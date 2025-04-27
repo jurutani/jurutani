@@ -3,75 +3,82 @@
 // @unocss-include
 
 export default {
-  title: 'NuCommerce',
+  title: 'JuruTani',
   description:
-    'Vue Designer Nuxt Tailwind CSS / Nuxt UI - Quick start template',
-  logo: 'i-fluent-emoji:shopping-bags',
+    'JuruTani adalah platform yang membantu petani dalam berkebun melalui fitur-fitur yang membantu petani dalam mengatur kebunnya seperti pengingat jadwal, log aktivitas, dan prediksi cuaca.',
+  logo: 'i-ic-baseline-grass',
   author: 'Pinegrow',
   url: 'https://pg-nuxtui.netlify.app',
-  github: 'https://github.com/pinegrow/pg-nuxtui',
+  github: 'https://github.com/IlhamKurniawanBlora',
   ogImageUrl: 'og-image.jpg', // absolute url (or) from public folder
-  generator: 'https://vuedesigner.com',
+  generator: 'https://jurutani.com',
   defaultLocale: 'en', // default
   identity: {
-    type: 'Organization',
+    type: 'StartUp',
   } as any,
-  twitter: '@vuedesigner',
+  twitter: 'jurutani',
   trailingSlash: false, // default
   titleSeparator: '|', // default
 
   navs: {
     primary: [
-      { title: 'Home', to: '/', icon: 'i-mdi-home' },
-      { title: 'Women', to: '/women', icon: 'i-mdi-home' },
-      { title: 'Men', to: '/men', icon: 'i-mdi-home' },
-      {
-        title: 'Jewellery',
-        to: '/jewellery',
-        icon: 'i-mdi-home',
-      },
-      {
-        title: 'Electronics',
-        to: '/electronics',
-        icon: 'i-mdi-home',
-      },
-      {
-        title: 'About Us',
-        to: '/quick-start',
-        icon: 'i-mdi-home',
-      },
+      { title: 'Home', to: '/', icon: 'i-ic-baseline-home' },
+      { title: 'Diskusi', to: '/discussions', icon: 'i-ic-baseline-forum' },
+      { title: 'Berita', to: '/news', icon: 'i-ic-baseline-newspaper' },
+      { title: 'Marketplace', to: '/markets', icon: 'i-ic-baseline-storefront' },
+      { title: 'Pengumuman', to: '/announcements', icon: 'i-ic-baseline-announcement' },
+      { title: 'Update', to: '/updates', icon: 'i-ic-baseline-update' },
+      { title: 'Alat', to: '/tools', icon: 'i-ic-baseline-construction' },
+      // { title: 'Women', to: '/women', icon: 'i-mdi-home' },
+      // { title: 'Men', to: '/men', icon: 'i-mdi-home' },
+      // {
+      //   title: 'Jewellery',
+      //   to: '/jewellery',
+      //   icon: 'i-mdi-home',
+      // },
+      // {
+      //   title: 'Electronics',
+      //   to: '/electronics',
+      //   icon: 'i-mdi-home',
+      // },
+      // {
+      //   title: 'About Us',
+      //   to: '/quick-start',
+      //   icon: 'i-mdi-home',
+      // },
     ],
     secondary: [
       {
-        title: 'Track Order',
-        to: '/track-order',
-        icon: 'i-ic-outline-my-location',
+        title: 'Profil',
+        to: '/profile',
+        icon: 'i-ic-round-person', // lebih cocok untuk profil user
       },
       {
-        title: 'Order History',
-        to: '/order-history',
-        icon: 'i-ic-baseline-history',
+        title: 'Keamanan',
+        to: '/security',
+        icon: 'i-material-symbols-lock-outline', // icon kunci untuk security
       },
       {
-        title: 'Returns',
-        to: '/returns',
-        icon: 'i-material-symbols-assignment-return-outline-rounded',
+        title: 'Pengaturan',
+        to: '/setting',
+        icon: 'i-material-symbols-settings-outline', // gear settings
       },
       {
-        title: 'Delivery Policy',
-        to: '/delivery-policy',
-        icon: 'i-tabler-truck-return',
+        title: 'History',
+        to: '/history',
+        icon: 'i-ic-round-history', // ikon jam history
       },
       {
         title: 'Contact Us',
         to: '/contact-us',
-        icon: 'i-material-symbols-add-call',
+        icon: 'i-material-symbols-call-outline', // telpon/contact
       },
       {
         title: 'Help & FAQs',
         to: '/help-faqs',
-        icon: 'i-material-symbols-contact-support-outline',
+        icon: 'i-material-symbols-help-outline', // ikon tanda tanya untuk help
       },
     ],
+   
   },
 }

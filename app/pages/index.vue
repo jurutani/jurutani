@@ -34,8 +34,14 @@
   <div>
     <HeroSection />
     <UContainer class="pt-8">
+       <WeatherSection />
+     </UContainer>
+    <UContainer class="pt-8">
       <LaunchSale class="mt-8" />
       <HotDeals class="mt-8" />
+    </UContainer>
+    <UContainer class="pt-8">
+      <FeatureSection class="mt-8" />
     </UContainer>
   </div>
 </template>
