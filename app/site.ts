@@ -29,23 +29,6 @@ export default {
       { title: 'Pengumuman', to: '/announcements', icon: 'i-ic-baseline-announcement' },
       { title: 'Update', to: '/updates', icon: 'i-ic-baseline-update' },
       { title: 'Alat', to: '/tools', icon: 'i-ic-baseline-construction' },
-      // { title: 'Women', to: '/women', icon: 'i-mdi-home' },
-      // { title: 'Men', to: '/men', icon: 'i-mdi-home' },
-      // {
-      //   title: 'Jewellery',
-      //   to: '/jewellery',
-      //   icon: 'i-mdi-home',
-      // },
-      // {
-      //   title: 'Electronics',
-      //   to: '/electronics',
-      //   icon: 'i-mdi-home',
-      // },
-      // {
-      //   title: 'About Us',
-      //   to: '/quick-start',
-      //   icon: 'i-mdi-home',
-      // },
     ],
     secondary: [
       {
