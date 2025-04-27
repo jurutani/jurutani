@@ -212,7 +212,7 @@
           <div class="flex-grow relative min-h-[300px] bg-gray-200 dark:bg-gray-700">
             <!-- Placeholder for map (in a real app, you'd use an actual map component) -->
             <div class="absolute inset-0 bg-opacity-70 flex items-center justify-center">
-              <img src="/vue-designer.png" alt="Map of Juru Tani Office Location" class="w-full h-full object-cover" >
+              <img src="/jurutanicon.png" alt="Map of Juru Tani Office Location" class="w-full h-full object-cover" >
             </div>
           </div>
         </div>

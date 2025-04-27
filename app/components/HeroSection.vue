@@ -5,39 +5,39 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 const carouselItems = [
   {
     id: 1,
-    imageUrl: '/api/placeholder/1920/1080',
+    imageUrl: '/hero/pertanian.png',
     caption: 'Pertanian Modern',
     title: 'Teknologi Hidroponik',
     description: 'Tingkatkan hasil panen dengan metode pertanian modern tanpa tanah.',
-    buttonText: 'Pelajari Sekarang',
-    buttonLink: '/hidroponik'
+    buttonText: 'Pelajari Selengkapnya',
+    buttonLink: '/news'
   },
   {
     id: 2,
-    imageUrl: '/api/placeholder/1920/1080',
+    imageUrl: '/hero/bibit-pertanian.png',
     caption: 'Agrikultur Terbaik',
     title: 'Bibit Unggul',
     description: 'Dapatkan bibit tanaman unggul dengan kualitas terbaik untuk hasil maksimal.',
-    buttonText: 'Lihat Katalog',
-    buttonLink: '/bibit'
+    buttonText: 'Pelajari Selengkapnya',
+    buttonLink: '/markets'
   },
   {
     id: 3,
-    imageUrl: '/api/placeholder/1920/1080',
+    imageUrl: '/hero/alat-pertanian.png',
     caption: 'Alat Pertanian',
     title: 'Peralatan Modern',
     description: 'Tingkatkan efisiensi dengan alat pertanian berteknologi terkini.',
-    buttonText: 'Belanja Sekarang',
-    buttonLink: '/alat'
+    buttonText: 'Pelajari Selengkapnya',
+    buttonLink: '/tools'
   },
   {
     id: 4,
-    imageUrl: '/api/placeholder/1920/1080',
+    imageUrl: '/hero/pertanian2.png',
     caption: 'Pertanian Organik',
     title: 'Pupuk Organik Premium',
     description: 'Perkaya tanah dan pertumbuhan tanaman dengan nutrisi alami terbaik.',
-    buttonText: 'Coba Sekarang',
-    buttonLink: '/pupuk'
+    buttonText: 'Pelajari Selengkapnya',
+    buttonLink: '/markets'
   }
 ]
 

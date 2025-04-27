@@ -10,7 +10,7 @@ export default {
   author: 'Pinegrow',
   url: 'https://pg-nuxtui.netlify.app',
   github: 'https://github.com/IlhamKurniawanBlora',
-  ogImageUrl: 'og-image.jpg', // absolute url (or) from public folder
+  ogImageUrl: 'jurutanicon.png', // absolute url (or) from public folder
   generator: 'https://jurutani.com',
   defaultLocale: 'en', // default
   identity: {

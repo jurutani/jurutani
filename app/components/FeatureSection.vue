@@ -6,7 +6,7 @@ const features = [
     title: 'Konsultasi Pertanian',
     description: 'Konsultasi langsung dengan pakar pertanian berpengalaman untuk hasil panen terbaik',
     icon: 'i-fa-solid-comments',
-    image: '/images/features/konsultasi-pertanian.jpg',
+    image: '/feature/konsultasi-pertanian.png',
     color: 'green'
   },
   {
@@ -14,7 +14,7 @@ const features = [
     title: 'Monitoring Lahan',
     description: 'Pantau kondisi lahan dan tanaman Anda secara real-time dengan teknologi IoT',
     icon: 'i-fa-solid-chart-line',
-    image: '/images/features/monitoring-lahan.jpg',
+    image: '/feature/monitoring-lahan.png',
     color: 'blue'
   },
   {
@@ -22,7 +22,7 @@ const features = [
     title: 'Marketplace Hasil Tani',
     description: 'Jual hasil pertanian Anda langsung ke konsumen tanpa perantara',
     icon: 'i-fa-solid-store',
-    image: '/images/features/marketplace-tani.jpg',
+    image: '/feature/penjualan.png',
     color: 'orange'
   },
   {
@@ -30,7 +30,7 @@ const features = [
     title: 'Kursus & Pelatihan',
     description: 'Tingkatkan pengetahuan dan keterampilan bertani melalui kursus online dan offline',
     icon: 'i-fa-solid-graduation-cap',
-    image: '/images/features/kursus-tani.jpg',
+    image: '/feature/pelatihan.png',
     color: 'yellow'
   },
   {
@@ -38,7 +38,7 @@ const features = [
     title: 'Komunitas Petani',
     description: 'Bergabung dengan komunitas petani untuk berbagi pengalaman dan pengetahuan',
     icon: 'i-fa-solid-users',
-    image: '/images/features/komunitas-petani.jpg',
+    image: '/feature/komunitas.png',
     color: 'indigo'
   },
   {
@@ -46,7 +46,7 @@ const features = [
     title: 'Prediksi Cuaca',
     description: 'Akses informasi prediksi cuaca akurat untuk perencanaan aktivitas pertanian',
     icon: 'i-fa-solid-cloud-sun',
-    image: '/images/features/prediksi-cuaca.jpg',
+    image: '/feature/cuaca.png',
     color: 'cyan'
   }
 ]
@@ -81,7 +81,7 @@ const features = [
               class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110"
               loading="lazy"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"/>
             
             <!-- Icon Circle pada Gambar -->
             <div 
@@ -103,7 +103,7 @@ const features = [
             
             <!-- Call to Action Button -->
             <NuxtLink 
-              :to="`/features/${feature.id}`" 
+              :to="`/about-us`" 
               class="mt-4 inline-flex items-center justify-center gap-1 text-sm font-medium text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
             >
               <span>Pelajari Lebih Lanjut</span>
