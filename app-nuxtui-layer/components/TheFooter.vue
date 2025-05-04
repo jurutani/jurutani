@@ -49,11 +49,11 @@
                 </NuxtLink>
               </div>
               <div class="flex flex-col space-y-3">
-                <NuxtLink to="/products" class="menu-link flex items-center">
+                <NuxtLink to="/markets" class="menu-link flex items-center">
                   <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"/>
                   Produk
                 </NuxtLink>
-                <NuxtLink to="/community" class="menu-link flex items-center">
+                <NuxtLink to="/discussions/group" class="menu-link flex items-center">
                   <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"/>
                   Komunitas
                 </NuxtLink>
