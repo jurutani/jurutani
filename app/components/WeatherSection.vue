@@ -1,189 +1,328 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue'
 
-// Data cuaca untuk lokasi Yogyakarta
-const weatherData = ref({
-  location: "Yogyakarta",
-  date: new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' }),
-  currentTemp: 29,
-  weatherCondition: "Berawan Sebagian",
-  humidity: 78,
-  rainfall: 0.5,
-  windSpeed: 8.2,
-  soilMoisture: 65,
-  uvIndex: 8
-});
+// State untuk menyimpan data cuaca dan lokasi
+const weatherData = ref<any>(null)
+const location = ref('')
+const isLoading = ref(true)
+const error = ref('')
 
-// Rekomendasi pertanian sederhana
-const farmingTips = ref([
-  "Waktu ideal untuk menyiram: Pagi (06:00-08:00)",
-  "Tidak disarankan menyemprot pestisida hari ini",
-  "Kelembaban tanah cukup, kurangi penyiraman"
-]);
+// Fungsi untuk mengakses lokasi pengguna
+const getLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude
+        const lon = position.coords.longitude
+        location.value = `${lat}, ${lon}`
 
-// Mendapatkan icon cuaca berdasarkan kondisi
-const getWeatherIcon = () => {
-  const condition = weatherData.value.weatherCondition.toLowerCase();
-  if (condition.includes("cerah")) return "sun";
-  if (condition.includes("berawan sebagian")) return "cloud-sun";
-  if (condition.includes("berawan")) return "cloud";
-  if (condition.includes("hujan")) return "cloud-rain";
-  return "sun";
-};
+        // Ambil data cuaca menggunakan API OpenWeatherMap
+        await fetchWeatherData(lat, lon)
+      },
+      (error) => {
+        console.error('Error mendapatkan lokasi:', error)
+        location.value = 'Lokasi tidak dapat diakses'
+        isLoading.value = false
+        error.value = 'Tidak dapat mengakses lokasi Anda'
+      }
+    )
+  } else {
+    location.value = 'Geolocation tidak didukung di browser ini'
+    isLoading.value = false
+    error.value = 'Geolocation tidak didukung di browser ini'
+  }
+}
 
-// Mendapatkan kelas warna untuk indeks UV
-const getUvIndexClass = () => {
-  const index = weatherData.value.uvIndex;
-  if (index <= 2) return "bg-green-500";
-  if (index <= 5) return "bg-yellow-500";
-  if (index <= 7) return "bg-orange-500";
-  return "bg-red-500";
-};
+// Fungsi untuk mengambil data cuaca berdasarkan latitude dan longitude
+const fetchWeatherData = async (lat: number, lon: number) => {
+  const apiKey = '416f0ed0bb28d3110beedecf5fa9cf85'
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=id`
+  
+  try {
+    const response = await fetch(url)
+    const data = await response.json()
+    console.log('Data cuaca:', data)
+    weatherData.value = data
+    isLoading.value = false
+  } catch (err) {
+    console.error('Error mengambil data cuaca:', err)
+    error.value = 'Gagal mengambil data cuaca'
+    isLoading.value = false
+  }
+}
+
+// Computed properties untuk informasi pertanian
+const farmingConditions = computed(() => {
+  if (!weatherData.value) return null
+
+  const temp = weatherData.value.main.temp
+  const humidity = weatherData.value.main.humidity
+  const windSpeed = weatherData.value.wind.speed
+  const clouds = weatherData.value.clouds.all
+  const weatherMain = weatherData.value.weather[0].main.toLowerCase()
+  
+  const conditions = {
+    suitable: true,
+    recommendations: [] as string[]
+  }
+
+  // Kondisi suhu
+  if (temp > 35) {
+    conditions.suitable = false
+    conditions.recommendations.push('Suhu terlalu tinggi. Siram tanaman lebih sering dan hindari penyemprotan pestisida.')
+  } else if (temp < 15) {
+    conditions.suitable = false
+    conditions.recommendations.push('Suhu terlalu rendah. Lindungi tanaman dari embun beku.')
+  } else if (temp >= 25 && temp <= 35) {
+    conditions.recommendations.push('Suhu optimal untuk pertumbuhan tanaman tropis.')
+  }
+
+  // Kondisi kelembaban
+  if (humidity > 85) {
+    conditions.recommendations.push('Kelembaban tinggi. Waspada serangan jamur dan hama.')
+  } else if (humidity < 40) {
+    conditions.recommendations.push('Kelembaban rendah. Tingkatkan penyiraman.')
+  } else {
+    conditions.recommendations.push('Kelembaban ideal untuk sebagian besar tanaman.')
+  }
+
+  // Kondisi angin
+  if (windSpeed > 5) {
+    conditions.recommendations.push('Angin kencang. Hindari penyemprotan pestisida atau pupuk.')
+  } else {
+    conditions.recommendations.push('Kondisi angin baik untuk penyemprotan pestisida/pupuk.')
+  }
+
+  // Kondisi awan
+  if (clouds > 80) {
+    conditions.recommendations.push('Tingkat cahaya matahari rendah. Tanaman mungkin kurang optimal untuk fotosintesis.')
+  } else if (clouds < 30) {
+    conditions.recommendations.push('Cahaya matahari optimal untuk fotosintesis tanaman.')
+  }
+
+  // Kondisi cuaca
+  if (weatherMain.includes('rain') || weatherMain.includes('thunder')) {
+    conditions.suitable = false
+    conditions.recommendations.push('Hujan. Tunda pemupukan dan penyemprotan pestisida.')
+  } else if (weatherMain.includes('clear')) {
+    conditions.recommendations.push('Cuaca cerah. Waktu ideal untuk pemupukan dan pengolahan lahan.')
+  }
+
+  return conditions
+})
+
+// Mendapatkan jam matahari terbit dan terbenam berdasarkan timezone
+const currentLocalTime = computed(() => {
+  if (!weatherData.value) return '-'
+
+  const timestamp = weatherData.value.dt
+  const timezoneOffset = weatherData.value.timezone // in seconds
+
+  const utcDate = new Date((timestamp + timezoneOffset) * 1000)
+
+  // Gunakan Intl.DateTimeFormat untuk mengatur waktu lokal berdasarkan offset
+  return new Intl.DateTimeFormat('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'UTC' // penting: waktu diproses sebagai UTC + offset manual
+  }).format(utcDate)
+})
+
+
+const sunriseTime = computed(() => {
+  if (!weatherData.value) return '-'
+
+  const timestamp = weatherData.value.sys.sunrise
+  const timezoneOffset = weatherData.value.timezone
+  const utcDate = new Date((timestamp + timezoneOffset) * 1000)
+
+  return new Intl.DateTimeFormat('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'UTC'
+  }).format(utcDate)
+})
+
+const sunsetTime = computed(() => {
+  if (!weatherData.value) return '-'
+
+  const timestamp = weatherData.value.sys.sunset
+  const timezoneOffset = weatherData.value.timezone
+  const utcDate = new Date((timestamp + timezoneOffset) * 1000)
+
+  return new Intl.DateTimeFormat('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'UTC'
+  }).format(utcDate)
+})
+
+
+
+// Mendapatkan arah angin dalam bahasa Indonesia
+const windDirection = computed(() => {
+  if (!weatherData.value) return '-'
+  
+  const deg = weatherData.value.wind.deg
+  
+  if (deg >= 337.5 || deg < 22.5) return 'Utara'
+  if (deg >= 22.5 && deg < 67.5) return 'Timur Laut'
+  if (deg >= 67.5 && deg < 112.5) return 'Timur'
+  if (deg >= 112.5 && deg < 157.5) return 'Tenggara'
+  if (deg >= 157.5 && deg < 202.5) return 'Selatan'
+  if (deg >= 202.5 && deg < 247.5) return 'Barat Daya'
+  if (deg >= 247.5 && deg < 292.5) return 'Barat'
+  if (deg >= 292.5 && deg < 337.5) return 'Barat Laut'
+  
+  return '-'
+})
+
+// Menjalankan fungsi untuk mendapatkan lokasi dan data cuaca saat halaman dimuat
+onMounted(() => {
+  getLocation()
+})
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-    <!-- Header -->
-    <div class="bg-gradient-to-r from-green-600 to-green-700 p-4 text-white">
-      <div class="flex justify-between items-center mx-8">
-        <div>
-          <h2 class="text-xl font-bold flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-            </svg>
-            Info Cuaca Pertanian
-          </h2>
-          <p class="text-green-100 text-sm mt-1">{{ weatherData.date }}</p>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+    <!-- Header Panel -->
+    <div class="bg-gradient-to-r from-green-600 to-green-700 dark:from-green-700 dark:to-green-800 text-white px-6 py-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold flex items-center">
+          <Icon name="mdi:weather-partly-cloudy" class="w-6 h-6 mr-2" />
+          Info Cuaca Pertanian
+        </h2>
+        <div class="text-sm bg-green-800 bg-opacity-30 dark:bg-green-900 dark:bg-opacity-50 px-3 py-1 rounded-full">
+          {{ currentLocalTime }}
         </div>
-        <div class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span>{{ weatherData.location }}</span>
-        </div>
+      </div>
+      <p v-if="weatherData" class="text-sm mt-1">
+        {{ weatherData.name }}, {{ weatherData.sys.country }}
+      </p>
+    </div>
+
+    <!-- Loading State -->
+    <div v-if="isLoading" class="p-6 flex justify-center items-center">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-green-500 border-t-transparent dark:border-green-400"/>
+        <p class="mt-2 text-gray-600 dark:text-gray-300">Memuat data cuaca...</p>
       </div>
     </div>
 
-    <!-- Main Weather Display -->
-    <div class="flex flex-col md:flex-row p-4">
-      <!-- Current Weather -->
-      <div class="flex items-center justify-center flex-grow pb-4 md:pb-0 md:border-r border-gray-200">
-        <div class="mr-4">
-          <!-- Weather Icon -->
-          <svg v-if="getWeatherIcon() === 'sun'" xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <svg v-else-if="getWeatherIcon() === 'cloud-sun'" xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-          </svg>
-          <svg v-else-if="getWeatherIcon() === 'cloud-rain'" xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-          </svg>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-          </svg>
+    <!-- Error State -->
+    <div v-else-if="error" class="p-6">
+      <div class="bg-red-100 dark:bg-red-900 border-l-4 border-red-500 text-red-700 dark:text-red-200 p-4" role="alert">
+        <p class="font-bold">Error</p>
+        <p>{{ error }}</p>
+      </div>
+    </div>
+
+    <!-- Weather Data -->
+    <div v-else-if="weatherData" class="p-4">
+      <!-- Current Weather Summary -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+          <img
+:src="`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`" 
+               class="w-16 h-16" 
+               :alt="weatherData.weather[0].description" >
+          <div class="ml-2">
+            <h3 class="text-2xl font-bold dark:text-white">{{ Math.round(weatherData.main.temp) }}°C</h3>
+            <p class="text-gray-600 dark:text-gray-300 capitalize">{{ weatherData.weather[0].description }}</p>
+          </div>
         </div>
-        <div>
-          <p class="text-4xl font-bold text-gray-800">{{ weatherData.currentTemp }}°C</p>
-          <p class="text-gray-500">{{ weatherData.weatherCondition }}</p>
+        <div class="text-right">
+          <p class="text-sm dark:text-gray-200">Terasa seperti: <span class="font-semibold">{{ Math.round(weatherData.main.feels_like) }}°C</span></p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Min: {{ Math.round(weatherData.main.temp_min) }}°C / Max: {{ Math.round(weatherData.main.temp_max) }}°C</p>
         </div>
       </div>
 
-      <!-- Weather Parameters -->
-      <div class="flex-grow grid grid-cols-2 gap-3 md:pl-4">
-        <!-- Humidity -->
-        <div class="flex items-center">
-          <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14.5v.5a2 2 0 01-2 2h-4l-4 4v-4H5a2 2 0 01-2-2v-7a2 2 0 012-2h2.5M15 3h6v6M14 10l6.5-6.5" />
-            </svg>
+      <!-- Detailed Weather Info -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
+            <Icon name="mdi:water-percent" class="w-5 h-5 mr-1" />
+            <span class="text-sm">Kelembaban</span>
           </div>
-          <div>
-            <p class="text-xs text-gray-500">Kelembapan</p>
-            <p class="font-bold text-gray-800">{{ weatherData.humidity }}%</p>
-          </div>
+          <p class="text-lg font-semibold dark:text-white">{{ weatherData.main.humidity }}%</p>
         </div>
-
-        <!-- Rainfall -->
-        <div class="flex items-center">
-          <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4-4m0 0l4 4m-4-4v18" />
-            </svg>
+        
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
+            <Icon name="mdi:weather-windy" class="w-5 h-5 mr-1" />
+            <span class="text-sm">Angin</span>
           </div>
-          <div>
-            <p class="text-xs text-gray-500">Curah Hujan</p>
-            <p class="font-bold text-gray-800">{{ weatherData.rainfall }} mm</p>
-          </div>
+          <p class="text-lg font-semibold dark:text-white">{{ weatherData.wind.speed }} m/s</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Arah: {{ windDirection }}</p>
         </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
+            <Icon name="mdi:weather-sunset-up" class="w-5 h-5 mr-1" />
+            <span class="text-sm">Matahari Terbit</span>
+          </div>
+          <p class="text-lg font-semibold dark:text-white">{{ sunriseTime }}</p>
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
+            <Icon name="mdi:weather-sunset-down" class="w-5 h-5 mr-1" />
+            <span class="text-sm">Matahari Terbenam</span>
+          </div>
+          <p class="text-lg font-semibold dark:text-white">{{ sunsetTime }}</p>
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
+            <Icon name="mdi:eye" class="w-5 h-5 mr-1" />
+            <span class="text-sm">Jarak Pandang</span>
+          </div>
+          <p class="text-lg font-semibold dark:text-white">{{ weatherData.visibility / 1000 }} km</p>
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
+            <Icon name="mdi:gauge" class="w-5 h-5 mr-1" />
+            <span class="text-sm">Tekanan</span>
+          </div>
+          <p class="text-lg font-semibold dark:text-white">{{ weatherData.main.pressure }} hPa</p>
+        </div>
+      </div>
 
-       <!-- Wind -->
-<div class="flex items-center">
-  <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 6h18M3 18h18" />
-    </svg>
-  </div>
-  <div>
-    <p class="text-xs text-gray-500">Kecepatan Angin</p>
-    <p class="font-bold text-gray-800">{{ weatherData.windSpeed }} km/jam</p>
-  </div>
-</div>
-
-<!-- Soil Moisture -->
-<div class="flex items-center">
-  <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center mr-3">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4.5 8-10A8 8 0 104 12c0 5.5 8 10 8 10z" />
-    </svg>
-  </div>
-  <div>
-    <p class="text-xs text-gray-500">Kelembapan Tanah</p>
-    <p class="font-bold text-gray-800">{{ weatherData.soilMoisture }}%</p>
-  </div>
-</div>
-
-<!-- UV Index -->
-<div class="col-span-2">
-  <div class="flex items-center">
-    <div :class="['w-10 h-10 rounded-full flex items-center justify-center mr-3', getUvIndexClass()]">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg>
+      <!-- Farming Recommendations -->
+      <div v-if="farmingConditions" class="border-t dark:border-gray-600 pt-4">
+        <h3 class="text-lg font-semibold mb-2 flex items-center dark:text-white">
+          <Icon name="mdi:tractor" class="w-5 h-5 mr-2" />
+          Rekomendasi Pertanian
+        </h3>
+        
+        <div
+:class="['p-3 rounded-lg mb-2', 
+          farmingConditions.suitable 
+            ? 'bg-green-50 border border-green-200 dark:bg-green-900 dark:bg-opacity-20 dark:border-green-700' 
+            : 'bg-yellow-50 border border-yellow-200 dark:bg-yellow-900 dark:bg-opacity-20 dark:border-yellow-700']">
+          <p class="font-medium mb-1 dark:text-gray-200">
+            <Icon
+:name="farmingConditions.suitable ? 'mdi:check-circle' : 'mdi:alert-circle'" 
+                  :class="['w-5 h-5 inline-block mr-1', 
+                    farmingConditions.suitable 
+                      ? 'text-green-600 dark:text-green-400' 
+                      : 'text-yellow-600 dark:text-yellow-400']" />
+            <span v-if="farmingConditions.suitable">Kondisi cuaca cocok untuk aktivitas pertanian</span>
+            <span v-else>Kondisi cuaca kurang optimal untuk beberapa aktivitas pertanian</span>
+          </p>
+        </div>
+        
+        <ul class="space-y-2">
+          <li v-for="(rec, index) in farmingConditions.recommendations" :key="index" class="flex items-start">
+            <Icon name="mdi:information" class="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <span class="text-sm dark:text-gray-300">{{ rec }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div>
-      <p class="text-xs text-gray-500">Indeks UV</p>
-      <p class="font-bold text-gray-800">{{ weatherData.uvIndex }}</p>
-    </div>
   </div>
-</div>
-
-    <!-- Farming Tips -->
-<div class="p-4 bg-gray-50 border-t border-gray-200">
-  <h3 class="font-semibold text-gray-700 mb-2">Rekomendasi Hari Ini</h3>
-  <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600">
-    <li v-for="(tip, index) in farmingTips" :key="index">{{ tip }}</li>
-  </ul>
-</div>
-<!-- Farming Tips -->
-<div class="p-4 bg-gray-50 border-t border-gray-200">
-  <h3 class="font-semibold text-gray-700 mb-2">Quotes Juru Tani</h3>
-  <p class="text-sm text-gray-600">"Berkebun adalah seni menunggu hasil dari kerja keras kita."</p>
-  <p class="text-sm text-gray-600">"Tanah adalah ibu kita, rawatlah ia dengan baik."</p>
-</div>
-
-  </div>
-</div>
-
-</div>
 </template>
-
-<style scoped>
-/* Transisi smooth untuk hover */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-}
-</style>

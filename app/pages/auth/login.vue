@@ -1,7 +1,7 @@
-<!-- pages/auth/login.vue -->
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useToast } from '#imports'
+import { useSupabase } from '~/composables/useSupabase'
 
 // Definisikan layout
 definePageMeta({
@@ -9,6 +9,7 @@ definePageMeta({
 })
 
 const toast = useToast()
+const { login, loginWithSocialProvider, loading } = useSupabase()
 
 // State form
 const form = ref({
@@ -35,22 +36,34 @@ const handleLogin = async () => {
 
   try {
     isLoading.value = true
-    await new Promise(resolve => setTimeout(resolve, 1000)) // simulasi loading
+    
+    // Panggil fungsi login dari useSupabase composable
+    const { success, error } = await login(form.value.email, form.value.password)
 
-    toast.add({
-      title: 'Berhasil',
-      description: 'Selamat datang di Juru Tani!',
-      color: 'green',
-      icon: 'i-ph-check-circle',
-      timeout: 3000
-    })
+    if (success) {
+      toast.add({
+        title: 'Berhasil',
+        description: 'Selamat datang di Juru Tani!',
+        color: 'green',
+        icon: 'i-ph-check-circle',
+        timeout: 3000
+      })
 
-    // Setelah login sukses
-    // navigateTo('/dashboard')
+      // Setelah login sukses
+      navigateTo('/dashboard')
+    } else {
+      toast.add({
+        title: 'Gagal',
+        description: error || 'Email atau kata sandi tidak valid.',
+        color: 'red',
+        icon: 'i-ph-x-circle',
+        timeout: 3000
+      })
+    }
   } catch (error) {
     toast.add({
       title: 'Gagal',
-      description: 'Email atau kata sandi tidak valid.',
+      description: error.message || 'Terjadi kesalahan saat login.',
       color: 'red',
       icon: 'i-ph-x-circle',
       timeout: 3000
@@ -61,18 +74,30 @@ const handleLogin = async () => {
 }
 
 // Handler login sosial
-const handleSocialLogin = (provider: string) => {
-  isLoading.value = true
-  setTimeout(() => {
+const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => {
+  try {
+    // Panggil fungsi loginWithSocialProvider dari useSupabase composable
+    const { success, error } = await loginWithSocialProvider(provider)
+    
+    if (!success) {
+      toast.add({
+        title: 'Gagal',
+        description: error || `Login dengan ${provider} gagal.`,
+        color: 'red',
+        icon: 'i-ph-x-circle',
+        timeout: 3000
+      })
+    }
+    // Jika sukses, akan diredirect otomatis oleh Supabase ke callback URL
+  } catch (error) {
     toast.add({
-      title: 'Info',
-      description: `Login dengan ${provider} akan tersedia.`,
-      color: 'blue',
-      icon: 'i-ph-info-circle',
+      title: 'Gagal',
+      description: error.message || 'Terjadi kesalahan saat login.',
+      color: 'red',
+      icon: 'i-ph-x-circle',
       timeout: 3000
     })
-    isLoading.value = false
-  }, 800)
+  }
 }
 </script>
 
@@ -94,9 +119,9 @@ const handleSocialLogin = (provider: string) => {
         <div>
           <div class="flex items-center space-x-3">
             <div class="bg-white rounded-full p-2 shadow-lg">
-              <Icon name="ph:plant-fill" class="text-green-600 w-8 h-8" />
+              <img src="/jurutanicon.png" alt="Logo" class="w-10 h-10" >
             </div>
-            <h1 class="text-2xl font-bold">Juru Tani</h1>
+            <h1 class="text-2xl font-bold mt-6">Juru Tani</h1>
           </div>
           <p class="mt-2 text-green-100">Mengelola pertanian dengan lebih pintar</p>
         </div>
@@ -135,21 +160,22 @@ const handleSocialLogin = (provider: string) => {
     </div>
     
     <!-- Form login -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-6">
-      <div class="w-full max-w-md">
-        <div class="lg:hidden flex items-center justify-center space-x-3 mb-8">
-          <div class="bg-green-600 rounded-full p-2 shadow-md">
-            <Icon name="ph:plant-fill" class="text-white w-6 h-6" />
-          </div>
-          <h1 class="text-xl font-bold text-green-600">Juru Tani</h1>
-        </div>
+      <div class="w-full lg:w-1/2 flex items-center justify-center p-6">
+        <div class="w-full max-w-md">
+          <div class="lg:hidden flex items-center justify-center space-x-3 mb-8">
+            <div class="bg-green-600 p-1 rounded-full shadow-md">
+              <img src="/jurutanicon.png" alt="Logo" class="w-10 h-10" >
+            </div>
+             <h1 class="text-xl font-bold text-green-600 dark:text-green-400 mx-auto mt-4">Juru Tani</h1>
+      </div>
+
+      <!-- Heading -->
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Selamat datang kembali</h2>
+        <p class="text-gray-500 dark:text-gray-400 mt-2">Masuk untuk melanjutkan ke sistem Juru Tani</p>
+      </div>
         
-        <div class="text-center mb-8">
-          <h2 class="text-2xl font-bold text-gray-800">Selamat datang kembali</h2>
-          <p class="text-gray-500 mt-2">Masuk untuk melanjutkan ke sistem Juru Tani</p>
-        </div>
-        
-        <UCard class="shadow-sm border-0">
+        <UCard class="shadow-sm border-green-100 dark:border-green-700">
           <form @submit.prevent="handleLogin">
             <UFormGroup label="Email atau Username" name="email">
               <UInput

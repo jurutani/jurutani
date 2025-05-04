@@ -6,7 +6,7 @@ export default {
   title: 'JuruTani',
   description:
     'JuruTani adalah platform yang membantu petani dalam berkebun melalui fitur-fitur yang membantu petani dalam mengatur kebunnya seperti pengingat jadwal, log aktivitas, dan prediksi cuaca.',
-  logo: 'i-ic-baseline-grass',
+  logo: '/jurutanicon.png',
   author: 'Pinegrow',
   url: 'https://pg-nuxtui.netlify.app',
   github: 'https://github.com/IlhamKurniawanBlora',

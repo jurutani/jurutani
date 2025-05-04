@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Tools - Juru Tani',
-  description: 'Stay updated with the latest Tools from Juru Tani.',
-  ogTitle: 'Tools - Juru Tani',
-  ogDescription: 'Stay updated with the latest Tools from Juru Tani.',
+  title: 'Marketplace - Juru Tani',
+  description: 'Stay updated with the latest Marketplace from Juru Tani.',
+  ogTitle: 'Marketplace - Juru Tani',
+  ogDescription: 'Stay updated with the latest Marketplace from Juru Tani.',
 })
 </script>
 
 <template>
   <div>
-    <ComingSoon />
+    <NuxtPage />
   </div>
 </template>

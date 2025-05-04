@@ -27,7 +27,7 @@
             placeholder="Search..."
             size="md"
             trailing-icon="i-material-symbols-search-rounded"
-            class="w-full bg-gray-50 dark:bg-green-800 border-none shadow-sm hover:shadow-md focus:ring-2 focus:ring-primary transition-all duration-300"
+            class="w-full bg-transparent border-none shadow-sm hover:shadow-md focus:ring-2 focus:ring-primary transition-all duration-300"
           />
         </UFormGroup>
       </div>

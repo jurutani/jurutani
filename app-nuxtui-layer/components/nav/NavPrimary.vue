@@ -65,7 +65,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
           <UIcon
             v-if="nav.icon"
             :name="nav.icon"
-            class="text-base text-green-600 dark:text-green-300"
+            class="text-base text-green-600 dark:text-green-300 mr-2 mt-2"
           />
           <span>{{ nav.title }}</span>
         </ULink>

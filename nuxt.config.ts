@@ -20,7 +20,12 @@ export default defineNuxtConfig({
   extends: [
     './app-nuxtui-layer', // NavBar and Footer components
   ],
-
+  runtimeConfig: {
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseKey: process.env.SUPABASE_KEY,
+    },
+  },
   // ssr: false,
   // devtools: { enabled: false }, // enabled by default, disable when using standalone Vue devtools
 

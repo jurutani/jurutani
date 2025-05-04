@@ -9,6 +9,6 @@ useSeoMeta({
 
 <template>
   <div>
-    <ComingSoon />
+    <NuxtPage />
   </div>
 </template>

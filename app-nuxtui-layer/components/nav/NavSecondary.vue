@@ -43,12 +43,15 @@ const dropdownItems = [
         <ProfileActions class="sm:!hidden" />
         
         <!-- Perbaiki ukuran tombol -->
-        <UButton
-          class="font-bold my-4 w-full py-2 text-sm bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 border-none text-white shadow-sm"
-          size="md"
-        >
-          Sign In / Join Us
-        </UButton>
+        <NuxtLink to="/auth/login">
+          <UButton
+            class="font-bold my-4 w-full py-2 text-sm bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 border-none text-white shadow-sm"
+            size="md"
+          >
+            Sign In / Join Us
+          </UButton>
+        </NuxtLink>
+
 
         <!-- Secondary Navigation Items -->
         <div class="grid grid-cols-3 gap-2 mt-2">
