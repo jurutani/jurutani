@@ -19,11 +19,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
           @click="openMobileMenu"
         >
           <ULink
-            v-slot="{ isActive }"
-            :to="nav.to"
-            exact
-            custom
-          >
+            v-slot="{ isActive }">
             <div class="flex flex-col items-center">
               <div class="p-2 rounded-full" :class="isActive ? 'bg-green-100 dark:bg-green-800' : ''">
                 <UIcon
