@@ -1,7 +1,7 @@
 <script setup lang="ts">
   definePageMeta({
     title: 'Contact Us',
-    description: "Connect with Juru Tani: We're here to help farmers succeed!",
+    description: "Hubungi kami untuk menyelesaikan masalah dalam bidang pertanian",
     navOrder: '11',
     type: 'secondary',
     icon: 'i-mdi-message-text-outline',
@@ -44,19 +44,20 @@
 
   // FAQ data
   const faqs = [
-    {
-      question: 'What services does Juru Tani provide?',
-      answer: 'Juru Tani offers comprehensive agricultural advisory services, farming technology solutions, crop management systems, market connection platforms, and educational resources for sustainable farming practices.'
-    },
-    {
-      question: 'How can I join the Juru Tani community?',
-      answer: 'You can register through our mobile app or website. Once registered, you\'ll gain access to our knowledge base, community forums, and personalized agricultural services.'
-    },
-    {
-      question: 'Is Juru Tani available in my region?',
-      answer: 'Juru Tani currently serves multiple regions across Indonesia. Please contact our support team with your specific location to check availability in your area.'
-    }
-  ]
+  {
+    question: 'Layanan apa saja yang disediakan oleh Juru Tani?',
+    answer: 'Juru Tani menyediakan layanan konsultasi pertanian yang komprehensif, solusi teknologi pertanian, sistem manajemen tanaman, platform koneksi pasar, dan sumber belajar untuk praktik pertanian berkelanjutan.'
+  },
+  {
+    question: 'Bagaimana cara bergabung dengan komunitas Juru Tani?',
+    answer: 'Anda dapat mendaftar melalui aplikasi seluler atau situs web kami. Setelah terdaftar, Anda akan mendapatkan akses ke basis pengetahuan, forum komunitas, dan layanan pertanian yang dipersonalisasi.'
+  },
+  {
+    question: 'Apakah Juru Tani tersedia di wilayah saya?',
+    answer: 'Juru Tani saat ini melayani berbagai wilayah di seluruh Indonesia. Silakan hubungi tim dukungan kami dengan lokasi spesifik Anda untuk memeriksa ketersediaan di daerah Anda.'
+  }
+];
+
 </script>
 
 <template>
@@ -73,11 +74,11 @@
       </div>
       <div class="container mx-auto px-6 py-20 relative z-10">
         <div class="max-w-3xl mx-auto text-center">
-          <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Get in Touch with Juru Tani</h1>
-          <p class="text-lg md:text-xl text-green-100 mb-10">We're here to support farmers and agricultural communities. Let us know how we can help you grow.</p>
+          <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Hubungi Tim JuruTani</h1>
+          <p class="text-lg md:text-xl text-green-100 mb-10">Kami disini untuk membantu komunitas pertanian Indonesia agar semakin maju. Berikan kami pertanyaan mengenai masalah pertanian agar berkembang bersama sama.</p>
           <div class="flex justify-center">
             <UButton size="lg" class="bg-white text-green-700 hover:bg-green-50" @click="$scrollTo('#contact-form')">
-              Contact Us Now
+              Hubungi sekarang
             </UButton>
           </div>
         </div>
@@ -92,10 +93,10 @@
           <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center mb-6">
             <UIcon name="i-heroicons-phone" class="text-green-600 dark:text-green-300 text-2xl" />
           </div>
-          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Call Us</h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">Our customer service team is available Monday to Friday, 8am to 5pm.</p>
-          <div class="font-medium text-green-600 dark:text-green-400">+62 812 3456 7890</div>
-          <div class="font-medium text-green-600 dark:text-green-400">+62 21 987 6543</div>
+          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Telepon kami</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">Layanan Panggilan JuruTani tersedia di hari Senin - jumat </p>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">Jam layanan : 09.00 - 16.00 WIB</p>
+      <div class="font-medium text-green-600 dark:text-green-400">+62 815 7552 5260</div>
         </div>
 
         <!-- Contact card 2 -->
@@ -103,8 +104,8 @@
           <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center mb-6">
             <UIcon name="i-heroicons-envelope" class="text-green-600 dark:text-green-300 text-2xl" />
           </div>
-          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Email Us</h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">Send us an email and we'll get back to you within 24 hours.</p>
+          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Email kami</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">Kirimi kami pesan email dan segera Tim JuruTani akan meberikan respon secepatnya.</p>
           <div class="font-medium text-green-600 dark:text-green-400">info@jurutani.com</div>
           <div class="font-medium text-green-600 dark:text-green-400">support@jurutani.com</div>
         </div>
@@ -114,10 +115,10 @@
           <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center mb-6">
             <UIcon name="i-heroicons-map-pin" class="text-green-600 dark:text-green-300 text-2xl" />
           </div>
-          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Visit Us</h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">Come visit our office for in-person assistance.</p>
-          <div class="font-medium text-green-600 dark:text-green-400">Jalan Raya Pertanian No. 123</div>
-          <div class="font-medium text-green-600 dark:text-green-400">Jakarta Selatan, Indonesia 12345</div>
+          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Lokasi kami</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">Mari datang dan berdiskusi dengan tim JuruTani secara langsung.</p>
+          <div class="font-medium text-green-600 dark:text-green-400">Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo, </div>
+          <div class="font-medium text-green-600 dark:text-green-400">Kota Yogyakarta, Daerah Istimewa Yogyakarta 55167</div>
         </div>
       </div>
     </div>
@@ -127,24 +128,24 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <!-- Contact form -->
         <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-md">
-          <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">Send Us a Message</h2>
+          <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">Kirim pesan untuk tim JuruTani</h2>
           
           <UAlert v-if="showSuccess" class="mb-6" color="green" variant="soft" title="Message Sent!">
-            Thank you for reaching out. We'll get back to you shortly.
+            Terimakasih sudah menghubungi tim JuruTani, kami akan merespon pesan anda segera.
           </UAlert>
           
           <form @submit.prevent="handleSubmit">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-              <UFormGroup label="Full Name">
+              <UFormGroup label="Nama lengkap">
                 <UInput 
                   v-model="contactForm.name" 
-                  placeholder="Your name" 
+                  placeholder="Masukan nama lengkap" 
                   class="border-gray-200 dark:border-gray-700"
                   required
                 />
               </UFormGroup>
               
-              <UFormGroup label="Email Address">
+              <UFormGroup label="Email">
                 <UInput 
                   v-model="contactForm.email" 
                   type="email" 
@@ -156,7 +157,7 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-              <UFormGroup label="Phone Number">
+              <UFormGroup label="Nomor telepon">
                 <UInput 
                   v-model="contactForm.phone" 
                   placeholder="+62 812 345 6789" 
@@ -164,20 +165,20 @@
                 />
               </UFormGroup>
               
-              <UFormGroup label="Subject">
+              <UFormGroup label="Subjek">
                 <UInput 
                   v-model="contactForm.subject" 
-                  placeholder="How can we help?" 
+                  placeholder="bagaimana kami bisa membantu ?"
                   class="border-gray-200 dark:border-gray-700"
                   required
                 />
               </UFormGroup>
             </div>
             
-            <UFormGroup label="Message" class="mb-6">
+            <UFormGroup label="Pesan" class="mb-6">
               <UTextarea 
                 v-model="contactForm.message" 
-                placeholder="Tell us about your inquiry or question..." 
+                placeholder="Masukan pesan anda..." 
                 class="border-gray-200 dark:border-gray-700"
                 :rows="3"
                 required
@@ -185,14 +186,14 @@
             </UFormGroup>
             
             <UButton 
-              type="submit" 
+              type="Kirim" 
               block 
               :loading="isSubmitting"
               :disabled="isSubmitting"
               class="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white"
             >
               <UIcon v-if="!isSubmitting" name="i-heroicons-paper-airplane" class="mr-2" />
-              {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+              {{ isSubmitting ? 'Mengirim...' : 'Pesan terkirim' }}
             </UButton>
           </form>
         </div>
@@ -200,19 +201,19 @@
         <!-- Map -->
         <div class="lg:flex flex-col bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
           <div class="p-8">
-            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Our Location</h2>
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Lokasi Kami</h2>
             <p class="text-gray-600 dark:text-gray-300 mb-2">
-              Find us at our headquarters in Jakarta. We're conveniently located near public transportation and have ample parking available.
+              Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo, Kota Yogyakarta, Daerah Istimewa Yogyakarta 55167.
             </p>
             <div class="flex items-center text-green-600 dark:text-green-400 mb-4">
               <UIcon name="i-heroicons-clock" class="mr-2" />
-              <span>Open Monday - Friday, 8:00 AM - 5:00 PM</span>
+              <span>Buka senin - jum'at, 09:00 - 17:00 WIB</span>
             </div>
           </div>
           <div class="flex-grow relative min-h-[300px] bg-gray-200 dark:bg-gray-700">
             <!-- Placeholder for map (in a real app, you'd use an actual map component) -->
             <div class="absolute inset-0 bg-opacity-70 flex items-center justify-center">
-              <img src="/jurutanicon.png" alt="Map of Juru Tani Office Location" class="w-full h-full object-cover" >
+              <img src="/jurutani.png" alt="Map of Juru Tani Office Location" class="w-full h-full object-cover" >
             </div>
           </div>
         </div>
@@ -222,7 +223,7 @@
     <!-- FAQ Section -->
     <div class="container mx-auto px-6 py-16">
       <div class="max-w-3xl mx-auto">
-        <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-12 text-center">Frequently Asked Questions</h2>
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-12 text-center">Pertanyaan Umum</h2>
         
         <UAccordion :items="faqs" class="bg-white dark:bg-gray-800 rounded-xl shadow-md">
           <template #default="{ item, index, open }">
@@ -244,8 +245,8 @@
         </UAccordion>
         
         <div class="mt-10 text-center">
-          <p class="text-gray-600 dark:text-gray-300 mb-4">Still have questions?</p>
-          <UButton class="bg-green-600 hover:bg-green-700 text-white" to="#contact-form">Contact Our Support Team</UButton>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">Masih memiliki pertanyaan?</p>
+          <UButton class="bg-green-600 hover:bg-green-700 text-white" to="#contact-form">Hubungi tim JuruTani</UButton>
         </div>
       </div>
     </div>

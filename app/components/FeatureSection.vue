@@ -11,11 +11,11 @@ const features = [
   },
   {
     id: 2,
-    title: 'Monitoring Lahan',
-    description: 'Pantau kondisi lahan dan tanaman Anda secara real-time dengan teknologi IoT',
-    icon: 'i-fa-solid-chart-line',
-    image: '/feature/monitoring-lahan.png',
-    color: 'blue'
+    title: 'Alat Pertanian',
+    description: 'Hitung kebutuhan pertanian Anda dengan kalkulator kami dan dapatkan rekomendasi terbaik',
+    image: '/feature/cuaca.png',
+    color: 'blue',
+    icon: 'i-fa-solid-sun'
   },
   {
     id: 3,
@@ -41,14 +41,6 @@ const features = [
     image: '/feature/komunitas.png',
     color: 'indigo'
   },
-  {
-    id: 6,
-    title: 'Prediksi Cuaca',
-    description: 'Akses informasi prediksi cuaca akurat untuk perencanaan aktivitas pertanian',
-    icon: 'i-fa-solid-cloud-sun',
-    image: '/feature/cuaca.png',
-    color: 'cyan'
-  }
 ]
 </script>
 

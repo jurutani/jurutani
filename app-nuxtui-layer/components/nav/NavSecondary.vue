@@ -35,7 +35,7 @@ const dropdownItems = [
 
         <!-- Logo dan Judul -->
         <div class="flex items-center space-x-2 mb-3">
-          <img src="/jurutanicon.png" alt="Logo Juru Tani" class="w-8 h-8" >
+          <img src="/jurutani.png" alt="Logo Juru Tani" class="w-8 h-8" >
           <span class="font-semibold text-green-700 dark:text-green-200 text-lg">Juru Tani</span>
         </div>
 

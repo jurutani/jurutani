@@ -119,7 +119,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         <div>
           <div class="flex items-center space-x-3">
             <div class="bg-white rounded-full p-2 shadow-lg">
-              <img src="/jurutanicon.png" alt="Logo" class="w-10 h-10" >
+              <img src="/jurutani.png" alt="Logo" class="w-10 h-10" >
             </div>
             <h1 class="text-2xl font-bold mt-6">Juru Tani</h1>
           </div>
@@ -164,7 +164,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         <div class="w-full max-w-md">
           <div class="lg:hidden flex items-center justify-center space-x-3 mb-8">
             <div class="bg-green-600 p-1 rounded-full shadow-md">
-              <img src="/jurutanicon.png" alt="Logo" class="w-10 h-10" >
+              <img src="/jurutani.png" alt="Logo" class="w-10 h-10" >
             </div>
              <h1 class="text-xl font-bold text-green-600 dark:text-green-400 mx-auto mt-4">Juru Tani</h1>
       </div>

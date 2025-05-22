@@ -12,7 +12,7 @@
       
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <div class="flex justify-center mb-8">
-          <img src="/jurutanicon.png" alt="Logo Juru Tani" class="h-24">
+          <img src="/jurutani.png" alt="Logo Juru Tani" class="h-24">
         </div>
 
         <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 text-center">

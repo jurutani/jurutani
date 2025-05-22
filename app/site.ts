@@ -6,11 +6,11 @@ export default {
   title: 'JuruTani',
   description:
     'JuruTani adalah platform yang membantu petani dalam berkebun melalui fitur-fitur yang membantu petani dalam mengatur kebunnya seperti pengingat jadwal, log aktivitas, dan prediksi cuaca.',
-  logo: '/jurutanicon.png',
+  logo: '/jurutani.png',
   author: 'Pinegrow',
   url: 'https://pg-nuxtui.netlify.app',
   github: 'https://github.com/IlhamKurniawanBlora',
-  ogImageUrl: 'jurutanicon.png', // absolute url (or) from public folder
+  ogImageUrl: 'jurutani.png', // absolute url (or) from public folder
   generator: 'https://jurutani.com',
   defaultLocale: 'en', // default
   identity: {
@@ -23,11 +23,11 @@ export default {
   navs: {
     primary: [
       { title: 'Home', to: '/', icon: 'i-ic-baseline-home' },
-      { title: 'Diskusi', to: '/discussions', icon: 'i-ic-baseline-forum' },
+      { title: 'Layanan', to: '/discussions', icon: 'i-ic-baseline-forum' },
       { title: 'Berita', to: '/news', icon: 'i-ic-baseline-newspaper' },
       { title: 'Marketplace', to: '/markets', icon: 'i-ic-baseline-storefront' },
       { title: 'Pengumuman', to: '/announcements', icon: 'i-ic-baseline-announcement' },
-      { title: 'Update', to: '/updates', icon: 'i-ic-baseline-update' },
+      { title: 'Course', to: '/courses', icon: 'i-ic-baseline-book' },
       { title: 'Alat', to: '/tools', icon: 'i-ic-baseline-construction' },
     ],
     secondary: [

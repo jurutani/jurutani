@@ -8,7 +8,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
     
     <!-- Mobile Layout: Logo + Menu -->
     <div class="w-full sm:hidden flex flex-col items-center bg-gradient-to-r from-green-200 via-green-100 to-blue-100 dark:from-green-900 dark:via-green-800 dark:to-green-900 rounded-xl p-4">
-      <TheLogo class="mb-4" />
+      <TheLogo class="mb-4 justify-center" />
 
       <!-- Mobile Bottom Sheet Menu Layout -->
       <div class="w-full grid grid-cols-3 gap-4">

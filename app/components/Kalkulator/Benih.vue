@@ -30,7 +30,7 @@ const totalKebutuhanBenih = computed<number>(() => {
 
 <template>
   <div class="rounded-xl p-6 shadow-md bg-white dark:bg-green-800">
-    <h2 class="text-2xl font-bold text-primary mb-6">Kalkulator Benih Padi</h2>
+    <h2 class="text-2xl font-bold text-primary mb-6">Kalkulator Benih</h2>
 
     <div class="grid md:grid-cols-2 gap-6">
       <div class="space-y-4">

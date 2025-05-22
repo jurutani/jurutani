@@ -19,12 +19,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           <!-- Brand Identity -->
           <div class="flex flex-col space-y-4">
-            <div class="flex items-center">
-              <div class="w-10 h-10 bg-green-600 dark:bg-green-500 rounded-lg flex items-center justify-center mr-3">
-                <span class="text-white font-bold text-lg">JT</span>
-              </div>
-              <h3 class="text-2xl font-bold bg-gradient-to-r from-green-700 to-green-500 dark:from-green-400 dark:to-green-300 bg-clip-text text-transparent">Juru Tani</h3>
-            </div>
+              <TheLogo />
             <p class="text-sm text-green-700/80 dark:text-green-300/90 max-w-xs">
               Memberdayakan petani Indonesia dengan teknologi modern dan solusi berkelanjutan untuk pertanian yang lebih baik.
             </p>
@@ -71,19 +66,22 @@
             <div class="space-y-3">
               <div class="flex items-center">
                 <UIcon name="i-mdi-map-marker" class="text-green-600 dark:text-green-400 mr-2" />
-                <p class="text-sm">Jl. Pertanian Maju No. 123, Jakarta</p>
+                <div>
+                <p class="text-sm">Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo, </p>
+                <p class="text-sm">Kota Yogyakarta, Daerah Istimewa Yogyakarta 55161</p>
+                </div>
               </div>
               <div class="flex items-center">
                 <UIcon name="i-mdi-phone" class="text-green-600 dark:text-green-400 mr-2" />
-                <p class="text-sm">+62 812 3456 7890</p>
+                <p class="text-sm">+62 815-7552-5260</p>
               </div>
               <div class="flex items-center">
                 <UIcon name="i-mdi-email-outline" class="text-green-600 dark:text-green-400 mr-2" />
-                <p class="text-sm">info@jurutani.id</p>
+                <p class="text-sm">jurutani2@gmail.com</p>
               </div>
               <div class="flex items-center">
                 <UIcon name="i-mdi-clock-time-four-outline" class="text-green-600 dark:text-green-400 mr-2" />
-                <p class="text-sm">Senin - Jumat: 08.00 - 17.00 WIB</p>
+                <p class="text-sm">Senin - Jumat: 08.00 - 16.00 WIB</p>
               </div>
             </div>
           </div>
@@ -96,7 +94,7 @@
         <div class="flex flex-wrap justify-center gap-4">
           <!-- WhatsApp -->
           <a 
-            href="https://wa.me/6281234567890" 
+            href="https://wa.me/081575525260" 
             target="_blank"
             aria-label="WhatsApp"
             class="social-icon-container"
@@ -108,7 +106,7 @@
           
           <!-- TikTok -->
           <a 
-            href="https://www.tiktok.com/@jurutani" 
+            href="https://www.tiktok.com/@juru_tani" 
             target="_blank"
             aria-label="TikTok"
             class="social-icon-container"
@@ -120,7 +118,7 @@
           
           <!-- Email/Gmail -->
           <a 
-            href="mailto:info@jurutani.id" 
+            href="mailto:jurutani2@gmail.com" 
             aria-label="Email"
             class="social-icon-container"
           >
@@ -131,7 +129,7 @@
           
           <!-- Instagram -->
           <a 
-            href="https://www.instagram.com/jurutani" 
+            href="https://www.instagram.com/jurutani_" 
             target="_blank"
             aria-label="Instagram"
             class="social-icon-container"
@@ -143,7 +141,7 @@
           
           <!-- YouTube -->
           <a 
-            href="https://www.youtube.com/@jurutani" 
+            href="https://www.youtube.com/@Juru_Tani" 
             target="_blank"
             aria-label="YouTube"
             class="social-icon-container"

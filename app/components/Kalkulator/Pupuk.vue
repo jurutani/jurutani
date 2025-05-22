@@ -15,7 +15,7 @@ const totalKCL = computed(() => (luasLahan.value || 0) * kclPerHa)
 
 <template>
   <div class="rounded-xl p-6 shadow-md bg-white dark:bg-green-800">
-    <h2 class="text-2xl font-bold text-primary mb-4">Kalkulator Pupuk Padi</h2>
+    <h2 class="text-2xl font-bold text-primary mb-4">Kalkulator Pupuk</h2>
 
     <div class="space-y-4">
       <div>
