@@ -212,9 +212,12 @@
           </div>
           <div class="flex-grow relative min-h-[300px] bg-gray-200 dark:bg-gray-700">
             <!-- Placeholder for map (in a real app, you'd use an actual map component) -->
+            <a href="https://www.google.com/maps/place/Polbangtan+Yoma/@-7.4659651,110.2528921,17.25z/data=!4m6!3m5!1s0x2e7a7d62e57e2b35:0x12bce272391fd6fe!8m2!3d-7.4657971!4d110.2545773!16s%2Fg%2F11h75pf8t9?entry=ttu&g_ep=EgoyMDI1MDUyMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="absolute inset-0">
+              <span class="sr-only">Lihat lokasi di Google Maps</span>
             <div class="absolute inset-0 bg-opacity-70 flex items-center justify-center">
-              <img src="/jurutani.png" alt="Map of Juru Tani Office Location" class="w-full h-full object-cover" >
+              <img src="/maps.png" alt="Map of Juru Tani Office Location" class="w-full h-full object-cover" >
             </div>
+          </a>
           </div>
         </div>
       </div>

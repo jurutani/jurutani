@@ -59,7 +59,7 @@
   
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
         <div class="bg-white p-6 rounded-lg shadow-xl">
-          <img src="/about/polbangtan.png" alt="Juru Tani 1" class="w-full h-64 object-cover rounded-t-lg mb-4" />
+          <img src="/about/polbangtan.png" alt="Juru Tani 1" class="w-full h-64 object-cover rounded-t-lg mb-4" >
           <h3 class="text-xl font-semibold text-green-700">Inovasi Pertanian Modern</h3>
           <p class="text-gray-600 mt-2">
             Dengan pendekatan berbasis teknologi, Juru Tani Polbangtan berperan dalam meningkatkan produktivitas pertanian Indonesia melalui sistem yang lebih efisien.
@@ -67,7 +67,7 @@
         </div>
   
         <div class="bg-white p-6 rounded-lg shadow-xl">
-          <img src="/about/polbangtan2.png" alt="Juru Tani 2" class="w-full h-64 object-cover rounded-t-lg mb-4" />
+          <img src="/about/polbangtan2.png" alt="Juru Tani 2" class="w-full h-64 object-cover rounded-t-lg mb-4" >
           <h3 class="text-xl font-semibold text-green-700">Kontribusi Nyata di Lapangan</h3>
           <p class="text-gray-600 mt-2">
             Lulusan Juru Tani tidak hanya menguasai teori, tetapi juga siap menghadapi tantangan di lapangan dengan solusi yang relevan dan berkelanjutan.
@@ -75,12 +75,14 @@
         </div>
   
         <div class="bg-white p-6 rounded-lg shadow-xl">
-          <img src="/about/polbangtan3.png" alt="Juru Tani 3" class="w-full h-64 object-cover rounded-t-lg mb-4" />
+          <img src="/about/polbangtan3.png" alt="Juru Tani 3" class="w-full h-64 object-cover rounded-t-lg mb-4" >
           <h3 class="text-xl font-semibold text-green-700">Pertanian Berkelanjutan</h3>
           <p class="text-gray-600 mt-2">
             Juru Tani Polbangtan memprioritaskan prinsip keberlanjutan dalam setiap aspek pengelolaan pertanian, menjaga keseimbangan antara teknologi dan alam.
           </p>
         </div>
+
+         
       </div>
     </div>
   </template>

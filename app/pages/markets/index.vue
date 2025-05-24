@@ -78,7 +78,14 @@ onMounted(() => {
 
 <template>
   <div class="markets-page container mx-auto px-4">
-    <h1 class="text-2xl font-bold text-center my-8">Pasar Tani</h1>
+    <div class="mx-auto mb-12 max-w-2xl text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
+          Pasar Tani JuruTani
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          Temukan berbagai produk pertanian, peternakan, dan olahan lokal dari petani dan produsen terpercaya di JuruTani.
+        </p>
+      </div>
     
     <!-- Category Filter -->
     <MarketsFilterCategory 

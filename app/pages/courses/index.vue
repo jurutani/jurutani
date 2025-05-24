@@ -66,7 +66,14 @@ onMounted(() => {
 </script>
 <template>
   <div class="announcement-page container mx-auto px-4">
-    <h1 class="text-2xl font-bold text-center my-8">Pengumuman Terkini</h1>
+    <div class="mx-auto mb-12 max-w-2xl text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
+          Pengumuman Course / Pelatihan JuruTani
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          Temukan berbagai pengumuman terkait kursus, pelatihan, dan kegiatan yang diselenggarakan oleh JuruTani.
+        </p>
+      </div>
 
     <!-- Filter Kategori -->
     <NewsFilterCategory

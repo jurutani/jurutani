@@ -7,10 +7,14 @@ const tabItems = [
 
 <template>
   <UContainer class="py-8">
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-primary">Alat Pertanian</h1>
-      <p class="text-gray-600 dark:text-gray-300 mt-2">Hitung kebutuhan benih dan pupuk Anda dengan mudah.</p>
-    </div>
+    <div class="mx-auto mb-12 max-w-2xl text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
+          Alat Pertanian JuruTani
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          Kalkulator Benih dan Kalkulator pupuk untuk menghitung kebutuhan pengguanaan pada pertanian anda.
+        </p>
+      </div>
 
     <UTabs :items="tabItems" class="text-primary">
       <template #benih>

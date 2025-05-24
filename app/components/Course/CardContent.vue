@@ -5,7 +5,7 @@ import { computed } from 'vue';
 const props = defineProps({
   course: {
     type: Object,
-    required: true
+    requigreen: true
   }
 });
 
@@ -30,7 +30,7 @@ const getCategoryColor = (category) => {
   const colors = {
     'Pertanian': 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700',
     'Peternakan': 'bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700',
-    'Teknologi': 'bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-700',
+    'Teknologi': 'bg-gradient-to-r from-green-500 to-green-800 dark:from-green-800 dark:to-green-700',
     'Lainya': 'bg-gradient-to-r from-cyan-500 to-cyan-600 dark:from-cyan-600 dark:to-cyan-700',
     'All': 'bg-gradient-to-r from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700'
   };
@@ -61,20 +61,20 @@ const downloadFile = (file) => {
     </div>
 
     <!-- Decorative Engineering Pattern -->
-    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 via-red-500 to-pink-500 dark:from-green-500 dark:via-red-600 dark:to-pink-600"/>
+    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 via-green-500 to-blue-500 dark:from-green-500 dark:via-green-800 dark:to-blue-600"/>
     
     <!-- Card Header -->
     <div class="p-6 pb-4">
       <!-- Engineering Icon -->
       <div class="flex items-start space-x-4">
         <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-800 dark:to-green-900 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6 text-green-800 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
           </svg>
         </div>
         
         <div class="flex-1">
-          <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-300">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 group-hover:text-green-800 dark:group-hover:text-green-400 transition-colors duration-300">
             {{ course.title }}
           </h3>
           
@@ -111,7 +111,7 @@ const downloadFile = (file) => {
       <div v-if="hasFiles" class="mb-4">
         <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
           <div class="w-5 h-5 bg-green-100 dark:bg-green-900 rounded-md flex items-center justify-center mr-2">
-            <svg class="w-3 h-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3 h-3 text-green-800 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
           </div>
@@ -126,7 +126,7 @@ const downloadFile = (file) => {
           >
             <div class="flex items-center">
               <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3 group-hover/file:scale-110 transition-transform duration-300">
-                <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-green-800 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
               </div>
@@ -158,7 +158,7 @@ const downloadFile = (file) => {
         >
           <div class="flex items-center">
             <div class="w-8 h-8 bg-green-100 dark:bg-green-800 rounded-lg flex items-center justify-center mr-3 group-hover/drive:scale-110 transition-transform duration-300">
-              <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-green-800 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 01-6.033-6.032 6.033 6.033 0 016.033-6.032c1.498 0 2.866.549 3.921 1.453l2.814-2.814A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748L12.545 10.239z"/>
               </svg>
             </div>
@@ -175,12 +175,12 @@ const downloadFile = (file) => {
         <!-- YouTube Link -->
         <button
           v-if="course.link_youtube"
-          class="flex items-center justify-between w-full p-3 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/30 dark:to-pink-900/30 hover:from-red-100 hover:to-pink-100 dark:hover:from-red-800/40 dark:hover:to-pink-800/40 text-red-700 dark:text-red-300 rounded-lg transition-all duration-300 group/youtube"
+          class="flex items-center justify-between w-full p-3 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/30 dark:to-blue-900/30 hover:from-green-100 hover:to-blue-100 dark:hover:from-green-800/40 dark:hover:to-blue-800/40 text-green-700 dark:text-green-300 rounded-lg transition-all duration-300 group/youtube"
           @click="openLink(course.link_youtube)"
         >
           <div class="flex items-center">
-            <div class="w-8 h-8 bg-red-100 dark:bg-red-800 rounded-lg flex items-center justify-center mr-3 group-hover/youtube:scale-110 transition-transform duration-300">
-              <svg class="w-4 h-4 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 24 24">
+            <div class="w-8 h-8 bg-green-100 dark:bg-green-800 rounded-lg flex items-center justify-center mr-3 group-hover/youtube:scale-110 transition-transform duration-300">
+              <svg class="w-4 h-4 text-green-800 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
               </svg>
             </div>
@@ -230,7 +230,7 @@ const downloadFile = (file) => {
           <svg class="w-4 h-4 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
           </svg>
-          <span class="text-xs font-semibold text-green-600 dark:text-green-400">JURUTANI</span>
+          <span class="text-xs font-semibold text-green-800 dark:text-green-400">JURUTANI</span>
         </div>
       </div>
     </div>
@@ -271,7 +271,7 @@ const downloadFile = (file) => {
   opacity: 1;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-greenuced-motion: greenuce) {
   .course-card {
     transition: none;
   }

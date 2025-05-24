@@ -2,7 +2,8 @@
   const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
 </script>
 <template>
-  <nav class="container mx-auto px-4">
+<nav class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-green-900/70 border-b border-gray-200 dark:border-green-800 shadow-sm transition-all duration-300">
+  <div class="container mx-auto px-4">
     <div class="flex h-full items-center justify-between navbar-grid py-4">
       <div style="grid-area: logo" class="flex justify-center">
         <TheLogo />
@@ -19,7 +20,7 @@
         style="grid-area: primary-nav"
         class="hidden sm:flex"
       >
-        <NavPrimary class="sm:w-full" />
+        <NavPrimary class="sm:w-full justify-between" />
       </div>
       
       <div data-pg-name="Profile" class="flex space-x-1" style="grid-area: profile">
@@ -46,6 +47,7 @@
         </div>
       </div>
     </div>
+  </div>
   </nav>
 </template>
 <style scoped>

@@ -19,10 +19,15 @@ export default defineComponent({
 </script>
 <template>
   <UContainer class="py-8">
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-primary mb-2">💬 Forum Diskusi JuruTani</h1>
-      <p class="text-gray-600 dark:text-gray-300">Tempat diskusi dan tanya jawab bagi petani, penyuluh, dan pakar pertanian Indonesia.</p>
-    </div>
+   
+    <div class="mx-auto mb-12 max-w-2xl text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
+          Forum Diskusi JuruTani
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          Tempat diskusi dan tanya jawab bagi petani, penyuluh, dan pakar pertanian Indonesia.
+        </p>
+      </div>
 
     <div class="grid md:grid-cols-3 gap-6">
       <!-- Diskusi Penyuluh -->
@@ -110,16 +115,25 @@ export default defineComponent({
       </UCard>
     </div>
 
-     <div class="text-center my-12">
-      <h1 class="text-4xl font-bold text-primary mb-2">Video Pembelajaran JuruTani</h1>
-      <p class="text-gray-600 dark:text-gray-300">Video pembelajaran tentang pertanian dari tim JuruTani</p>
-    </div>
+     <div class="mx-auto mb-12 max-w-2xl text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
+          Video Edukasi JuruTani
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          Video pembelajaran dan tutorial pertanian dari tim JuruTani untuk meningkatkan pengetahuan dan keterampilan petani.
+        </p>
+      </div>
     <DiscussionsVideoSection />
 
-    <div class="text-center my-12">
-      <h1 class="text-4xl font-bold text-primary mb-2">Materi Pembelajaran JuruTani</h1>
-      <p class="text-gray-600 dark:text-gray-300">Materi pdf pembelajaran tentang pertanian dari tim JuruTani</p>
-    </div>
+   
+    <div class="mx-auto mb-12 max-w-2xl text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
+          Materi Edukasi JuruTani
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          Kumpulan materi edukasi dan panduan pertanian yang dapat diakses oleh petani untuk meningkatkan produktivitas dan keberlanjutan usaha tani.
+        </p>
+      </div>
     <DiscussionsMaterialSection />
   </UContainer>
 </template>

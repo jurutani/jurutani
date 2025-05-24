@@ -49,8 +49,8 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
     </div>
 
     <!-- Desktop Layout -->
-    <div class="hidden sm:flex w-full overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent">
-      <div class="flex items-center gap-4 ml-4 py-1">
+    <div class="hidden sm:flex w-full overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent justify-center">
+      <div class="flex items-center gap-4 py-1 justify-center">
         <ULink
           v-for="(nav, index) in navsPrimary"
           :key="index"

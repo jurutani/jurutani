@@ -71,7 +71,14 @@ onMounted(() => {
 
 <template>
   <div class="news-page container mx-auto px-4">
-    <h1 class="text-2xl font-bold text-center my-8">Berita Terkini</h1>
+    <div class="mx-auto mb-12 max-w-2xl text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
+          Berita Terkini JuruTani
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          Berita dan informasi terbaru seputar pertanian, teknologi, dan prestasi petani dari JuruTani.
+        </p>
+      </div>
     
     <!-- Category Filter -->
     <NewsFilterCategory 

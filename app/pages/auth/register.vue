@@ -190,10 +190,7 @@ const handleSocialRegister = (provider: string) => {
       <div class="relative z-10 flex flex-col justify-between h-full p-12 text-white">
         <div>
           <div class="flex items-center space-x-3">
-            <div class="bg-white rounded-full p-2 shadow-lg">
-              <Icon name="ph:plant-fill" class="text-green-600 w-8 h-8" />
-            </div>
-            <h1 class="text-2xl font-bold">Juru Tani</h1>
+            <TheLogo />
           </div>
           <p class="mt-2 text-green-100">Bergabung untuk masa depan pertanian yang lebih baik</p>
         </div>
@@ -235,14 +232,11 @@ const handleSocialRegister = (provider: string) => {
     <div class="w-full lg:w-1/2 flex items-center justify-center p-6">
       <div class="w-full max-w-md">
         <div class="lg:hidden flex items-center justify-center space-x-3 mb-8">
-          <div class="bg-green-600 rounded-full p-2 shadow-md">
-            <Icon name="ph:plant-fill" class="text-white w-6 h-6" />
-          </div>
-          <h1 class="text-xl font-bold text-green-600">Juru Tani</h1>
+          <TheLogo />
         </div>
         
         <div class="text-center mb-8">
-          <h2 class="text-2xl font-bold text-gray-800">Buat Akun Baru</h2>
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Buat Akun Baru</h2>
           <p class="text-gray-500 mt-2">Bergabung dengan platform Juru Tani</p>
         </div>
         

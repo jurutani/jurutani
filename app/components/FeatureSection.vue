@@ -50,7 +50,7 @@ const features = [
 </script>
 
 <template>
-  <section class="features-section py-16 bg-green-50 dark:bg-green-900/20">
+  <section class="features-section py-16 bg-green-50 dark:bg-green-900/20 mb-8">
     <UContainer>
       <!-- Section Header -->
       <div class="mx-auto mb-12 max-w-2xl text-center">

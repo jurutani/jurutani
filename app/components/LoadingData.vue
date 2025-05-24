@@ -3,7 +3,7 @@
 const props = defineProps({
   message: {
     type: String,
-    default: 'Memuat data produk pertanian...'
+    default: 'Memuat data jurutani...'
   }
 });
 </script>
