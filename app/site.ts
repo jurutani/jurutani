@@ -26,8 +26,8 @@ export default {
       { title: 'Layanan', to: '/discussions', icon: 'i-ic-baseline-forum' },
       { title: 'Berita', to: '/news', icon: 'i-ic-baseline-newspaper' },
       { title: 'Marketplace', to: '/markets', icon: 'i-ic-baseline-storefront' },
-      { title: 'Pengumuman', to: '/announcements', icon: 'i-ic-baseline-announcement' },
-      { title: 'Course', to: '/courses', icon: 'i-ic-baseline-book' },
+      { title: 'Materi', to: '/books', icon: 'i-ic-baseline-book' },
+      { title: 'Course', to: '/courses', icon: 'i-ic-baseline-school' },
       { title: 'Alat', to: '/tools', icon: 'i-ic-baseline-construction' },
     ],
     secondary: [

@@ -7,6 +7,7 @@ const features = [
     description: 'Konsultasi langsung dengan pakar pertanian berpengalaman untuk hasil panen terbaik',
     icon: 'i-fa-solid-comments',
     image: '/feature/konsultasi-pertanian.png',
+    url: '/discussions',
     color: 'green'
   },
   {
@@ -15,6 +16,7 @@ const features = [
     description: 'Hitung kebutuhan pertanian Anda dengan kalkulator kami dan dapatkan rekomendasi terbaik',
     image: '/feature/cuaca.png',
     color: 'blue',
+    url: '/tools',
     icon: 'i-fa-solid-sun'
   },
   {
@@ -23,6 +25,7 @@ const features = [
     description: 'Jual hasil pertanian Anda langsung ke konsumen tanpa perantara',
     icon: 'i-fa-solid-store',
     image: '/feature/penjualan.png',
+    url: '/markets',
     color: 'orange'
   },
   {
@@ -31,6 +34,7 @@ const features = [
     description: 'Tingkatkan pengetahuan dan keterampilan bertani melalui kursus online dan offline',
     icon: 'i-fa-solid-graduation-cap',
     image: '/feature/pelatihan.png',
+    url: '/courses',
     color: 'yellow'
   },
   {
@@ -39,6 +43,7 @@ const features = [
     description: 'Bergabung dengan komunitas petani untuk berbagi pengalaman dan pengetahuan',
     icon: 'i-fa-solid-users',
     image: '/feature/komunitas.png',
+    url: '/discussions/group',
     color: 'indigo'
   },
 ]
@@ -95,7 +100,7 @@ const features = [
             
             <!-- Call to Action Button -->
             <NuxtLink 
-              :to="`/about-us`" 
+              :to="feature.url" 
               class="mt-4 inline-flex items-center justify-center gap-1 text-sm font-medium text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
             >
               <span>Pelajari Lebih Lanjut</span>

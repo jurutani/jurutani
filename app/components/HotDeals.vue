@@ -11,8 +11,8 @@ const loading = ref(true);
 const error = ref(null);
 
 // Filter and pagination
-const currentCategory = ref('all');
-const categories = ['all', 'Hasil Pertanian', 'Alat Pertanian', 'Pupuk', 'Lainya'];
+const currentCategory = ref('Semua');
+const categories = ['Semua', 'Hasil Pertanian', 'Hasil Peternakan', 'Produk Olahan', 'Penunjang Pertanian', 'Lainya'];
 const currentPage = ref(1);
 const pageSize = ref(12);
 const totalPages = ref(1);
@@ -36,7 +36,7 @@ const fetchMarkets = async () => {
         currentPage.value * pageSize.value - 1
       );
 
-    if (currentCategory.value !== 'all') {
+    if (currentCategory.value !== 'Semua') {
       query = query.eq('category', currentCategory.value);
     }
 
@@ -89,17 +89,9 @@ onMounted(() => {
     
     <!-- Markets Content -->
     <div class="mt-8">
-      <div v-if="loading" class="text-center py-10">
-        <p class="text-gray-500">Memuat produk...</p>
-      </div>
-      
-      <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-        <p>Terjadi kesalahan saat memuat produk.</p>
-      </div>
-      
-      <div v-else-if="marketsList.length === 0" class="text-center py-10">
-        <p class="text-gray-500">Tidak ada produk tersedia untuk kategori ini.</p>
-      </div>
+        <LoadingData v-if="loading"/>      
+        <ErrorData v-else-if="error" />
+        <NotFoundData v-else-if="marketsList.length === 0" />
       
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <MarketsCardContent 

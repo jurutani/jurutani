@@ -77,7 +77,7 @@ const imageUrl = computed(() => {
       </p>
 
       <router-link
-        :to="`/announcements/${announcement.id}`"
+        :to="`/courses/${announcement.id}`"
         class="mt-auto inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white text-sm rounded-md transition-colors duration-200 w-full sm:w-auto"
       >
         <span>Baca Selengkapnya</span>

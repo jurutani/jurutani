@@ -47,6 +47,7 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22.10.6",
+    "@types/youtube": "^0.1.1",
     "@unocss/nuxt": "^65.4.0",
     "@unocss/preset-icons": "^0.62.3",
     "@vueuse/nuxt": "^12.4.0",

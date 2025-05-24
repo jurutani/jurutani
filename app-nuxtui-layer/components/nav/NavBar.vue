@@ -21,16 +21,7 @@
       >
         <NavPrimary class="sm:w-full" />
       </div>
-      <div data-pg-name="Searchbox" style="grid-area: search">
-        <UFormGroup>
-          <UInput
-            placeholder="Search..."
-            size="md"
-            trailing-icon="i-material-symbols-search-rounded"
-            class="w-full bg-transparent border-none shadow-sm hover:shadow-md focus:ring-2 focus:ring-primary transition-all duration-300"
-          />
-        </UFormGroup>
-      </div>
+      
       <div data-pg-name="Profile" class="flex space-x-1" style="grid-area: profile">
         <ProfileActions class="!hidden sm:!flex" />
         <NavSecondary />
