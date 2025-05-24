@@ -84,7 +84,7 @@ onMounted(() => {
     <div class="mt-8">
       <LoadingData v-if="loading"/>      
       <ErrorData v-else-if="error" />
-      <NotFoundData v-else-if="newList.length === 0" />
+      <NotFoundData v-else-if="newsList.length === 0" />
       
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <NewsCardContent 
