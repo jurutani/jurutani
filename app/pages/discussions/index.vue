@@ -115,7 +115,7 @@ export default defineComponent({
       </UCard>
     </div>
 
-     <div class="mx-auto mb-12 max-w-2xl text-center">
+     <div class="mx-auto mb-12 max-w-2xl text-center mt-12">
         <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
           Video Edukasi JuruTani
         </h2>
