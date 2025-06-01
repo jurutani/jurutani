@@ -44,7 +44,6 @@ const carouselItems = [
 // State untuk carousel
 const currentSlide = ref(0)
 const autoplayInterval = ref(null)
-const hoverIndex = ref(null)
 
 // Fungsi untuk mengatur slide
 const goToSlide = (index) => {
@@ -59,25 +58,27 @@ const prevSlide = () => {
   currentSlide.value = (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
 }
 
-// Hover handlers
-const handleMouseEnter = (index) => {
-  hoverIndex.value = index
+// Autoplay functions
+const startAutoplay = () => {
+  autoplayInterval.value = setInterval(() => {
+    nextSlide()
+  }, 5000)
+}
+
+const stopAutoplay = () => {
   if (autoplayInterval.value) {
     clearInterval(autoplayInterval.value)
     autoplayInterval.value = null
   }
 }
 
-const handleMouseLeave = () => {
-  hoverIndex.value = null
-  startAutoplay()
+// Mouse handlers for pausing autoplay on hover
+const handleMouseEnter = () => {
+  stopAutoplay()
 }
 
-// Autoplay
-const startAutoplay = () => {
-  autoplayInterval.value = setInterval(() => {
-    nextSlide()
-  }, 5000)
+const handleMouseLeave = () => {
+  startAutoplay()
 }
 
 onMounted(() => {
@@ -85,16 +86,18 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (autoplayInterval.value) {
-    clearInterval(autoplayInterval.value)
-  }
+  stopAutoplay()
 })
 </script>
 
 <template>
   <section class="relative overflow-hidden">
     <!-- Carousel Container -->
-    <div class="relative w-full h-screen max-h-screen">
+    <div 
+      class="relative w-full h-screen max-h-screen"
+      @mouseenter="handleMouseEnter"
+      @mouseleave="handleMouseLeave"
+    >
       <!-- Carousel Items -->
       <div 
         v-for="(item, index) in carouselItems" 
@@ -103,42 +106,38 @@ onBeforeUnmount(() => {
         :class="[
           currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
         ]"
-        @mouseenter="handleMouseEnter(index)"
-        @mouseleave="handleMouseLeave"
       >
         <!-- Background Image -->
         <div 
-          class="w-full h-full bg-cover bg-center transition-transform duration-700"
+          class="w-full h-full bg-cover bg-center"
           :style="{ backgroundImage: `url(${item.imageUrl})` }"
-          :class="{ 'scale-110': hoverIndex === index }"
         >
           <!-- Overlay -->
-          <div
-class="absolute inset-0 bg-black bg-opacity-40 transition-all duration-500" 
-               :class="{ 'bg-opacity-60': hoverIndex === index }"/>
+          <div class="absolute inset-0 bg-black bg-opacity-50"/>
         </div>
 
-        <!-- Content Box -->
+        <!-- Content Box - Always Visible -->
         <div class="absolute inset-0 flex items-center justify-center">
-          <div 
-            class="text-center transition-all duration-700 transform px-6 py-10 rounded-xl backdrop-blur-sm bg-black bg-opacity-20 border border-green-500 border-opacity-20 w-full max-w-lg"
-            :class="[
-              hoverIndex === index 
-                ? 'scale-105 translate-y-0 opacity-100' 
-                : 'scale-95 translate-y-10 opacity-0'
-            ]"
-          >
-            <p class="text-green-300 font-medium uppercase tracking-wider text-sm mb-2">{{ item.caption }}</p>
-            <h2 class="text-white text-4xl font-bold mb-4">{{ item.title }}</h2>
-            <p class="text-gray-200 mb-6">{{ item.description }}</p>
-            <UButton
-              :label="item.buttonText"
-              :to="item.buttonLink"
-              variant="outline"
-              color="white"
-              size="xl"
-              class="bg-green-600 hover:bg-green-700 border-none"
-            />
+          <div class="text-center px-6 py-10 rounded-xl backdrop-blur-sm bg-black bg-opacity-30 border border-green-500 border-opacity-30 w-full max-w-lg">
+            <p class="text-green-300 font-medium uppercase tracking-wider text-sm mb-2 animate-fadeIn">
+              {{ item.caption }}
+            </p>
+            <h2 class="text-white text-4xl font-bold mb-4 animate-slideUp">
+              {{ item.title }}
+            </h2>
+            <p class="text-gray-200 mb-6 animate-slideUp animation-delay-200">
+              {{ item.description }}
+            </p>
+            <div class="animate-slideUp animation-delay-400">
+              <UButton
+                :label="item.buttonText"
+                :to="item.buttonLink"
+                variant="outline"
+                color="white"
+                size="xl"
+                class="bg-green-600 hover:bg-green-700 border-none transition-all duration-300 hover:scale-105"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -182,7 +181,42 @@ class="absolute inset-0 bg-black bg-opacity-40 transition-all duration-500"
 </template>
 
 <style scoped>
-.carousel-item {
-  transition: transform 0.5s ease;
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.8s ease-out;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+  animation-fill-mode: both;
 }
 </style>

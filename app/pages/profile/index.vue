@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import { useSupabase } from '~/composables/useSupabase';
 import { toastStore } from '~/composables/useJuruTaniToast';
 
@@ -39,7 +39,10 @@ const fetchUserData = async () => {
       userData.value = {
         ...data,
         email: user.email,
+        // PERBAIKAN: Tambahkan cache busting untuk avatar URL
+        avatar_url: data.avatar_url ? `${data.avatar_url}?t=${Date.now()}` : data.avatar_url
       };
+      console.log('User data loaded:', userData.value); // Debug log
     }
   } catch (err) {
     console.error('Exception fetching user data:', err);
@@ -51,8 +54,14 @@ const fetchUserData = async () => {
 };
 
 // Handle profile update
-const handleProfileUpdate = (updatedProfile) => {
+const handleProfileUpdate = async (updatedProfile) => {
+  // Update userData with new profile data
   userData.value = { ...userData.value, ...updatedProfile };
+  
+  // PERBAIKAN: Refresh data dari database untuk memastikan sinkronisasi
+  await nextTick();
+  await fetchUserData();
+  
   toastStore.success('Profil berhasil diperbarui');
   isEditing.value = false;
 };
@@ -62,11 +71,18 @@ const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
 };
 
+// Handle image error
+const handleImageError = (event) => {
+  console.error('Profile image failed to load:', event.target.src);
+  event.target.src = '/profile.png'; // Fallback to default image
+};
+
 onMounted(() => {
   fetchUserData();
 });
 </script>
 
+<!-- TEMPLATE UNTUK PROFILE PAGE -->
 <template>
   <div class="profile-page container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold text-center mb-8">Profil Pengguna</h1>
@@ -89,11 +105,13 @@ onMounted(() => {
       <div v-if="!isEditing" class="bg-white rounded-lg shadow-md p-6">
         <div class="flex flex-col md:flex-row items-center mb-6">
           <!-- Profile Image -->
-          <div class="w-32 h-32 rounded-full overflow-hidden mb-4 md:mb-0 md:mr-6">
+          <div class="w-32 h-32 rounded-full overflow-hidden mb-4 md:mb-0 md:mr-6 bg-gray-100">
             <img 
-              :src="userData.avatar_url || '/img/default-avatar.png'" 
+              :src="userData.avatar_url || '/profile.png'" 
               :alt="userData.full_name || 'User'"
               class="w-full h-full object-cover"
+              @error="handleImageError"
+              @load="console.log('Profile image loaded:', $event.target.src)"
             >
           </div>
 
@@ -102,6 +120,10 @@ onMounted(() => {
             <h2 class="text-xl font-semibold">{{ userData.full_name || 'Pengguna' }}</h2>
             <p class="text-gray-600">{{ userData.email }}</p>
             <p v-if="userData.phone" class="text-gray-600">{{ userData.phone }}</p>
+            <!-- Debug info -->
+            <p v-if="userData.avatar_url" class="text-xs text-blue-500 mt-1">
+              Avatar URL: {{ userData.avatar_url }}
+            </p>
           </div>
         </div>
 

@@ -66,56 +66,96 @@ const resetImage = () => {
 const handleSubmit = async () => {
   loading.value = true;
   try {
-    const updates = {
-      id: props.userData.id,
-      full_name: formData.full_name,
-      phone: formData.phone,
-      address: formData.address,
-      bio: formData.bio,
-      avatar_url: formData.avatar_url,
-      updated_at: new Date().toISOString()
-    };
+    let newAvatarUrl = formData.avatar_url; // Keep existing avatar URL by default
 
     // Upload new avatar if selected
     if (imageFile.value) {
-      const fileExt = imageFile.value.name.split('.').pop();
-      const fileName = `${props.userData.id}-${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
+      // Delete old avatar if exists (perbaikan: cek path yang lebih robust)
+      if (formData.avatar_url && formData.avatar_url.includes('avatars/')) {
+        try {
+          const oldPath = formData.avatar_url.split('avatars/')[1].split('?')[0]; // Remove query params
+          if (oldPath) {
+            const { error: deleteError } = await supabase.storage
+              .from('avatars')
+              .remove([oldPath]);
+            
+            if (deleteError) {
+              console.warn('Could not delete old avatar:', deleteError);
+            }
+          }
+        } catch (deleteErr) {
+          console.warn('Error deleting old avatar:', deleteErr);
+        }
+      }
 
-      const { error: uploadError } = await supabase.storage
-        .from('user-avatars')
-        .upload(filePath, imageFile.value);
+      // Upload new avatar
+      const fileExt = imageFile.value.name.split('.').pop();
+      const fileName = `avatar_${Date.now()}.${fileExt}`;
+      const filePath = `${props.userData.id}/${fileName}`;
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, imageFile.value, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
       if (uploadError) {
-        toastStore.error('Gagal mengunggah gambar profil.');
-        console.error('Error uploading avatar:', uploadError);
+        console.error('Upload error:', uploadError);
+        toastStore.error(`Gagal mengunggah gambar profil: ${uploadError.message}`);
         return;
       }
 
-      // Generate public URL for the uploaded image
+      // Get public URL for the uploaded file
       const { data: { publicUrl } } = supabase.storage
-        .from('user-avatars')
+        .from('avatars')
         .getPublicUrl(filePath);
 
-      // Update avatar URL
-      updates.avatar_url = publicUrl;
+      if (publicUrl) {
+        // PERBAIKAN: Tambahkan timestamp untuk cache busting
+        newAvatarUrl = `${publicUrl}?t=${Date.now()}`;
+        formData.avatar_url = newAvatarUrl;
+        console.log('New avatar URL:', newAvatarUrl); // Debug log
+      } else {
+        console.error('Failed to get public URL');
+        toastStore.error('Gagal mendapatkan URL gambar profil.');
+        return;
+      }
     }
 
+    // Prepare update data
+    const updates = {
+      id: props.userData.id,
+      full_name: formData.full_name.trim(),
+      phone: formData.phone.trim(),
+      address: formData.address.trim(),
+      bio: formData.bio.trim(),
+      avatar_url: newAvatarUrl,
+      updated_at: new Date().toISOString()
+    };
+
     // Update profile in database
-    const { error: updateError } = await supabase
+    const { data: updateData, error: updateError } = await supabase
       .from('profiles')
       .update(updates)
-      .eq('id', props.userData.id);
+      .eq('id', props.userData.id)
+      .select();
 
     if (updateError) {
-      toastStore.error('Gagal memperbarui profil.');
       console.error('Error updating profile:', updateError);
+      toastStore.error(`Gagal memperbarui profil: ${updateError.message}`);
       return;
     }
 
+    console.log('Profile updated successfully:', updateData); // Debug log
+
     // Emit update event with updated data
-    emit('update', updates);
+    emit('update', { ...updates, email: props.userData.email });
     toastStore.success('Profil berhasil diperbarui.');
+    
+    // Reset image selection after successful update
+    resetImage();
+    
   } catch (err) {
     console.error('Exception updating profile:', err);
     toastStore.error('Terjadi kesalahan saat memperbarui profil.');
@@ -126,13 +166,30 @@ const handleSubmit = async () => {
 
 // Handle cancel
 const handleCancel = () => {
+  // Reset any changes
+  resetImage();
   emit('cancel');
 };
 
 // Compute current avatar display
 const currentAvatar = computed(() => {
-  return imagePreview.value || props.userData.avatar_url || '/img/default-avatar.png';
+  // Priority: preview image > current avatar > default
+  if (imagePreview.value) {
+    return imagePreview.value;
+  }
+  
+  if (formData.avatar_url) {
+    return formData.avatar_url;
+  }
+  
+  return '/profile.png';
 });
+
+// Handle image load error
+const handleImageError = (event) => {
+  console.error('Image failed to load:', event.target.src);
+  event.target.src = '/profile.png'; // Fallback to default image
+};
 </script>
 
 <template>
@@ -144,11 +201,13 @@ const currentAvatar = computed(() => {
       <label class="block text-gray-700 text-sm font-medium mb-2">Foto Profil</label>
       
       <div class="flex items-center">
-        <div class="w-24 h-24 rounded-full overflow-hidden mr-4">
+        <div class="w-24 h-24 rounded-full overflow-hidden mr-4 bg-gray-100">
           <img 
             :src="currentAvatar" 
             alt="Avatar Preview"
             class="w-full h-full object-cover"
+            @error="handleImageError"
+            @load="console.log('Image loaded:', $event.target.src)"
           >
         </div>
         
@@ -178,6 +237,10 @@ const currentAvatar = computed(() => {
           </div>
           <p class="text-xs text-gray-500 mt-1">
             Format: JPG, PNG, GIF. Maks. 2MB
+          </p>
+          <!-- Debug info -->
+          <p v-if="formData.avatar_url" class="text-xs text-blue-500 mt-1">
+            Current URL: {{ formData.avatar_url }}
           </p>
         </div>
       </div>

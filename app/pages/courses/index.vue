@@ -10,7 +10,7 @@ const error = ref(null);
 
 // Filter dan pagination
 const currentCategory = ref('all');
-const categories = ['all', 'Kampus', 'Pertemuan', 'Kegiatan', 'Webinar', 'Lomba'];
+const categories = ['all', 'Online', 'Offline', 'Lainya'];
 const currentPage = ref(1);
 const pageSize = ref(10);
 const totalPages = ref(1);
@@ -22,7 +22,7 @@ const fetchAnnouncements = async () => {
 
   try {
     let query = supabase
-      .from('announcement')
+      .from('meetings')
       .select('*', { count: 'exact' })
       .is('deleted_at', null)
       .is('archived_at', null)

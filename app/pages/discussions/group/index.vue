@@ -18,7 +18,7 @@
         <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 text-center">
           Bergabunglah dengan komunitas Juru Tani untuk mendapatkan informasi terbaru, tips pertanian, dan terhubung dengan petani lainnya melalui berbagai platform media sosial kami.
         </p>
-        
+
         <div class="social-media-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- YouTube -->
           <div class="social-media-card flex flex-col items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-400 hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-800">
@@ -29,7 +29,7 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">YouTube</h3>
             <p class="text-gray-600 dark:text-gray-400 text-center mb-4">Tutorial dan tips seputar dunia pertanian dalam bentuk video</p>
-            <a href="https://youtube.com/jurutani" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
+            <a href="https://www.youtube.com/@Juru_Tani" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
               Subscribe
             </a>
           </div>
@@ -43,7 +43,7 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">TikTok</h3>
             <p class="text-gray-600 dark:text-gray-400 text-center mb-4">Konten kreatif bertani dan teknik pertanian modern</p>
-            <a href="https://tiktok.com/@jurutani" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
+            <a href="https://www.tiktok.com/@juru_tani" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
               Ikuti
             </a>
           </div>
@@ -57,7 +57,7 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Instagram</h3>
             <p class="text-gray-600 dark:text-gray-400 text-center mb-4">Foto inspiratif hasil panen dan aktivitas petani</p>
-            <a href="https://instagram.com/jurutani" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
+            <a href="https://www.instagram.com/jurutani_/" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
               Follow
             </a>
           </div>
@@ -71,7 +71,7 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">WhatsApp</h3>
             <p class="text-gray-600 dark:text-gray-400 text-center mb-4">Grup diskusi untuk pertanyaan dan berbagi pengalaman</p>
-            <a href="https://wa.me/628123456789?text=Saya%20ingin%20bergabung%20dengan%20grup%20Juru%20Tani" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
+            <a href="https://wa.me/081575525260?text=Saya%20ingin%20bergabung%20dengan%20grup%20Juru%20Tani" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
               Gabung Grup
             </a>
           </div>

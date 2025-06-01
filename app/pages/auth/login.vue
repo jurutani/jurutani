@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useToast } from '#imports'
+import { toastStore } from '~/composables/useJuruTaniToast'
 import { useSupabase } from '~/composables/useSupabase'
 
-// Definisikan layout
 definePageMeta({
   layout: 'blank'
 })
 
-const toast = useToast()
 const { login, loginWithSocialProvider, loading } = useSupabase()
 
-// State form
 const form = ref({
   email: '',
   password: '',
@@ -21,85 +18,44 @@ const form = ref({
 const isLoading = ref(false)
 const showPassword = ref(false)
 
-// Handler login
 const handleLogin = async () => {
   if (!form.value.email || !form.value.password) {
-    toast.add({
-      title: 'Peringatan',
-      description: 'Email dan kata sandi harus diisi.',
-      color: 'orange',
-      icon: 'i-ph-warning-circle',
-      timeout: 3000
-    })
+    toastStore.warning('Email dan kata sandi harus diisi.', 3000)
     return
   }
 
   try {
     isLoading.value = true
-    
-    // Panggil fungsi login dari useSupabase composable
+
     const { success, error } = await login(form.value.email, form.value.password)
 
     if (success) {
-      toast.add({
-        title: 'Berhasil',
-        description: 'Selamat datang di Juru Tani!',
-        color: 'green',
-        icon: 'i-ph-check-circle',
-        timeout: 3000
-      })
-
-      // Setelah login sukses
-      navigateTo('/dashboard')
+      toastStore.success('Selamat datang di Juru Tani!', 3000)
+      navigateTo('/')
     } else {
-      toast.add({
-        title: 'Gagal',
-        description: error || 'Email atau kata sandi tidak valid.',
-        color: 'red',
-        icon: 'i-ph-x-circle',
-        timeout: 3000
-      })
+      toastStore.error(error || 'Email atau kata sandi tidak valid.', 3000)
     }
-  } catch (error) {
-    toast.add({
-      title: 'Gagal',
-      description: error.message || 'Terjadi kesalahan saat login.',
-      color: 'red',
-      icon: 'i-ph-x-circle',
-      timeout: 3000
-    })
+  } catch (error: any) {
+    toastStore.error(error.message || 'Terjadi kesalahan saat login.', 3000)
   } finally {
     isLoading.value = false
   }
 }
 
-// Handler login sosial
 const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => {
   try {
-    // Panggil fungsi loginWithSocialProvider dari useSupabase composable
     const { success, error } = await loginWithSocialProvider(provider)
-    
+
     if (!success) {
-      toast.add({
-        title: 'Gagal',
-        description: error || `Login dengan ${provider} gagal.`,
-        color: 'red',
-        icon: 'i-ph-x-circle',
-        timeout: 3000
-      })
+      toastStore.error(error || `Login dengan ${provider} gagal.`, 3000)
     }
-    // Jika sukses, akan diredirect otomatis oleh Supabase ke callback URL
-  } catch (error) {
-    toast.add({
-      title: 'Gagal',
-      description: error.message || 'Terjadi kesalahan saat login.',
-      color: 'red',
-      icon: 'i-ph-x-circle',
-      timeout: 3000
-    })
+    // Supabase akan redirect otomatis
+  } catch (error: any) {
+    toastStore.error(error.message || 'Terjadi kesalahan saat login.', 3000)
   }
 }
 </script>
+
 
 <template>
   <div class="min-h-screen flex">

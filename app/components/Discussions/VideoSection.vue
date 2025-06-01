@@ -95,7 +95,34 @@ onMounted(() => {
 
 // Computed
 const hasVideos = computed(() => videoList.value && videoList.value.length > 0);
-const showPagination = computed(() => !loading.value && hasVideos.value && totalPages.value > 1);
+const canGoPrev = computed(() => currentPage.value > 1);
+const canGoNext = computed(() => currentPage.value < totalPages.value);
+
+// Generate visible page numbers for pagination
+const visiblePages = computed(() => {
+  const pages = [];
+  const current = currentPage.value;
+  const total = totalPages.value;
+  
+  // Always show page 1
+  if (total >= 1) pages.push(1);
+  
+  // Add ellipsis if there's a gap
+  if (current > 4) pages.push('...');
+  
+  // Add pages around current page
+  for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+    if (!pages.includes(i)) pages.push(i);
+  }
+  
+  // Add ellipsis if there's a gap
+  if (current < total - 3) pages.push('...');
+  
+  // Always show last page (if total > 1)
+  if (total > 1 && !pages.includes(total)) pages.push(total);
+  
+  return pages;
+});
 </script>
 
 <template>
@@ -145,9 +172,6 @@ const showPagination = computed(() => !loading.value && hasVideos.value && total
     <!-- Video Grid -->
     <div v-else>
       <!-- Results Info -->
-      <div class="mb-6 text-sm text-gray-600">
-        <span v-if="currentCategory !== 'all'"> untuk kategori "{{ currentCategory }}"</span>
-      </div>
 
       <!-- Video Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
@@ -158,15 +182,66 @@ const showPagination = computed(() => !loading.value && hasVideos.value && total
         />
       </div>
 
-      <!-- Pagination -->
-      <div v-if="showPagination" class="flex justify-center">
-        <Pagination 
-          :current-page="currentPage" 
-          :total-pages="totalPages" 
-          @prev="handlePrevPage" 
-          @next="handleNextPage" 
-          @goto="handleGotoPage" 
-        />
+      <!-- Enhanced Pagination -->
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <!-- Previous/Next Navigation -->
+        <div class="flex items-center gap-2">
+          <button 
+            :disabled="!canGoPrev"
+            :class="[
+              'flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors',
+              canGoPrev 
+                ? 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50 hover:text-gray-900' 
+                : 'text-gray-400 bg-gray-100 border-gray-200 cursor-not-allowed'
+            ]"
+            @click="handlePrevPage"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Sebelumnya
+          </button>
+
+          <button 
+            :disabled="!canGoNext"
+            :class="[
+              'flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors',
+              canGoNext 
+                ? 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50 hover:text-gray-900' 
+                : 'text-gray-400 bg-gray-100 border-gray-200 cursor-not-allowed'
+            ]"
+            @click="handleNextPage"
+          >
+            Selanjutnya
+            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Page Numbers -->
+        <div class="flex items-center gap-1">
+          <template v-for="(page, index) in visiblePages" :key="index">
+            <button
+              v-if="typeof page === 'number'"
+              :class="[
+                'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                page === currentPage
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+              ]"
+              @click="handleGotoPage(page)"
+            >
+              {{ page }}
+            </button>
+            <span v-else class="px-2 text-gray-500">...</span>
+          </template>
+        </div>
+
+        <!-- Page Info -->
+        <div class="text-sm text-gray-600">
+          Halaman {{ currentPage }} dari {{ totalPages }}
+        </div>
       </div>
     </div>
 
