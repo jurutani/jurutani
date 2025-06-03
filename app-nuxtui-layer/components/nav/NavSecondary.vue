@@ -1,8 +1,36 @@
 <script setup lang="ts">
 import { useSupabase } from '~/composables/useSupabase'
+import { ref, onMounted, computed } from 'vue';
+import { toastStore } from '~/composables/useJuruTaniToast';
 
 const { navsSecondary } = useNavMenu()
-const { user, logout, loading } = useSupabase()
+const { logout, loading } = useSupabase()
+const { supabase } = useSupabase();
+const currentUserId = ref(null);
+const user = ref(null);
+// Fetch current user ID and set it to the user ref
+const fetchCurrentUser = async () => {
+  try {
+    const { data: { user: userData } } = await supabase.auth.getUser();
+    
+    if (!userData) {
+      toastStore.error('Tidak dapat memuat data pengguna. Silakan login kembali.');
+      return;
+    }
+    
+    console.log('Current user:', userData);
+    user.value = userData; // <- Ini penting
+    currentUserId.value = userData.id;
+  } catch (err) {
+    console.error('Error fetching current user:', err);
+    toastStore.error('Gagal memuat data pengguna.');
+  }
+};
+
+
+onMounted(() => {
+  fetchCurrentUser();
+});
 
 const dropdownItems = [
   [
@@ -17,12 +45,11 @@ const dropdownItems = [
 const handleLogout = async () => {
   const result = await logout()
   if (result.success) {
-    // Logout berhasil, mungkin redirect atau show notification
-    // Contoh redirect ke homepage:
+    toastStore.success('Berhasil logout')
     window.location.href = '/'
   } else {
-    alert('Logout gagal: ' + result.error)
-  }
+    toastStore.error('Gagal logout')
+    console.error('Logout failed:', result.error);}
 }
 </script>
 
@@ -58,19 +85,9 @@ const handleLogout = async () => {
 
         <!-- Tombol Sign In & Register atau Logout -->
         <div class="grid sm:grid-cols-1 grid-cols-2 gap-2 mt-4">
-
-          <button
-            class="col-span-2 font-bold w-full py-2 text-sm flex justify-center items-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 border-none text-white shadow-sm"
-            type="button"
-            @click="handleLogout"
-          >
-            <UIcon name="i-heroicons-arrow-left-on-rectangle" class="text-white w-5 h-5" />
-            Logout
-          </button>
           <template v-if="user">
-            <!-- Jika sudah login, tampilkan tombol Logout penuh -->
             <button
-              class="col-span-2 font-bold w-full py-2 text-sm flex justify-center items-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 border-none text-white shadow-sm"
+              class="col-span-2 font-bold w-full py-2 text-sm flex justify-center items-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 border border-red-600 hover:border-red-700 text-white shadow-sm"
               type="button"
               @click="handleLogout"
             >
@@ -80,7 +97,6 @@ const handleLogout = async () => {
           </template>
 
           <template v-else>
-            <!-- Jika belum login, tampilkan Sign In dan Register -->
             <NuxtLink to="/auth/login" class="col-span-1">
               <UButton
                 class="font-bold w-full py-2 text-sm flex justify-center items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 border-none text-white shadow-sm"
@@ -102,6 +118,7 @@ const handleLogout = async () => {
             </NuxtLink>
           </template>
         </div>
+
 
         <!-- Secondary Navigation Items -->
         <div class="grid grid-cols-2 gap-2 mt-4">
