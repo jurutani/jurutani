@@ -1,32 +1,57 @@
 <script setup lang="ts">
 import { useSupabase } from '~/composables/useSupabase'
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { toastStore } from '~/composables/useJuruTaniToast';
 
-const { navsSecondary } = useNavMenu()
-const { logout, loading } = useSupabase()
+const { logout } = useSupabase()
 const { supabase } = useSupabase();
 const currentUserId = ref(null);
 const user = ref(null);
-// Fetch current user ID and set it to the user ref
+
 const fetchCurrentUser = async () => {
   try {
-    const { data: { user: userData } } = await supabase.auth.getUser();
+    const { data: { user: userData }, error: userError } = await supabase.auth.getUser();
     
-    if (!userData) {
+    if (userError || !userData) {
       toastStore.error('Tidak dapat memuat data pengguna. Silakan login kembali.');
       return;
     }
+
+    // Fetch profile from 'profiles' table
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select('avatar_url, full_name, id')
+      .eq('id', userData.id)
+      .single();
+
+    if (profileError || !profileData) {
+      console.error('Error fetching profile:', profileError);
+      toastStore.error('Gagal memuat profil pengguna.');
+      return;
+    }
+
+    // Gabungkan data user auth dan profile
+    user.value = {
+      id: userData.id,
+      email: userData.email,
+      full_name: profileData.full_name,
+      avatar_url: profileData.avatar_url ? `${profileData.avatar_url}?t=${Date.now()}` : '/profile.png'
+    };
     
-    console.log('Current user:', userData);
-    user.value = userData; // <- Ini penting
     currentUserId.value = userData.id;
+
+    console.log('User data loaded:', user.value);
   } catch (err) {
     console.error('Error fetching current user:', err);
     toastStore.error('Gagal memuat data pengguna.');
   }
 };
 
+// Handle image error
+const handleImageError = (event) => {
+  console.error('Profile image failed to load:', event.target.src);
+  event.target.src = '/profile.png';
+};
 
 onMounted(() => {
   fetchCurrentUser();
@@ -39,9 +64,8 @@ const dropdownItems = [
       disabled: true,
     }
   ],
-]
+];
 
-// Function untuk handle logout
 const handleLogout = async () => {
   const result = await logout()
   if (result.success) {
@@ -49,9 +73,11 @@ const handleLogout = async () => {
     window.location.href = '/'
   } else {
     toastStore.error('Gagal logout')
-    console.error('Logout failed:', result.error);}
+    console.error('Logout failed:', result.error);
+  }
 }
 </script>
+
 
 
 <template>
@@ -67,18 +93,26 @@ const handleLogout = async () => {
     :items="dropdownItems"
   >
     <UAvatar
+      v-if="user && user.avatar_url"
+      :src="user.avatar_url"
+      alt="Avatar"
+      size="lg"
+      class="sm:ml-2"
+    />
+    <UAvatar
+      v-else
       src="/profile.png"
       alt="Avatar"
       size="lg"
       class="sm:ml-2"
     />
 
+
     <template #account>
       <div class="my-2 w-full px-3">
         <!-- Logo dan Judul -->
         <div class="flex items-center space-x-2 mb-3">
-          <img src="/jurutani.png" alt="Logo Juru Tani" class="w-8 h-8" >
-          <span class="font-semibold text-green-700 dark:text-green-200 text-lg">Juru Tani</span>
+          <TheLogo />
         </div>
 
         <ProfileActions class="sm:!hidden mb-2" />

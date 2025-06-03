@@ -3,7 +3,7 @@
 const props = defineProps({
   message: {
     type: String,
-    default: 'Tidak ada produk tersedia untuk kategori ini.'
+    default: 'Tidak ada Informasi tersedia untuk kategori ini.'
   },
   actionText: {
     type: String,

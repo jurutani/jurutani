@@ -1,347 +1,354 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useSupabase } from '~/composables/useSupabase';
+import { ref, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useSupabase } from '~/composables/useSupabase'
 
-const route = useRoute();
-const router = useRouter();
-const { supabase } = useSupabase();
+// Types
+interface NewsItem {
+  id: string
+  title: string
+  sub_title?: string
+  content: string
+  category?: string
+  status_news: string
+  link?: string
+  image_url?: string
+  attachment_url?: string
+  author?: string
+  author_id?: string
+  created_at: string
+  updated_at: string
+  published_at?: string
+}
 
-// Data
-const newsId = route.params.id;
-const news = ref(null);
-const loading = ref(true);
-const error = ref(null);
-const relatedNews = ref([]);
-const relatedLoading = ref(false);
+// Composables
+const route = useRoute()
+const router = useRouter()
+const { supabase } = useSupabase()
 
-// Fetch single news
-const fetchNewsDetail = async () => {
-  loading.value = true;
-  error.value = null;
+// State
+const newsId = route.params.id as string
+const news = ref<NewsItem | null>(null)
+const loading = ref(true)
+const error = ref<string | null>(null)
+
+// Computed
+const imageUrl = computed(() => {
+  if (!news.value?.image_url) return null
+  
+  // Check if it's already a full URL
+  if (news.value.image_url.startsWith('http')) {
+    return news.value.image_url
+  }
+  
+  // Get public URL from Supabase storage
+  const { data } = supabase.storage
+    .from('news-images')
+    .getPublicUrl(news.value.image_url)
+  
+  return data.publicUrl
+})
+
+const attachmentUrl = computed(() => {
+  if (!news.value?.attachment_url) return null
+  
+  // Check if it's already a full URL
+  if (news.value.attachment_url.startsWith('http')) {
+    return news.value.attachment_url
+  }
+  
+  // Get public URL from Supabase storage
+  const { data } = supabase.storage
+    .from('news-attachments')
+    .getPublicUrl(news.value.attachment_url)
+  
+  return data.publicUrl
+})
+
+const attachmentFileName = computed(() => {
+  if (!news.value?.attachment_url) return ''
+  return news.value.attachment_url.split('/').pop() || 'Lampiran'
+})
+
+const attachmentFileType = computed(() => {
+  if (!news.value?.attachment_url) return 'FILE'
+  const fileName = attachmentFileName.value
+  const extension = fileName.split('.').pop()
+  return extension?.toUpperCase() || 'FILE'
+})
+
+// Methods
+const fetchNewsDetail = async (): Promise<void> => {
+  loading.value = true
+  error.value = null
 
   try {
-    // Fix: Menghilangkan destructuring yang salah
     const { data, error: fetchError } = await supabase
       .from('news')
       .select('*')
       .eq('id', newsId)
       .eq('status_news', 'approved')
-      .single();
+      .single()
 
     if (fetchError) {
-      console.error('Error fetching news detail:', fetchError);
-      error.value = fetchError;
-      return;
+      console.error('Error fetching news:', fetchError)
+      error.value = 'Gagal memuat berita'
+      return
     }
 
     if (!data) {
-      error.value = { message: 'Berita tidak ditemukan' };
-      return;
+      error.value = 'Berita tidak ditemukan'
+      return
     }
 
-    news.value = data;
-    
-    // Fetch related news setelah berhasil mengambil news utama
-    if (data.category) {
-      await fetchRelatedNews(data.category);
-    }
+    news.value = data
   } catch (err) {
-    console.error('Unexpected error:', err);
-    error.value = err;
+    console.error('Unexpected error:', err)
+    error.value = 'Terjadi kesalahan yang tidak terduga'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
-// Fetch related news with the same category
-const fetchRelatedNews = async (category) => {
-  if (!category) return;
-  
-  relatedLoading.value = true;
-  
-  try {
-    console.log('Fetching related news for category:', category); // Debug log
-    
-    const { data, error: fetchError } = await supabase
-      .from('news')
-      .select('id, title, sub_title, image_url, category, created_at, author')
-      .eq('category', category)
-      .eq('status_news', 'approved')
-      .limit(3);
-
-    if (fetchError) {
-      console.error('Error fetching related news:', fetchError);
-      return;
-    }
-
-    console.log('Related news data:', data); // Debug log
-    relatedNews.value = data || [];
-  } catch (err) {
-    console.error('Error fetching related news:', err);
-  } finally {
-    relatedLoading.value = false;
-  }
-};
-
-// Format date to Indonesian style
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString)
   return new Intl.DateTimeFormat('id-ID', {
     day: 'numeric',
-    month: 'long',
+    month: 'long', 
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit'
-  }).format(date);
-};
+  }).format(date)
+}
 
-// Navigate to news detail
-const goToNews = (id) => {
-  router.push(`/news/${id}`);
-};
+const formatCategory = (category?: string): string => {
+  if (!category) return 'Lainnya'
+  return category.charAt(0).toUpperCase() + category.slice(1)
+}
 
-// Go back to news list
-const goBack = () => {
-  router.push('/news');
-};
+const goBack = (): void => {
+  router.push('/news')
+}
 
-// Format category for display
-const formatCategory = (category) => {
-  if (!category) return 'Lainnya';
-  return category.charAt(0).toUpperCase() + category.slice(1);
-};
+const openAttachment = (): void => {
+  if (attachmentUrl.value) {
+    window.open(attachmentUrl.value, '_blank', 'noopener,noreferrer')
+  }
+}
 
-// Truncate text for card display
-const truncateText = (text, maxLength = 100) => {
-  if (!text) return '';
-  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-};
+const openLink = (): void => {
+  if (news.value?.link) {
+    window.open(news.value.link, '_blank', 'noopener,noreferrer')
+  }
+}
 
-// Load data on mount
+// Lifecycle
 onMounted(() => {
-  fetchNewsDetail();
-});
+  fetchNewsDetail()
+})
 </script>
 
 <template>
-  <div class="news-detail container mx-auto px-4 py-8 dark:bg-gray-900 dark:text-gray-100">
-    <!-- Header dengan tema juru tani -->
-    <div class="bg-green-700 text-white px-6 py-3 rounded-t-lg shadow-md mb-4 dark:bg-green-800">
-      <h2 class="text-xl font-bold">Portal Berita JuruTani</h2>
-    </div>
-
-    <!-- Tombol Kembali -->
-    <button 
-      class="mb-6 flex items-center text-green-700 hover:text-green-900 font-medium dark:text-green-300 dark:hover:text-green-100 transition-colors" 
-      @click="goBack"
-    >
-      <span class="mr-1">&larr;</span> Kembali ke Daftar Berita
-    </button>
-
-    <!-- Loading -->
-    <div v-if="loading" class="text-center py-20">
-      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-700 border-t-transparent dark:border-green-400 dark:border-t-transparent"/>
-      <p class="text-green-800 mt-4 dark:text-green-300">Memuat berita...</p>
-    </div>
-
-    <!-- Error -->
-    <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded dark:bg-red-900 dark:text-red-200 dark:border-red-500">
-      <p>{{ error.message || 'Terjadi kesalahan saat memuat berita.' }}</p>
-      <button 
-        class="mt-4 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-500 transition-colors" 
-        @click="goBack"
-      >
-        Kembali
-      </button>
-    </div>
-
-    <!-- Konten Berita -->
-    <div v-else-if="news" class="bg-white rounded-lg shadow-lg overflow-hidden border border-green-200 dark:bg-gray-800 dark:border-green-800">
-      <!-- Gambar utama -->
-      <div class="relative h-64 md:h-96 bg-green-50 dark:bg-green-900">
-        <img
-          v-if="news.image_url"
-          :src="news.image_url"
-          :alt="news.title"
-          class="w-full h-full object-cover"
-        >
-        <div v-else class="flex items-center justify-center h-full bg-green-50 text-green-500 dark:bg-green-900 dark:text-green-300">
-          <div class="text-center">
-            <div class="text-6xl mb-2">🌱</div>
-            <span>Tidak ada gambar</span>
-          </div>
-        </div>
-
-        <!-- Kategori -->
-        <div class="absolute top-4 right-4 bg-green-700 text-white px-3 py-1 rounded-full dark:bg-green-600">
-          {{ formatCategory(news.category || 'Lainnya') }}
-        </div>
-      </div>
-
-      <!-- Isi konten -->
-      <div class="p-6">
-        <h1 class="text-3xl font-bold mb-2 text-green-900 dark:text-green-300">{{ news.title }}</h1>
-        <h2 v-if="news.sub_title" class="text-xl text-green-700 mb-4 dark:text-green-400">{{ news.sub_title }}</h2>
-
-        <!-- Meta -->
-        <div class="flex flex-wrap gap-4 text-sm text-green-600 mb-6 bg-green-50 p-4 rounded-lg dark:bg-green-950 dark:text-green-300">
-          <p><span class="font-bold">Penulis:</span> {{ news.author || 'Tim JuruTani' }}</p>
-          <p><span class="font-bold">Tanggal:</span> {{ formatDate(news.created_at) }}</p>
-          <p v-if="news.updated_at && news.updated_at !== news.created_at">
-            <span class="font-bold">Diperbarui:</span> {{ formatDate(news.updated_at) }}
-          </p>
-        </div>
-
-        <!-- Konten HTML -->
-        <div class="prose max-w-none prose-green prose-headings:text-green-800 prose-a:text-green-600 dark:prose-invert dark:prose-a:text-green-300 dark:prose-headings:text-green-200" v-html="news.content"/>
-
-        <!-- Link Terkait -->
-        <div v-if="news.link" class="mt-6 p-4 bg-green-50 rounded-lg border-l-4 border-green-600 dark:bg-green-950 dark:border-green-500">
-          <h3 class="font-semibold text-green-800 mb-2 dark:text-green-300">Link Informasi Terkait:</h3>
-          <a :href="news.link" class="text-green-600 hover:underline flex items-center dark:text-green-300 dark:hover:text-green-200 break-all" target="_blank" rel="noopener noreferrer">
-            <span class="mr-2">🔗</span>
-            {{ news.link }}
-            <span class="ml-2">↗</span>
-          </a>
-        </div>
-
-        <!-- Lampiran -->
-        <div v-if="news.attachments?.length" class="mt-8 bg-green-50 p-4 rounded-lg dark:bg-green-950">
-          <h3 class="text-lg font-semibold mb-4 text-green-800 dark:text-green-300">Lampiran Penting:</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div 
-              v-for="(file, index) in news.attachments" 
-              :key="index" 
-              class="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer dark:bg-gray-700 dark:border-green-700"
-              @click="window.open(file.url, '_blank')"
-            >
-              <div class="flex items-center space-x-3">
-                <div class="flex-shrink-0">
-                  <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                    <span class="text-green-600 dark:text-green-400 text-xs font-bold">
-                      {{ file.name?.split('.').pop()?.toUpperCase() || 'FILE' }}
-                    </span>
-                  </div>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {{ file.name || 'Lampiran' }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ file.size ? `${Math.round(file.size / 1024)} KB` : 'Klik untuk membuka' }}
-                  </p>
-                </div>
-                <div class="flex-shrink-0">
-                  <span class="text-gray-400">📎</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Berita Terkait -->
-    <div v-if="news" class="mt-12">
-      <h2 class="text-2xl font-bold mb-6 text-green-800 border-b-2 border-green-500 pb-2 dark:text-green-300 dark:border-green-400">
-        Informasi Pertanian Terkait
-      </h2>
-      
-      <!-- Loading related news -->
-      <div v-if="relatedLoading" class="text-center py-8">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-green-700 border-t-transparent dark:border-green-400"/>
-        <p class="text-green-800 mt-2 dark:text-green-300">Memuat berita terkait...</p>
-      </div>
-      
-      <!-- Related news content -->
-      <div v-else-if="relatedNews.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div 
-          v-for="item in relatedNews" 
-          :key="item.id" 
-          class="bg-white rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-1 border border-green-100 cursor-pointer dark:bg-gray-800 dark:border-green-700"
-          @click="goToNews(item.id)"
-        >
-          <!-- Image -->
-          <div class="h-48 bg-green-50 dark:bg-green-900 rounded-t-lg overflow-hidden">
-            <img
-              v-if="item.image_url"
-              :src="item.image_url"
-              :alt="item.title"
-              class="w-full h-full object-cover"
-            >
-            <div v-else class="flex items-center justify-center h-full text-green-500 dark:text-green-300">
-              <div class="text-center">
-                <div class="text-3xl mb-1">🌱</div>
-                <span class="text-sm">No Image</span>
-              </div>
-            </div>
-          </div>
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <button 
+            class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+            @click="goBack"
+          >
+            <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
+            <span class="font-medium">Kembali ke Berita</span>
+          </button>
           
-          <!-- Content -->
-          <div class="p-4">
-            <!-- Category -->
-            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full mb-2 dark:bg-green-900 dark:text-green-200">
-              {{ formatCategory(item.category) }}
-            </span>
-            
-            <!-- Title -->
-            <h3 class="font-semibold text-green-900 mb-2 line-clamp-2 dark:text-green-100">
-              {{ item.title }}
-            </h3>
-            
-            <!-- Subtitle -->
-            <p v-if="item.sub_title" class="text-sm text-green-600 mb-2 line-clamp-2 dark:text-green-300">
-              {{ truncateText(item.sub_title, 80) }}
-            </p>
-            
-            <!-- Meta -->
-            <div class="flex items-center justify-between text-xs text-green-500 dark:text-green-400">
-              <span>{{ item.author || 'Tim JuruTani' }}</span>
-              <span>{{ formatDate(item.created_at) }}</span>
-            </div>
+          <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
+            <UIcon name="i-heroicons-newspaper" class="w-5 h-5" />
+            <span class="font-semibold">JuruTani News</span>
           </div>
         </div>
       </div>
-      
-      <!-- No related news -->
-      <div v-else class="text-center py-12 bg-green-50 dark:bg-green-950 rounded-lg">
-        <div class="text-4xl mb-4">🌾</div>
-        <p class="text-green-600 dark:text-green-400">
-          Belum ada berita terkait untuk kategori ini
-        </p>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <!-- Loading State -->
+      <div v-if="loading" class="flex flex-col items-center justify-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent" />
+        <p class="text-gray-600 dark:text-gray-400 mt-4">Memuat berita...</p>
       </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-20">
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8 max-w-md mx-auto">
+          <UIcon name="i-heroicons-exclamation-triangle" class="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h3 class="text-lg font-semibold text-red-700 dark:text-red-400 mb-2">Oops! Terjadi Kesalahan</h3>
+          <p class="text-red-600 dark:text-red-300 mb-4">{{ error }}</p>
+          <UButton color="red" variant="outline" @click="goBack">
+            Kembali ke Daftar Berita
+          </UButton>
+        </div>
+      </div>
+
+      <!-- News Content -->
+      <article v-else-if="news" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Hero Image -->
+        <div class="relative h-64 md:h-80 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
+          <img
+            v-if="imageUrl"
+            :src="imageUrl"
+            :alt="news.title"
+            class="w-full h-full object-cover"
+            @error="console.log('Image failed to load:', imageUrl)"
+          >
+          <div v-else class="flex items-center justify-center h-full">
+            <div class="text-center text-green-600 dark:text-green-400">
+              <UIcon name="i-heroicons-photo" class="w-16 h-16 mx-auto mb-2 opacity-50" />
+              <p class="text-sm opacity-75">Tidak ada gambar</p>
+            </div>
+          </div>
+
+          <!-- Category Badge -->
+          <div class="absolute top-4 right-4">
+            <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full shadow-sm">
+              <UIcon name="i-heroicons-tag" class="w-3 h-3" />
+              {{ formatCategory(news.category) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 md:p-8">
+          <!-- Title -->
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
+            {{ news.title }}
+          </h1>
+
+          <!-- Subtitle -->
+          <h2 v-if="news.sub_title" class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+            {{ news.sub_title }}
+          </h2>
+
+          <!-- Meta Information -->
+          <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-1">
+              <UIcon name="i-heroicons-user" class="w-4 h-4" />
+              <span>{{ news.author || 'Tim JuruTani' }}</span>
+            </div>
+            
+            <div class="flex items-center gap-1">
+              <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
+              <span>{{ formatDate(news.published_at || news.created_at) }}</span>
+            </div>
+            
+            <div v-if="news.updated_at && news.updated_at !== news.created_at" class="flex items-center gap-1">
+              <UIcon name="i-heroicons-pencil-square" class="w-4 h-4" />
+              <span>Diperbarui {{ formatDate(news.updated_at) }}</span>
+            </div>
+          </div>
+
+          <!-- Main Content -->
+          <div 
+            class="prose prose-lg max-w-none prose-green prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-green-600 hover:prose-a:text-green-700 dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300 dark:prose-a:text-green-400"
+            v-html="news.content"
+          />
+
+          <!-- Actions -->
+          <div class="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <!-- External Link -->
+            <UButton
+              v-if="news.link"
+              color="green"
+              variant="outline"
+              icon="i-heroicons-link"
+              class="flex-1 sm:flex-none"
+              @click="openLink"
+            >
+              Baca Selengkapnya
+            </UButton>
+
+            <!-- Attachment -->
+            <UButton
+              v-if="attachmentUrl"
+              color="blue" 
+              variant="outline"
+              icon="i-heroicons-paper-clip"
+              class="flex-1 sm:flex-none"
+              @click="openAttachment"
+            >
+              Unduh {{ attachmentFileType }}
+            </UButton>
+          </div>
+
+          <!-- Attachment Info -->
+          <div v-if="attachmentUrl" class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+            <div class="flex items-center gap-3">
+              <div class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center">
+                <span class="text-blue-600 dark:text-blue-400 text-xs font-bold">
+                  {{ attachmentFileType }}
+                </span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-blue-900 dark:text-blue-200 truncate">
+                  {{ attachmentFileName }}
+                </p>
+                <p class="text-xs text-blue-600 dark:text-blue-400">
+                  Klik tombol untuk mengunduh lampiran
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </template>
 
 <style scoped>
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
 .prose {
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 .prose p {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .prose h1, .prose h2, .prose h3 {
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.prose h1 {
+  font-size: 1.875rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
 }
 
 .prose ul, .prose ol {
-  margin: 1rem 0;
-  padding-left: 1.5rem;
+  margin: 1.25rem 0;
+  padding-left: 1.75rem;
 }
 
 .prose li {
-  margin: 0.5rem 0;
+  margin: 0.75rem 0;
+}
+
+.prose blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 4px solid #10b981;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.dark .prose blockquote {
+  color: #9ca3af;
+  border-left-color: #34d399;
 }
 </style>

@@ -8,6 +8,13 @@ const props = defineProps({
   }
 });
 
+// Image states
+const imageError = ref(false);
+const imageLoading = ref(true);
+
+// Supabase client import (pastikan ini tersedia di komponen)
+const { $supabase } = useNuxtApp();
+
 // Format price as Indonesian currency
 const formattedPrice = computed(() => {
   return new Intl.NumberFormat('id-ID', {
@@ -23,12 +30,91 @@ const priceRange = computed(() => {
   return props.product.price_range;
 });
 
-// Get the first image from attachments array
+// Get the first image from attachments JSON field with Supabase support
 const mainImage = computed(() => {
-  if (!props.product.attachments || !Array.isArray(props.product.attachments) || props.product.attachments.length === 0) {
-    return '/product.png'; // Default placeholder
+  if (!props.product.attachments || props.product.attachments.trim() === '') {
+    return '/product.png';
   }
-  return props.product.attachments[0];
+
+  let imageUrl = '';
+
+  try {
+    const attachmentsData = JSON.parse(props.product.attachments);
+
+    if (attachmentsData && attachmentsData.url_image) {
+      imageUrl = attachmentsData.url_image.trim();
+    } else {
+      return '/product.png';
+    }
+  } catch (error) {
+    console.error('Error parsing attachments JSON:', error);
+    return '/product.png';
+  }
+
+  if (imageUrl.startsWith('http')) {
+    return imageUrl;
+  }
+
+  // Ini bukan async, jadi langsung ambil .data.publicUrl
+  const { data } = $supabase.storage
+    .from('markets-attachments')
+    .getPublicUrl(imageUrl);
+
+  return data?.publicUrl || '/product.png';
+});
+
+
+// Get all images from attachments JSON (if you need multiple images later)
+const allImages = computed(() => {
+  if (!props.product.attachments || props.product.attachments.trim() === '') {
+    return [];
+  }
+  
+  try {
+    // Parse JSON string
+    const attachmentsData = JSON.parse(props.product.attachments);
+    
+    // Handle different JSON structures
+    let imageUrls = [];
+    
+    if (attachmentsData.url_image) {
+      // Single image format: {"url_image": "path/to/image.png"}
+      imageUrls = [attachmentsData.url_image];
+    } else if (Array.isArray(attachmentsData)) {
+      // Array format: [{"url_image": "path1"}, {"url_image": "path2"}]
+      imageUrls = attachmentsData
+        .filter(item => item.url_image)
+        .map(item => item.url_image);
+    } else if (attachmentsData.images && Array.isArray(attachmentsData.images)) {
+      // Nested array format: {"images": [{"url_image": "path1"}]}
+      imageUrls = attachmentsData.images
+        .filter(item => item.url_image)
+        .map(item => item.url_image);
+    }
+    
+    return imageUrls.map(imageUrl => {
+      // Check if it's already a full URL
+      if (imageUrl.startsWith('http')) {
+        return imageUrl;
+      }
+      
+      // Get public URL from Supabase storage
+      try {
+        const { data } = $supabase.storage
+          .from('markets-attachments')
+          .getPublicUrl(imageUrl);
+        
+        return data.publicUrl;
+      } catch (error) {
+        console.error('Error getting image URL:', error);
+        return '/product.png';
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error parsing attachments JSON:', error);
+    return [];
+  }
 });
 
 // Get formatted category badge class
@@ -66,17 +152,55 @@ const whatsappLink = computed(() => {
   const phone = props.product.contact_seller.replace(/\D/g, '');
   return `https://wa.me/${phone}`;
 });
+
+// Handle image load events
+const handleImageLoad = () => {
+  imageLoading.value = false;
+  imageError.value = false;
+};
+
+const handleImageError = () => {
+  imageLoading.value = false;
+  imageError.value = true;
+};
 </script>
 
 <template>
   <div class="market-card bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
     <!-- Product Image -->
-    <div class="relative h-56 overflow-hidden">
+    <div class="relative h-56 overflow-hidden bg-gray-100 dark:bg-gray-700">
+      <!-- Loading Spinner -->
+      <div 
+        v-if="imageLoading" 
+        class="absolute inset-0 flex items-center justify-center"
+      >
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600"/>
+      </div>
+      
+      <!-- Error Placeholder -->
+      <div 
+        v-if="imageError" 
+        class="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700"
+      >
+        <div class="text-center text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <p class="text-sm">Gambar tidak dapat dimuat</p>
+        </div>
+      </div>
+      
+      <!-- Main Image -->
       <img 
+        v-show="!imageLoading && !imageError"
         :src="mainImage" 
         :alt="product.name" 
         class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        @load="handleImageLoad"
+        @error="handleImageError"
       >
+      
+      <!-- Category Badge -->
       <span 
         :class="categoryClass"
         class="absolute top-3 right-3"
@@ -137,7 +261,7 @@ const whatsappLink = computed(() => {
           class="inline-flex items-center px-3 py-1.5 bg-gray-900 text-white dark:bg-gray-700 dark:text-gray-100 rounded-full text-xs transition-colors hover:bg-gray-800 dark:hover:bg-gray-600"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 015.15-1.75V11.5a6.13 6.13 0 004.4 1.37V9.41a4.83 4.83 0 01-1.73.33 4.66 4.66 0 01-3.27-1.39v.08a4.83 4.83 0 104.83 4.83V8.05a8.74 8.74 0 004.52 1.29V6.69z" />
+            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 015.15-1.75V11.5a6.13 6.13 0 014.4 1.37V9.41a4.83 4.83 0 01-1.73.33 4.66 4.66 0 01-3.27-1.39v.08a4.83 4.83 0 104.83 4.83V8.05a8.74 8.74 0 004.52 1.29V6.69z" />
           </svg>
           TikTok
         </a>
