@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useSupabase } from '~/composables/useSupabase'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { toastStore } from '~/composables/useJuruTaniToast';
 
-const { logout } = useSupabase()
+const { navsSecondary } = useNavMenu()
+const { logout, loading } = useSupabase()
 const { supabase } = useSupabase();
 const currentUserId = ref(null);
 const user = ref(null);
 
+// Fetch current user ID and set it to the user ref
 const fetchCurrentUser = async () => {
   try {
     const { data: { user: userData }, error: userError } = await supabase.auth.getUser();
@@ -64,8 +66,9 @@ const dropdownItems = [
       disabled: true,
     }
   ],
-];
+]
 
+// Function untuk handle logout
 const handleLogout = async () => {
   const result = await logout()
   if (result.success) {
@@ -73,11 +76,9 @@ const handleLogout = async () => {
     window.location.href = '/'
   } else {
     toastStore.error('Gagal logout')
-    console.error('Logout failed:', result.error);
-  }
+    console.error('Logout failed:', result.error);}
 }
 </script>
-
 
 
 <template>
