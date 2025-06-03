@@ -3,44 +3,98 @@ import { ref, reactive, computed } from 'vue';
 import { useSupabase } from '~/composables/useSupabase';
 import { toastStore } from '~/composables/useJuruTaniToast';
 
-const props = defineProps({
-  userData: {
-    type: Object,
-    required: true
-  }
-});
+interface UserData {
+  id: string;
+  email?: string;
+  full_name?: string;
+  username?: string;
+  phone?: string;
+  address?: string;
+  bio?: string;
+  website?: string;
+  birth_date?: string;
+  avatar_url?: string;
+}
 
-const emit = defineEmits(['update', 'cancel']);
+const props = defineProps<{
+  userData: UserData;
+}>();
+
+const emit = defineEmits<{
+  update: [data: UserData];
+  cancel: [];
+}>();
 
 const { supabase } = useSupabase();
 
+// State
 const loading = ref(false);
-const imageFile = ref(null);
-const imagePreview = ref(null);
+const imageFile = ref<File | null>(null);
+const imagePreview = ref<string | null>(null);
 
-// Create a reactive copy of user data
+// Form data with all fields
 const formData = reactive({
   full_name: props.userData.full_name || '',
+  username: props.userData.username || '',
   phone: props.userData.phone || '',
   address: props.userData.address || '',
   bio: props.userData.bio || '',
+  website: props.userData.website || '',
+  birth_date: props.userData.birth_date || '',
   avatar_url: props.userData.avatar_url || ''
 });
 
-// Handle image selection
-const handleImageSelect = (event) => {
-  const file = event.target.files[0];
+// Validation rules
+const validations = {
+  username: (value: string) => {
+    if (!value) return true; // Optional field
+    return /^[a-zA-Z0-9_]+$/.test(value) || 'Username hanya boleh berisi huruf, angka, dan underscore';
+  },
+  website: (value: string) => {
+    if (!value) return true; // Optional field
+    try {
+      new URL(value.startsWith('http') ? value : `https://${value}`);
+      return true;
+    } catch {
+      return 'Format website tidak valid';
+    }
+  },
+  phone: (value: string) => {
+    if (!value) return true; // Optional field
+    return /^[\d\s\-+\(\)]+$/.test(value) || 'Format nomor telepon tidak valid';
+  }
+};
+
+// Computed validation
+const formErrors = computed(() => {
+  const errors: Record<string, string> = {};
+  
+  Object.entries(validations).forEach(([field, validator]) => {
+    const result = validator(formData[field as keyof typeof formData]);
+    if (typeof result === 'string') {
+      errors[field] = result;
+    }
+  });
+  
+  return errors;
+});
+
+const isFormValid = computed(() => Object.keys(formErrors.value).length === 0);
+
+// Image handling
+const handleImageSelect = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
   if (!file) return;
 
-  // Validate file type
   const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+  const maxSize = 2 * 1024 * 1024; // 2MB
+
   if (!validTypes.includes(file.type)) {
     toastStore.error('Format file tidak didukung. Gunakan JPG, PNG, atau GIF.');
     return;
   }
 
-  // Validate file size (max 2MB)
-  const maxSize = 2 * 1024 * 1024; // 2MB
   if (file.size > maxSize) {
     toastStore.error('Ukuran file terlalu besar. Maksimal 2MB.');
     return;
@@ -48,152 +102,182 @@ const handleImageSelect = (event) => {
 
   imageFile.value = file;
   
-  // Create image preview
+  // Create preview
   const reader = new FileReader();
   reader.onload = (e) => {
-    imagePreview.value = e.target.result;
+    imagePreview.value = e.target?.result as string;
   };
   reader.readAsDataURL(file);
 };
 
-// Reset image selection
 const resetImage = () => {
   imageFile.value = null;
   imagePreview.value = null;
 };
 
-// Handle form submission
+// Avatar upload utility
+const uploadAvatar = async (userId: string): Promise<string | null> => {
+  if (!imageFile.value) return null;
+
+  console.log('Starting avatar upload process...');
+  
+  // Delete old avatar
+  if (formData.avatar_url?.includes('avatars/')) {
+    try {
+      const oldPath = formData.avatar_url.split('avatars/')[1].split('?')[0];
+      if (oldPath) {
+        console.log('Attempting to delete old avatar:', oldPath);
+        await supabase.storage.from('avatars').remove([oldPath]);
+        console.log('Old avatar deleted successfully');
+      }
+    } catch (error) {
+      console.warn('Error deleting old avatar:', error);
+    }
+  }
+
+  // Upload new avatar
+  const fileExt = imageFile.value.name.split('.').pop();
+  const fileName = `avatar_${Date.now()}.${fileExt}`;
+  const filePath = `${userId}/${fileName}`;
+
+  console.log('Uploading new avatar:', { fileName, filePath, fileSize: imageFile.value.size });
+
+  const { data, error } = await supabase.storage
+    .from('avatars')
+    .upload(filePath, imageFile.value, {
+      cacheControl: '3600',
+      upsert: true
+    });
+
+  if (error) {
+    console.error('Upload error:', error);
+    throw new Error(`Gagal mengunggah gambar profil: ${error.message}`);
+  }
+
+  console.log('Avatar uploaded successfully:', data);
+
+  // Get public URL
+  const { data: { publicUrl } } = supabase.storage
+    .from('avatars')
+    .getPublicUrl(filePath);
+
+  if (!publicUrl) {
+    throw new Error('Gagal mendapatkan URL gambar profil.');
+  }
+
+  return `${publicUrl}?t=${Date.now()}`;
+};
+
+// Main submit handler
 const handleSubmit = async () => {
+  if (!isFormValid.value) {
+    toastStore.error('Mohon perbaiki kesalahan pada form.');
+    return;
+  }
+
   loading.value = true;
+  
   try {
-    let newAvatarUrl = formData.avatar_url; // Keep existing avatar URL by default
+    // Get authenticated user
+    const { data: user } = await supabase.auth.getUser();
+    console.log("auth.uid():", user?.user?.id);
+    console.log("props.userData.id:", props.userData.id);
+    
+    if (!user?.user?.id) {
+      console.error('No authenticated user found');
+      toastStore.error('Anda harus login untuk memperbarui profil.');
+      return;
+    }
 
-    // Upload new avatar if selected
+    if (user.user.id !== props.userData.id) {
+      console.error('User ID mismatch:', {
+        authUserId: user.user.id,
+        profileUserId: props.userData.id
+      });
+      toastStore.error('Tidak dapat memperbarui profil pengguna lain.');
+      return;
+    }
+
+    // Handle avatar upload
+    let newAvatarUrl = formData.avatar_url;
     if (imageFile.value) {
-      // Delete old avatar if exists (perbaikan: cek path yang lebih robust)
-      if (formData.avatar_url && formData.avatar_url.includes('avatars/')) {
-        try {
-          const oldPath = formData.avatar_url.split('avatars/')[1].split('?')[0]; // Remove query params
-          if (oldPath) {
-            const { error: deleteError } = await supabase.storage
-              .from('avatars')
-              .remove([oldPath]);
-            
-            if (deleteError) {
-              console.warn('Could not delete old avatar:', deleteError);
-            }
-          }
-        } catch (deleteErr) {
-          console.warn('Error deleting old avatar:', deleteErr);
-        }
-      }
-
-      // Upload new avatar
-      const fileExt = imageFile.value.name.split('.').pop();
-      const fileName = `avatar_${Date.now()}.${fileExt}`;
-      const filePath = `${props.userData.id}/${fileName}`;
-
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, imageFile.value, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        toastStore.error(`Gagal mengunggah gambar profil: ${uploadError.message}`);
-        return;
-      }
-
-      // Get public URL for the uploaded file
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      if (publicUrl) {
-        // PERBAIKAN: Tambahkan timestamp untuk cache busting
-        newAvatarUrl = `${publicUrl}?t=${Date.now()}`;
+      newAvatarUrl = await uploadAvatar(user.user.id);
+      if (newAvatarUrl) {
         formData.avatar_url = newAvatarUrl;
-        console.log('New avatar URL:', newAvatarUrl); // Debug log
-      } else {
-        console.error('Failed to get public URL');
-        toastStore.error('Gagal mendapatkan URL gambar profil.');
-        return;
+        console.log('New avatar URL:', newAvatarUrl);
       }
     }
 
     // Prepare update data
     const updates = {
-      id: props.userData.id,
+      id: user.user.id,
       full_name: formData.full_name.trim(),
-      phone: formData.phone.trim(),
-      address: formData.address.trim(),
-      bio: formData.bio.trim(),
+      username: formData.username.trim() || null,
+      phone: formData.phone.trim() || null,
+      address: formData.address.trim() || null,
+      bio: formData.bio.trim() || null,
+      website: formData.website.trim() || null,
+      birth_date: formData.birth_date || null,
       avatar_url: newAvatarUrl,
       updated_at: new Date().toISOString()
     };
 
-    // Update profile in database
+    console.log('Updating profile with data:', updates);
+
+    // Update profile
     const { data: updateData, error: updateError } = await supabase
       .from('profiles')
-      .update(updates)
-      .eq('id', props.userData.id)
+      .upsert(updates, {
+        onConflict: 'id',
+        ignoreDuplicates: false
+      })
       .select();
 
     if (updateError) {
       console.error('Error updating profile:', updateError);
-      toastStore.error(`Gagal memperbarui profil: ${updateError.message}`);
-      return;
+      throw new Error(`Gagal memperbarui profil: ${updateError.message}`);
     }
 
-    console.log('Profile updated successfully:', updateData); // Debug log
+    console.log('Profile updated successfully:', updateData);
 
-    // Emit update event with updated data
+    // Emit success
     emit('update', { ...updates, email: props.userData.email });
     toastStore.success('Profil berhasil diperbarui.');
-    
-    // Reset image selection after successful update
     resetImage();
     
-  } catch (err) {
-    console.error('Exception updating profile:', err);
-    toastStore.error('Terjadi kesalahan saat memperbarui profil.');
+  } catch (error) {
+    console.error('Exception updating profile:', error);
+    toastStore.error(error instanceof Error ? error.message : 'Terjadi kesalahan saat memperbarui profil.');
   } finally {
     loading.value = false;
   }
 };
 
-// Handle cancel
 const handleCancel = () => {
-  // Reset any changes
   resetImage();
   emit('cancel');
 };
 
-// Compute current avatar display
+// Computed properties
 const currentAvatar = computed(() => {
-  // Priority: preview image > current avatar > default
-  if (imagePreview.value) {
-    return imagePreview.value;
-  }
-  
-  if (formData.avatar_url) {
-    return formData.avatar_url;
-  }
-  
-  return '/profile.png';
+  return imagePreview.value || formData.avatar_url || '/profile.png';
 });
 
-// Handle image load error
-const handleImageError = (event) => {
-  console.error('Image failed to load:', event.target.src);
-  event.target.src = '/profile.png'; // Fallback to default image
+const handleImageError = (event: Event) => {
+  const target = event.target as HTMLImageElement;
+  console.error('Image failed to load:', target.src);
+  target.src = '/profile.png';
+};
+
+// Format website URL for display
+const formatWebsiteUrl = (url: string) => {
+  if (!url) return '';
+  return url.startsWith('http') ? url : `https://${url}`;
 };
 </script>
 
 <template>
-  <form class="bg-white rounded-lg shadow-md p-6" @submit.prevent="handleSubmit">
+  <form class="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto" @submit.prevent="handleSubmit">
     <h2 class="text-xl font-semibold mb-6">Edit Profil</h2>
 
     <!-- Avatar Upload -->
@@ -201,13 +285,12 @@ const handleImageError = (event) => {
       <label class="block text-gray-700 text-sm font-medium mb-2">Foto Profil</label>
       
       <div class="flex items-center">
-        <div class="w-24 h-24 rounded-full overflow-hidden mr-4 bg-gray-100">
+        <div class="w-24 h-24 rounded-full overflow-hidden mr-4 bg-gray-100 flex-shrink-0">
           <img 
             :src="currentAvatar" 
             alt="Avatar Preview"
             class="w-full h-full object-cover"
             @error="handleImageError"
-            @load="console.log('Image loaded:', $event.target.src)"
           >
         </div>
         
@@ -222,14 +305,14 @@ const handleImageError = (event) => {
           <div class="flex space-x-2">
             <label 
               for="avatar" 
-              class="cursor-pointer bg-blue-100 text-blue-600 px-3 py-2 rounded hover:bg-blue-200"
+              class="cursor-pointer bg-blue-100 text-blue-600 px-3 py-2 rounded hover:bg-blue-200 transition-colors"
             >
               Pilih Gambar
             </label>
             <button 
               v-if="imagePreview" 
               type="button" 
-              class="bg-gray-100 text-gray-600 px-3 py-2 rounded hover:bg-gray-200"
+              class="bg-gray-100 text-gray-600 px-3 py-2 rounded hover:bg-gray-200 transition-colors"
               @click="resetImage"
             >
               Batal
@@ -238,75 +321,131 @@ const handleImageError = (event) => {
           <p class="text-xs text-gray-500 mt-1">
             Format: JPG, PNG, GIF. Maks. 2MB
           </p>
-          <!-- Debug info -->
-          <p v-if="formData.avatar_url" class="text-xs text-blue-500 mt-1">
-            Current URL: {{ formData.avatar_url }}
-          </p>
         </div>
       </div>
     </div>
 
-    <!-- Name -->
-    <div class="mb-4">
-      <label for="full_name" class="block text-gray-700 text-sm font-medium mb-2">
-        Nama Lengkap
-      </label>
-      <input
-        id="full_name"
-        v-model="formData.full_name"
-        type="text"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Masukkan nama lengkap Anda"
-      >
-    </div>
+    <!-- Form Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <!-- Full Name -->
+      <div class="md:col-span-2">
+        <label for="full_name" class="block text-gray-700 text-sm font-medium mb-2">
+          Nama Lengkap *
+        </label>
+        <input
+          id="full_name"
+          v-model="formData.full_name"
+          type="text"
+          required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Masukkan nama lengkap Anda"
+        >
+      </div>
 
-    <!-- Phone -->
-    <div class="mb-4">
-      <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">
-        Nomor Telepon
-      </label>
-      <input
-        id="phone"
-        v-model="formData.phone"
-        type="tel"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Contoh: 08123456789"
-      >
-    </div>
+      <!-- Username -->
+      <div>
+        <label for="username" class="block text-gray-700 text-sm font-medium mb-2">
+          Username
+        </label>
+        <input
+          id="username"
+          v-model="formData.username"
+          type="text"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          :class="{ 'border-red-500': formErrors.username }"
+          placeholder="username_anda"
+        >
+        <p v-if="formErrors.username" class="text-red-500 text-xs mt-1">
+          {{ formErrors.username }}
+        </p>
+      </div>
 
-    <!-- Address -->
-    <div class="mb-4">
-      <label for="address" class="block text-gray-700 text-sm font-medium mb-2">
-        Alamat
-      </label>
-      <input
-        id="address"
-        v-model="formData.address"
-        type="text"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Masukkan alamat lengkap Anda"
-      >
-    </div>
+      <!-- Phone -->
+      <div>
+        <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">
+          Nomor Telepon
+        </label>
+        <input
+          id="phone"
+          v-model="formData.phone"
+          type="tel"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          :class="{ 'border-red-500': formErrors.phone }"
+          placeholder="08123456789"
+        >
+        <p v-if="formErrors.phone" class="text-red-500 text-xs mt-1">
+          {{ formErrors.phone }}
+        </p>
+      </div>
 
-    <!-- Bio -->
-    <div class="mb-6">
-      <label for="bio" class="block text-gray-700 text-sm font-medium mb-2">
-        Bio
-      </label>
-      <textarea
-        id="bio"
-        v-model="formData.bio"
-        rows="4"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Ceritakan sedikit tentang diri Anda..."
-      />
+      <!-- Birth Date -->
+      <div>
+        <label for="birth_date" class="block text-gray-700 text-sm font-medium mb-2">
+          Tanggal Lahir
+        </label>
+        <input
+          id="birth_date"
+          v-model="formData.birth_date"
+          type="date"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+      </div>
+
+      <!-- Website -->
+      <div>
+        <label for="website" class="block text-gray-700 text-sm font-medium mb-2">
+          Website
+        </label>
+        <input
+          id="website"
+          v-model="formData.website"
+          type="url"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          :class="{ 'border-red-500': formErrors.website }"
+          placeholder="https://website-anda.com"
+        >
+        <p v-if="formErrors.website" class="text-red-500 text-xs mt-1">
+          {{ formErrors.website }}
+        </p>
+      </div>
+
+      <!-- Address -->
+      <div class="md:col-span-2">
+        <label for="address" class="block text-gray-700 text-sm font-medium mb-2">
+          Alamat
+        </label>
+        <input
+          id="address"
+          v-model="formData.address"
+          type="text"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Masukkan alamat lengkap Anda"
+        >
+      </div>
+
+      <!-- Bio -->
+      <div class="md:col-span-2">
+        <label for="bio" class="block text-gray-700 text-sm font-medium mb-2">
+          Bio
+        </label>
+        <textarea
+          id="bio"
+          v-model="formData.bio"
+          rows="4"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          placeholder="Ceritakan sedikit tentang diri Anda..."
+        />
+        <p class="text-xs text-gray-500 mt-1">
+          {{ formData.bio.length }}/300 karakter
+        </p>
+      </div>
     </div>
 
     <!-- Buttons -->
-    <div class="flex justify-end space-x-3">
+    <div class="flex justify-end space-x-3 pt-4 border-t">
       <button
         type="button"
-        class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+        class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
         :disabled="loading"
         @click="handleCancel"
       >
@@ -314,12 +453,39 @@ const handleImageError = (event) => {
       </button>
       <button
         type="submit"
-        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        :disabled="loading"
+        class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:opacity-50"
+        :disabled="loading || !isFormValid"
       >
-        <span v-if="loading">Menyimpan...</span>
-        <span v-else>Simpan</span>
+        <span v-if="loading" class="flex items-center">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+          </svg>
+          Menyimpan...
+        </span>
+        <span v-else>Simpan Perubahan</span>
       </button>
     </div>
   </form>
 </template>
+
+<style scoped>
+/* Custom scrollbar for textarea */
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+</style>
