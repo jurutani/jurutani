@@ -1,5 +1,5 @@
 <template>
-  <div class="join-community dark:bg-dark">
+  <div class="join-community">
     <div class="container mx-auto py-10 px-4">
       <div class="flex items-center mb-8">
         <NuxtLink to="/discussions" class="mr-4 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300">
@@ -102,15 +102,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.join-community {
-  min-height: 100vh;
-  background-color: #f0fdf4;
-}
-
-.dark .join-community {
-  background-color: #111827;
-}
-
 .social-media-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
