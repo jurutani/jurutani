@@ -84,59 +84,75 @@ export const useSupabase = () => {
   }
   
   // Register dengan email dan password
-  const register = async (email: string, password: string, metadata = {}) => {
-    loading.value = true
-    error.auth = null
-    
-    try {
-      const { data, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: metadata
-        }
-      })
-      
-      if (authError) {
-        error.auth = authError.message
-        return { success: false, error: authError.message }
-      }
-      
-      return { success: true, data }
-    } catch (err) {
-      error.auth = err.message
-      return { success: false, error: err.message }
-    } finally {
-      loading.value = false
-    }
-  }
+  const register = async (email: string, password: string, phone: number, full_name: string) => {
+  loading.value = true
+  error.auth = null
   
-  // Login dengan provider social (Google, Facebook, dll)
-  const loginWithSocialProvider = async (provider: 'google' | 'facebook' | 'github') => {
-    loading.value = true
-    error.auth = null
-    
-    try {
-      const { data, error: authError } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`
-        }
-      })
-      
-      if (authError) {
-        error.auth = authError.message
-        return { success: false, error: authError.message }
-      }
-      
-      return { success: true, data }
-    } catch (err) {
-      error.auth = err.message
-      return { success: false, error: err.message }
-    } finally {
-      loading.value = false
+  try {
+    const { data, error: authError } = await supabase.auth.signUp({
+      email,
+      password
+    })
+
+    if (authError) {
+      error.auth = authError.message
+      return { success: false, error: authError.message }
     }
+
+    // Setelah signup berhasil, ambil id user
+    const user_id = data.user?.id
+
+    // Insert ke profile
+    const { error: profileError } = await supabase
+      .from('profile')
+      .insert([{ id: user_id, full_name, phone }])
+
+    if (profileError) {
+      error.auth = profileError.message
+      return { success: false, error: profileError.message }
+    }
+
+    return { success: true, data }
+  } catch (err: any) {
+    error.auth = err.message
+    return { success: false, error: err.message }
+  } finally {
+    loading.value = false
   }
+}
+
+  
+  // Login dengan provider sosial (Google, Facebook, GitHub)
+const loginWithSocialProvider = async (
+  provider: 'google' | 'facebook' | 'github'
+) => {
+  loading.value = true
+  error.auth = null
+
+  try {
+    const { data, error: authError } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        // Redirect kembali ke aplikasi setelah login
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    })
+
+    if (authError) {
+      error.auth = authError.message
+      return { success: false, error: authError.message }
+    }
+
+    return { success: true, data }
+  } catch (err: any) {
+    const message = err?.message || 'Terjadi kesalahan saat login'
+    error.auth = message
+    return { success: false, error: message }
+  } finally {
+    loading.value = false
+  }
+}
+
   
   // Logout
   const logout = async () => {

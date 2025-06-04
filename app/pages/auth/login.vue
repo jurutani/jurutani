@@ -44,16 +44,21 @@ const handleLogin = async () => {
 
 const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => {
   try {
-    const { success, error } = await loginWithSocialProvider(provider)
+    const { success, error: loginError } = await loginWithSocialProvider(provider)
 
     if (!success) {
-      toastStore.error(error || `Login dengan ${provider} gagal.`, 3000)
+      toastStore.error(
+        loginError || `Login dengan ${provider} gagal.`,
+        3000
+      )
     }
-    // Supabase akan redirect otomatis
-  } catch (error: any) {
-    toastStore.error(error.message || 'Terjadi kesalahan saat login.', 3000)
+
+  } catch (err: any) {
+    const message = err?.message || 'Terjadi kesalahan saat login.'
+    toastStore.error(message, 3000)
   }
 }
+
 </script>
 
 
@@ -217,42 +222,24 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
             <span class="h-px flex-1 bg-gray-200"/>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
-        <UButton
+         <div class="grid grid-cols-1 place-items-center gap-3">
+          <UButton
             color="white"
             variant="outline"
             :ui="{ 
-            base: 'rounded-lg p-2', 
-            color: {
+              base: 'rounded-lg p-2', 
+              color: {
                 white: {
-                solid: 'bg-white hover:bg-gray-50'
+                  solid: 'bg-white hover:bg-gray-50'
                 }
-            }
+              }
             }"
             :disabled="isLoading"
-            @click="handleSocialLogin('Google')"
-        >
+            @click="handleSocialLogin('google')"
+          >
             <Icon name="logos:google-icon" class="mr-2 h-5 w-5" />
             Google
-        </UButton>
-
-        <UButton
-            color="white"
-            variant="outline"
-            :ui="{ 
-            base: 'rounded-lg p-2', 
-            color: {
-                white: {
-                solid: 'bg-white hover:bg-gray-50'
-                }
-            }
-            }"
-            :disabled="isLoading"
-            @click="handleSocialLogin('Telepon')"
-        >
-            <Icon name="ph:phone-fill" class="mr-2 h-5 w-5 text-green-600" />
-            Telepon
-        </UButton>
+          </UButton>
         </div>
 
         </UCard>

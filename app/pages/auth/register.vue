@@ -1,14 +1,16 @@
 <!-- pages/auth/register.vue -->
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useToast } from '#imports'
+import { toastStore } from '~/composables/useJuruTaniToast'
+import { useSupabase } from '~/composables/useSupabase'
 
 // Definisikan layout
 definePageMeta({
   layout: 'blank'
 })
 
-const toast = useToast()
+// Composable Supabase
+const { register, loginWithSocialProvider, loading, error } = useSupabase()
 
 // State form
 const form = ref({
@@ -20,7 +22,6 @@ const form = ref({
   agreeTerms: false
 })
 
-const isLoading = ref(false)
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const currentStep = ref(1)
@@ -43,35 +44,17 @@ const validatePassword = (password: string) => {
 const goToNextStep = () => {
   if (currentStep.value === 1) {
     if (!form.value.fullName || !form.value.email || !form.value.phone) {
-      toast.add({
-        title: 'Peringatan',
-        description: 'Mohon lengkapi semua data diri Anda.',
-        color: 'orange',
-        icon: 'i-ph-warning-circle',
-        timeout: 3000
-      })
+      toastStore.warning('Mohon isi semua field yang diperlukan.', 3000)
       return
     }
 
     if (!validateEmail(form.value.email)) {
-      toast.add({
-        title: 'Peringatan',
-        description: 'Format email tidak valid.',
-        color: 'orange',
-        icon: 'i-ph-warning-circle',
-        timeout: 3000
-      })
+      toastStore.warning('Format email tidak valid.', 3000)
       return
     }
 
     if (!validatePhone(form.value.phone)) {
-      toast.add({
-        title: 'Peringatan',
-        description: 'Nomor telepon harus berisi 10-13 digit angka.',
-        color: 'orange',
-        icon: 'i-ph-warning-circle',
-        timeout: 3000
-      })
+      toastStore.warning('Nomor telepon harus terdiri dari 10-13 digit.', 3000)
       return
     }
   }
@@ -87,90 +70,93 @@ const goToPreviousStep = () => {
 // Handler register
 const handleRegister = async () => {
   if (!form.value.password || !form.value.confirmPassword) {
-    toast.add({
-      title: 'Peringatan',
-      description: 'Mohon isi kata sandi dan konfirmasi kata sandi.',
-      color: 'orange',
-      icon: 'i-ph-warning-circle',
-      timeout: 3000
-    })
+    toastStore.warning('Kata sandi dan konfirmasi kata sandi harus diisi.', 3000)
     return
   }
 
   if (!validatePassword(form.value.password)) {
-    toast.add({
-      title: 'Peringatan',
-      description: 'Kata sandi minimal harus 8 karakter.',
-      color: 'orange',
-      icon: 'i-ph-warning-circle',
-      timeout: 3000
-    })
+    toastStore.warning('Kata sandi harus minimal 8 karakter.', 3000)
     return
   }
 
   if (form.value.password !== form.value.confirmPassword) {
-    toast.add({
-      title: 'Peringatan',
-      description: 'Konfirmasi kata sandi tidak sesuai.',
-      color: 'orange',
-      icon: 'i-ph-warning-circle',
-      timeout: 3000
-    })
+    toastStore.warning('Kata sandi dan konfirmasi kata sandi tidak cocok.', 3000)
     return
   }
 
   if (!form.value.agreeTerms) {
-    toast.add({
-      title: 'Peringatan',
-      description: 'Anda harus menyetujui syarat dan ketentuan.',
-      color: 'orange',
-      icon: 'i-ph-warning-circle',
-      timeout: 3000
-    })
+    toastStore.warning('Anda harus menyetujui syarat dan ketentuan.', 3000)
     return
   }
 
   try {
-    isLoading.value = true
-    await new Promise(resolve => setTimeout(resolve, 1500)) // simulasi loading
+    // Siapkan metadata untuk user profile
+    const metadata = {
+      full_name: form.value.fullName,
+      phone: form.value.phone,
+      display_name: form.value.fullName
+    }
 
-    toast.add({
-      title: 'Berhasil',
-      description: 'Akun Anda berhasil terdaftar! Silakan periksa email untuk verifikasi.',
-      color: 'green',
-      icon: 'i-ph-check-circle',
-      timeout: 3000
-    })
+    // Panggil fungsi register dari useSupabase
+    const result = await register(form.value.email, form.value.password, metadata)
 
-    // Setelah register sukses
-    // navigateTo('/auth/login')
-  } catch (error) {
-    toast.add({
-      title: 'Gagal',
-      description: 'Terjadi kesalahan saat mendaftarkan akun. Silakan coba lagi.',
-      color: 'red',
-      icon: 'i-ph-x-circle',
-      timeout: 3000
-    })
-  } finally {
-    isLoading.value = false
+    if (result.success) {
+      toastStore.success('Akun berhasil dibuat! Silakan cek email Anda untuk verifikasi.', 5000)
+      
+      // Reset form setelah berhasil
+      form.value = {
+        fullName: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+        agreeTerms: false
+      }
+      
+      // Redirect ke halaman login atau dashboard
+      await navigateTo('/auth/login')
+    } else {
+      // Tampilkan error yang lebih spesifik
+      if (result.error?.includes('already registered')) {
+        toastStore.error('Email sudah terdaftar. Silakan gunakan email lain atau masuk ke akun Anda.', 5000)
+      } else if (result.error?.includes('invalid email')) {
+        toastStore.error('Format email tidak valid.', 3000)
+      } else if (result.error?.includes('weak password')) {
+        toastStore.error('Kata sandi terlalu lemah. Gunakan kombinasi huruf, angka, dan simbol.', 5000)
+      } else {
+        toastStore.error(result.error || 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.', 5000)
+      }
+    }
+  } catch (err: any) {
+    console.error('Error during registration:', err)
+    toastStore.error('Terjadi kesalahan tidak terduga. Silakan coba lagi.', 3000)
   }
 }
 
-// Handler social register
-const handleSocialRegister = (provider: string) => {
-  isLoading.value = true
-  setTimeout(() => {
-    toast.add({
-      title: 'Info',
-      description: `Pendaftaran dengan ${provider} akan tersedia.`,
-      color: 'blue',
-      icon: 'i-ph-info-circle',
-      timeout: 3000
-    })
-    isLoading.value = false
-  }, 800)
+const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => {
+  try {
+    const { success, error: loginError } = await loginWithSocialProvider(provider)
+
+    if (!success) {
+      toastStore.error(
+        loginError || `Login dengan ${provider} gagal.`,
+        3000
+      )
+    }
+
+  } catch (err: any) {
+    const message = err?.message || 'Terjadi kesalahan saat login.'
+    toastStore.error(message, 3000)
+  }
 }
+
+
+// Watch untuk error dari useSupabase
+watch(() => error.auth, (newError) => {
+  if (newError) {
+    console.error('Supabase Auth Error:', newError)
+  }
+})
 </script>
 
 <template>
@@ -465,27 +451,10 @@ const handleSocialRegister = (provider: string) => {
                 }
                 }"
                 :disabled="isLoading"
-                @click="handleSocialRegister('Google')"
+                @click="handleSocialLogin('Google')"
             >
                 <Icon name="logos:google-icon" class="mr-2 h-5 w-5" />
                 Google
-            </UButton>
-            <UButton
-                color="white"
-                variant="outline"
-                :ui="{
-                base: 'rounded-lg py-2 border border-gray-300',
-                color: {
-                    white: {
-                    solid: 'bg-white hover:bg-gray-50 focus:ring-gray-200'
-                    }
-                }
-                }"
-                :disabled="isLoading"
-                @click="handleSocialRegister('Telepon')"
-            >
-              <Icon name="ph:phone-fill" class="mr-2 h-5 w-5 text-green-600" />
-              Telepon
             </UButton>
           </div>
         </UCard>
