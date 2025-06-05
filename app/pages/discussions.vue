@@ -5,6 +5,7 @@ useSeoMeta({
   ogTitle: 'Discussions - Juru Tani',
   ogDescription: 'Stay updated with the latest Discussions from Juru Tani.',
 })
+
 </script>
 
 <template>

@@ -5,6 +5,7 @@ useSeoMeta({
   ogTitle: 'Marketplace - Juru Tani',
   ogDescription: 'Stay updated with the latest Marketplace from Juru Tani.',
 })
+
 </script>
 
 <template>

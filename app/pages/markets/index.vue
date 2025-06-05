@@ -1,79 +1,70 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
-import { useSupabase } from '~/composables/useSupabase';
-import { CreateButton } from '#components';
+import { ref, watch } from 'vue'
+import { useSupabase } from '~/composables/useSupabase'
+import { CreateButton } from '#components'
+import { useAsyncData } from '#app'
 
-const { supabase } = useSupabase();
+// Supabase client
+const { supabase } = useSupabase()
 
-// Data
-const marketsList = ref([]);
-const loading = ref(true);
-const error = ref(null);
+// Data utama
+const marketsList = ref([])
+const error = ref<any>(null)
+const loading = ref(true)
 
-// Filter and pagination
-const currentCategory = ref('Semua');
-const categories = ['Semua', 'Hasil Pertanian', 'Hasil Peternakan', 'Produk Olahan', 'Penunjang Pertanian', 'Lainya'];
-const currentPage = ref(1);
-const pageSize = ref(12);
-const totalPages = ref(1);
+// Filter & pagination
+const currentCategory = ref('Semua')
+const categories = ['Semua', 'Hasil Pertanian', 'Hasil Peternakan', 'Produk Olahan', 'Penunjang Pertanian', 'Lainya']
+const currentPage = ref(1)
+const pageSize = ref(12)
+const totalPages = ref(1)
 
-// Fetch markets with filters
+// Fungsi fetch data
 const fetchMarkets = async () => {
-  loading.value = true;
-  error.value = null;
+  loading.value = true
+  error.value = null
 
   try {
     let query = supabase
       .from('markets')
-      .select(`
-        *
-      `, { count: 'exact' }) // hanya ambil kolom yang dibutuhkan
+      .select('*', { count: 'exact' })
       .is('deleted_at', null)
       .is('archived_at', null)
       .order('created_at', { ascending: false })
       .range(
         (currentPage.value - 1) * pageSize.value,
         currentPage.value * pageSize.value - 1
-      );
+      )
 
     if (currentCategory.value !== 'Semua') {
-      query = query.eq('category', currentCategory.value);
+      query = query.eq('category', currentCategory.value)
     }
 
-    const { data, error: fetchError, count } = await query;
+    const { data, error: fetchError, count } = await query
 
-    if (fetchError) {
-      console.error('[Supabase Fetch Error]', fetchError);
-      error.value = fetchError;
-    } else {
-      console.log('[Markets Fetched Data]', data); // ✅ Debug log
-      marketsList.value = data || [];
-      totalPages.value = Math.ceil((count || 0) / pageSize.value);
-    }
+    if (fetchError) throw fetchError
+
+    marketsList.value = data || []
+    totalPages.value = Math.ceil((count || 0) / pageSize.value)
   } catch (err) {
-    console.error('[FetchMarkets Error]', err);
-    error.value = err;
+    error.value = err
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
+// SSR-friendly data fetch on first load
+await useAsyncData('markets', () => fetchMarkets())
 
-// Reset to page 1 when category changes
+// Watchers untuk filter dan pagination
 watch(currentCategory, () => {
-  currentPage.value = 1;
-  fetchMarkets();
-});
+  currentPage.value = 1
+  fetchMarkets()
+})
 
-// Refetch when page changes
 watch(currentPage, () => {
-  fetchMarkets();
-});
-
-// Initial fetch
-onMounted(() => {
-  fetchMarkets();
-});
+  fetchMarkets()
+})
 </script>
 
 <template>
