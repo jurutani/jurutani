@@ -1,21 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 
-export default defineComponent({
-  name: 'DiscussionsPage',
-  head() {
-    return {
-      title: 'Forum Diskusi JuruTani',
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'Tempat diskusi dan tanya jawab bagi petani, penyuluh, dan pakar pertanian Indonesia.'
-        }
-      ]
-    }
-  }
-})
 </script>
 <template>
   <UContainer class="py-8">

@@ -305,13 +305,13 @@ export default defineNuxtConfig({
     },
   },
 
-  unocss: {
-    presets: [
-      presetIcons({
-        prefix: 'i-', // default prefix, do not change
-      }),
-    ],
-  },
+  // unocss: {
+  //   presets: [
+  //     presetIcons({
+  //       prefix: 'i-', // default prefix, do not change
+  //     }),
+  //   ],
+  // },
 
   eslint: {
     // config: {

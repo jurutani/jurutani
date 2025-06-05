@@ -93,7 +93,7 @@ export const useHeadAndMeta = (pageMeta: any) => {
     ],
 
     // useScript can also be used to load scripts
-    script: [{ innerHTML: checkDarkTheme, once: true } as TurboScript],
+    script: [{ innerHTML: checkDarkTheme }],
     link,
     noscript,
     htmlAttrs: { lang: 'en-US' },

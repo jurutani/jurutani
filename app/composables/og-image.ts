@@ -3,7 +3,7 @@ import { heroImageUrl } from '@/utils/hero'
 import { primary, secondary } from '@/utils/colors'
 
 export const useOgImage = () => {
-  const { title, logo, description, author, twitter } = siteMeta
+  const { title, description } = siteMeta
   const fromBg = secondary
   const toBg = primary
 
@@ -15,9 +15,7 @@ export const useOgImage = () => {
     fromBg,
     toBg,
     // image: '~/assets/images/hero1.jpg',
-    logo,
-    author,
-    twitter,
+
   }
 
   const route = useRoute()
