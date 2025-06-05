@@ -61,7 +61,7 @@ const validations = {
   },
   phone: (value: string) => {
     if (!value) return true; // Optional field
-    return /^[\d\s\-+\(\)]+$/.test(value) || 'Format nomor telepon tidak valid';
+    return /^[\d\s\-+()]+$/.test(value) || 'Format nomor telepon tidak valid';
   }
 };
 

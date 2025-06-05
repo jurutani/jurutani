@@ -76,7 +76,7 @@ const startConversation = async () => {
     
     if (!user) {
       // Redirect to login if not authenticated
-      router.push('/login');
+      router.push('/auth/login');
       return;
     }
 

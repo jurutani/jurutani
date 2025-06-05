@@ -1,5 +1,4 @@
 // composables/useChatUtils.ts
-import { computed } from 'vue'
 import type { Message, Conversation } from './useChat'
 
 export const useChatUtils = () => {

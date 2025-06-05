@@ -1,127 +1,99 @@
-import { ref } from 'vue'
-import { useSupabase } from './useSupabase'
+import { ref } from 'vue';
+import { useSupabase } from './useSupabase';
+import { toastStore } from './useJuruTaniToast';
 
-export const useUserProfile = () => {
-  const { supabase, user, loading: authLoading } = useSupabase()
-  
-  const profile = ref(null)
-  const loading = ref(false)
-  const error = ref(null)
-  
-  // Ambil data profil user dari database
-  const fetchProfile = async () => {
-    if (!user.value) return null
-    
-    loading.value = true
-    error.value = null
-    
+export function useProfile() {
+  const { supabase } = useSupabase();
+
+  const userData = ref<any>(null);
+  const loading = ref(true);
+  const error = ref<any>(null);
+  const isEditing = ref(false);
+
+  const fetchUserData = async () => {
+    loading.value = true;
+    error.value = null;
+
     try {
-      const { data, error: fetchError } = await supabase
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        toastStore.error('Tidak dapat memuat data pengguna. Silakan login kembali.');
+        return;
+      }
+
+      const { data, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user.value.id)
-        .single()
-      
-      if (fetchError) {
-        error.value = fetchError.message
-        return null
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        error.value = profileError;
+        toastStore.error('Gagal memuat profil pengguna.');
+      } else {
+        userData.value = {
+          ...data,
+          email: user.email,
+          avatar_url: data.avatar_url ? `${data.avatar_url}?t=${Date.now()}` : null
+        };
       }
-      
-      profile.value = data
-      return data
     } catch (err) {
-      error.value = err.message
-      return null
+      error.value = err;
+      toastStore.error('Terjadi kesalahan saat memuat data profil.');
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
-  
-  // Update profil pengguna
-  const updateProfile = async (updates) => {
-    if (!user.value) return { success: false, error: 'User tidak ditemukan' }
-    
-    loading.value = true
-    error.value = null
-    
+  };
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '-';
     try {
-      const { data, error: updateError } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('id', user.value.id)
-        .select()
-        .single()
-      
-      if (updateError) {
-        error.value = updateError.message
-        return { success: false, error: updateError.message }
-      }
-      
-      profile.value = data
-      return { success: true, data }
-    } catch (err) {
-      error.value = err.message
-      return { success: false, error: err.message }
-    } finally {
-      loading.value = false
+      return new Date(dateString).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    } catch {
+      return '-';
     }
-  }
-  
-  // Upload avatar
-  const uploadAvatar = async (file) => {
-    if (!user.value) return { success: false, error: 'User tidak ditemukan' }
-    
-    loading.value = true
-    error.value = null
-    
+  };
+
+  const formatRole = (role?: string) => {
+    const roleLabels: Record<string, string> = {
+      admin: 'Administrator',
+      expert: 'Ahli Pertanian',
+      farmer: 'Petani',
+      user: 'Pengguna'
+    };
+    return roleLabels[role ?? ''] || role || 'Pengguna';
+  };
+
+  const updateUserProfile = async (updatedProfile: Record<string, any>) => {
+    userData.value = { ...userData.value, ...updatedProfile };
+    await fetchUserData();
+    toastStore.success('Profil berhasil diperbarui');
+    isEditing.value = false;
+  };
+
+  const isValidUrl = (string: string) => {
     try {
-      // Buat nama file unik
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`
-      const filePath = `avatars/${user.value.id}/${fileName}`
-      
-      // Upload file ke storage
-      const { error: uploadError } = await supabase
-        .storage
-        .from('user-content')
-        .upload(filePath, file)
-      
-      if (uploadError) {
-        error.value = uploadError.message
-        return { success: false, error: uploadError.message }
-      }
-      
-      // Dapatkan public URL
-      const { data: publicURL } = supabase
-        .storage
-        .from('user-content')
-        .getPublicUrl(filePath)
-      
-      // Update profil dengan URL avatar baru
-      const { success, error: updateError } = await updateProfile({
-        avatar_url: publicURL.publicUrl
-      })
-      
-      if (!success) {
-        error.value = updateError
-        return { success: false, error: updateError }
-      }
-      
-      return { success: true, url: publicURL.publicUrl }
-    } catch (err) {
-      error.value = err.message
-      return { success: false, error: err.message }
-    } finally {
-      loading.value = false
+      new URL(string);
+      return true;
+    } catch {
+      return false;
     }
-  }
-  
+  };
+
   return {
-    profile,
+    userData,
     loading,
     error,
-    fetchProfile,
-    updateProfile,
-    uploadAvatar
-  }
+    isEditing,
+    fetchUserData,
+    updateUserProfile,
+    formatDate,
+    formatRole,
+    isValidUrl
+  };
 }

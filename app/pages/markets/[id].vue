@@ -182,11 +182,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="min-h-screen">
     <div class="container mx-auto px-4 py-6 max-w-7xl">
       <!-- Back Button -->
       <button 
-        class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-8 transition-colors group" 
+        class="inline-flex items-center text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 mb-8 transition-colors group" 
         @click="goBack"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

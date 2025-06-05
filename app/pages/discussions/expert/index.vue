@@ -124,14 +124,22 @@ useHead({
 <template>
   <div class="expert-discussions">
     <div class="container mx-auto py-10 px-4">
-      <div class="flex items-center mb-8">
-        <NuxtLink to="/discussions" class="mr-4 text-green-600 hover:text-green-800">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="flex items-center mb-10 gap-4">
+        <NuxtLink 
+          to="/discussions" 
+          class="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 hover:bg-green-100 transition-colors"
+          aria-label="Kembali ke Diskusi"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </NuxtLink>
-        <h1 class="text-3xl font-bold text-green-700">Diskusi Pakar</h1>
+        
+        <h1 class="text-3xl font-bold text-green-700 leading-tight flex items-center my-auto">
+          Diskusi Pakar
+        </h1>
       </div>
+
       
       <div class="bg-white rounded-lg shadow-md p-6">
         <p class="text-lg text-gray-700 mb-6">
@@ -159,7 +167,7 @@ useHead({
         <div v-else>
           <!-- Category selection -->
           <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">Pilih Kategori</h2>
+            <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">Pilih Kategori</h2>
             <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
               <button 
                 v-for="category in categories" 
@@ -179,7 +187,7 @@ useHead({
           
           <!-- Experts based on selected category -->
           <div>
-            <h2 class="text-xl font-semibold mb-4">
+            <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
               Pakar {{ selectedCategory }}
               <span class="text-sm font-normal text-gray-500">({{ filteredExperts.length }} pakar)</span>
             </h2>
@@ -222,7 +230,7 @@ useHead({
 
           <!-- Popular topics -->
           <div class="mt-8 pt-6 border-t">
-            <h2 class="text-xl font-semibold mb-4">Topik Diskusi Populer - {{ selectedCategory }}</h2>
+            <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">Topik Diskusi Populer - {{ selectedCategory }}</h2>
             <ul class="space-y-3">
               <li 
                 v-for="(topic, index) in getPopularTopics(selectedCategory)" 
@@ -247,6 +255,5 @@ useHead({
 <style scoped>
 .expert-discussions {
   min-height: 100vh;
-  background-color: #f0fdf4;
 }
 </style>

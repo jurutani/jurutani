@@ -145,13 +145,20 @@ useHead({
 <template>
   <div class="instructor-discussions">
     <div class="container mx-auto py-10 px-4">
-      <div class="flex items-center mb-8">
-        <NuxtLink to="/discussions" class="mr-4 text-green-600 hover:text-green-800">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="flex items-center mb-10 gap-4">
+        <NuxtLink 
+          to="/discussions" 
+          class="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 hover:bg-green-100 transition-colors"
+          aria-label="Kembali ke Diskusi"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </NuxtLink>
-        <h1 class="text-3xl font-bold text-green-700">Diskusi Penyuluh</h1>
+        
+        <h1 class="text-3xl font-bold text-green-700 leading-tight flex items-center my-auto">
+          Diskusi Penyuluh
+        </h1>
       </div>
       
       <div class="bg-white rounded-lg shadow-md p-6">
@@ -161,7 +168,7 @@ useHead({
         
         <!-- Search input -->
         <div class="mb-6">
-          <h2 class="text-xl font-semibold mb-4">Cari Penyuluh</h2>
+          <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">Cari Penyuluh</h2>
           <div class="relative">
             <input 
               v-model="searchQuery"
@@ -201,7 +208,7 @@ useHead({
         <!-- Filters -->
         <div v-else class="mb-6">
           <div class="max-w-md">
-            <h2 class="text-xl font-semibold mb-4">Pilih Kabupaten/Kota</h2>
+            <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">Pilih Kabupaten/Kota</h2>
             <select
               v-model="selectedDistrict"
               class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
@@ -216,7 +223,7 @@ useHead({
 
         <!-- Instructors list -->
         <div v-if="!loading && !error">
-          <h2 class="text-xl font-semibold mb-4">
+          <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
             Penyuluh
             <span v-if="selectedDistrict"> 
               di {{ selectedDistrict }}
@@ -279,6 +286,5 @@ useHead({
 <style scoped>
 .instructor-discussions {
   min-height: 100vh;
-  background-color: #f0fdf4;
 }
 </style>

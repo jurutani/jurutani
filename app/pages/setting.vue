@@ -5,6 +5,9 @@ useSeoMeta({
   ogTitle: 'Setting - Juru Tani',
   ogDescription: 'Stay updated with the latest Setting from Juru Tani.',
 })
+definePageMeta({
+  middleware: ['auth']
+});
 </script>
 
 <template>

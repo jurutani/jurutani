@@ -5,6 +5,10 @@ useSeoMeta({
   ogTitle: 'Room Chat - Juru Tani',
   ogDescription: 'Stay updated with the latest Room Chat from Juru Tani.',
 })
+definePageMeta({
+  prerender: false,
+  middleware: ['auth']
+});
 </script>
 
 <template>

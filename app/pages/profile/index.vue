@@ -1,121 +1,39 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
-import { useSupabase } from '~/composables/useSupabase';
-import { toastStore } from '~/composables/useJuruTaniToast';
+import { onMounted, nextTick } from 'vue';
+import { useProfile } from '~/composables/useProfile';
 
-const { supabase } = useSupabase();
+const {
+  userData,
+  loading,
+  error,
+  isEditing,
+  fetchUserData,
+  updateUserProfile,
+  formatDate,
+  formatRole,
+  isValidUrl
+} = useProfile();
 
-const userData = ref(null);
-const loading = ref(true);
-const error = ref(null);
-const isEditing = ref(false);
-
-// Format date utility
-const formatDate = (dateString) => {
-  if (!dateString) return '-';
-  try {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  } catch {
-    return '-';
-  }
-};
-
-// Format role display
-const formatRole = (role) => {
-  const roleLabels = {
-    'admin': 'Administrator',
-    'expert': 'Ahli Pertanian',
-    'farmer': 'Petani',
-    'user': 'Pengguna'
-  };
-  return roleLabels[role] || role || 'Pengguna';
-};
-
-// Fetch user data
-const fetchUserData = async () => {
-  loading.value = true;
-  error.value = null;
-
-  try {
-    // Get the current user
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      toastStore.error('Tidak dapat memuat data pengguna. Silakan login kembali.');
-      return;
-    }
-
-    // Get the user profile from the profiles table
-    const { data, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-
-    if (profileError) {
-      console.error('Error fetching profile:', profileError);
-      error.value = profileError;
-      toastStore.error('Gagal memuat profil pengguna.');
-    } else {
-      userData.value = {
-        ...data,
-        email: user.email, // Email dari auth
-        // Cache busting untuk avatar URL
-        avatar_url: data.avatar_url ? `${data.avatar_url}?t=${Date.now()}` : data.avatar_url
-      };
-      console.log('User data loaded:', userData.value);
-    }
-  } catch (err) {
-    console.error('Exception fetching user data:', err);
-    error.value = err;
-    toastStore.error('Terjadi kesalahan saat memuat data profil.');
-  } finally {
-    loading.value = false;
-  }
-};
-
-// Handle profile update
-const handleProfileUpdate = async (updatedProfile) => {
-  // Update userData with new profile data
-  userData.value = { ...userData.value, ...updatedProfile };
-  
-  // Refresh data dari database untuk memastikan sinkronisasi
-  await nextTick();
-  await fetchUserData();
-  
-  toastStore.success('Profil berhasil diperbarui');
-  isEditing.value = false;
-};
-
-// Toggle edit mode
 const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
 };
 
-// Handle image error
-const handleImageError = (event) => {
-  console.error('Profile image failed to load:', event.target.src);
-  event.target.src = '/profile.png'; // Fallback to default image
+const handleProfileUpdate = async (updatedProfile: Record<string, any>) => {
+  await nextTick(); // Jika ada animasi atau loading
+  await updateUserProfile(updatedProfile);
 };
 
-// Check if URL is valid
-const isValidUrl = (string) => {
-  try {
-    new URL(string);
-    return true;
-  } catch {
-    return false;
-  }
+const handleImageError = (event: Event) => {
+  const target = event.target as HTMLImageElement;
+  console.error('Profile image failed to load:', target.src);
+  target.src = '/profile.png';
 };
 
 onMounted(() => {
   fetchUserData();
 });
 </script>
+
 
 <template>
   <div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
