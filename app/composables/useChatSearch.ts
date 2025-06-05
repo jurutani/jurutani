@@ -12,8 +12,8 @@ export const useChatSearch = () => {
 
       let searchQuery = supabase
         .from('profiles')
-        .select('id, name, avatar')
-        .ilike('name', `%${query.trim()}%`)
+        .select('id, full_name, avatar_url')
+        .ilike('full_name', `%${query.trim()}%`)
         .limit(10)
 
       if (excludeUserId) {
@@ -43,7 +43,7 @@ export const useChatSearch = () => {
         ? conversation.participant1 
         : conversation.participant2
 
-      const partnerName = partner?.name?.toLowerCase() || ''
+      const partnerName = partner?.full_name?.toLowerCase() || ''
       const lastMessage = conversation.last_message?.toLowerCase() || ''
 
       return partnerName.includes(searchTerm) || lastMessage.includes(searchTerm)

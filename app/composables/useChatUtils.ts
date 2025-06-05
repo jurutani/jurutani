@@ -127,9 +127,9 @@ export const useChatUtils = () => {
     ).length
   }
 
-  // Get avatar fallback (first letter of name)
-  const getAvatarFallback = (name: string) => {
-    return name ? name.charAt(0).toUpperCase() : '?'
+  // Get avatar fallback (first letter of full_name)
+  const getAvatarFallback = (full_name: string) => {
+    return full_name ? full_name.charAt(0).toUpperCase() : '?'
   }
 
   // Validate message content
@@ -140,7 +140,7 @@ export const useChatUtils = () => {
   // Get conversation title
   const getConversationTitle = (conversation: Conversation, currentUserId: string) => {
     const partner = getConversationPartner(conversation, currentUserId)
-    return partner?.name || 'Unknown User'
+    return partner?.full_name || 'Unknown User'
   }
 
   // Scroll to bottom helper

@@ -12,8 +12,8 @@ export interface Message {
   is_read: boolean
   sender?: {
     id: string
-    name: string
-    avatar?: string
+    full_name: string
+    avatar_url?: string
   }
 }
 
@@ -27,13 +27,13 @@ export interface Conversation {
   updated_at: string
   participant1?: {
     id: string
-    name: string
-    avatar?: string
+    full_name: string
+    avatar_url?: string
   }
   participant2?: {
     id: string
-    name: string
-    avatar?: string
+    full_name: string
+    avatar_url?: string
   }
 }
 
@@ -65,8 +65,8 @@ export const useChat = () => {
         .from('conversations')
         .select(`
           *,
-          participant1:profiles!conversations_participant1_id_fkey(id, name, avatar),
-          participant2:profiles!conversations_participant2_id_fkey(id, name, avatar)
+          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url),
+          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url)
         `)
         .or(`and(participant1_id.eq.${currentUser.id},participant2_id.eq.${otherUserId}),and(participant1_id.eq.${otherUserId},participant2_id.eq.${currentUser.id})`)
         .single()
@@ -89,8 +89,8 @@ export const useChat = () => {
         })
         .select(`
           *,
-          participant1:profiles!conversations_participant1_id_fkey(id, name, avatar),
-          participant2:profiles!conversations_participant2_id_fkey(id, name, avatar)
+          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url),
+          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url)
         `)
         .single()
 
@@ -118,8 +118,8 @@ export const useChat = () => {
         .from('conversations')
         .select(`
           *,
-          participant1:profiles!conversations_participant1_id_fkey(id, name, avatar),
-          participant2:profiles!conversations_participant2_id_fkey(id, name, avatar)
+          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url),
+          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url)
         `)
         .or(`participant1_id.eq.${currentUser.id},participant2_id.eq.${currentUser.id}`)
         .order('updated_at', { ascending: false })
@@ -127,6 +127,7 @@ export const useChat = () => {
       if (fetchError) throw fetchError
 
       conversations.value = data || []
+      console.log('Conversations:', conversations.value)
       return data
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch conversations'
@@ -144,7 +145,7 @@ export const useChat = () => {
         .from('messages')
         .select(`
           *,
-          sender:profiles!messages_sender_id_fkey(id, name, avatar)
+          sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url)
         `)
         .eq('conversation_id', conversationId)
         .order('created_at', { ascending: true })
@@ -152,6 +153,7 @@ export const useChat = () => {
       if (fetchError) throw fetchError
 
       messages.value = data || []
+      console.log('Messages:', messages.value)
       return data
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch messages'
@@ -178,7 +180,7 @@ export const useChat = () => {
         })
         .select(`
           *,
-          sender:profiles!messages_sender_id_fkey(id, name, avatar)
+          sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url)
         `)
         .single()
 
@@ -241,7 +243,7 @@ export const useChat = () => {
             .from('messages')
             .select(`
               *,
-              sender:profiles!messages_sender_id_fkey(id, name, avatar)
+              sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url)
             `)
             .eq('id', payload.new.id)
             .single()
@@ -263,19 +265,17 @@ export const useChat = () => {
   }
 
   // Get other participant dalam conversation
-  const getOtherParticipant = computed(() => {
+  const getOtherParticipant = async () => {
     if (!currentConversation.value) return null
-    
-    return async () => {
-      const currentUser = await getCurrentUser()
-      if (!currentUser) return null
 
-      const conv = currentConversation.value!
-      return conv.participant1_id === currentUser.id 
-        ? conv.participant2 
-        : conv.participant1
-    }
-  })
+    const currentUser = await getCurrentUser()
+    if (!currentUser) return null
+
+    const conv = currentConversation.value
+    return conv.participant1_id === currentUser.id 
+      ? conv.participant2 
+      : conv.participant1
+  }
 
   // Cleanup
   onUnmounted(() => {

@@ -1,33 +1,20 @@
-<!-- pages/chat/[id].vue - Halaman chat individual -->
+<!-- pages/room-chat/[id].vue -->
 <script setup lang="ts">
+import { toastStore } from '~/composables/useJuruTaniToast'
+import { useChat } from '~/composables/useChat'
+import { useChatUtils } from '~/composables/useChatUtils'
+import { useChatSearch } from '~/composables/useChatSearch'
+
 const router = useRouter()
 const route = useRoute()
 
-const { 
-  conversations, 
-  getUserConversations, 
+// Chat composables
+const {
+  conversations,
+  getUserConversations,
   getOrCreateConversation,
   getCurrentUser,
-  loading 
-} = useChat()
-
-const { 
-  formatLastMessageTime, 
-  truncateMessage, 
-  getConversationPartner,
-  getAvatarFallback 
-} = useChatUtils()
-
-const { searchConversations, searchUsers: searchUsersUtil } = useChatSearch()
-
-// Chat list states
-const searchQuery = ref('')
-const showNewChat = ref(false)
-const userSearchQuery = ref('')
-const searchResults = ref([])
-
-// Chat room states
-const {
+  loading,
   messages,
   currentConversation,
   getMessages,
@@ -42,15 +29,26 @@ const {
   groupMessagesByDate,
   isOwnMessage,
   isValidMessage,
-  scrollToBottom
+  scrollToBottom,
+  formatLastMessageTime,
+  truncateMessage,
+  getConversationPartner,
+  getAvatarFallback
 } = useChatUtils()
 
+const { searchConversations, searchUsers: searchUsersUtil } = useChatSearch()
+
+// Reactive States
+const searchQuery = ref('')
+const showNewChat = ref(false)
+const userSearchQuery = ref('')
+const searchResults = ref([])
 const newMessage = ref('')
 const messagesContainer = ref<HTMLElement>()
 const currentUser = ref(null)
+
 const conversationId = computed(() => route.params.id as string)
 
-// Computed properties
 const filteredConversations = computed(() => {
   if (!currentUser.value) return []
   return searchConversations(conversations.value, searchQuery.value, currentUser.value.id)
@@ -60,9 +58,15 @@ const groupedMessages = computed(() => {
   return groupMessagesByDate(messages.value)
 })
 
-const partnerInfo = computed(() => {
+const getParticipant = () => {
   if (!currentConversation.value || !currentUser.value) return null
-  return getConversationPartner(currentConversation.value, currentUser.value.id)
+
+  const participant = getConversationPartner(currentConversation.value, currentUser.value.id)
+  console.log('Participant:', participant)
+  return participant
+}
+const partnerInfo = computed(() => {
+  return getParticipant()
 })
 
 // Methods
@@ -71,24 +75,24 @@ const getPartner = (conversation) => {
   return getConversationPartner(conversation, currentUser.value.id)
 }
 
-const openChat = (conversationId: string) => {
-  router.push(`/chat/${conversationId}`)
+const openChat = async (id: string) => {
+  try {
+    await getMessages(id)
+    router.push(`/room-chat/${id}`)
+  } catch (error) {
+    console.error('Gagal membuka percakapan:', error)
+    toastStore.error('Gagal membuka percakapan', 'Silakan coba lagi nanti')
+  }
 }
 
 const startChat = async (userId: string) => {
   try {
     const conversation = await getOrCreateConversation(userId)
     showNewChat.value = false
-    router.push(`/chat/${conversation.id}`)
+    router.push(`/room-chat/${conversation.id}`)
   } catch (error) {
-    console.error('Failed to start chat:', error)
-    // Show error toast
-    const toast = useToast()
-    toast.add({
-      title: 'Error',
-      description: 'Gagal membuat percakapan',
-      color: 'red'
-    })
+    console.error('Gagal memulai chat:', error)
+    toastStore.error('Gagal memulai chat', 'Silakan coba lagi nanti')
   }
 }
 
@@ -97,77 +101,85 @@ const searchUsers = async () => {
     searchResults.value = []
     return
   }
-  
+
   try {
     const results = await searchUsersUtil(userSearchQuery.value, currentUser.value?.id)
     searchResults.value = results
   } catch (error) {
-    console.error('Failed to search users:', error)
+    console.error('Gagal mencari pengguna:', error)
   }
 }
 
 const sendMessage = async () => {
   if (!isValidMessage(newMessage.value) || loading.value) return
-  
+
   try {
-    const messageContent = newMessage.value.trim()
+    const content = newMessage.value.trim()
     newMessage.value = ''
-    
-    await sendChatMessage(conversationId.value, messageContent)
-    
-    // Scroll to bottom after sending
+    await sendChatMessage(conversationId.value, content)
+
     await nextTick()
-    if (messagesContainer.value) {
-      scrollToBottom(messagesContainer.value)
-    }
+    if (messagesContainer.value) scrollToBottom(messagesContainer.value)
   } catch (error) {
-    console.error('Failed to send message:', error)
-    const toast = useToast()
-    toast.add({
-      title: 'Error',
-      description: 'Gagal mengirim pesan',
-      color: 'red'
-    })
+    console.error('Gagal mengirim pesan:', error)
+    toastStore.error('Gagal mengirim pesan', 'Silakan coba lagi nanti')
   }
 }
 
 const goBack = () => {
-  router.push('/chat')
+  router.push('/room-chat')
 }
 
-// Watchers
+// Watch messages for auto-scroll
 watch(messages, async () => {
   await nextTick()
-  if (messagesContainer.value) {
-    scrollToBottom(messagesContainer.value)
-  }
+  if (messagesContainer.value) scrollToBottom(messagesContainer.value)
 }, { deep: true })
 
 // Lifecycle
 onMounted(async () => {
   try {
     currentUser.value = await getCurrentUser()
-    
+    console.log('Current User:', currentUser.value)
+
     if (conversationId.value) {
-      // Load messages for specific conversation
+      console.log('Conversation ID:', conversationId.value)
       await getMessages(conversationId.value)
       await markAsRead(conversationId.value)
       subscribeToMessages(conversationId.value)
-      
-      // Scroll to bottom
+
+      // Fetch conversation data if not already loaded
+      let conversationData = currentConversation.value
+      if (!conversationData || conversationData.id !== conversationId.value) {
+        // Try to find in conversations list
+        conversationData = conversations.value.find(c => c.id === conversationId.value)
+        if (!conversationData) {
+          // If not found, fetch all conversations
+          await getUserConversations()
+          conversationData = conversations.value.find(c => c.id === conversationId.value)
+        }
+        if (conversationData) {
+          currentConversation.value = conversationData
+        }
+      }
+      console.log('Conversation Data:', conversationData)
+
+      // Get participant info
+      if (conversationData && currentUser.value) {
+        const participant = getConversationPartner(conversationData, currentUser.value.id)
+        console.log('Participant Info:', participant)
+      }
+
       await nextTick()
       if (messagesContainer.value) {
         scrollToBottom(messagesContainer.value, false)
       }
     } else {
-      // Load conversations list
       await getUserConversations()
     }
   } catch (error) {
-    console.error('Failed to load chat:', error)
-    if (conversationId.value) {
-      router.push('/chat')
-    }
+    console.error('Gagal memuat data chat:', error)
+    if (conversationId.value) router.push('/room-chat')
   }
 })
 
@@ -175,6 +187,7 @@ onUnmounted(() => {
   unsubscribeFromMessages()
 })
 </script>
+
 
 <template>
   <div class="flex flex-col h-screen max-w-4xl mx-auto bg-white">
@@ -190,16 +203,16 @@ onUnmounted(() => {
             @click="goBack"
           />
           <UAvatar
-            :src="partnerInfo?.avatar"
-            :alt="partnerInfo?.name"
+            :src="partnerInfo?.avatar_url"
+            :alt="partnerInfo?.full_name"
             size="md"
           >
             <template #fallback>
-              {{ getAvatarFallback(partnerInfo?.name || '') }}
+              {{ getAvatarFallback(partnerInfo?.full_name || '') }}
             </template>
           </UAvatar>
           <div>
-            <h2 class="font-semibold text-gray-900">{{ partnerInfo?.name }}</h2>
+            <h2 class="font-semibold text-gray-900">{{ partnerInfo?.full_name }}</h2>
             <p class="text-sm text-gray-500">Online</p>
           </div>
         </div>
@@ -307,19 +320,19 @@ onUnmounted(() => {
           @click="openChat(conversation.id)"
         >
           <UAvatar
-            :src="getPartner(conversation)?.avatar"
-            :alt="getPartner(conversation)?.name"
+            :src="getPartner(conversation)?.avatar_url"
+            :alt="getPartner(conversation)?.full_name"
             size="lg"
           >
             <template #fallback>
-              {{ getAvatarFallback(getPartner(conversation)?.name || '') }}
+              {{ getAvatarFallback(getPartner(conversation)?.full_name || '') }}
             </template>
           </UAvatar>
           
           <div class="flex-1 min-w-0">
             <div class="flex justify-between items-center mb-1">
               <h3 class="font-medium text-gray-900 truncate">
-                {{ getPartner(conversation)?.name }}
+                {{ getPartner(conversation)?.full_name }}
               </h3>
               <span class="text-xs text-gray-500 flex-shrink-0">
                 {{ formatLastMessageTime(conversation.last_message?.created_at) }}
@@ -378,16 +391,16 @@ onUnmounted(() => {
               @click="startChat(user.id)"
             >
               <UAvatar
-                :src="user.avatar"
-                :alt="user.name"
+                :src="user.avatar_url"
+                :alt="user.full_name"
                 size="sm"
               >
                 <template #fallback>
-                  {{ getAvatarFallback(user.name) }}
+                  {{ getAvatarFallback(user.full_name) }}
                 </template>
               </UAvatar>
               <div>
-                <p class="font-medium text-gray-900">{{ user.name }}</p>
+                <p class="font-medium text-gray-900">{{ user.full_name }}</p>
                 <p class="text-sm text-gray-500">{{ user.email }}</p>
               </div>
             </div>

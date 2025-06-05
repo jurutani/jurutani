@@ -1,4 +1,108 @@
-<!-- pages/chat/index.vue - Halaman daftar conversation -->
+<!-- pages/room-chat/index.vue - Halaman daftar conversation -->
+ <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { toastStore } from '~/composables/useJuruTaniToast'
+
+// Composables
+const router = useRouter()
+const toast = useToast()
+
+const { 
+  conversations, 
+  getUserConversations, 
+  getOrCreateConversation,
+  getCurrentUser,
+  loading 
+} = useChat()
+
+const { 
+  formatLastMessageTime, 
+  truncateMessage, 
+  getConversationPartner,
+  getAvatarFallback 
+} = useChatUtils()
+
+const { searchConversations, searchUsers: searchUsersUtil } = useChatSearch()
+
+// Reactive data
+const searchQuery = ref('')
+const showNewChat = ref(false)
+const userSearchQuery = ref('')
+const searchResults = ref([])
+const searchingUsers = ref(false)
+const currentUser = ref(null)
+
+// Computed properties
+const filteredConversations = computed(() => {
+  if (!currentUser.value || !conversations.value) return []
+  return searchConversations(conversations.value, searchQuery.value, currentUser.value.id)
+})
+
+// Methods
+const getPartner = (conversation) => {
+  if (!currentUser.value) return null
+  return getConversationPartner(conversation, currentUser.value.id)
+}
+
+const openChat = (conversationId: string) => {
+  router.push(`/room-chat/${conversationId}`)
+}
+
+const startChat = async (userId: string) => {
+  try {
+    const conversation = await getOrCreateConversation(userId)
+    showNewChat.value = false
+    userSearchQuery.value = ''
+    searchResults.value = []
+    
+    toast.add({
+      title: 'Berhasil',
+      description: 'Chat baru telah dibuat',
+      color: 'green'
+    })
+    
+    router.push(`/room-chat/${conversation.id}`)
+  } catch (error) {
+    console.error('Failed to start chat:', error)
+    toastStore.error('Gagal memulai chat', 'Terjadi kesalahan saat membuat chat baru')
+  }
+}
+
+const searchUsers = async () => {
+  if (userSearchQuery.value.trim().length < 2) {
+    searchResults.value = []
+    return
+  }
+  
+  try {
+    searchingUsers.value = true
+    const results = await searchUsersUtil(userSearchQuery.value, currentUser.value?.id)
+    searchResults.value = results || []
+  } catch (error) {
+    console.error('Failed to search users:', error)
+    toastStore.error('Gagal mencari pengguna', 'Terjadi kesalahan saat mencari pengguna')
+  } finally {
+    searchingUsers.value = false
+  }
+}
+
+// Lifecycle
+onMounted(async () => {
+  try {
+    currentUser.value = await getCurrentUser()
+    await getUserConversations()
+  } catch (error) {
+    console.error('Failed to load conversations:', error)
+    toastStore.error('Gagal memuat conversation', 'Terjadi kesalahan saat mengambil data conversation')
+  }
+})
+
+// Meta
+useHead({
+  title: 'Chat - Daftar Conversation'
+})
+</script>
 <template>
   <div class="flex flex-col h-screen max-w-4xl mx-auto bg-white">
     <!-- Chat Header -->
@@ -45,13 +149,13 @@
           <!-- Avatar -->
           <div class="relative">
             <UAvatar
-              :src="getPartner(conversation)?.avatar"
-              :alt="getPartner(conversation)?.name"
+              :src="getPartner(conversation)?.avatar_url"
+              :alt="getPartner(conversation)?.full_name"
               size="lg"
               class="ring-2 ring-white"
             >
               <template #fallback>
-                {{ getAvatarFallback(getPartner(conversation)?.name || '') }}
+                {{ getAvatarFallback(getPartner(conversation)?.full_name || '') }}
               </template>
             </UAvatar>
             
@@ -63,7 +167,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex justify-between items-start mb-1">
               <h3 class="font-semibold text-gray-900 truncate group-hover:text-primary-600 transition-colors">
-                {{ getPartner(conversation)?.name }}
+                {{ getPartner(conversation)?.full_name }}
               </h3>
               <span class="text-xs text-gray-500 flex-shrink-0 ml-2">
                 {{ conversation.last_message_at ? formatLastMessageTime(conversation.last_message_at) : '' }}
@@ -162,17 +266,17 @@
                 @click="startChat(user.id)"
               >
                 <UAvatar
-                  :src="user.avatar"
-                  :alt="user.name"
+                  :src="user.avatar_url"
+                  :alt="user.full_name"
                   size="sm"
                 >
                   <template #fallback>
-                    {{ getAvatarFallback(user.name) }}
+                    {{ getAvatarFallback(user.full_name) }}
                   </template>
                 </UAvatar>
                 <div class="flex-1 min-w-0">
                   <p class="font-medium text-gray-900 truncate group-hover:text-primary-600 transition-colors">
-                    {{ user.name }}
+                    {{ user.full_name }}
                   </p>
                   <p class="text-sm text-gray-500 truncate">{{ user.email }}</p>
                 </div>
@@ -212,118 +316,3 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-
-// Composables
-const router = useRouter()
-const toast = useToast()
-
-const { 
-  conversations, 
-  getUserConversations, 
-  getOrCreateConversation,
-  getCurrentUser,
-  loading 
-} = useChat()
-
-const { 
-  formatLastMessageTime, 
-  truncateMessage, 
-  getConversationPartner,
-  getAvatarFallback 
-} = useChatUtils()
-
-const { searchConversations, searchUsers: searchUsersUtil } = useChatSearch()
-
-// Reactive data
-const searchQuery = ref('')
-const showNewChat = ref(false)
-const userSearchQuery = ref('')
-const searchResults = ref([])
-const searchingUsers = ref(false)
-const currentUser = ref(null)
-
-// Computed properties
-const filteredConversations = computed(() => {
-  if (!currentUser.value || !conversations.value) return []
-  return searchConversations(conversations.value, searchQuery.value, currentUser.value.id)
-})
-
-// Methods
-const getPartner = (conversation) => {
-  if (!currentUser.value) return null
-  return getConversationPartner(conversation, currentUser.value.id)
-}
-
-const openChat = (conversationId: string) => {
-  router.push(`/chat/${conversationId}`)
-}
-
-const startChat = async (userId: string) => {
-  try {
-    const conversation = await getOrCreateConversation(userId)
-    showNewChat.value = false
-    userSearchQuery.value = ''
-    searchResults.value = []
-    
-    toast.add({
-      title: 'Berhasil',
-      description: 'Chat baru telah dibuat',
-      color: 'green'
-    })
-    
-    router.push(`/chat/${conversation.id}`)
-  } catch (error) {
-    console.error('Failed to start chat:', error)
-    toast.add({
-      title: 'Error',
-      description: 'Gagal membuat chat baru',
-      color: 'red'
-    })
-  }
-}
-
-const searchUsers = async () => {
-  if (userSearchQuery.value.trim().length < 2) {
-    searchResults.value = []
-    return
-  }
-  
-  try {
-    searchingUsers.value = true
-    const results = await searchUsersUtil(userSearchQuery.value, currentUser.value?.id)
-    searchResults.value = results || []
-  } catch (error) {
-    console.error('Failed to search users:', error)
-    toast.add({
-      title: 'Error',
-      description: 'Gagal mencari pengguna',
-      color: 'red'
-    })
-  } finally {
-    searchingUsers.value = false
-  }
-}
-
-// Lifecycle
-onMounted(async () => {
-  try {
-    currentUser.value = await getCurrentUser()
-    await getUserConversations()
-  } catch (error) {
-    console.error('Failed to load conversations:', error)
-    toast.add({
-      title: 'Error',
-      description: 'Gagal memuat daftar conversation',
-      color: 'red'
-    })
-  }
-})
-
-// Meta
-useHead({
-  title: 'Chat - Daftar Conversation'
-})
-</script>
