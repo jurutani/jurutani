@@ -94,7 +94,7 @@
         <div class="flex flex-wrap justify-center gap-4">
           <!-- WhatsApp -->
           <a 
-            href="https://wa.me/081575525260" 
+            href="https://api.whatsapp.com/send/?phone=6281575525260&text=Halo%2C+saya+ingin+bertanya...&type=phone_number&app_absent=0" 
             target="_blank"
             aria-label="WhatsApp"
             class="social-icon-container"

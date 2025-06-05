@@ -83,7 +83,7 @@ const startConversation = async () => {
     const { data: existingConversation } = await supabase
       .from('conversations')
       .select('id')
-      .or(`and(participant1_id.eq.${user.id},participant2_id.eq.${route.params.id}),and(participant1_id.eq.${route.params.id},participant2_id.eq.${user.id})`)
+      .or(`and(participant1_id.eq.${user.id},participant2_id.eq.${instructor.value.user_id}),and(participant1_id.eq.${instructor.value.user_id},participant2_id.eq.${user.id})`)
       .single();
 
     if (existingConversation) {
@@ -95,7 +95,7 @@ const startConversation = async () => {
         .from('conversations')
         .insert({
           participant1_id: user.id,
-          participant2_id: route.params.id
+          participant2_id: instructor.value.user_id
         })
         .select('id')
         .single();

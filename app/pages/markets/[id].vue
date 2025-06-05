@@ -97,7 +97,10 @@ const hasTiktokLink = computed(() => product.value?.links?.tiktok_link);
 const whatsappLink = computed(() => {
   if (!product.value?.contact_seller) return '#';
   const phone = product.value.contact_seller.replace(/\D/g, '');
-  return `https://wa.me/${phone}`;
+    // Pesan yang mau dikirim
+  const message = 'Saya ingin menanyakan produk anda';
+  const encodedMessage = encodeURIComponent(message);
+  return `https://api.whatsapp.com/send/?phone=${phone}&text=${encodedMessage}&type=phone_number&app_absent=0`;
 });
 
 // Format date

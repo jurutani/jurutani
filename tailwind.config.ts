@@ -17,12 +17,13 @@ export default {
     tailwindTypography,
     tailwindForms,
     tailwindCssPluginPinegrow({
+      // colors: { ...pg_colors, pp: pg_colors.primary }, // pp, primary, secondary etc
       fonts: getFontsWithFallback(pg_fonts),
-      backgrounds: pg_backgrounds,
+      backgrounds: pg_backgrounds, // bg-design-image, bg-design-image-large
     }),
   ],
 
-  theme: {
+ theme: {
     extend: {
       colors: {
         ...pg_colors,
@@ -30,6 +31,7 @@ export default {
       },
     },
   },
+
 
   get content() {
     const _content = [
@@ -43,6 +45,6 @@ export default {
     ]
     return process.env.NODE_ENV === 'production'
       ? _content
-      : [..._content, './_pginfo/**/*.{html,js}']
+      : [..._content, './_pginfo/**/*.{html,js}'] // used by Vue Desginer for live-designing during development
   },
 }

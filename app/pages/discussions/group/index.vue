@@ -71,7 +71,7 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">WhatsApp</h3>
             <p class="text-gray-600 dark:text-gray-400 text-center mb-4">Grup diskusi untuk pertanyaan dan berbagi pengalaman</p>
-            <a href="https://wa.me/081575525260?text=Saya%20ingin%20bergabung%20dengan%20grup%20Juru%20Tani" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
+            <a href="https://api.whatsapp.com/send/?phone=6281575525260&text=Saya+ingin+bergabung+dengan+grup+Juru+Tani&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-300">
               Gabung Grup
             </a>
           </div>

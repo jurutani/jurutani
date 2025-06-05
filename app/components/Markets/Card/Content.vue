@@ -150,7 +150,10 @@ const hasTiktokLink = computed(() => props.product.links?.tiktok_link);
 const whatsappLink = computed(() => {
   if (!props.product.contact_seller) return '#';
   const phone = props.product.contact_seller.replace(/\D/g, '');
-  return `https://wa.me/${phone}`;
+      // Pesan yang mau dikirim
+  const message = 'Saya ingin menanyakan produk anda';
+  const encodedMessage = encodeURIComponent(message);
+  return `https://api.whatsapp.com/send/?phone=${phone}&text=${encodedMessage}&type=phone_number&app_absent=0`;
 });
 
 // Handle image load events
