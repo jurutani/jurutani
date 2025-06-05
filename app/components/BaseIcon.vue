@@ -4,7 +4,7 @@
   const props = defineProps({
     name: {
       type: String,
-      default: 'i-line-md-iconify1',
+      default: 'i-heroicons-light-bulb',
     },
     tag: {
       type: String,

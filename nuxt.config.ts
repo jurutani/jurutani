@@ -48,6 +48,10 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'netlify-static',
+    prerender: {
+      crawlLinks: true,
+      ignore: ['/room-chat', '/markets']
+    }
   },
 
   app: {
@@ -350,6 +354,5 @@ export default defineNuxtConfig({
       // ],
     },
   },
-
   compatibilityDate: '2025-01-14',
 })

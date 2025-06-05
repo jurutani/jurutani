@@ -12,7 +12,7 @@
             {
               "name": "name",
               "customType": "icon",
-              "placeholder": "i-line-md-iconify1"
+              "placeholder": "i-heroicons-light-bulb"
             },
             {
               "name": "size",
