@@ -18,7 +18,7 @@ interface NewsItem {
   published_at?: string
   image_url?: string
   attachment_url?: string
-  author_id?: UUID
+  user_id?: UUID
 }
 
 interface FormState {
@@ -228,7 +228,7 @@ const handleSubmit = async (): Promise<void> => {
       link: form.value.link.trim() || null,
       image_url: imageUrl || null,
       attachment_url: attachmentUrl || null,
-      author_id: props.newsItem?.author_id || null,
+      user_id: props.newsItem?.user_id || null,
       published_at: form.value.publishDate || null
     }
 

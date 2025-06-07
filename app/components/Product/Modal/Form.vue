@@ -21,7 +21,7 @@ interface MarketItem {
   category?: string;
   seller?: string;
   contact_seller?: string;
-  seller_id?: UUID;
+  user_id?: UUID;
 }
 
 const props = defineProps({
@@ -201,7 +201,7 @@ const submitForm = async () => {
       category: form.value.category,
       seller: form.value.seller,
       contact_seller: form.value.contact_seller,
-      seller_id: props.marketItem?.seller_id ?? null
+      user_id: props.marketItem?.user_id ?? null
     }
 
     const res = await supabase.from('markets').upsert(payload, { onConflict: 'id' })

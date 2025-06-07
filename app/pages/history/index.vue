@@ -17,14 +17,32 @@ const pageSize = ref(10);
 const totalItems = ref(0);
 const totalPages = computed(() => Math.ceil(totalItems.value / pageSize.value));
 
-// Filter
+// Filter - hanya news dan markets
 const activeFilter = ref('all');
-const filters = ['all', 'news', 'markets', 'updates'];
+const filters = ['all', 'news', 'markets'];
 const filterLabels = {
   all: 'Semua',
   news: 'Berita',
-  markets: 'Pasar',
-  updates: 'Update'
+  markets: 'Pasar'
+};
+
+// Status mapping
+const statusConfig = {
+  approved: {
+    label: 'Disetujui',
+    class: 'bg-green-100 text-green-800 border-green-200',
+    icon: '✓'
+  },
+  pending: {
+    label: 'Menunggu',
+    class: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    icon: '⏳'
+  },
+  rejected: {
+    label: 'Ditolak',
+    class: 'bg-red-100 text-red-800 border-red-200',
+    icon: '✗'
+  }
 };
 
 // Fetch user data
@@ -70,7 +88,7 @@ const fetchHistoryData = async () => {
     if (activeFilter.value === 'all' || activeFilter.value === 'news') {
       const { data: newsData, error: newsError, count: newsCount } = await supabase
         .from('news')
-        .select('id, title, created_at, image', { count: 'exact' })
+        .select('id, title, created_at, image_url, status_news', { count: 'exact' })
         .eq('user_id', currentUserId.value)
         .order('created_at', { ascending: false });
       
@@ -81,7 +99,8 @@ const fetchHistoryData = async () => {
           ...item,
           type: 'news',
           typeLabel: 'Berita',
-          route: `/news/${item.id}`
+          route: `/news/${item.id}`,
+          status: item.status || 'pending'
         }));
         allData = [...allData, ...formattedNews];
         if (activeFilter.value === 'news') {
@@ -94,7 +113,7 @@ const fetchHistoryData = async () => {
     if (activeFilter.value === 'all' || activeFilter.value === 'markets') {
       const { data: marketsData, error: marketsError, count: marketsCount } = await supabase
         .from('markets')
-        .select('id, title, created_at, image', { count: 'exact' })
+        .select('id, name, created_at, attachments, status', { count: 'exact' })
         .eq('user_id', currentUserId.value)
         .order('created_at', { ascending: false });
       
@@ -105,35 +124,12 @@ const fetchHistoryData = async () => {
           ...item,
           type: 'markets',
           typeLabel: 'Pasar',
-          route: `/markets/${item.id}`
+          route: `/markets/${item.id}`,
+          status: item.status || 'pending'
         }));
         allData = [...allData, ...formattedMarkets];
         if (activeFilter.value === 'markets') {
           totalItems.value = marketsCount || 0;
-        }
-      }
-    }
-    
-    // Fetch updates data
-    if (activeFilter.value === 'all' || activeFilter.value === 'updates') {
-      const { data: updatesData, error: updatesError, count: updatesCount } = await supabase
-        .from('updates')
-        .select('id, title, created_at, image', { count: 'exact' })
-        .eq('user_id', currentUserId.value)
-        .order('created_at', { ascending: false });
-      
-      if (updatesError) {
-        console.error('Error fetching updates:', updatesError);
-      } else if (updatesData) {
-        const formattedUpdates = updatesData.map(item => ({
-          ...item,
-          type: 'updates',
-          typeLabel: 'Update',
-          route: `/updates/${item.id}`
-        }));
-        allData = [...allData, ...formattedUpdates];
-        if (activeFilter.value === 'updates') {
-          totalItems.value = updatesCount || 0;
         }
       }
     }
@@ -175,109 +171,167 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="history-page container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-center mb-8">Riwayat Aktivitas</h1>
+  <div class="history-page container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">Riwayat Aktivitas</h1>
+      <p class="text-gray-600">Kelola dan pantau status submission Anda</p>
+    </div>
     
     <!-- Filter Tabs -->
-    <div class="flex overflow-x-auto mb-6 pb-2">
-      <button 
-        v-for="filter in filters" 
-        :key="filter"
-        :class="[
-          'px-4 py-2 mx-1 rounded-full whitespace-nowrap',
-          activeFilter === filter 
-            ? 'bg-green-600 text-white' 
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        ]"
-        @click="changeFilter(filter)"
-      >
-        {{ filterLabels[filter] }}
-      </button>
+    <div class="bg-white rounded-lg shadow-sm border mb-6">
+      <div class="flex border-b">
+        <button 
+          v-for="filter in filters" 
+          :key="filter"
+          :class="[
+            'flex-1 px-6 py-4 text-center font-medium transition-all duration-200',
+            activeFilter === filter 
+              ? 'text-green-600 border-b-2 border-green-600 bg-green-50' 
+              : 'text-gray-600 hover:text-green-600 hover:bg-gray-50'
+          ]"
+          @click="changeFilter(filter)"
+        >
+          {{ filterLabels[filter] }}
+        </button>
+      </div>
     </div>
     
     <!-- Loading State -->
-    <div v-if="loading" class="text-center py-10">
+    <div v-if="loading" class="text-center py-16">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-4"/>
       <p class="text-gray-500">Memuat riwayat aktivitas Anda...</p>
     </div>
     
     <!-- Error State -->
-    <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-      <p>Terjadi kesalahan saat memuat riwayat aktivitas.</p>
-      <button class="mt-2 text-blue-600 hover:underline" @click="fetchHistoryData">
+    <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg">
+      <div class="flex items-center">
+        <span class="text-red-500 mr-2">⚠️</span>
+        <p class="font-medium">Terjadi kesalahan saat memuat riwayat aktivitas.</p>
+      </div>
+      <button 
+        class="mt-3 text-blue-600 hover:text-blue-700 font-medium underline" 
+        @click="fetchHistoryData"
+      >
         Coba lagi
       </button>
     </div>
     
     <!-- Empty State -->
-    <div v-else-if="historyItems.length === 0" class="text-center py-10">
-      <p class="text-gray-500">Belum ada aktivitas untuk ditampilkan.</p>
-      <p v-if="activeFilter !== 'all'" class="text-gray-500 mt-2">
-        Coba pilih kategori lain atau lihat semua aktivitas.
+    <div v-else-if="historyItems.length === 0" class="text-center py-16">
+      <div class="text-6xl mb-4">📝</div>
+      <h3 class="text-xl font-medium text-gray-800 mb-2">Belum ada aktivitas</h3>
+      <p class="text-gray-500 mb-4">
+        {{ activeFilter !== 'all' ? 
+          'Belum ada data untuk kategori ini.' : 
+          'Mulai buat berita atau posting pasar untuk melihat riwayat.' 
+        }}
       </p>
+      <nuxt-link 
+        to="/" 
+        class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+      >
+        <span class="mr-2">+</span>
+        Buat Konten Baru
+      </nuxt-link>
     </div>
     
-    <!-- History Items -->
+    <!-- History Items List -->
     <div v-else class="space-y-4">
-      <nuxt-link 
+      <div 
         v-for="item in historyItems" 
         :key="item.type + '-' + item.id"
-        :to="item.route"
-        class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+        class="bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200"
       >
-        <div class="flex items-center p-4">
-          <!-- Image -->
-          <div class="w-16 h-16 md:w-20 md:h-20 rounded overflow-hidden flex-shrink-0 mr-4">
-            <img 
-              :src="item.image || '/img/default-placeholder.png'" 
-              :alt="item.title"
-              class="w-full h-full object-cover"
-            >
-          </div>
-          
-          <!-- Content -->
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center mb-1">
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-4">
+            <!-- Type Badge -->
+            <div class="flex items-center space-x-3">
               <span 
                 :class="[
-                  'text-xs px-2 py-1 rounded-full mr-2',
-                  item.type === 'news' ? 'bg-blue-100 text-blue-800' :
-                  item.type === 'markets' ? 'bg-green-100 text-green-800' :
-                  'bg-purple-100 text-purple-800'
+                  'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
+                  item.type === 'news' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
                 ]"
               >
+                <span class="mr-1">
+                  {{ item.type === 'news' ? '📰' : '🛒' }}
+                </span>
                 {{ item.typeLabel }}
               </span>
-              <span class="text-xs text-gray-500">
+              
+              <!-- Date -->
+              <span class="text-sm text-gray-500">
                 {{ formatDate(item.created_at) }}
               </span>
             </div>
-            <h3 class="font-medium text-gray-900 truncate">{{ item.title }}</h3>
-            <div class="flex items-center text-sm text-blue-600 mt-1">
-              <span>Lihat detail</span>
-              <span class="ml-1">→</span>
+            
+            <!-- Status Badge -->
+            <span 
+              :class="[
+                'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border',
+                statusConfig[item.status]?.class || statusConfig.pending.class
+              ]"
+            >
+              <span class="mr-1">
+                {{ statusConfig[item.status]?.icon || statusConfig.pending.icon }}
+              </span>
+              {{ statusConfig[item.status]?.label || statusConfig.pending.label }}
+            </span>
+          </div>
+          
+          <div class="flex items-center space-x-4">
+            <!-- Image -->
+            <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+              <img 
+                :src="item.image || '/img/default-placeholder.png'" 
+                :alt="item.title"
+                class="w-full h-full object-cover"
+                loading="lazy"
+              >
+            </div>
+            
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+              <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                {{ item.title }}
+              </h3>
+              
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-500">
+                  ID: {{ item.type.toUpperCase() }}-{{ item.id }}
+                </div>
+                
+                <nuxt-link 
+                  :to="item.route"
+                  class="inline-flex items-center px-4 py-2 text-sm font-medium text-green-600 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors"
+                >
+                  Lihat Detail
+                  <span class="ml-1">→</span>
+                </nuxt-link>
+              </div>
             </div>
           </div>
         </div>
-      </nuxt-link>
+      </div>
     </div>
     
     <!-- Pagination -->
     <div 
-      v-if="!loading && historyItems.length > 0" 
+      v-if="!loading && historyItems.length > 0 && totalPages > 1" 
       class="flex justify-center mt-8"
     >
-      <nav class="inline-flex">
+      <nav class="inline-flex rounded-lg border border-gray-200 bg-white shadow-sm">
         <button
           :disabled="currentPage === 1"
           :class="[
-            'px-3 py-1 rounded-l border',
+            'px-4 py-2 text-sm font-medium rounded-l-lg border-r border-gray-200',
             currentPage === 1 
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-              : 'bg-white text-gray-700 hover:bg-gray-50'
+              ? 'bg-gray-50 text-gray-400 cursor-not-allowed' 
+              : 'text-gray-700 hover:bg-gray-50'
           ]"
           @click="changePage(currentPage - 1)"
         >
-          Sebelumnya
+          ← Sebelumnya
         </button>
         
         <div class="flex">
@@ -289,10 +343,10 @@ onMounted(() => {
                 (page >= currentPage - 1 && page <= currentPage + 1)
               "
               :class="[
-                'px-3 py-1 border-t border-b',
+                'px-4 py-2 text-sm font-medium border-r border-gray-200',
                 currentPage === page 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
+                  ? 'bg-green-600 text-white' 
+                  : 'text-gray-700 hover:bg-gray-50'
               ]"
               @click="changePage(page)"
             >
@@ -301,7 +355,7 @@ onMounted(() => {
             
             <span
               v-else-if="page === currentPage - 2 || page === currentPage + 2"
-              class="px-3 py-1 border-t border-b bg-white text-gray-700"
+              class="px-4 py-2 text-sm text-gray-400 border-r border-gray-200"
             >
               ...
             </span>
@@ -311,16 +365,31 @@ onMounted(() => {
         <button
           :disabled="currentPage === totalPages"
           :class="[
-            'px-3 py-1 rounded-r border',
+            'px-4 py-2 text-sm font-medium rounded-r-lg',
             currentPage === totalPages 
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-              : 'bg-white text-gray-700 hover:bg-gray-50'
+              ? 'bg-gray-50 text-gray-400 cursor-not-allowed' 
+              : 'text-gray-700 hover:bg-gray-50'
           ]"
           @click="changePage(currentPage + 1)"
         >
-          Selanjutnya
+          Selanjutnya →
         </button>
       </nav>
     </div>
+    
+    <!-- Stats Summary -->
+    <div v-if="!loading && historyItems.length > 0" class="mt-8 text-center text-sm text-gray-500">
+      Menampilkan {{ historyItems.length }} dari {{ totalItems }} item
+    </div>
   </div>
 </template>
+
+<style scoped>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

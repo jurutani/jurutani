@@ -224,23 +224,23 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
 
          <div class="grid grid-cols-1 place-items-center gap-3">
           <UButton
-            color="white"
-            variant="outline"
-            :ui="{ 
-              base: 'rounded-lg p-2', 
-              color: {
-                white: {
-                  solid: 'bg-white hover:bg-gray-50'
+              color="white"
+              variant="outline"
+              :ui="{ 
+                base: 'rounded-lg p-2', 
+                color: {
+                  white: {
+                    solid: 'bg-white hover:bg-gray-50'
+                  }
                 }
-              }
-            }"
-            :disabled="isLoading"
-            @click="handleSocialLogin('google')"
-          >
-            <Icon name="logos:google-icon" class="mr-2 h-5 w-5" />
-            Google
-          </UButton>
-        </div>
+              }"
+              :disabled="isLoading"
+              @click="handleSocialLogin('google')"
+            >
+              <Icon name="logos:google-icon" class="mr-2 h-5 w-5" />
+              Google
+            </UButton>
+          </div>
 
         </UCard>
         

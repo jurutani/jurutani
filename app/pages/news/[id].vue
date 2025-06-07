@@ -15,7 +15,7 @@ interface NewsItem {
   image_url?: string
   attachment_url?: string
   author?: string
-  author_id?: string
+  user_id?: string
   created_at: string
   updated_at: string
   published_at?: string
