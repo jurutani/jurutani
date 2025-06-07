@@ -190,18 +190,31 @@ onUnmounted(() => {
 
 
 <template>
-  <div class="flex flex-col h-screen max-w-4xl mx-auto bg-white">
+  <div class="flex flex-col h-screen max-w-4xl mx-auto bg-white dark:bg-gray-900">
+    <!-- Back Button -->
+    <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <button 
+            class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+            @click="goBack"
+          >
+            <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
+            <span class="font-medium">Kembali ke Room Chat</span>
+          </button>
+          <div class="flex items-center gap-2 text-green-700 dark:text-green-300">
+            <UIcon name="i-heroicons-newspaper" class="w-5 h-5" />
+            <span class="font-semibold">JuruTani Room Chat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <!-- Chat Room View -->
     <div v-if="conversationId" class="flex flex-col h-full">
       <!-- Header -->
-      <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+      <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
         <div class="flex items-center gap-3">
-          <UButton
-            icon="i-heroicons-arrow-left"
-            variant="ghost"
-            size="sm"
-            @click="goBack"
-          />
           <UAvatar
             :src="partnerInfo?.avatar_url"
             :alt="partnerInfo?.full_name"
@@ -212,21 +225,43 @@ onUnmounted(() => {
             </template>
           </UAvatar>
           <div>
-            <h2 class="font-semibold text-gray-900">{{ partnerInfo?.full_name }}</h2>
-            <p class="text-sm text-gray-500">Online</p>
+            <p class="font-semibold text-gray-900 dark:text-gray-100 text-lg md:text-xl">{{ partnerInfo?.full_name }}</p>
+            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400">Online</p>
           </div>
+        </div>
+        <div class="flex flex-col items-center gap-1 ml-4">
+          <UIcon 
+            v-if="partnerInfo?.role === 'pakar'"
+            name="i-heroicons-academic-cap" 
+            class="w-4 h-4 text-green-500 dark:text-green-400"
+          />
+          <UIcon 
+            v-else-if="partnerInfo?.role === 'penyuluh'"
+            name="i-heroicons-megaphone" 
+            class="w-4 h-4 text-blue-500 dark:text-blue-400"
+          />
+          <UIcon 
+            v-else
+            name="i-heroicons-user" 
+            class="w-4 h-4 text-gray-400 dark:text-gray-500"
+          />
+          <UBadge 
+            color="green" 
+            variant="solid" 
+            size="xs"
+          >{{ partnerInfo?.role }}</UBadge>
         </div>
       </div>
 
       <!-- Messages Container -->
       <div 
         ref="messagesContainer" 
-        class="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4"
+        class="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900 space-y-4"
       >
         <div v-for="(messagesGroup, date) in groupedMessages" :key="date" class="space-y-3">
           <!-- Date Separator -->
           <div class="flex justify-center">
-            <UBadge variant="soft" color="gray" size="sm">
+            <UBadge variant="soft" color="gray" size="sm" class="dark:bg-gray-700 dark:text-gray-300">
               {{ date }}
             </UBadge>
           </div>
@@ -244,8 +279,8 @@ onUnmounted(() => {
               :class="[
                 'max-w-xs lg:max-w-md xl:max-w-lg px-4 py-2 rounded-2xl shadow-sm',
                 isOwnMessage(message, currentUser?.id) 
-                  ? 'bg-primary-500 text-white rounded-br-md' 
-                  : 'bg-white text-gray-900 rounded-bl-md'
+                  ? 'bg-green-500 dark:bg-green-600 text-white rounded-br-md' 
+                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-bl-md'
               ]"
             >
               <p class="text-sm leading-relaxed">{{ message.content }}</p>
@@ -253,8 +288,8 @@ onUnmounted(() => {
                 :class="[
                   'text-xs mt-1',
                   isOwnMessage(message, currentUser?.id) 
-                    ? 'text-primary-100' 
-                    : 'text-gray-500'
+                    ? 'text-green-100 dark:text-green-200' 
+                    : 'text-gray-500 dark:text-gray-400'
                 ]"
               >
                 {{ formatMessageTime(message.created_at) }}
@@ -265,13 +300,13 @@ onUnmounted(() => {
       </div>
 
       <!-- Message Input -->
-      <div class="p-4 border-t border-gray-200 bg-white">
+      <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 mb-16">
         <div class="flex gap-3">
           <UInput
             v-model="newMessage"
             placeholder="Ketik pesan..."
             :disabled="loading"
-            class="flex-1"
+            class="flex-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
             size="lg"
             @keypress.enter="sendMessage"
           />
@@ -280,6 +315,7 @@ onUnmounted(() => {
             :loading="loading"
             icon="i-heroicons-paper-airplane"
             size="lg"
+            color="green"
             @click="sendMessage"
           >
             Kirim
@@ -291,10 +327,11 @@ onUnmounted(() => {
     <!-- Chat List View -->
     <div v-else class="flex flex-col h-full">
       <!-- Header -->
-      <div class="flex items-center justify-between p-4 border-b border-gray-200">
-        <h1 class="text-xl font-semibold text-gray-900">Pesan</h1>
+      <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Pesan</h1>
         <UButton
           icon="i-heroicons-plus"
+          color="green"
           @click="showNewChat = true"
         >
           Chat Baru
@@ -302,21 +339,22 @@ onUnmounted(() => {
       </div>
 
       <!-- Search Bar -->
-      <div class="p-4 border-b border-gray-200">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         <UInput
           v-model="searchQuery"
           placeholder="Cari percakapan..."
           icon="i-heroicons-magnifying-glass"
           size="lg"
+          class="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
         />
       </div>
 
       <!-- Conversations List -->
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         <div
           v-for="conversation in filteredConversations"
           :key="conversation.id"
-          class="flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 transition-colors"
+          class="flex items-center gap-3 p-4 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer border-b border-gray-100 dark:border-gray-800 transition-colors"
           @click="openChat(conversation.id)"
         >
           <UAvatar
@@ -331,28 +369,28 @@ onUnmounted(() => {
           
           <div class="flex-1 min-w-0">
             <div class="flex justify-between items-center mb-1">
-              <h3 class="font-medium text-gray-900 truncate">
+              <h3 class="font-medium text-gray-900 dark:text-gray-100 truncate">
                 {{ getPartner(conversation)?.full_name }}
               </h3>
-              <span class="text-xs text-gray-500 flex-shrink-0">
+              <span class="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
                 {{ formatLastMessageTime(conversation.last_message?.created_at) }}
               </span>
             </div>
-            <p class="text-sm text-gray-600 truncate">
+            <p class="text-sm text-gray-600 dark:text-gray-300 truncate">
               {{ truncateMessage(conversation.last_message?.content || '', 50) }}
             </p>
           </div>
           
           <!-- Unread indicator -->
           <div v-if="conversation.unread_count > 0" class="flex-shrink-0">
-            <UBadge color="primary" variant="solid" size="sm">
+            <UBadge color="green" variant="solid" size="sm">
               {{ conversation.unread_count }}
             </UBadge>
           </div>
         </div>
 
         <!-- Empty State -->
-        <div v-if="filteredConversations.length === 0" class="flex flex-col items-center justify-center h-64 text-gray-500">
+        <div v-if="filteredConversations.length === 0" class="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400">
           <UIcon name="i-heroicons-chat-bubble-left-right" class="w-12 h-12 mb-4" />
           <p class="text-lg font-medium mb-2">Belum ada percakapan</p>
           <p class="text-sm text-center">Mulai percakapan baru dengan menekan tombol "Chat Baru"</p>
@@ -362,14 +400,15 @@ onUnmounted(() => {
 
     <!-- New Chat Modal -->
     <UModal v-model="showNewChat">
-      <UCard>
+      <UCard class="dark:bg-gray-800 dark:border-gray-700">
         <template #header>
           <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold">Mulai Chat Baru</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Mulai Chat Baru</h3>
             <UButton
               color="gray"
               variant="ghost"
               icon="i-heroicons-x-mark"
+              class="dark:text-gray-400 dark:hover:text-gray-300"
               @click="showNewChat = false"
             />
           </div>
@@ -380,6 +419,7 @@ onUnmounted(() => {
             v-model="userSearchQuery"
             placeholder="Cari pengguna..."
             icon="i-heroicons-magnifying-glass"
+            class="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
             @input="searchUsers"
           />
 
@@ -387,7 +427,7 @@ onUnmounted(() => {
             <div
               v-for="user in searchResults"
               :key="user.id"
-              class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+              class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors"
               @click="startChat(user.id)"
             >
               <UAvatar
@@ -400,12 +440,12 @@ onUnmounted(() => {
                 </template>
               </UAvatar>
               <div>
-                <p class="font-medium text-gray-900">{{ user.full_name }}</p>
-                <p class="text-sm text-gray-500">{{ user.email }}</p>
+                <p class="font-medium text-gray-900 dark:text-gray-100">{{ user.full_name }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</p>
               </div>
             </div>
 
-            <div v-if="userSearchQuery && searchResults.length === 0" class="text-center py-8 text-gray-500">
+            <div v-if="userSearchQuery && searchResults.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
               <UIcon name="i-heroicons-user-group" class="w-8 h-8 mx-auto mb-2" />
               <p>Tidak ada pengguna ditemukan</p>
             </div>

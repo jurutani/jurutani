@@ -102,6 +102,24 @@ onMounted(() => {
 
 <template>
   <div class="meeting-detail container mx-auto px-4 py-8 max-w-4xl dark:text-gray-100">
+     <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <button 
+            class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+            @click="goBack"
+          >
+            <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
+            <span class="font-medium">Kembali ke Meeting</span>
+          </button>
+          
+          <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
+            <UIcon name="i-heroicons-newspaper" class="w-5 h-5" />
+            <span class="font-semibold">JuruTani Meeting</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Loading State -->
     <div v-if="loading" class="text-center py-12">
       <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"/>
@@ -141,15 +159,7 @@ onMounted(() => {
     <!-- Meeting Content -->
     <div v-else-if="meeting" class="space-y-6">
       <!-- Header -->
-      <div class="bg-white rounded-xl shadow-sm p-6 dark:bg-gray-800 border dark:border-gray-700">
-        <!-- Back Button -->
-        <button 
-          class="mb-4 text-gray-600 hover:text-gray-800 flex items-center text-sm font-medium dark:text-gray-400 dark:hover:text-gray-200 transition-colors" 
-          @click="goBack"
-        >
-          <span class="mr-2">←</span> Kembali ke daftar rapat
-        </button>
-
+      <div class="bg-white rounded-b-xl shadow-sm p-6 dark:bg-gray-800 border dark:border-gray-700">
         <!-- Category and Date -->
         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div class="flex items-center gap-3">

@@ -188,15 +188,24 @@ onMounted(() => {
   <div class="min-h-screen">
     <div class="container mx-auto px-4 py-6 max-w-7xl">
       <!-- Back Button -->
-      <button 
-        class="inline-flex items-center text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 mb-8 transition-colors group" 
-        @click="goBack"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Kembali ke Pasar Tani
-      </button>
+       <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+          <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+              <button 
+                class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                @click="goBack"
+              >
+                <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
+                <span class="font-medium">Kembali ke Market</span>
+              </button>
+              
+              <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
+                <UIcon name="i-heroicons-newspaper" class="w-5 h-5" />
+                <span class="font-semibold">JuruTani Marketplace</span>
+              </div>
+            </div>
+          </div>
+        </div>
       
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-96">
@@ -225,7 +234,7 @@ onMounted(() => {
       </div>
       
       <!-- Product Details -->
-      <div v-else-if="product" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+      <div v-else-if="product" class="bg-white dark:bg-gray-800 rounded-b-2xl shadow-lg overflow-hidden">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <!-- Left Column - Images -->
           <div class="relative bg-gray-50 dark:bg-gray-700 p-6">

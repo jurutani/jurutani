@@ -1,15 +1,22 @@
 <template>
   <div class="join-community">
     <div class="container mx-auto py-10 px-4">
-      <div class="flex items-center mb-8">
-        <NuxtLink to="/discussions" class="mr-4 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+     <div class="flex items-center mb-10 gap-4">
+        <NuxtLink 
+          to="/discussions" 
+          class="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 hover:bg-green-100 transition-colors"
+          aria-label="Kembali ke Diskusi"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </NuxtLink>
-        <h1 class="text-3xl font-bold text-green-700 dark:text-green-400">Gabung Komunitas Juru Tani</h1>
+        
+        <h1 class="text-3xl font-bold text-green-700 leading-tight flex items-center my-auto">
+          Diskusi Komunitas Juru Tani
+        </h1>
       </div>
-      
+
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <div class="flex justify-center mb-8">
           <img src="/jurutani.png" alt="Logo Juru Tani" class="h-24">
