@@ -25,17 +25,6 @@ const truncatedDescription = computed(() => {
     : props.course.description;
 });
 
-// Engineering category colors
-const getCategoryColor = (category) => {
-  const colors = {
-    'Pertanian': 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700',
-    'Peternakan': 'bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700',
-    'Teknologi': 'bg-gradient-to-r from-green-500 to-green-800 dark:from-green-800 dark:to-green-700',
-    'Lainya': 'bg-gradient-to-r from-cyan-500 to-cyan-600 dark:from-cyan-600 dark:to-cyan-700',
-    'All': 'bg-gradient-to-r from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700'
-  };
-  return colors[category?.toLowerCase()] || colors.default;
-};
 
 // Methods
 const openLink = (url) => {
@@ -53,13 +42,6 @@ const downloadFile = (file) => {
 
 <template>
   <div class="course-card group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl dark:hover:shadow-2xl dark:hover:shadow-gray-900/50 transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700">
-    <!-- Engineering Category Badge -->
-    <div class="absolute top-4 right-4 z-10">
-      <span :class="getCategoryColor(course.category)" class="px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg">
-        {{ course.category || 'Teknik Sipil' }}
-      </span>
-    </div>
-
     <!-- Decorative Engineering Pattern -->
     <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 via-green-500 to-blue-500 dark:from-green-500 dark:via-green-800 dark:to-blue-600"/>
     
@@ -84,7 +66,7 @@ const downloadFile = (file) => {
               <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
               </svg>
-              {{ course.level || 'Menengah' }}
+              {{ course.category || 'Pertanian' }}
             </span>
             <span v-if="course.duration" class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300">
               <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

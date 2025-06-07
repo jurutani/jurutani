@@ -303,7 +303,7 @@ onMounted(() => {
         @click="activeTab = 'forecast'"
         >
           <Icon name="mdi:calendar-week" class="w-4 h-4 mr-2 inline-block" />
-          Prediksi 7 Hari
+          Prediksi 5 Hari
         </button>
       </nav>
     </div>
