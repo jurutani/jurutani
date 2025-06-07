@@ -31,17 +31,25 @@
 
 <script setup lang="ts">
 import { useForm, FormField, ErrorMessage } from 'vee-validate'
-import * as yup from 'yup'
-import { useSupabase } from '@/composables/useSupabase'
-import { toastStore } from '@/composables/useJuruTaniToast'
+import { useSupabase } from '~/composables/useSupabase'
+import { toastStore } from '~/composables/useJuruTaniToast'
 
 const { supabase } = useSupabase()
 
-const schema = yup.object({
-  email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
-})
+function validateEmail(value: string) {
+  if (!value) return 'Email wajib diisi'
+  // Simple email regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(value)) return 'Email tidak valid'
+  return true
+}
 
-const { handleSubmit, isSubmitting } = useForm({ validationSchema: schema })
+const { handleSubmit, isSubmitting } = useForm({
+  initialValues: { email: '' },
+  validationSchema: {
+    email: validateEmail,
+  },
+})
 
 const onSubmit = handleSubmit(async (values) => {
   const { error } = await supabase.auth.updateUser({ email: values.email })
