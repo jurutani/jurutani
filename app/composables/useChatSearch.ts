@@ -12,7 +12,7 @@ export const useChatSearch = () => {
 
       let searchQuery = supabase
         .from('profiles')
-        .select('id, full_name, avatar_url')
+        .select('id, full_name, avatar_url, role')
         .ilike('full_name', `%${query.trim()}%`)
         .limit(10)
 

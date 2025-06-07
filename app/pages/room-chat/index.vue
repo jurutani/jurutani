@@ -147,7 +147,7 @@ useHead({
           @click="openChat(conversation.id)"
         >
           <!-- Avatar -->
-          <div class="relative">
+            <div class="relative">
             <UAvatar
               :src="getPartner(conversation)?.avatar_url"
               :alt="getPartner(conversation)?.full_name"
@@ -155,13 +155,24 @@ useHead({
               class="ring-2 ring-white"
             >
               <template #fallback>
-                {{ getAvatarFallback(getPartner(conversation)?.full_name || '') }}
+              {{ getAvatarFallback(getPartner(conversation)?.full_name || '') }}
               </template>
             </UAvatar>
             
             <!-- Online Status -->
             <div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 border-2 border-white rounded-full"/>
-          </div>
+            
+            <!-- Role Badge -->
+            <UBadge
+              v-if="getPartner(conversation)?.role"
+              color="green"
+              variant="soft"
+              size="xs"
+              class="absolute -top-1 -right-1"
+            >
+              {{ getPartner(conversation).role }}
+            </UBadge>
+            </div>
           
           <!-- Conversation Info -->
           <div class="flex-1 min-w-0">

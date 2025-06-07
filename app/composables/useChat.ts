@@ -65,8 +65,8 @@ export const useChat = () => {
         .from('conversations')
         .select(`
           *,
-          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url),
-          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url)
+          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url, role),
+          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url, role)
         `)
         .or(`and(participant1_id.eq.${currentUser.id},participant2_id.eq.${otherUserId}),and(participant1_id.eq.${otherUserId},participant2_id.eq.${currentUser.id})`)
         .single()
@@ -89,8 +89,8 @@ export const useChat = () => {
         })
         .select(`
           *,
-          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url),
-          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url)
+          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url, role),
+          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url, role)
         `)
         .single()
 
@@ -118,8 +118,8 @@ export const useChat = () => {
         .from('conversations')
         .select(`
           *,
-          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url),
-          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url)
+          participant1:profiles!conversations_participant1_id_fkey(id, full_name, avatar_url, role),
+          participant2:profiles!conversations_participant2_id_fkey(id, full_name, avatar_url, role)
         `)
         .or(`participant1_id.eq.${currentUser.id},participant2_id.eq.${currentUser.id}`)
         .order('updated_at', { ascending: false })
@@ -145,7 +145,7 @@ export const useChat = () => {
         .from('messages')
         .select(`
           *,
-          sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url)
+          sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url, role)
         `)
         .eq('conversation_id', conversationId)
         .order('created_at', { ascending: true })
@@ -180,7 +180,7 @@ export const useChat = () => {
         })
         .select(`
           *,
-          sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url)
+          sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url, role)
         `)
         .single()
 
@@ -243,7 +243,7 @@ export const useChat = () => {
             .from('messages')
             .select(`
               *,
-              sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url)
+              sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url, role)
             `)
             .eq('id', payload.new.id)
             .single()
