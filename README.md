@@ -1,4 +1,4 @@
-# Juru Tani - Aplikasi Web yang Membantu Meningkatkan Kualitas dan Kuantitas Hasil Pertanian dengan Menggunakan Teknologi IoT dan AI.
+# Juru Tani - Aplikasi Web yang Membantu Meningkatkan Kualitas dan Kuantitas Hasil Pertanian
 
 Nuxt 3 Full stack (SPA-SSR) quick start template that pre-includes the [Pinegrow Nuxt Module](https://www.npmjs.com/package/@pinegrow/nuxt-module), [Pinegrow Tailwind CSS Plugin](https://www.npmjs.com/package/@pinegrow/tailwindcss-plugin), [Nuxt UI](https://ui.nuxt.com/getting-started) and other goodies for Vue Designer. This template uses the tailwind-based Nuxt UI component library and features an eCommerce store, where data is fetched via APIs server by server routes (Nitro-powered).
 
