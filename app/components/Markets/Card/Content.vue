@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useSupabase } from '~/composables/useSupabase'
+
 const props = defineProps({
   product: {
     type: Object,
@@ -13,7 +13,7 @@ const imageError = ref(false);
 const imageLoading = ref(true);
 
 // Supabase client import (pastikan ini tersedia di komponen)
-const supabase = useSupabase();
+const { $supabase } = useNuxtApp();
 
 // Format price as Indonesian currency
 const formattedPrice = computed(() => {
@@ -56,7 +56,7 @@ const mainImage = computed(() => {
   }
 
   // Ini bukan async, jadi langsung ambil .data.publicUrl
-  const { data } = supabase.storage
+  const { data } = $supabase.storage
     .from('markets-attachments')
     .getPublicUrl(imageUrl);
 
@@ -100,7 +100,7 @@ const allImages = computed(() => {
       
       // Get public URL from Supabase storage
       try {
-        const { data } = supabase.storage
+        const { data } = $supabase.storage
           .from('markets-attachments')
           .getPublicUrl(imageUrl);
         
