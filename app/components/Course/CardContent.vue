@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+
 
 // Props
 const props = defineProps({
   course: {
     type: Object,
-    requigreen: true
+    required: true
   }
 });
 
@@ -25,6 +26,22 @@ const truncatedDescription = computed(() => {
     : props.course.description;
 });
 
+const imgSrc = ref('/placeholder.png') // default awal
+
+const imageUrl = computed(() => {
+  if (!props.course?.image_url) return null
+  // If you have supabase client, import and use it here. Otherwise, fallback to direct URL.
+  // Example fallback:
+  return props.course.image_url.startsWith('http')
+    ? props.course.image_url
+    : `/courses/${props.course.image_url}`
+})
+
+function handleImgError(e: Event) {
+  const img = e.target as HTMLImageElement
+  img.onerror = null
+  img.src = '/placeholder.png'
+}
 
 // Methods
 const openLink = (url) => {
@@ -38,6 +55,15 @@ const downloadFile = (file) => {
     window.open(file.url, '_blank');
   }
 };
+
+const viewDetails = () => {
+  // Navigate to course details page
+  window.location.href = `/educations/${props.course.id}`;
+};
+
+onMounted(async () => {
+  imgSrc.value = imageUrl.value ?? '/placeholder.png'
+})
 </script>
 
 <template>
@@ -45,46 +71,53 @@ const downloadFile = (file) => {
     <!-- Decorative Engineering Pattern -->
     <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 via-green-500 to-blue-500 dark:from-green-500 dark:via-green-800 dark:to-blue-600"/>
     
-    <!-- Card Header -->
-    <div class="p-6 pb-4">
-      <!-- Engineering Icon -->
-      <div class="flex items-start space-x-4">
-        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-800 dark:to-green-900 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <svg class="w-6 h-6 text-green-800 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-          </svg>
-        </div>
-        
-        <div class="flex-1">
-          <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 group-hover:text-green-800 dark:group-hover:text-green-400 transition-colors duration-300">
-            {{ course.title }}
-          </h3>
-          
-          <!-- Course Level & Duration -->
-          <div class="flex items-center space-x-3 mb-3">
-            <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
-              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-              </svg>
-              {{ course.category || 'Pertanian' }}
-            </span>
-            <span v-if="course.duration" class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300">
-              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              {{ course.duration }}
-            </span>
-          </div>
-        </div>
-      </div>
+    <!-- Course Thumbnail -->
+    <div class="relative h-48 overflow-hidden">
+      <img
+        :src="imgSrc"
+        :alt="course.title"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        @error="handleImgError"
+      >
+      <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
       
-      <p v-if="course.description" class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+      <!-- Category Badge on Image -->
+      <div class="absolute top-4 left-4">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-gray-800 shadow-lg">
+          <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+          {{ course.category || 'Pertanian' }}
+        </span>
+      </div>
+    </div>
+    
+    <!-- Card Header -->
+    <div class="p-6 pb-4">      
+      <!-- Course Title -->
+      <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 line-clamp-2 group-hover:text-green-800 dark:group-hover:text-green-400 transition-colors duration-300">
+        {{ course.title }}
+      </h3>      
+      
+      <p v-if="course.description" class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
         {{ truncatedDescription }}
       </p>
       
-      <p v-else class="text-gray-400 dark:text-gray-500 text-sm italic">
+      <p v-else class="text-gray-400 dark:text-gray-500 text-sm italic mb-4">
         Tidak ada deskripsi tersedia
       </p>
+
+      <!-- View Details Button -->
+      <button
+        class="w-full mb-4 bg-gradient-to-r from-green-600 via-green-700 to-blue-600 dark:from-green-500 dark:via-green-600 dark:to-blue-500 hover:from-green-700 hover:via-green-800 hover:to-blue-700 dark:hover:from-green-600 dark:hover:via-green-700 dark:hover:to-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center space-x-2"
+        @click="viewDetails"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        </svg>
+        <span>Lihat Selengkapnya</span>
+      </button>
     </div>
 
     <!-- Course Resources -->
@@ -101,7 +134,7 @@ const downloadFile = (file) => {
         </h4>
         <div class="space-y-2">
           <button
-            v-for="(file, index) in course.files"
+            v-for="(file, index) in course.files.slice(0, 2)"
             :key="index"
             class="flex items-center justify-between w-full p-3 text-sm bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 hover:from-green-50 hover:to-green-100 dark:hover:from-green-900/30 dark:hover:to-green-800/30 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-green-300 rounded-lg transition-all duration-300 group/file"
             @click="downloadFile(file)"
@@ -118,6 +151,13 @@ const downloadFile = (file) => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
             </svg>
           </button>
+          
+          <!-- Show more files indicator -->
+          <div v-if="course.files.length > 2" class="text-center">
+            <span class="text-xs text-gray-500 dark:text-gray-400">
+              +{{ course.files.length - 2 }} file lainnya
+            </span>
+          </div>
         </div>
       </div>
 
@@ -178,9 +218,9 @@ const downloadFile = (file) => {
       </div>
 
       <!-- No Resources Message -->
-      <div v-if="!hasFiles && !hasLinks" class="text-center py-8">
-        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
-          <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div v-if="!hasFiles && !hasLinks" class="text-center py-6">
+        <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-2">
+          <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
           </svg>
         </div>
@@ -253,7 +293,7 @@ const downloadFile = (file) => {
   opacity: 1;
 }
 
-@media (prefers-greenuced-motion: greenuce) {
+@media (prefers-reduced-motion: reduce) {
   .course-card {
     transition: none;
   }
@@ -261,4 +301,5 @@ const downloadFile = (file) => {
   .course-card:hover {
     transform: none;
   }
-}</style>
+}
+</style>
