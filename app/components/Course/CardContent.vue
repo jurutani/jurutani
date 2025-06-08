@@ -195,7 +195,7 @@ onMounted(async () => {
         </button>
 
         <!-- YouTube Link -->
-        <button
+        <!-- <button
           v-if="course.link_youtube"
           class="flex items-center justify-between w-full p-3 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/30 dark:to-blue-900/30 hover:from-green-100 hover:to-blue-100 dark:hover:from-green-800/40 dark:hover:to-blue-800/40 text-green-700 dark:text-green-300 rounded-lg transition-all duration-300 group/youtube"
           @click="openLink(course.link_youtube)"
@@ -214,7 +214,7 @@ onMounted(async () => {
           <svg class="w-4 h-4 opacity-0 group-hover/youtube:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
           </svg>
-        </button>
+        </button> -->
       </div>
 
       <!-- No Resources Message -->

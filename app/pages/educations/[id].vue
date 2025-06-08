@@ -340,7 +340,7 @@ onMounted(async () => {
                   </button>
 
                   <!-- YouTube Link -->
-                  <button
+                  <!-- <button
                     v-if="course.link_youtube"
                     class="flex items-center justify-between w-full p-4 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/30 dark:to-pink-900/30 hover:from-red-100 hover:to-pink-100 dark:hover:from-red-800/40 dark:hover:to-pink-800/40 text-red-700 dark:text-red-300 rounded-lg transition-all duration-300 group"
                     @click="openYouTubeLink"
@@ -359,7 +359,7 @@ onMounted(async () => {
                     <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                     </svg>
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
