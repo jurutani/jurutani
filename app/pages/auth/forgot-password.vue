@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useToast } from '#imports'
+import { toastStore } from '~/composables/useJuruTaniToast'
 import { useSupabase } from '~/composables/useSupabase'
 
 // Definisikan layout
@@ -8,7 +8,6 @@ definePageMeta({
   layout: 'blank'
 })
 
-const toast = useToast()
 const { resetPassword } = useSupabase()
 
 // State form
@@ -19,13 +18,7 @@ const isSubmitted = ref(false)
 // Handler reset password
 const handleResetPassword = async () => {
   if (!email.value) {
-    toast.add({
-      title: 'Peringatan',
-      description: 'Email harus diisi.',
-      color: 'orange',
-      icon: 'i-ph-warning-circle',
-      timeout: 3000
-    })
+    toastStore.warning('Email tidak boleh kosong ...')
     return
   }
 
@@ -37,30 +30,12 @@ const handleResetPassword = async () => {
 
     if (success) {
       isSubmitted.value = true
-      toast.add({
-        title: 'Berhasil',
-        description: 'Instruksi reset password telah dikirim ke email Anda.',
-        color: 'green',
-        icon: 'i-ph-check-circle',
-        timeout: 5000
-      })
+      toastStore.success('Benih reset password telah dikirim ke email Anda! 🌱')
     } else {
-      toast.add({
-        title: 'Gagal',
-        description: error || 'Gagal mengirim email reset password.',
-        color: 'red',
-        icon: 'i-ph-x-circle',
-        timeout: 3000
-      })
+      toastStore.error(error?.message || 'Gagal mengirim benih reset password. Silakan coba lagi.')
     }
   } catch (error) {
-    toast.add({
-      title: 'Gagal',
-      description: error.message || 'Terjadi kesalahan saat memproses permintaan.',
-      color: 'red',
-      icon: 'i-ph-x-circle',
-      timeout: 3000
-    })
+    toastStore.error('Terjadi kesalahan saat mengirim benih reset password. Silakan coba lagi.')
   } finally {
     isLoading.value = false
   }
