@@ -60,6 +60,8 @@ const imagePreview = ref<string | null>(null)
 const checkUserAuth = (): boolean => {
   if (!userData.value) {
     toastStore.error('Login dulu')
+    emit('close')
+    navigateTo('/auth/login')
     return false
   }
   return true

@@ -66,6 +66,8 @@ const currentAttachmentName = computed(() => {
 const checkUserAuth = (): boolean => {
   if (!userData.value) {
     toastStore.error('Login dulu')
+    emit('close')
+    navigateTo('/auth/login')
     return false
   }
   return true
