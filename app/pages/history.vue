@@ -5,6 +5,9 @@ useSeoMeta({
   ogTitle: 'History - Juru Tani',
   ogDescription: 'Stay updated with the latest History from Juru Tani.',
 })
+definePageMeta({
+  middleware: ['auth']
+});
 </script>
 
 <template>

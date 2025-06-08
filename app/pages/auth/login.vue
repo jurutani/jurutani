@@ -4,7 +4,8 @@ import { toastStore } from '~/composables/useJuruTaniToast'
 import { useSupabase } from '~/composables/useSupabase'
 
 definePageMeta({
-  layout: 'blank'
+  layout: 'blank',
+  middleware: ['guest']
 })
 
 const { login, loginWithSocialProvider, loading } = useSupabase()

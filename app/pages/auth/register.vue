@@ -6,7 +6,8 @@ import { useSupabase } from '~/composables/useSupabase'
 
 // Definisikan layout
 definePageMeta({
-  layout: 'blank'
+  layout: 'blank',
+  middleware: ['guest']
 })
 
 // Composable Supabase

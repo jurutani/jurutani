@@ -185,7 +185,7 @@ onMounted(() => {
                   {{ expert.profiles?.full_name || 'Nama Pakar' }}
                 </h1>
                 <p class="text-lg text-green-600 font-semibold mb-2">
-                  Pakar Pertanian Profesional
+                  Pakar Juru Tani Profesional
                 </p>
                 <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                   <span v-if="age" class="flex items-center gap-1.5">

@@ -6,7 +6,8 @@ import { useRouter, useRoute } from 'vue-router'
 
 // Definisikan layout
 definePageMeta({
-  layout: 'blank'
+  layout: 'blank',
+  middleware: ['guest']
 })
 
 const { supabase } = useSupabase()

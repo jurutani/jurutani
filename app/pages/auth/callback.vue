@@ -5,7 +5,8 @@ import { toastStore } from '~/composables/useJuruTaniToast'
 
 // Define layout
 definePageMeta({
-  layout: 'blank'
+  layout: 'blank',
+  middleware: ['guest']
 })
 
 const { supabase } = useSupabase()
