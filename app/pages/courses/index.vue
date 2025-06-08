@@ -40,7 +40,7 @@ const fetchAnnouncements = async () => {
       error.value = fetchError;
     } else {
       announcements.value = data || [];
-      console.log('Fetched announcements:', announcements.value);
+      // console.log('Fetched announcements:', announcements.value);
       totalPages.value = Math.ceil((count || 0) / pageSize.value);
     }
   } catch (err) {

@@ -127,7 +127,7 @@ export const useChat = () => {
       if (fetchError) throw fetchError
 
       conversations.value = data || []
-      console.log('Conversations:', conversations.value)
+      // console.log('Conversations:', conversations.value)
       return data
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch conversations'
@@ -153,7 +153,7 @@ export const useChat = () => {
       if (fetchError) throw fetchError
 
       messages.value = data || []
-      console.log('Messages:', messages.value)
+      // console.log('Messages:', messages.value)
       return data
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch messages'

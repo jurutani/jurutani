@@ -119,16 +119,16 @@ const resetImage = () => {
 const uploadAvatar = async (userId: string): Promise<string | null> => {
   if (!imageFile.value) return null;
 
-  console.log('Starting avatar upload process...');
+  // console.log('Starting avatar upload process...');
   
   // Delete old avatar
   if (formData.avatar_url?.includes('avatars/')) {
     try {
       const oldPath = formData.avatar_url.split('avatars/')[1].split('?')[0];
       if (oldPath) {
-        console.log('Attempting to delete old avatar:', oldPath);
+        // console.log('Attempting to delete old avatar:', oldPath);
         await supabase.storage.from('avatars').remove([oldPath]);
-        console.log('Old avatar deleted successfully');
+        // console.log('Old avatar deleted successfully');
       }
     } catch (error) {
       console.warn('Error deleting old avatar:', error);
@@ -140,7 +140,7 @@ const uploadAvatar = async (userId: string): Promise<string | null> => {
   const fileName = `avatar_${Date.now()}.${fileExt}`;
   const filePath = `${userId}/${fileName}`;
 
-  console.log('Uploading new avatar:', { fileName, filePath, fileSize: imageFile.value.size });
+  // console.log('Uploading new avatar:', { fileName, filePath, fileSize: imageFile.value.size });
 
   const { data, error } = await supabase.storage
     .from('avatars')
@@ -154,7 +154,7 @@ const uploadAvatar = async (userId: string): Promise<string | null> => {
     throw new Error(`Gagal mengunggah gambar profil: ${error.message}`);
   }
 
-  console.log('Avatar uploaded successfully:', data);
+  // console.log('Avatar uploaded successfully:', data);
 
   // Get public URL
   const { data: { publicUrl } } = supabase.storage
@@ -180,8 +180,8 @@ const handleSubmit = async () => {
   try {
     // Get authenticated user
     const { data: user } = await supabase.auth.getUser();
-    console.log("auth.uid():", user?.user?.id);
-    console.log("props.userData.id:", props.userData.id);
+    // console.log("auth.uid():", user?.user?.id);
+    // console.log("props.userData.id:", props.userData.id);
     
     if (!user?.user?.id) {
       console.error('No authenticated user found');
@@ -204,7 +204,7 @@ const handleSubmit = async () => {
       newAvatarUrl = await uploadAvatar(user.user.id);
       if (newAvatarUrl) {
         formData.avatar_url = newAvatarUrl;
-        console.log('New avatar URL:', newAvatarUrl);
+        // console.log('New avatar URL:', newAvatarUrl);
       }
     }
 
@@ -222,7 +222,7 @@ const handleSubmit = async () => {
       updated_at: new Date().toISOString()
     };
 
-    console.log('Updating profile with data:', updates);
+    // console.log('Updating profile with data:', updates);
 
     // Update profile
     const { data: updateData, error: updateError } = await supabase
@@ -238,7 +238,7 @@ const handleSubmit = async () => {
       throw new Error(`Gagal memperbarui profil: ${updateError.message}`);
     }
 
-    console.log('Profile updated successfully:', updateData);
+    // console.log('Profile updated successfully:', updateData);
 
     // Emit success
     emit('update', { ...updates, email: props.userData.email });

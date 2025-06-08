@@ -145,7 +145,7 @@ const fetchProduct = async () => {
       return;
     }
     
-    console.log('[Product Detail Fetched]', data);
+    // console.log('[Product Detail Fetched]', data);
     product.value = data;
     
   } catch (err) {

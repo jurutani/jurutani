@@ -62,7 +62,7 @@ const getParticipant = () => {
   if (!currentConversation.value || !currentUser.value) return null
 
   const participant = getConversationPartner(currentConversation.value, currentUser.value.id)
-  console.log('Participant:', participant)
+  // console.log('Participant:', participant)
   return participant
 }
 const partnerInfo = computed(() => {
@@ -140,10 +140,10 @@ watch(messages, async () => {
 onMounted(async () => {
   try {
     currentUser.value = await getCurrentUser()
-    console.log('Current User:', currentUser.value)
+    // console.log('Current User:', currentUser.value)
 
     if (conversationId.value) {
-      console.log('Conversation ID:', conversationId.value)
+      // console.log('Conversation ID:', conversationId.value)
       await getMessages(conversationId.value)
       await markAsRead(conversationId.value)
       subscribeToMessages(conversationId.value)
@@ -162,12 +162,12 @@ onMounted(async () => {
           currentConversation.value = conversationData
         }
       }
-      console.log('Conversation Data:', conversationData)
+      // console.log('Conversation Data:', conversationData)
 
       // Get participant info
       if (conversationData && currentUser.value) {
         const participant = getConversationPartner(conversationData, currentUser.value.id)
-        console.log('Participant Info:', participant)
+        // console.log('Participant Info:', participant)
       }
 
       await nextTick()

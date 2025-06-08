@@ -137,8 +137,24 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 import { toastStore } from '~/composables/useJuruTaniToast'
+import { useProfile } from '~/composables/useProfile';
 
-const { supabase, user: currentUser } = useSupabase()
+const {
+  userData,
+  loading,
+  error,
+  isEditing,
+  fetchUserData,
+  updateUserProfile,
+  formatDate,
+  formatRole,
+  isValidUrl
+} = useProfile();
+
+const { supabase } = useSupabase()
+
+// Get current user from Supabase auth
+const currentUser = ref(null)
 
 // State
 const newEmail = ref('')
@@ -150,6 +166,18 @@ const emailError = ref('')
 const confirmEmailError = ref('')
 const resetEmailError = ref('')
 const successMessage = ref('')
+
+// Function to get current user
+const getCurrentUser = async () => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    currentUser.value = user
+    return user
+  } catch (error) {
+    console.error('Error getting current user:', error)
+    return null
+  }
+}
 
 // Email validation
 const validateEmail = (email: string) => {
@@ -308,10 +336,27 @@ const handleResetPassword = async () => {
   }
 }
 
-// Auto-fill current user email for reset password
-onMounted(() => {
-  if (currentUser.value?.email) {
-    resetEmail.value = currentUser.value.email
+// Initialize component
+onMounted(async () => {
+  await fetchUserData()
+  const user = await getCurrentUser()
+  
+  // Auto-fill current user email for reset password
+  if (user?.email) {
+    resetEmail.value = user.email
+  }
+})
+
+// Listen for auth state changes
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session?.user) {
+    currentUser.value = session.user
+    if (session.user.email && !resetEmail.value) {
+      resetEmail.value = session.user.email
+    }
+  } else {
+    currentUser.value = null
+    resetEmail.value = ''
   }
 })
 </script>

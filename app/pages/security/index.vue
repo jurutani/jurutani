@@ -172,17 +172,7 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Help Text -->
-      <div class="mt-6 text-center">
-        <p class="text-sm text-gray-600">
-          Lupa password? 
-          <NuxtLink to="/reset-password" class="text-green-600 hover:text-green-700 font-medium hover:underline">
-            Reset Password
-          </NuxtLink>
-        </p>
-      </div>
+      </div>      
     </div>
   </div>
 </template>

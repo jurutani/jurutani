@@ -42,7 +42,7 @@ const fetchCurrentUser = async () => {
     
     currentUserId.value = userData.id;
 
-    console.log('User data loaded:', user.value);
+    // console.log('User data loaded:', user.value);
   } catch (err) {
     console.error('Error fetching current user:', err);
     toastStore.error('Gagal memuat data pengguna.');

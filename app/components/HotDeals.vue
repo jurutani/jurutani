@@ -46,7 +46,7 @@ const fetchMarkets = async () => {
       console.error('[Supabase Fetch Error]', fetchError);
       error.value = fetchError;
     } else {
-      console.log('[Markets Fetched Data]', data); // ✅ Debug log
+      // console.log('[Markets Fetched Data]', data); // ✅ Debug log
       marketsList.value = data || [];
       totalPages.value = Math.ceil((count || 0) / pageSize.value);
     }

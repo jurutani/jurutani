@@ -1,26 +1,14 @@
 <script setup lang="ts">
 import type { UUID } from 'crypto'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { toastStore } from '~/composables/useJuruTaniToast'
 import { useSupabase } from '~/composables/useSupabase'
+import { useProfile } from '~/composables/useProfile'
 
 const { supabase } = useSupabase()
+const { userData, fetchUserData } = useProfile()
 
 // Types
-interface NewsItem {
-  id?: string
-  title?: string
-  sub_title?: string
-  content?: string
-  category?: string
-  status_news?: string
-  link?: string
-  published_at?: string
-  image_url?: string
-  attachment_url?: string
-  user_id?: UUID
-}
-
 interface FormState {
   title: string
   sub_title: string
@@ -33,12 +21,7 @@ interface FormState {
   attachmentFile?: File
 }
 
-// Props & Emits
-const props = defineProps<{
-  isEdit?: boolean
-  newsItem?: NewsItem
-}>()
-
+// Emits
 const emit = defineEmits<{
   close: []
 }>()
@@ -60,32 +43,33 @@ const STORAGE_BUCKETS = {
 
 // Reactive State
 const form = ref<FormState>({
-  title: props.newsItem?.title || '',
-  sub_title: props.newsItem?.sub_title || '',
-  content: props.newsItem?.content || '',
-  category: props.newsItem?.category || '',
-  status_news: props.newsItem?.status_news || 'pending',
-  link: props.newsItem?.link || '',
-  publishDate: props.newsItem?.published_at?.split('T')[0] || ''
+  title: '',
+  sub_title: '',
+  content: '',
+  category: '',
+  status_news: 'pending',
+  link: '',
+  publishDate: ''
 })
 
 const errors = ref<Record<string, string>>({})
 const isSubmitting = ref(false)
+const imagePreview = ref<string | null>(null)
 
 // Computed
-const imagePreview = ref<string | null>(
-  props.newsItem?.image_url
-    ? supabase.storage.from(STORAGE_BUCKETS.images).getPublicUrl(props.newsItem.image_url).data.publicUrl
-    : null
-)
-
 const currentAttachmentName = computed(() => {
   if (form.value.attachmentFile) return form.value.attachmentFile.name
-  if (props.newsItem?.attachment_url) {
-    return props.newsItem.attachment_url.split('/').pop() || ''
-  }
   return ''
 })
+
+// Check user authentication
+const checkUserAuth = (): boolean => {
+  if (!userData.value) {
+    toastStore.error('Login dulu')
+    return false
+  }
+  return true
+}
 
 // Validation
 const validateForm = (): boolean => {
@@ -188,16 +172,19 @@ const handleAttachmentUpload = (event: Event): void => {
 
 // Form Submission
 const handleSubmit = async (): Promise<void> => {
+  // Check authentication first
+  if (!checkUserAuth()) return
+
   if (!validateForm()) return
 
   isSubmitting.value = true
 
   try {
-    const newsId = props.newsItem?.id || crypto.randomUUID()
-    let imageUrl = props.newsItem?.image_url || ''
-    let attachmentUrl = props.newsItem?.attachment_url || ''
+    const newsId = crypto.randomUUID()
+    let imageUrl = ''
+    let attachmentUrl = ''
 
-    // Upload image if new file selected
+    // Upload image if file selected
     if (form.value.imageFile) {
       const imagePath = generateFilePath(
         newsId, 
@@ -207,7 +194,7 @@ const handleSubmit = async (): Promise<void> => {
       imageUrl = await uploadFile(STORAGE_BUCKETS.images, imagePath, form.value.imageFile)
     }
 
-    // Upload attachment if new file selected
+    // Upload attachment if file selected
     if (form.value.attachmentFile) {
       const attachmentPath = generateFilePath(
         newsId, 
@@ -217,7 +204,7 @@ const handleSubmit = async (): Promise<void> => {
       attachmentUrl = await uploadFile(STORAGE_BUCKETS.attachments, attachmentPath, form.value.attachmentFile)
     }
 
-    // Prepare payload
+    // Prepare payload for insert
     const payload = {
       id: newsId,
       title: form.value.title.trim(),
@@ -228,21 +215,20 @@ const handleSubmit = async (): Promise<void> => {
       link: form.value.link.trim() || null,
       image_url: imageUrl || null,
       attachment_url: attachmentUrl || null,
-      user_id: props.newsItem?.user_id || null,
-      published_at: form.value.publishDate || null
+      user_id: userData.value.id, // Use profile ID from useProfile
+      published_at: form.value.publishDate || null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     }
 
+    // Insert new record
     const { error } = await supabase
       .from('news')
-      .upsert(payload, { onConflict: 'id' })
+      .insert(payload)
 
     if (error) throw error
 
-    const successMessage = props.isEdit 
-      ? 'Berita berhasil diperbarui!' 
-      : 'Berita baru berhasil ditambahkan!'
-    
-    toastStore.success(successMessage)
+    toastStore.success('Berita baru berhasil ditambahkan!')
     emit('close')
 
   } catch (error: any) {
@@ -256,6 +242,11 @@ const handleSubmit = async (): Promise<void> => {
 const handleCancel = (): void => {
   emit('close')
 }
+
+// Initialize component
+onMounted(async () => {
+  await fetchUserData()
+})
 </script>
 
 <template>
@@ -267,7 +258,7 @@ const handleCancel = (): void => {
           class="text-green-600 dark:text-green-400 text-xl"
         />
         <h2 class="text-xl font-bold text-green-700 dark:text-green-400">
-          {{ isEdit ? 'Edit Berita' : 'Tambah Berita Baru' }}
+          Tambah Berita Baru
         </h2>
       </div>
     </template>
@@ -403,7 +394,7 @@ const handleCancel = (): void => {
           :loading="isSubmitting"
           @click="handleSubmit"
         >
-          {{ isEdit ? 'Perbarui Berita' : 'Simpan Berita' }}
+          Simpan Berita
         </UButton>
       </div>
     </template>

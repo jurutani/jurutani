@@ -30,6 +30,7 @@ const fetchMarkets = async () => {
       .select('*', { count: 'exact' })
       .is('deleted_at', null)
       .is('archived_at', null)
+      .eq('status', 'Approved') // perbaikan di sini
       .order('created_at', { ascending: false })
       .range(
         (currentPage.value - 1) * pageSize.value,

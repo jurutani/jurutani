@@ -50,7 +50,7 @@ const fetchWeatherData = async (lat: number, lon: number) => {
   try {
     const response = await fetch(url)
     const data = await response.json()
-    console.log('Data cuaca hari ini:', data)
+    // console.log('Data cuaca hari ini:', data)
     weatherData.value = data
     isLoading.value = false
   } catch (err) {
@@ -68,7 +68,7 @@ const fetchForecastData = async (lat: number, lon: number) => {
   try {
     const response = await fetch(url)
     const data = await response.json()
-    console.log('Data prediksi cuaca:', data)
+    // console.log('Data prediksi cuaca:', data)
     
     // Group forecast data by day
     const dailyForecast = groupForecastByDay(data.list)
