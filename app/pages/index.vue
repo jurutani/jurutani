@@ -2,15 +2,10 @@
   import { heroImageUrl } from '@/utils/hero'
 
   definePageMeta({
-    // layout: 'default',
-    // name: 'index',
-    // alias: 'index',
     title: 'Home',
-    description: 'New Arrivals, Big Savings!',
+    description: 'Juru Tani',
     navOrder: 1,
-    type: 'primary',
     icon: 'i-mdi-home',
-    // ogImage: 'images/ogImage.png', // url or local images inside public folder, for eg, ~/public/images/ogImage.png
   })
 
   const { optimizeImage } = useOptimizeImage()
@@ -19,9 +14,7 @@
     cover: true,
     ...optimizeImage(
       heroImageUrl,
-      /* options */
       {
-        // placeholder: false, // placeholder image before the actual image is fully loaded.
       },
       true /* return bgStyles */,
     ),

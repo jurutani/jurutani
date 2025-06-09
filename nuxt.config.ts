@@ -129,7 +129,6 @@ export default defineNuxtConfig({
   // Global styles
   css: [
     '@/assets/css/tailwind.css',
-    'lite-youtube-embed/src/lite-yt-embed.css',
   ],
 
   postcss: {
@@ -234,11 +233,6 @@ export default defineNuxtConfig({
     // dirs: ['my-components'],
   },
 
-  vue: {
-    compilerOptions: {
-      isCustomElement: (tag) => tag === 'lite-youtube',
-    },
-  },
 
   sourcemap: {
     client: false,
