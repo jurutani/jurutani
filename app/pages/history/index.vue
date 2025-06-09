@@ -2,7 +2,6 @@
 import { ref, onMounted, computed } from 'vue';
 import { useSupabase } from '~/composables/useSupabase';
 import { toastStore } from '~/composables/useJuruTaniToast';
-import { formatDate } from '~/utils/dateFormatter';
 
 const { supabase } = useSupabase();
 
@@ -11,7 +10,7 @@ const historyItems = ref([]);
 const loading = ref(true);
 const error = ref(null);
 
-// Pagination
+// Pagination - fixed to 10 per page
 const currentPage = ref(1);
 const pageSize = ref(10);
 const totalItems = ref(0);
@@ -26,7 +25,7 @@ const filterLabels = {
   markets: 'Pasar'
 };
 
-// Status mapping
+// Status mapping - updated to handle both status formats
 const statusConfig = {
   approved: {
     label: 'Disetujui',
@@ -42,7 +41,84 @@ const statusConfig = {
     label: 'Ditolak',
     class: 'bg-red-100 text-red-800 border-red-200',
     icon: '✗'
+  },
+  // Handle capitalized status for markets
+  Approved: {
+    label: 'Disetujui',
+    class: 'bg-green-100 text-green-800 border-green-200',
+    icon: '✓'
+  },
+  Pending: {
+    label: 'Menunggu',
+    class: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    icon: '⏳'
+  },
+  Rejected: {
+    label: 'Ditolak',
+    class: 'bg-red-100 text-red-800 border-red-200',
+    icon: '✗'
   }
+};
+
+// Helper function to get image URL for markets
+const getMarketImageUrl = (attachments) => {
+  if (!attachments || attachments.trim() === '') {
+    return '/product.png';
+  }
+
+  try {
+    const attachmentsData = JSON.parse(attachments);
+    
+    // Handle single image
+    if (attachmentsData.url_image) {
+      const imageUrl = attachmentsData.url_image.trim();
+      if (imageUrl.startsWith('http')) {
+        return imageUrl;
+      } else {
+        const { data } = supabase.storage
+          .from('markets-attachments')
+          .getPublicUrl(imageUrl);
+        return data?.publicUrl || '/product.png';
+      }
+    }
+
+    // Handle multiple images array - get first image
+    if (attachmentsData.images && Array.isArray(attachmentsData.images) && attachmentsData.images.length > 0) {
+      const firstImage = attachmentsData.images[0];
+      if (typeof firstImage === 'string') {
+        if (firstImage.startsWith('http')) {
+          return firstImage;
+        } else {
+          const { data } = supabase.storage
+            .from('markets-attachments')
+            .getPublicUrl(firstImage);
+          return data?.publicUrl || '/product.png';
+        }
+      }
+    }
+
+    return '/product.png';
+  } catch (error) {
+    console.error('Error parsing attachments JSON:', error);
+    return '/product.png';
+  }
+};
+
+// Helper function to get image URL for news
+const getNewsImageUrl = (imageUrl) => {
+  if (!imageUrl) return '/img/default-placeholder.png';
+  
+  // Check if it's already a full URL
+  if (imageUrl.startsWith('http')) {
+    return imageUrl;
+  }
+  
+  // Get public URL from Supabase storage
+  const { data } = supabase.storage
+    .from('news-images')
+    .getPublicUrl(imageUrl);
+  
+  return data?.publicUrl || '/img/default-placeholder.png';
 };
 
 // Fetch user data
@@ -63,7 +139,7 @@ const fetchCurrentUser = async () => {
   }
 };
 
-// Fetch history data
+// Fetch history data with proper pagination
 const fetchHistoryData = async () => {
   loading.value = true;
   error.value = null;
@@ -82,7 +158,8 @@ const fetchHistoryData = async () => {
     const from = (currentPage.value - 1) * pageSize.value;
     const to = from + pageSize.value - 1;
     
-    let allData = [];
+    let combinedData = [];
+    let totalCount = 0;
     
     // Fetch news data
     if (activeFilter.value === 'all' || activeFilter.value === 'news') {
@@ -100,11 +177,14 @@ const fetchHistoryData = async () => {
           type: 'news',
           typeLabel: 'Berita',
           route: `/news/${item.id}`,
-          status: item.status || 'pending'
+          status: item.status_news || 'pending',
+          imageUrl: getNewsImageUrl(item.image_url),
+          title: item.title || 'Berita Tanpa Judul'
         }));
-        allData = [...allData, ...formattedNews];
+        combinedData = [...combinedData, ...formattedNews];
+        
         if (activeFilter.value === 'news') {
-          totalItems.value = newsCount || 0;
+          totalCount = newsCount || 0;
         }
       }
     }
@@ -125,22 +205,28 @@ const fetchHistoryData = async () => {
           type: 'markets',
           typeLabel: 'Pasar',
           route: `/markets/${item.id}`,
-          status: item.status || 'pending'
+          status: item.status || 'Pending',
+          imageUrl: getMarketImageUrl(item.attachments),
+          title: item.name || 'Produk Tanpa Nama'
         }));
-        allData = [...allData, ...formattedMarkets];
+        combinedData = [...combinedData, ...formattedMarkets];
+        
         if (activeFilter.value === 'markets') {
-          totalItems.value = marketsCount || 0;
+          totalCount = marketsCount || 0;
         }
       }
     }
     
-    // Sort by date and apply pagination
+    // Handle pagination based on filter
     if (activeFilter.value === 'all') {
-      allData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      totalItems.value = allData.length;
-      historyItems.value = allData.slice(from, to + 1);
+      // Sort combined data by date
+      combinedData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      totalItems.value = combinedData.length;
+      historyItems.value = combinedData.slice(from, to + 1);
     } else {
-      historyItems.value = allData.slice(from, Math.min(to + 1, allData.length));
+      // For specific filters, use the count from the query
+      totalItems.value = totalCount;
+      historyItems.value = combinedData.slice(from, to + 1);
     }
     
   } catch (err) {
@@ -161,8 +247,17 @@ const changeFilter = (filter) => {
 
 // Change page
 const changePage = (page) => {
-  currentPage.value = page;
-  fetchHistoryData();
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+    fetchHistoryData();
+  }
+};
+
+// Get normalized status for display
+const getNormalizedStatus = (status) => {
+  // Convert to lowercase for comparison
+  const normalizedStatus = status?.toLowerCase() || 'pending';
+  return statusConfig[normalizedStatus] || statusConfig[status] || statusConfig.pending;
 };
 
 onMounted(() => {
@@ -261,7 +356,11 @@ onMounted(() => {
               
               <!-- Date -->
               <span class="text-sm text-gray-500">
-                {{ formatDate(item.created_at) }}
+                {{ item.created_at ? new Date(item.created_at).toLocaleDateString('id-ID', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                }) : 'Tanggal tidak tersedia' }}
               </span>
             </div>
             
@@ -269,13 +368,13 @@ onMounted(() => {
             <span 
               :class="[
                 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border',
-                statusConfig[item.status]?.class || statusConfig.pending.class
+                getNormalizedStatus(item.status).class
               ]"
             >
               <span class="mr-1">
-                {{ statusConfig[item.status]?.icon || statusConfig.pending.icon }}
+                {{ getNormalizedStatus(item.status).icon }}
               </span>
-              {{ statusConfig[item.status]?.label || statusConfig.pending.label }}
+              {{ getNormalizedStatus(item.status).label }}
             </span>
           </div>
           
@@ -283,10 +382,11 @@ onMounted(() => {
             <!-- Image -->
             <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
               <img 
-                :src="item.image || '/img/default-placeholder.png'" 
+                :src="item.imageUrl" 
                 :alt="item.title"
                 class="w-full h-full object-cover"
                 loading="lazy"
+                @error="$event.target.src = '/img/default-placeholder.png'"
               >
             </div>
             
@@ -379,7 +479,7 @@ onMounted(() => {
     
     <!-- Stats Summary -->
     <div v-if="!loading && historyItems.length > 0" class="mt-8 text-center text-sm text-gray-500">
-      Menampilkan {{ historyItems.length }} dari {{ totalItems }} item
+      Menampilkan {{ ((currentPage - 1) * pageSize) + 1 }} - {{ Math.min(currentPage * pageSize, totalItems) }} dari {{ totalItems }} item
     </div>
   </div>
 </template>
