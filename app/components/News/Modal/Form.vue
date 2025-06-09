@@ -29,10 +29,9 @@ const emit = defineEmits<{
 // Constants
 const CATEGORIES = [
   { value: 'Pertanian', label: 'Pertanian' },
-  { value: 'Edukasi', label: 'Edukasi' },
-  { value: 'Pupuk', label: 'Pupuk' },
-  { value: 'Tokoh', label: 'Tokoh' },
   { value: 'Teknologi', label: 'Teknologi' },
+  { value: 'Prestasi', label: 'Prestasi' },
+  { value: 'Peternakan', label: 'Peternakan' },
   { value: 'Lainnya', label: 'Lainnya' }
 ] as const
 

@@ -30,9 +30,10 @@ const emit = defineEmits<{
 
 // Constants
 const CATEGORIES = [
-  { value: 'Pupuk', label: 'Pupuk' },
   { value: 'Hasil Pertanian', label: 'Hasil Pertanian' },
-  { value: 'Alat Pertanian', label: 'Alat Pertanian' },
+  { value: 'Hasil Peternakan', label: 'Hasil Peternakan' },
+  { value: 'Produk Olahan', label: 'Produk Olahan' },
+  { value: 'Penunjang Pertanian', label: 'Penunjang Pertanian' },
   { value: 'Lainnya', label: 'Lainnya' }
 ] as const
 
