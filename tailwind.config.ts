@@ -26,8 +26,15 @@ export default {
  theme: {
     extend: {
       colors: {
-        ...pg_colors,
-        pp: pg_colors.primary,
+        primary: '#16a34a',     // hijau utama (green-600)
+        secondary: '#65a30d',   // hijau keemasan (lime-600)
+        accent: '#4ade80',      // hijau terang (green-400)
+        neutral: '#f3f4f6',     // abu muda
+        base: '#ffffff',        // putih dasar
+        info: '#22d3ee',        // biru muda
+        success: '#16a34a',     // sama dengan primary
+        warning: '#facc15',     // kuning terang
+        error: '#dc2626',       // merah
       },
     },
   },
