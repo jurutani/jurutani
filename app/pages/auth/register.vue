@@ -23,9 +23,7 @@ const form = ref({
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
-
-// Computed untuk loading state
-const isLoading = computed(() => false)
+const isLoading = ref(false) // Changed from computed to ref
 
 // Validation functions
 const validateEmail = (email: string) => {
@@ -70,6 +68,8 @@ const handleRegister = async () => {
   }
 
   try {
+    isLoading.value = true // Set loading to true
+
     console.log('Attempting to register with:', {
       email: form.value.email
     })
@@ -85,6 +85,8 @@ const handleRegister = async () => {
     console.log('Registration result:', result)
 
     if (result.success) {
+      toastStore.success('Pendaftaran berhasil! Silakan periksa email Anda.', 3000)
+      
       // Navigate to confirm email page with email parameter
       await navigateTo({
         path: '/auth/confirm-email',
@@ -98,12 +100,16 @@ const handleRegister = async () => {
   } catch (err: any) {
     console.error('Unexpected error during registration:', err)
     toastStore.error('Terjadi kesalahan tidak terduga. Silakan coba lagi.', 3000)
+  } finally {
+    isLoading.value = false // Reset loading state
   }
 }
 
 // Social login handler
 const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => {
   try {
+    isLoading.value = true // Set loading for social login too
+    
     const { success, error: loginError } = await loginWithSocialProvider(provider)
 
     if (!success) {
@@ -116,6 +122,8 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
   } catch (err: any) {
     const message = err?.message || 'Terjadi kesalahan saat login.'
     toastStore.error(message, 3000)
+  } finally {
+    isLoading.value = false // Reset loading state
   }
 }
 </script>
@@ -188,120 +196,129 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         </div>
         
         <UCard class="shadow-sm border-0">
-          <UFormGroup label="Email" name="email">
-            <UInput
-              v-model="form.email"
-              type="email"
-              placeholder="nama@example.com"
-              size="lg"
-              :ui="{
-                icon: { trailing: { pointer: '' } },
-                base: 'relative block w-full rounded-lg',
-                input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-              }"
-            >
-              <template #trailing>
-                <Icon name="ph:at" class="text-gray-400" />
-              </template>
-            </UInput>
-          </UFormGroup>
+          <form @submit.prevent="handleRegister">
+            <UFormGroup label="Email" name="email">
+              <UInput
+                v-model="form.email"
+                type="email"
+                placeholder="nama@example.com"
+                size="lg"
+                :disabled="isLoading"
+                :ui="{
+                  icon: { trailing: { pointer: '' } },
+                  base: 'relative block w-full rounded-lg',
+                  input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
+                }"
+              >
+                <template #trailing>
+                  <Icon name="ph:at" class="text-gray-400" />
+                </template>
+              </UInput>
+            </UFormGroup>
 
-          <UFormGroup label="Kata Sandi" name="password" class="mt-4">
-            <UInput
-              v-model="form.password"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Minimal 8 karakter"
-              size="lg"
-              :ui="{
-                icon: { trailing: { pointer: 'cursor-pointer' } },
-                base: 'relative block w-full rounded-lg',
-                input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-              }"
-            >
-              <template #trailing>
-                <Icon
-                  :name="showPassword ? 'ph:eye-slash' : 'ph:eye'"
-                  class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
-                  @click="showPassword = !showPassword"
-                />
-              </template>
-            </UInput>
-          </UFormGroup>
+            <UFormGroup label="Kata Sandi" name="password" class="mt-4">
+              <UInput
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="Minimal 8 karakter"
+                size="lg"
+                :disabled="isLoading"
+                :ui="{
+                  icon: { trailing: { pointer: 'cursor-pointer' } },
+                  base: 'relative block w-full rounded-lg',
+                  input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
+                }"
+              >
+                <template #trailing>
+                  <Icon
+                    :name="showPassword ? 'ph:eye-slash' : 'ph:eye'"
+                    class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
+                    @click="showPassword = !showPassword"
+                  />
+                </template>
+              </UInput>
+            </UFormGroup>
 
-          <UFormGroup label="Konfirmasi Kata Sandi" name="confirmPassword" class="mt-4">
-            <UInput
-              v-model="form.confirmPassword"
-              :type="showConfirmPassword ? 'text' : 'password'"
-              placeholder="Masukkan kembali kata sandi"
-              size="lg"
-              :ui="{
-                icon: { trailing: { pointer: 'cursor-pointer' } },
-                base: 'relative block w-full rounded-lg',
-                input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-              }"
-            >
-              <template #trailing>
-                <Icon
-                  :name="showConfirmPassword ? 'ph:eye-slash' : 'ph:eye'"
-                  class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
-                  @click="showConfirmPassword = !showConfirmPassword"
-                />
-              </template>
-            </UInput>
-          </UFormGroup>
+            <UFormGroup label="Konfirmasi Kata Sandi" name="confirmPassword" class="mt-4">
+              <UInput
+                v-model="form.confirmPassword"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                placeholder="Masukkan kembali kata sandi"
+                size="lg"
+                :disabled="isLoading"
+                :ui="{
+                  icon: { trailing: { pointer: 'cursor-pointer' } },
+                  base: 'relative block w-full rounded-lg',
+                  input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
+                }"
+              >
+                <template #trailing>
+                  <Icon
+                    :name="showConfirmPassword ? 'ph:eye-slash' : 'ph:eye'"
+                    class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
+                    @click="showConfirmPassword = !showConfirmPassword"
+                  />
+                </template>
+              </UInput>
+            </UFormGroup>
 
-          <div class="mt-4">
-            <UCheckbox 
-              v-model="form.agreeTerms" 
-              name="agreeTerms" 
-              color="green"
-              :ui="{ 
-                wrapper: 'items-start',
-                label: 'text-sm text-gray-600 dark:text-gray-300'
-              }"
-            >
-              <template #label>
-                <span>
-                  Saya menyetujui 
-                  <UButton
-                    variant="link"
-                    to="/terms"
-                    class="text-green-600 hover:text-green-700 p-0 font-medium underline-offset-2"
-                  >
-                    Syarat & Ketentuan
-                  </UButton> 
-                  dan 
-                  <UButton
-                    variant="link"
-                    to="/privacy-policy"
-                    class="text-green-600 hover:text-green-700 p-0 font-medium underline-offset-2"
-                  >
-                    Kebijakan Privasi
-                  </UButton>
-                </span>
-              </template>
-            </UCheckbox>
-          </div>
+            <div class="mt-4">
+              <UCheckbox 
+                v-model="form.agreeTerms" 
+                name="agreeTerms" 
+                color="green"
+                :disabled="isLoading"
+                :ui="{ 
+                  wrapper: 'items-start',
+                  label: 'text-sm text-gray-600 dark:text-gray-300'
+                }"
+              >
+                <template #label>
+                  <span>
+                    Saya menyetujui 
+                    <UButton
+                      variant="link"
+                      to="/terms"
+                      class="text-green-600 hover:text-green-700 p-0 font-medium underline-offset-2"
+                    >
+                      Syarat & Ketentuan
+                    </UButton> 
+                    dan 
+                    <UButton
+                      variant="link"
+                      to="/privacy-policy"
+                      class="text-green-600 hover:text-green-700 p-0 font-medium underline-offset-2"
+                    >
+                      Kebijakan Privasi
+                    </UButton>
+                  </span>
+                </template>
+              </UCheckbox>
+            </div>
 
-          <div class="mt-6">
-            <UButton
-              block
-              color="green"
-              :ui="{
-                base: 'rounded-lg py-3 font-medium text-base',
-                color: {
-                  green: {
-                    solid: 'bg-green-600 hover:bg-green-700 focus:ring-green-300 text-white'
+            <div class="mt-6">
+              <UButton
+                type="submit"
+                block
+                color="green"
+                :loading="isLoading"
+                :disabled="isLoading"
+                :ui="{
+                  base: 'rounded-lg p-4 font-medium text-base',
+                  color: {
+                    green: {
+                      solid: 'bg-green-600 hover:bg-green-700 focus:ring-green-300 text-white'
+                    }
                   }
-                }
-              }"
-              :disabled="isLoading"
-              :loading="isLoading"
-              @click="handleRegister"
-            >
-              {{ isLoading ? 'Mendaftar...' : 'Daftar Sekarang' }}
-            </UButton>
-          </div>
+                }"
+              >
+                <template #leading>
+                  <Icon v-if="!isLoading" name="ph:user-plus" class="w-5 h-5" />
+                </template>
+                {{ isLoading ? 'Mendaftar...' : 'Daftar Sekarang' }}
+              </UButton>
+            </div>
+          </form>
 
           <!-- Social Login Section -->
           <div class="relative flex items-center justify-center gap-3 my-6">
@@ -311,7 +328,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
 
           <div class="grid grid-cols-1 place-items-center gap-3">
-          <UButton
+            <UButton
               color="white"
               variant="outline"
               :ui="{ 
@@ -323,9 +340,10 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 }
               }"
               :disabled="isLoading"
+              :loading="isLoading"
               @click="handleSocialLogin('google')"
             >
-              <Icon name="logos:google-icon" class="mr-2 h-5 w-5" />
+              <Icon v-if="!isLoading" name="logos:google-icon" class="mr-2 h-5 w-5" />
               Google
             </UButton>
           </div>

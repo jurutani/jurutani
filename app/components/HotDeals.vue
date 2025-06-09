@@ -30,6 +30,7 @@ const fetchMarkets = async () => {
       `, { count: 'exact' }) // hanya ambil kolom yang dibutuhkan
       .is('deleted_at', null)
       .is('archived_at', null)
+      .eq('status', 'Approved')
       .order('created_at', { ascending: false })
       .range(
         (currentPage.value - 1) * pageSize.value,
