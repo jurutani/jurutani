@@ -108,7 +108,7 @@ class="h-full rounded-3xl border border-gray-200 dark:border-gray-700 bg-white d
                 <div :class="service.bgColor" class="p-2.5 rounded-xl">
                   <UIcon :name="service.icon" :class="`w-5 h-5 text-${service.color}-800 dark:text-${service.color}-600`" />
                 </div>
-                <span :class="`text-sm font-medium text-${service.color}-800 dark:text-${service.color}-600 uppercase tracking-wide`">
+                <span :class="`text-sm font-medium text-${service.color}-400 dark:text-${service.color}-300 uppercase tracking-wide`">
                   {{ service.subtitle }}
                 </span>
               </div>
