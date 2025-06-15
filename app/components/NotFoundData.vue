@@ -3,15 +3,19 @@
 const props = defineProps({
   message: {
     type: String,
-    default: 'Tidak ada Informasi tersedia untuk kategori ini.'
+    default: 'Tidak ada data tersedia'
   },
   actionText: {
     type: String,
-    default: 'Jelajahi Kategori Lain'
+    default: 'Coba Lagi'
   },
   showAction: {
     type: Boolean,
     default: true
+  },
+  imageSrc: {
+    type: String,
+    default: '/profile.png'
   }
 });
 
@@ -25,48 +29,38 @@ const handleAction = () => {
 </script>
 
 <template>
-  <UCard class="text-center dark:text-gray-200 mb-8">
-    <div class="py-8">
-      <!-- Empty State Icon -->
-      <div class="mb-6">
-        <UIcon 
-          name="i-heroicons-folder-open" 
-          class="w-16 h-16 text-amber-400 mx-auto mb-2"
-        />
-        <p class="text-4xl">🏜️</p>
+  <div class="text-center py-12">
+    <!-- Image -->
+    <div class="mb-6">
+      <img 
+        v-if="imageSrc" 
+        :src="imageSrc" 
+        alt="Empty state"
+        class="w-32 h-32 mx-auto object-contain opacity-60"
+      >
+      <div v-else class="w-32 h-32 mx-auto flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+        <UIcon name="i-heroicons-folder-open" class="w-12 h-12 text-gray-400" />
       </div>
-
-      <!-- Content -->
-      <div class="space-y-3 dark:text-gray-200 text-gray-800">
-        <h3 class="text-xl font-semibold ">
-          Kebun masih kosong 🌾
-        </h3>
-        <p >{{ message }}</p>
-        <p class="text-sm ">
-          Coba cari di kategori lain atau periksa kembali nanti
-        </p>
-      </div>
-
-      <!-- Action Button -->
-      <div v-if="showAction" class="mt-6">
-        <UButton 
-          color="green"
-          icon="i-heroicons-magnifying-glass"
-          @click="handleAction"
-        >
-          {{ actionText }}
-        </UButton>
-      </div>
-
-      <!-- Tips -->
-      <UAlert
-        class="mt-6 text-left"
-        icon="i-heroicons-light-bulb"
-        color="amber"
-        variant="soft"
-        title="Tips untuk Petani:"
-        description="Gunakan kata kunci yang berbeda atau hubungi admin untuk menambah produk baru"
-      />
     </div>
-  </UCard>
+
+    <!-- Message -->
+    <div class="space-y-2 mb-6">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        {{ message }}
+      </h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Coba periksa kembali atau hubungi admin
+      </p>
+    </div>
+
+    <!-- Action Button -->
+    <UButton 
+      v-if="showAction"
+      color="primary"
+      variant="soft"
+      @click="handleAction"
+    >
+      {{ actionText }}
+    </UButton>
+  </div>
 </template>

@@ -1,49 +1,45 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useSupabase } from '~/composables/useSupabase';
 
-// Kalau mau aktifin emit, tinggal uncomment
+const { supabase } = useSupabase()
 // const emit = defineEmits(['exploreProducts'])
 
 const currentSlide = ref(0)
+const banners = ref([])
+const loading = ref(true)
+const error = ref(null)
 let slideInterval: NodeJS.Timeout | null = null
 
-// Data slides banner
-const slides = [
-  {
-    title: "Selamat Datang di Juru Tani!",
-    subtitle: "Panen Promo",
-    description: "Platform terlengkap untuk kebutuhan pertanian Anda",
-    categories: ["Pertanian", "Perkebunan", "Peternakan", "Alat Tani", "Pupuk", "Dan Lainnya"],
-    gradient: "from-green-500 to-emerald-700"
-  },
-  {
-    title: "Solusi Pertanian Modern",
-    subtitle: "Teknologi Terdepan",
-    description: "Aplikasi dan tools untuk meningkatkan produktivitas pertanian",
-    categories: [ "Monitoring Tanaman", "Analisis Cuaca", "Prediksi Panen"],
-    gradient: "from-blue-500 to-cyan-700"
-  },
-  {
-    title: "Komunitas Petani Indonesia",
-    subtitle: "Berkembang Bersama",
-    description: "Bergabung dengan ribuan petani sukses di seluruh Indonesia",
-    categories: ["Forum Diskusi", "Konsultasi Ahli", "Sharing Pengalaman", "Edukasi Pertanian"],
-    gradient: "from-orange-500 to-red-700"
-  },
-  {
-    title: "Marketplace Pertanian",
-    subtitle: "Jual Beli Mudah",
-    description: "Platform jual beli produk pertanian terpercaya",
-    categories: ["Benih Unggul", "Alat Pertanian", "Hasil Panen", "Layanan Logistik"],
-    gradient: "from-purple-500 to-pink-700"
+// Fetch banners from Supabase
+const fetchBanners = async () => {
+  try {
+    loading.value = true
+    const { data, error: fetchError } = await supabase
+      .from('banner')
+      .select('*')
+      .order('created_at', { ascending: true })
+
+    if (fetchError) {
+      throw fetchError
+    }
+
+    banners.value = data || []
+  } catch (err) {
+    console.error('Error fetching banners:', err)
+    error.value = err.message
+  } finally {
+    loading.value = false
   }
-]
+}
 
 // Auto slide functionality
 const startAutoSlide = () => {
-  slideInterval = setInterval(() => {
-    currentSlide.value = (currentSlide.value + 1) % slides.length
-  }, 5000) // Ganti slide setiap 5 detik
+  if (banners.value.length > 1) {
+    slideInterval = setInterval(() => {
+      currentSlide.value = (currentSlide.value + 1) % banners.value.length
+    }, 5000) // Ganti slide setiap 5 detik
+  }
 }
 
 const stopAutoSlide = () => {
@@ -60,22 +56,30 @@ const goToSlide = (index: number) => {
 }
 
 const nextSlide = () => {
-  currentSlide.value = (currentSlide.value + 1) % slides.length
+  currentSlide.value = (currentSlide.value + 1) % banners.value.length
   stopAutoSlide()
   startAutoSlide()
 }
 
 const prevSlide = () => {
-  currentSlide.value = currentSlide.value === 0 ? slides.length - 1 : currentSlide.value - 1
+  currentSlide.value = currentSlide.value === 0 ? banners.value.length - 1 : currentSlide.value - 1
   stopAutoSlide()
   startAutoSlide()
+}
+
+// Handle image load error
+const handleImageError = (event) => {
+  console.error('Failed to load banner image:', event.target.src)
+  // Anda bisa set placeholder image di sini
+  event.target.src = '/placeholder-banner.jpg' // Sesuaikan dengan path placeholder Anda
 }
 
 // const exploreProducts = () => {
 //   emit('exploreProducts')
 // }
 
-onMounted(() => {
+onMounted(async () => {
+  await fetchBanners()
   startAutoSlide()
 })
 
@@ -87,109 +91,130 @@ onUnmounted(() => {
 <template>
   <section class="relative">
     <UCard class="overflow-hidden">
-      <!-- Slider Container -->
-      <div class="relative h-80 lg:h-60">
+      <!-- Loading State -->
+      <div v-if="loading" class="h-80 lg:h-96 flex items-center justify-center bg-gray-100">
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"/>
+          <p class="text-gray-600">Memuat banner...</p>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="h-80 lg:h-96 flex items-center justify-center bg-red-50">
+        <div class="text-center">
+          <svg class="w-16 h-16 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-red-600 font-medium">Gagal memuat banner</p>
+          <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+          <button 
+            class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" 
+            @click="fetchBanners"
+          >
+            Coba Lagi
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div v-else-if="banners.length === 0" class="h-80 lg:h-96 flex items-center justify-center bg-gray-50">
+        <div class="text-center">
+          <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <p class="text-gray-600 font-medium">Belum ada banner</p>
+          <p class="text-gray-500 text-sm mt-1">Banner akan ditampilkan di sini</p>
+        </div>
+      </div>
+
+      <!-- Banner Slider -->
+      <div v-else class="relative h-80 lg:h-96">
         <!-- Slides -->
         <div
-          v-for="(slide, index) in slides"
-          :key="index"
+          v-for="(banner, index) in banners"
+          :key="banner.id"
           :class="[
             'absolute inset-0 transition-all duration-500 ease-in-out',
             index === currentSlide ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
           ]"
         >
-          <div
-            :class="[
-              'bg-clip-text bg-gradient-to-r font-extrabold text-transparent h-full',
-              slide.gradient
-            ]"
-          >
-            <div class="launch-sale-grid h-full p-6">
-              <!-- Welcome Text -->
-              <div class="flex lg:flex lg:items-center" style="grid-area: sale">
-                <span class="-tracking-wide font-semibold text-2xl uppercase lg:text-center lg:text-3xl">
-                  {{ slide.title }}
-                </span>
-              </div>
-              
-              <!-- Main Promo Text -->
-              <div class="justify-center lg:flex lg:items-center" style="grid-area: discount">
-                <div class="text-center">
-                  <span class="-tracking-wide font-bold text-4xl uppercase whitespace-nowrap lg:text-6xl block">
-                    {{ slide.subtitle }}
-                  </span>
-                  <p class="text-gray-600 text-sm mt-2 font-normal">
-                    {{ slide.description }}
-                  </p>
-                </div>
-              </div>
-              
-              <!-- Categories -->
-              <div style="grid-area: categories" class="flex items-center">
-                <ul class="-tracking-wide font-extrabold space-y-2 text-right uppercase w-full whitespace-nowrap sm:space-y-0 lg:flex lg:flex-wrap lg:justify-center lg:space-x-2">
-                  <li v-for="category in slide.categories" :key="category" class="lg:mb-2">
-                    {{ category }}
-                  </li>
-                </ul>
-              </div>
-            </div>
+          <div class="relative h-full w-full">
+            <!-- Banner Image -->
+            <img
+              :src="banner.image_url"
+              :alt="`Banner ${index + 1}`"
+              class="w-full h-full object-cover"
+              @error="handleImageError"
+            >
+            
+            <!-- Overlay untuk readability (opsional) -->
+            <div class="absolute inset-0 bg-black/20"/>
           </div>
         </div>
 
-        <!-- Navigation Arrows -->
-        <button
-          class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-200"
-          @click="prevSlide"
-        >
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-          </svg>
-        </button>
-        
-        <button
-          class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-200"
-          @click="nextSlide"
-        >
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </button>
-      </div>
+        <!-- Navigation Arrows (hanya tampil jika ada lebih dari 1 banner) -->
+        <template v-if="banners.length > 1">
+          <button
+            class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-200 z-10"
+            @click="prevSlide"
+          >
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          
+          <button
+            class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-200 z-10"
+            @click="nextSlide"
+          >
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
 
-      <!-- Slide Indicators -->
-      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-        <button
-          v-for="(slide, index) in slides"
-          :key="index"
-          :class="[
-            'w-3 h-3 rounded-full transition-all duration-200',
-            index === currentSlide ? 'bg-white' : 'bg-white/50'
-          ]"
-          @click="goToSlide(index)"
-        />
+          <!-- Slide Indicators -->
+          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+            <button
+              v-for="(banner, index) in banners"
+              :key="banner.id"
+              :class="[
+                'w-3 h-3 rounded-full transition-all duration-200',
+                index === currentSlide ? 'bg-white' : 'bg-white/50'
+              ]"
+              @click="goToSlide(index)"
+            />
+          </div>
+        </template>
       </div>
     </UCard>
   </section>
 </template>
 
 <style scoped>
-.launch-sale-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas:
-    'discount categories'
-    'sale categories';
-  gap: 20px;
+/* Responsive image container */
+.banner-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
-@media (min-width: 1024px) {
-  .launch-sale-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: 'sale discount categories';
-    gap: 20px;
+/* Ensure images maintain aspect ratio */
+img {
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 </style>
