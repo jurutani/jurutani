@@ -136,12 +136,7 @@ class="h-full rounded-3xl border border-gray-200 dark:border-gray-700 bg-white d
             
             <!-- Image Section (Right) -->
             <div class="flex-shrink-0 flex items-center h-full">
-              <div 
-              :class="`w-32 h-full aspect-square rounded-full bg-gradient-to-br ${service.gradient.replace('from-', 'from-').replace('to-', 'to-').replace('-400', '-100').replace('-600', '-200')} dark:from-${service.color}-900/30 dark:to-${service.color}-800/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`"
-              style="min-height: 120px;"
-              >
               <img :src="service.image" :alt="service.title" class="w-28 h-28 object-cover rounded-full" >
-              </div>
             </div>
           </div>
         </div>
