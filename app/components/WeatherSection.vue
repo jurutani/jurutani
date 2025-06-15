@@ -4,12 +4,15 @@ import { ref, onMounted, computed } from 'vue'
 // State untuk menyimpan data cuaca dan lokasi
 const weatherData = ref<any>(null)
 const forecastData = ref<any>(null)
+const hourlyData = ref<any>(null)
 const location = ref('')
 const isLoading = ref(true)
 const isForecastLoading = ref(false)
+const isHourlyLoading = ref(false)
 const error = ref('')
 const forecastError = ref('')
-const activeTab = ref('today')
+const hourlyError = ref('')
+const activeTab = ref('current')
 
 // Environment variables
 const API_KEY = process.env.OPENWEATHER_API_KEY || '416f0ed0bb28d3110beedecf5fa9cf85'
@@ -50,7 +53,6 @@ const fetchWeatherData = async (lat: number, lon: number) => {
   try {
     const response = await fetch(url)
     const data = await response.json()
-    // console.log('Data cuaca hari ini:', data)
     weatherData.value = data
     isLoading.value = false
   } catch (err) {
@@ -60,24 +62,32 @@ const fetchWeatherData = async (lat: number, lon: number) => {
   }
 }
 
-// Fungsi untuk mengambil data prediksi cuaca 7 hari
+// Fungsi untuk mengambil data prediksi cuaca 5 hari + hourly
 const fetchForecastData = async (lat: number, lon: number) => {
   isForecastLoading.value = true
+  isHourlyLoading.value = true
   const url = `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=id`
   
   try {
     const response = await fetch(url)
     const data = await response.json()
-    // console.log('Data prediksi cuaca:', data)
     
-    // Group forecast data by day
+    // Group forecast data by day (5 days)
     const dailyForecast = groupForecastByDay(data.list)
     forecastData.value = dailyForecast
+    
+    // Get hourly data for next 24 hours
+    const next24Hours = data.list.slice(0, 8) // 8 intervals = 24 hours (3-hour intervals)
+    hourlyData.value = next24Hours
+    
     isForecastLoading.value = false
+    isHourlyLoading.value = false
   } catch (err) {
     console.error('Error mengambil data prediksi cuaca:', err)
     forecastError.value = 'Gagal mengambil data prediksi cuaca'
+    hourlyError.value = 'Gagal mengambil data hourly cuaca'
     isForecastLoading.value = false
+    isHourlyLoading.value = false
   }
 }
 
@@ -97,7 +107,8 @@ const groupForecastByDay = (forecastList: any[]) => {
         temp_max: item.main.temp_max,
         main_weather: item.weather[0],
         humidity: item.main.humidity,
-        wind_speed: item.wind.speed
+        wind_speed: item.wind.speed,
+        pop: item.pop || 0 // Probability of precipitation
       }
     }
     
@@ -106,7 +117,7 @@ const groupForecastByDay = (forecastList: any[]) => {
     grouped[dateKey].temp_max = Math.max(grouped[dateKey].temp_max, item.main.temp_max)
   })
   
-  return Object.values(grouped).slice(0, 7) // Ambil 7 hari ke depan
+  return Object.values(grouped).slice(0, 5) // 5 hari ke depan
 }
 
 // Computed properties untuk informasi pertanian
@@ -169,15 +180,12 @@ const farmingConditions = computed(() => {
   return conditions
 })
 
-// Mendapatkan jam matahari terbit dan terbenam berdasarkan timezone
+// Computed properties untuk waktu
 const currentLocalTime = computed(() => {
   if (!weatherData.value) return '-'
-
   const timestamp = weatherData.value.dt
   const timezoneOffset = weatherData.value.timezone
-
   const utcDate = new Date((timestamp + timezoneOffset) * 1000)
-
   return new Intl.DateTimeFormat('id-ID', {
     hour: '2-digit',
     minute: '2-digit',
@@ -188,11 +196,9 @@ const currentLocalTime = computed(() => {
 
 const sunriseTime = computed(() => {
   if (!weatherData.value) return '-'
-
   const timestamp = weatherData.value.sys.sunrise
   const timezoneOffset = weatherData.value.timezone
   const utcDate = new Date((timestamp + timezoneOffset) * 1000)
-
   return new Intl.DateTimeFormat('id-ID', {
     hour: '2-digit',
     minute: '2-digit',
@@ -203,11 +209,9 @@ const sunriseTime = computed(() => {
 
 const sunsetTime = computed(() => {
   if (!weatherData.value) return '-'
-
   const timestamp = weatherData.value.sys.sunset
   const timezoneOffset = weatherData.value.timezone
   const utcDate = new Date((timestamp + timezoneOffset) * 1000)
-
   return new Intl.DateTimeFormat('id-ID', {
     hour: '2-digit',
     minute: '2-digit',
@@ -218,10 +222,8 @@ const sunsetTime = computed(() => {
 
 // Mendapatkan arah angin dalam bahasa Indonesia
 const windDirection = computed(() => {
-  if (!weatherData.value) return '-'
-  
+  if (!weatherData.value || !weatherData.value.wind) return '-'
   const deg = weatherData.value.wind.deg
-  
   if (deg >= 337.5 || deg < 22.5) return 'Utara'
   if (deg >= 22.5 && deg < 67.5) return 'Timur Laut'
   if (deg >= 67.5 && deg < 112.5) return 'Timur'
@@ -230,7 +232,6 @@ const windDirection = computed(() => {
   if (deg >= 202.5 && deg < 247.5) return 'Barat Daya'
   if (deg >= 247.5 && deg < 292.5) return 'Barat'
   if (deg >= 292.5 && deg < 337.5) return 'Barat Laut'
-  
   return '-'
 })
 
@@ -244,7 +245,6 @@ const formatDate = (dateString: string) => {
   }).format(date)
 }
 
-// Fungsi untuk format tanggal pendek
 const formatDateShort = (dateString: string) => {
   const date = new Date(dateString)
   return new Intl.DateTimeFormat('id-ID', {
@@ -254,6 +254,14 @@ const formatDateShort = (dateString: string) => {
   }).format(date)
 }
 
+const formatHour = (timestamp: number) => {
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleTimeString('id-ID', { 
+    hour: '2-digit',
+    hour12: false
+  })
+}
+
 // Menjalankan fungsi untuk mendapatkan lokasi dan data cuaca saat halaman dimuat
 onMounted(() => {
   getLocation()
@@ -261,238 +269,297 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-    <!-- Header Panel -->
-    <div class="bg-gradient-to-r from-green-600 to-green-700 dark:from-green-700 dark:to-green-800 text-white px-6 py-4">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-semibold flex items-center">
-          <Icon name="mdi:weather-partly-cloudy" class="w-6 h-6 mr-2" />
+  <div class="bg-gradient-to-br from-green-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen border-radius-md">
+    <div class="container mx-auto px-4 py-6">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">
           Info Cuaca Pertanian
-        </h2>
-        <div class="text-sm bg-green-800 bg-opacity-30 dark:bg-green-900 dark:bg-opacity-50 px-3 py-1 rounded-full">
-          {{ currentLocalTime }}
-        </div>
+        </h1>
+        <p class="text-gray-600 dark:text-gray-300">
+          Informasi cuaca real-time untuk kebutuhan pertanian Anda
+        </p>
       </div>
-      <p v-if="weatherData" class="text-sm mt-1">
-        {{ weatherData.name }}, {{ weatherData.sys.country }}
-      </p>
-    </div>
 
-    <!-- Tabs Navigation -->
-    <div class="border-b border-gray-200 dark:border-gray-600">
-      <nav class="flex">
-        <button
-        :class="[
-          'px-6 py-3 text-sm font-medium border-b-2 transition-colors',
-          activeTab === 'today'
-          ? 'border-green-500 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900 dark:bg-opacity-20'
-          : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-        ]"
-        @click="activeTab = 'today'"
-        >
-          <Icon name="mdi:weather-sunny" class="w-4 h-4 mr-2 inline-block" />
-          Cuaca Hari Ini
-        </button>
-        <button
-        :class="[
-          'px-6 py-3 text-sm font-medium border-b-2 transition-colors',
-          activeTab === 'forecast'
-          ? 'border-green-500 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900 dark:bg-opacity-20'
-          : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-        ]"
-        @click="activeTab = 'forecast'"
-        >
-          <Icon name="mdi:calendar-week" class="w-4 h-4 mr-2 inline-block" />
-          Prediksi 5 Hari
-        </button>
-      </nav>
-    </div>
-
-    <!-- Tab Content -->
-    <div class="p-6">
-      <!-- Tab Cuaca Hari Ini -->
-      <div v-if="activeTab === 'today'">
-        <!-- Loading State -->
-        <div v-if="isLoading" class="flex justify-center items-center py-8">
-          <div class="text-center">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-green-500 border-t-transparent dark:border-green-400"/>
-            <p class="mt-2 text-gray-600 dark:text-gray-300">Memuat data cuaca...</p>
-          </div>
-        </div>
-
-        <!-- Error State -->
-        <div v-else-if="error">
-          <div class="bg-red-100 dark:bg-red-900 border-l-4 border-red-500 text-red-700 dark:text-red-200 p-4" role="alert">
-            <p class="font-bold">Error</p>
-            <p>{{ error }}</p>
-          </div>
-        </div>
-
-        <!-- Weather Data -->
-        <div v-else-if="weatherData">
-          <!-- Current Weather Summary -->
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center">
-              <img
-                :src="`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`" 
-                class="w-16 h-16" 
-                :alt="weatherData.weather[0].description"
-              >
-              <div class="ml-2">
-                <h3 class="text-2xl font-bold dark:text-white">{{ Math.round(weatherData.main.temp) }}°C</h3>
-                <p class="text-gray-600 dark:text-gray-300 capitalize">{{ weatherData.weather[0].description }}</p>
-              </div>
-            </div>
-            <div class="text-right">
-              <p class="text-sm dark:text-gray-200">Terasa seperti: <span class="font-semibold">{{ Math.round(weatherData.main.feels_like) }}°C</span></p>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Min: {{ Math.round(weatherData.main.temp_min) }}°C / Max: {{ Math.round(weatherData.main.temp_max) }}°C</p>
-            </div>
-          </div>
-
-          <!-- Detailed Weather Info -->
-          <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-              <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
-                <Icon name="mdi:water-percent" class="w-5 h-5 mr-1" />
-                <span class="text-sm">Kelembaban</span>
-              </div>
-              <p class="text-lg font-semibold dark:text-white">{{ weatherData.main.humidity }}%</p>
-            </div>
-            
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-              <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
-                <Icon name="mdi:weather-windy" class="w-5 h-5 mr-1" />
-                <span class="text-sm">Angin</span>
-              </div>
-              <p class="text-lg font-semibold dark:text-white">{{ weatherData.wind.speed }} m/s</p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Arah: {{ windDirection }}</p>
-            </div>
-            
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-              <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
-                <Icon name="mdi:weather-sunset-up" class="w-5 h-5 mr-1" />
-                <span class="text-sm">Matahari Terbit</span>
-              </div>
-              <p class="text-lg font-semibold dark:text-white">{{ sunriseTime }}</p>
-            </div>
-            
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-              <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
-                <Icon name="mdi:weather-sunset-down" class="w-5 h-5 mr-1" />
-                <span class="text-sm">Matahari Terbenam</span>
-              </div>
-              <p class="text-lg font-semibold dark:text-white">{{ sunsetTime }}</p>
-            </div>
-            
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-              <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
-                <Icon name="mdi:eye" class="w-5 h-5 mr-1" />
-                <span class="text-sm">Jarak Pandang</span>
-              </div>
-              <p class="text-lg font-semibold dark:text-white">{{ weatherData.visibility / 1000 }} km</p>
-            </div>
-            
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-              <div class="flex items-center text-gray-600 dark:text-gray-300 mb-1">
-                <Icon name="mdi:gauge" class="w-5 h-5 mr-1" />
-                <span class="text-sm">Tekanan</span>
-              </div>
-              <p class="text-lg font-semibold dark:text-white">{{ weatherData.main.pressure }} hPa</p>
-            </div>
-          </div>
-
-          <!-- Farming Recommendations -->
-          <div v-if="farmingConditions" class="border-t dark:border-gray-600 pt-4">
-            <h3 class="text-lg font-semibold mb-2 flex items-center dark:text-white">
-              <Icon name="mdi:tractor" class="w-5 h-5 mr-2" />
-              Rekomendasi Pertanian
-            </h3>
-            
-            <div
-              :class="['p-3 rounded-lg mb-2', 
-                farmingConditions.suitable 
-                  ? 'bg-green-50 border border-green-200 dark:bg-green-900 dark:bg-opacity-20 dark:border-green-700' 
-                  : 'bg-yellow-50 border border-yellow-200 dark:bg-yellow-900 dark:bg-opacity-20 dark:border-yellow-700']"
+      <!-- Navigation Tabs -->
+      <div class="flex justify-center mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-1 shadow-lg">
+          <nav class="flex space-x-1">
+            <button
+              :class="[
+                'px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300',
+                activeTab === 'current'
+                  ? 'bg-green-500 text-white shadow-lg'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400'
+              ]"
+              @click="activeTab = 'current'"
             >
-              <p class="font-medium mb-1 dark:text-gray-200">
-                <Icon
-                  :name="farmingConditions.suitable ? 'mdi:check-circle' : 'mdi:alert-circle'" 
-                  :class="['w-5 h-5 inline-block mr-1', 
-                    farmingConditions.suitable 
-                      ? 'text-green-600 dark:text-green-400' 
-                      : 'text-yellow-600 dark:text-yellow-400']"
-                />
-                <span v-if="farmingConditions.suitable">Kondisi cuaca cocok untuk aktivitas pertanian</span>
-                <span v-else>Kondisi cuaca kurang optimal untuk beberapa aktivitas pertanian</span>
-              </p>
-            </div>
-            
-            <ul class="space-y-2">
-              <li v-for="(rec, index) in farmingConditions.recommendations" :key="index" class="flex items-start">
-                <Icon name="mdi:information" class="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                <span class="text-sm dark:text-gray-300">{{ rec }}</span>
-              </li>
-            </ul>
-          </div>
+              <Icon name="mdi:weather-sunny" class="w-4 h-4 mr-2 inline-block" />
+              Cuaca Saat Ini
+            </button>
+            <button
+              :class="[
+                'px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300',
+                activeTab === 'hourly'
+                  ? 'bg-green-500 text-white shadow-lg'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400'
+              ]"
+              @click="activeTab = 'hourly'"
+            >
+              <Icon name="mdi:clock-outline" class="w-4 h-4 mr-2 inline-block" />
+              Ramalan 24 Jam
+            </button>
+            <button
+              :class="[
+                'px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300',
+                activeTab === 'forecast'
+                  ? 'bg-green-500 text-white shadow-lg'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400'
+              ]"
+              @click="activeTab = 'forecast'"
+            >
+              <Icon name="mdi:calendar-week" class="w-4 h-4 mr-2 inline-block" />
+              Ramalan 5 Hari
+            </button>
+          </nav>
         </div>
       </div>
 
-      <!-- Tab Prediksi 7 Hari -->
-      <div v-if="activeTab === 'forecast'">
-        <!-- Loading State -->
-        <div v-if="isForecastLoading" class="flex justify-center items-center py-8">
-          <div class="text-center">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-green-500 border-t-transparent dark:border-green-400"/>
-            <p class="mt-2 text-gray-600 dark:text-gray-300">Memuat prediksi cuaca...</p>
-          </div>
-        </div>
+      <!-- Content -->
+      <div class="max-w-6xl mx-auto">
+        <!-- Tab Cuaca Saat Ini -->
+        <div v-if="activeTab === 'current'" class="space-y-6">
+          <!-- Loading State -->
+          <LoadingData v-if="isLoading" message="Memuat data cuaca..." />
+          
+          <!-- Error State -->
+          <DataNotFound v-else-if="error" :message="error" />
+          
+          <!-- Weather Data -->
+          <div v-else-if="weatherData" class="space-y-6">
+            <!-- Main Weather Card -->
+            <div class="bg-gradient-to-br from-green-500 to-purple-600 rounded-3xl p-8 text-white shadow-2xl">
+              <div class="flex justify-between items-start mb-6">
+                <div>
+                  <h2 class="text-2xl font-bold mb-1">{{ weatherData.name }}, {{ weatherData.sys.country }}</h2>
+                  <p class="text-green-100 text-sm">{{ currentLocalTime }}</p>
+                </div>
+                <div class="text-right">
+                  <div class="text-4xl font-light">{{ Math.round(weatherData.main.temp) }}°</div>
+                  <p class="text-green-100 capitalize">{{ weatherData.weather[0].description }}</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <img
+                    src="/profile.png"
+                    class="w-20 h-20 mr-4"
+                    :alt="weatherData.weather[0].description"
+                    @error="$event.target.src = `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`"
+                  >
+                  <div>
+                    <p class="text-sm text-green-100">Terasa seperti</p>
+                    <p class="text-xl font-semibold">{{ Math.round(weatherData.main.feels_like) }}°C</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-green-100">Min / Max</p>
+                  <p class="text-lg font-semibold">{{ Math.round(weatherData.main.temp_min) }}° / {{ Math.round(weatherData.main.temp_max) }}°</p>
+                </div>
+              </div>
+            </div>
 
-        <!-- Error State -->
-        <div v-else-if="forecastError">
-          <div class="bg-red-100 dark:bg-red-900 border-l-4 border-red-500 text-red-700 dark:text-red-200 p-4" role="alert">
-            <p class="font-bold">Error</p>
-            <p>{{ forecastError }}</p>
-          </div>
-        </div>
+            <!-- Weather Details Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <!-- Kelembaban -->
+              <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
+                <div class="flex items-center mb-2">
+                  <Icon name="mdi:water-percent" class="w-6 h-6 text-green-500 mr-2" />
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Kelembaban</span>
+                </div>
+                <p class="text-2xl font-bold dark:text-white">{{ weatherData.main.humidity }}%</p>
+              </div>
 
-        <!-- Forecast Data -->
-        <div v-else-if="forecastData && forecastData.length > 0" class="space-y-4">
-          <div
-            v-for="(day, index) in forecastData"
-            :key="day.date"
-            class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 flex items-center justify-between"
-          >
-            <div class="flex items-center">
-              <img
-                :src="`https://openweathermap.org/img/wn/${day.main_weather.icon}@2x.png`"
-                class="w-12 h-12 mr-3"
-                :alt="day.main_weather.description"
+              <!-- Angin -->
+              <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
+                <div class="flex items-center mb-2">
+                  <Icon name="mdi:weather-windy" class="w-6 h-6 text-green-500 mr-2" />
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Angin</span>
+                </div>
+                <p class="text-2xl font-bold dark:text-white">{{ weatherData.wind?.speed || 0 }} m/s</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ windDirection }}</p>
+              </div>
+
+              <!-- Matahari Terbit -->
+              <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
+                <div class="flex items-center mb-2">
+                  <Icon name="mdi:weather-sunset-up" class="w-6 h-6 text-orange-500 mr-2" />
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Terbit</span>
+                </div>
+                <p class="text-2xl font-bold dark:text-white">{{ sunriseTime }}</p>
+              </div>
+
+              <!-- Matahari Terbenam -->
+              <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
+                <div class="flex items-center mb-2">
+                  <Icon name="mdi:weather-sunset-down" class="w-6 h-6 text-red-500 mr-2" />
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Terbenam</span>
+                </div>
+                <p class="text-2xl font-bold dark:text-white">{{ sunsetTime }}</p>
+              </div>
+
+              <!-- Jarak Pandang -->
+              <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
+                <div class="flex items-center mb-2">
+                  <Icon name="mdi:eye" class="w-6 h-6 text-purple-500 mr-2" />
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Pandang</span>
+                </div>
+                <p class="text-2xl font-bold dark:text-white">{{ (weatherData.visibility / 1000).toFixed(1) }} km</p>
+              </div>
+
+              <!-- Tekanan -->
+              <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
+                <div class="flex items-center mb-2">
+                  <Icon name="mdi:gauge" class="w-6 h-6 text-indigo-500 mr-2" />
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Tekanan</span>
+                </div>
+                <p class="text-2xl font-bold dark:text-white">{{ weatherData.main.pressure }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">hPa</p>
+              </div>
+            </div>
+
+            <!-- Rekomendasi Pertanian -->
+            <div v-if="farmingConditions" class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+              <h3 class="text-xl font-bold mb-4 flex items-center dark:text-white">
+                <Icon name="mdi:tractor" class="w-6 h-6 mr-2 text-green-500" />
+                Rekomendasi Pertanian
+              </h3>
+              
+              <div
+                :class="[
+                  'p-4 rounded-xl mb-4 border-l-4',
+                  farmingConditions.suitable 
+                    ? 'bg-green-50 border-green-500 dark:bg-green-900 dark:bg-opacity-20' 
+                    : 'bg-yellow-50 border-yellow-500 dark:bg-yellow-900 dark:bg-opacity-20'
+                ]"
               >
-              <div>
-                <h4 class="font-medium dark:text-white">
-                  {{ index === 0 ? 'Hari Ini' : formatDateShort(day.date) }}
-                </h4>
-                <p class="text-sm text-gray-600 dark:text-gray-300 capitalize">
-                  {{ day.main_weather.description }}
+                <p class="font-semibold flex items-center dark:text-gray-200">
+                  <Icon
+                    :name="farmingConditions.suitable ? 'mdi:check-circle' : 'mdi:alert-circle'"
+                    :class="[
+                      'w-5 h-5 mr-2',
+                      farmingConditions.suitable ? 'text-green-600' : 'text-yellow-600'
+                    ]"
+                  />
+                  {{ farmingConditions.suitable ? 'Kondisi Optimal' : 'Perlu Perhatian' }}
                 </p>
               </div>
+              
+              <div class="space-y-3">
+                <div
+                  v-for="(rec, index) in farmingConditions.recommendations"
+                  :key="index"
+                  class="flex items-start p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                >
+                  <Icon name="mdi:information" class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span class="text-sm dark:text-gray-300">{{ rec }}</span>
+                </div>
+              </div>
             </div>
-            
-            <div class="text-right">
-              <div class="flex items-center space-x-4">
-                <div class="text-center">
-                  <p class="text-xs text-gray-500 dark:text-gray-400">Min/Max</p>
-                  <p class="font-semibold dark:text-white">
-                    {{ Math.round(day.temp_min) }}°/{{ Math.round(day.temp_max) }}°
-                  </p>
+          </div>
+        </div>
+
+        <!-- Tab Ramalan 24 Jam -->
+        <div v-if="activeTab === 'hourly'" class="space-y-6">
+          <LoadingData v-if="isHourlyLoading" message="Memuat ramalan 24 jam..." />
+          <DataNotFound v-else-if="hourlyError" :message="hourlyError" />
+          
+          <div v-else-if="hourlyData && hourlyData.length > 0">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+              <h3 class="text-xl font-bold mb-6 dark:text-white">Ramalan 24 Jam Kedepan</h3>
+              
+              <!-- Horizontal Scroll Container -->
+              <div class="overflow-x-auto pb-4">
+                <div class="flex space-x-4 min-w-max">
+                  <div
+                    v-for="(hour, index) in hourlyData"
+                    :key="hour.dt"
+                    class="flex-shrink-0 text-center bg-gray-50 dark:bg-gray-700 rounded-xl p-4 min-w-[120px]"
+                  >
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      {{ index === 0 ? 'Sekarang' : formatHour(hour.dt) }}
+                    </p>
+                    <img
+                      :src="`https://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`"
+                      class="w-12 h-12 mx-auto mb-2"
+                      :alt="hour.weather[0].description"
+                    >
+                    <p class="text-lg font-bold dark:text-white mb-1">{{ Math.round(hour.main.temp) }}°</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ Math.round(hour.pop * 100) }}%</p>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      <p>💨 {{ hour.wind.speed.toFixed(1) }}m/s</p>
+                      <p>💧 {{ hour.main.humidity }}%</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="text-center">
-                  <p class="text-xs text-gray-500 dark:text-gray-400">Kelembaban</p>
-                  <p class="font-semibold dark:text-white">{{ day.humidity }}%</p>
-                </div>
-                <div class="text-center">
-                  <p class="text-xs text-gray-500 dark:text-gray-400">Angin</p>
-                  <p class="font-semibold dark:text-white">{{ day.wind_speed.toFixed(1) }} m/s</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Ramalan 5 Hari -->
+        <div v-if="activeTab === 'forecast'" class="space-y-6">
+          <LoadingData v-if="isForecastLoading" message="Memuat ramalan 5 hari..." />
+          <DataNotFound v-else-if="forecastError" :message="forecastError" />
+          
+          <div v-else-if="forecastData && forecastData.length > 0">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+              <h3 class="text-xl font-bold mb-6 dark:text-white">Ramalan 5 Hari Kedepan</h3>
+              
+              <div class="space-y-4">
+                <div
+                  v-for="(day, index) in forecastData"
+                  :key="day.date"
+                  class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                >
+                  <div class="flex items-center flex-1">
+                    <img
+                      :src="`https://openweathermap.org/img/wn/${day.main_weather.icon}@2x.png`"
+                      class="w-16 h-16 mr-4"
+                      :alt="day.main_weather.description"
+                    >
+                    <div>
+                      <h4 class="font-semibold text-lg dark:text-white">
+                        {{ index === 0 ? 'Hari Ini' : formatDateShort(day.date) }}
+                      </h4>
+                      <p class="text-sm text-gray-600 dark:text-gray-300 capitalize">
+                        {{ day.main_weather.description }}
+                      </p>
+                      <p class="text-xs text-green-600 dark:text-green-400">
+                        Kemungkinan hujan: {{ Math.round(day.pop * 100) }}%
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center space-x-6 text-right">
+                    <div class="text-center">
+                      <p class="text-2xl font-bold dark:text-white">
+                        {{ Math.round(day.temp_max) }}°
+                      </p>
+                      <p class="text-lg text-gray-500 dark:text-gray-400">
+                        {{ Math.round(day.temp_min) }}°
+                      </p>
+                    </div>
+                    <div class="text-center min-w-[60px]">
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Kelembaban</p>
+                      <p class="font-semibold dark:text-white">{{ day.humidity }}%</p>
+                    </div>
+                    <div class="text-center min-w-[60px]">
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Angin</p>
+                      <p class="font-semibold dark:text-white">{{ day.wind_speed.toFixed(1) }} m/s</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -502,3 +569,36 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Custom scrollbar untuk horizontal scroll */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+</style>

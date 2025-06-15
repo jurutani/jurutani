@@ -127,12 +127,7 @@ const getCategoryColor = (category: string) => {
       </div>
 
       <!-- Loading State -->
-      <div v-if="isLoading" class="absolute inset-0 flex items-center justify-center bg-gray-50">
-        <div class="flex flex-col items-center space-y-2">
-          <div class="animate-spin w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full"/>
-          <p class="text-sm text-gray-600">Loading...</p>
-        </div>
-      </div>
+      <LoadingData v-if="isLoading && !isPlaying" :message="'Memuat video...'" " />
 
       <!-- Video Player -->
       <iframe
