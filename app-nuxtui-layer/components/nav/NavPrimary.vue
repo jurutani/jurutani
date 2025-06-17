@@ -10,64 +10,70 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
     <div class="w-full sm:hidden flex flex-col items-center bg-gradient-to-r from-green-50 via-green-25 to-blue-50 dark:from-green-950 dark:via-green-900 dark:to-green-950 rounded-xl p-4">
       <TheLogo class="mb-4 justify-center" />
 
-      <!-- Mobile Bottom Sheet Menu Layout -->
-      <div class="w-full grid grid-cols-3 gap-3">
-        <ULink
-          v-for="(nav, index) in navsPrimary" 
-          :key="index"
-          v-slot="{ isActive }"
-          :to="nav.to"
-          exact
-          custom
-        >
-          <div 
-            class="mobile-nav-item flex flex-col items-center justify-center p-3 rounded-xl transition-all duration-300 ease-out cursor-pointer"
-            :class="isActive ? 'mobile-active' : ''"
-            @click="openMobileMenu"
-          >
-            <div class="flex flex-col items-center">
-              <div class="mobile-icon-wrapper p-2 rounded-full transition-all duration-300">
-                <UIcon
-                  v-if="nav.icon"
-                  :name="nav.icon"
-                  class="mobile-icon text-xl transition-all duration-300"
-                />
-                <UIcon
-                  v-else
-                  name="i-material-symbols-apps-rounded"
-                  class="mobile-icon text-xl transition-all duration-300"
-                />
+      <!-- Mobile Bottom Sheet Menu Layout with scroll -->
+      <div class="w-full max-w-sm mx-auto">
+        <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent">
+          <div class="grid grid-cols-3 gap-3 min-w-fit">
+            <ULink
+              v-for="(nav, index) in navsPrimary" 
+              :key="index"
+              v-slot="{ isActive }"
+              :to="nav.to"
+              exact
+              custom
+            >
+              <div 
+                class="mobile-nav-item flex flex-col items-center justify-center p-3 rounded-xl transition-all duration-300 ease-out cursor-pointer whitespace-nowrap min-w-[80px]"
+                :class="isActive ? 'mobile-active' : ''"
+                @click="openMobileMenu"
+              >
+                <div class="flex flex-col items-center">
+                  <div class="mobile-icon-wrapper p-2 rounded-full transition-all duration-300">
+                    <UIcon
+                      v-if="nav.icon"
+                      :name="nav.icon"
+                      class="mobile-icon text-xl transition-all duration-300"
+                    />
+                    <UIcon
+                      v-else
+                      name="i-material-symbols-apps-rounded"
+                      class="mobile-icon text-xl transition-all duration-300"
+                    />
+                  </div>
+                  <span class="mobile-text mt-1 text-xs font-medium transition-all duration-300 text-center">
+                    {{ nav.title }}
+                  </span>
+                </div>
               </div>
-              <span class="mobile-text mt-1 text-xs font-medium transition-all duration-300">
-                {{ nav.title }}
-              </span>
-            </div>
+            </ULink>
           </div>
-        </ULink>
+        </div>
       </div>
     </div>
 
-    <!-- Desktop Layout -->
-    <div class="hidden sm:flex w-full overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent justify-center">
-      <div class="flex items-center gap-1 py-1">
-        <ULink
-          v-for="(nav, index) in navsPrimary"
-          :key="index"
-          :label="nav.title"
-          :to="nav.to"
-          variant="link"
-          class="desktop-nav-link flex-shrink-0 items-center gap-2 font-medium px-4 py-2.5 text-sm rounded-lg transition-all duration-300 ease-out"
-          color="gray"
-          active-class="desktop-active"
-          exact
-        >
-          <UIcon
-            v-if="nav.icon"
-            :name="nav.icon"
-            class="desktop-icon text-base transition-all duration-300"
-          />
-          <span class="desktop-text transition-all duration-300">{{ nav.title }}</span>
-        </ULink>
+    <!-- Desktop Layout with max width and scroll -->
+    <div class="hidden sm:flex w-full justify-center">
+      <div class="max-w-4xl w-full overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent">
+        <div class="flex items-center justify-center gap-1 py-1 min-w-fit px-2">
+          <ULink
+            v-for="(nav, index) in navsPrimary"
+            :key="index"
+            :label="nav.title"
+            :to="nav.to"
+            variant="link"
+            class="desktop-nav-link flex-shrink-0 items-center gap-2 font-medium px-4 py-2.5 text-sm rounded-lg transition-all duration-300 ease-out whitespace-nowrap"
+            color="gray"
+            active-class="desktop-active"
+            exact
+          >
+            <UIcon
+              v-if="nav.icon"
+              :name="nav.icon"
+              class="desktop-icon text-base transition-all duration-300"
+            />
+            <span class="desktop-text transition-all duration-300">{{ nav.title }}</span>
+          </ULink>
+        </div>
       </div>
     </div>
 
@@ -272,7 +278,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
   will-change: transform, color, background-color;
 }
 
-/* Scrollbar styles */
+/* Enhanced Scrollbar styles */
 .scrollbar-thin {
   scrollbar-width: thin;
 }
@@ -283,15 +289,26 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
 
 .scrollbar-thin::-webkit-scrollbar {
   height: 6px;
+  width: 6px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
   background: transparent;
+  border-radius: 10px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
   background-color: rgba(34, 197, 94, 0.5);
   border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(34, 197, 94, 0.7);
+}
+
+.scrollbar-thin::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Touch feedback for mobile */
@@ -300,5 +317,60 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
     background: rgba(16, 185, 129, 0.15);
     transform: scale(0.95);
   }
+}
+
+/* Responsive breakpoints for max-width */
+@media (max-width: 1280px) {
+  .max-w-4xl {
+    max-width: 56rem; /* 896px */
+  }
+}
+
+@media (max-width: 1024px) {
+  .max-w-4xl {
+    max-width: 48rem; /* 768px */
+  }
+}
+
+@media (max-width: 768px) {
+  .max-w-4xl {
+    max-width: 36rem; /* 576px */
+  }
+}
+
+/* Smooth scroll behavior */
+.overflow-x-auto {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fade edges for better scroll indication */
+.overflow-x-auto::before,
+.overflow-x-auto::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.overflow-x-auto::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.8), transparent);
+}
+
+.overflow-x-auto::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
+}
+
+.dark .overflow-x-auto::before {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.dark .overflow-x-auto::after {
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.8), transparent);
 }
 </style>

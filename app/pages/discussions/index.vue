@@ -26,7 +26,7 @@ export default {
           route: '/discussions/instructor',
           color: 'emerald',
           gradient: 'from-emerald-400 to-green-600',
-          bgColor: 'bg-emerald-50 dark:bg-emerald-900/10'
+          bgColor: 'bg-emerald-50 dark:bg-emerald-900'
         },
         {
           id: 'expert',
@@ -38,7 +38,7 @@ export default {
           route: '/discussions/expert',
           color: 'blue',
           gradient: 'from-blue-400 to-indigo-600',
-          bgColor: 'bg-blue-50 dark:bg-blue-900/10'
+          bgColor: 'bg-blue-50 dark:bg-blue-900'
         },
         {
           id: 'community',
@@ -50,7 +50,7 @@ export default {
           route: '/discussions/group',
           color: 'amber',
           gradient: 'from-amber-400 to-yellow-600',
-          bgColor: 'bg-amber-50 dark:bg-amber-900/10'
+          bgColor: 'bg-amber-50 dark:bg-amber-900'
         },
         {
           id: 'chat',
@@ -62,7 +62,7 @@ export default {
           route: '/room-chat',
           color: 'purple',
           gradient: 'from-purple-400 to-violet-600',
-          bgColor: 'bg-purple-50 dark:bg-purple-900/10'
+          bgColor: 'bg-purple-50 dark:bg-purple-900'
         }
       ] as DiscussionService[]
     }
@@ -100,13 +100,13 @@ export default {
       >
         <div
 class="h-full rounded-3xl border border-gray-200 dark:border-gray-700 bg-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
-             :class="`hover:shadow-${service.color}-500/10`">
+             :class="`hover:shadow-${service.color}-500`">
           <div class="p-6 h-full flex items-center gap-6">
             <!-- Content Section (Left) -->
             <div class="flex-1">
               <div class="flex items-center gap-3 mb-3">
                 <div :class="service.bgColor" class="p-2.5 rounded-xl">
-                  <UIcon :name="service.icon" :class="`w-5 h-5 text-${service.color}-800`" />
+                  <UIcon :name="service.icon" :class="`w-5 h-5`" />
                 </div>
                 <span :class="`text-sm font-medium text-${service.color}-400 uppercase tracking-wide`">
                   {{ service.subtitle }}
@@ -145,7 +145,7 @@ class="h-full rounded-3xl border border-gray-200 dark:border-gray-700 bg-white o
 
     <!-- Info Section -->
     <div class="mx-auto max-w-4xl">
-      <div class="rounded-3xl bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/10 dark:via-emerald-900/10 dark:to-teal-900/10 border border-green-200 dark:border-green-700 p-8">
+      <div class="rounded-3xl bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900 dark:via-emerald-900 dark:to-teal-900 border border-green-200 dark:border-green-700 p-8">
         <div class="text-center">
           <div class="inline-flex items-center gap-2 mb-4 px-3 py-1 bg-green-100 dark:bg-green-800 rounded-full">
             <UIcon name="i-heroicons-information-circle" class="w-4 h-4 text-green-600 dark:text-green-400" />

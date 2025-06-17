@@ -5,7 +5,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 const carouselItems = [
   {
     id: 1,
-    imageUrl: '/hero/penyuluhan.webp',
+    imageUrl: '/hero/diskusi-pertanian.webp',
     caption: 'Pertanian Modern',
     title: 'Penyuluhan Digital',
     description: 'Ikuti penyuluhan digital seputar pertanian modern berbasis teknologi.',
@@ -14,7 +14,7 @@ const carouselItems = [
   },
   {
     id: 2,
-    imageUrl: '/hero/edukasi.webp',
+    imageUrl: '/hero/pelatihan-pertanian.webp',
     caption: 'Bibit Unggul',
     title: 'Edukasi Pertanian',
     description: 'Pelajari teknik budidaya dan perawatan tanaman melalui edukasi pertanian berkualitas.',
@@ -23,7 +23,7 @@ const carouselItems = [
   },
   {
     id: 3,
-    imageUrl: '/hero/marketing.webp',
+    imageUrl: '/hero/pakar-pertanian.webp',
     caption: 'Alat Canggih',
     title: 'Marketplace Jurutani',
     description: 'Jelajahi berbagai produk pertanian di marketplace Jurutani.',
