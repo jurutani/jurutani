@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 
 // Data untuk carousel
 const carouselItems = [
   {
     id: 1,
-    imageUrl: '/hero/bertani.webp',
+    imageUrl: '/hero/penyuluhan.webp',
     caption: 'Pertanian Modern',
     title: 'Penyuluhan Digital',
     description: 'Ikuti penyuluhan digital seputar pertanian modern berbasis teknologi.',
@@ -14,7 +14,7 @@ const carouselItems = [
   },
   {
     id: 2,
-    imageUrl: '/hero/pembelajaran-pertanian.webp',
+    imageUrl: '/hero/edukasi.webp',
     caption: 'Bibit Unggul',
     title: 'Edukasi Pertanian',
     description: 'Pelajari teknik budidaya dan perawatan tanaman melalui edukasi pertanian berkualitas.',
@@ -23,7 +23,7 @@ const carouselItems = [
   },
   {
     id: 3,
-    imageUrl: '/hero/penjualan.webp',
+    imageUrl: '/hero/marketing.webp',
     caption: 'Alat Canggih',
     title: 'Marketplace Jurutani',
     description: 'Jelajahi berbagai produk pertanian di marketplace Jurutani.',
@@ -72,10 +72,88 @@ const swipeThreshold = 50
 
 // Device detection
 const isMobile = ref(false)
+const connectionSpeed = ref('fast') // fast, slow, offline
 
-// Detect device type
+// Image loading states
+const loadedImages = ref(new Set())
+const imageLoadingErrors = ref(new Set())
+
+// Detect device type and connection
 const detectDevice = () => {
   isMobile.value = window.innerWidth < 768
+  
+  // Detect connection speed
+  if ('connection' in navigator) {
+    const connection = (navigator as any).connection
+    if (connection) {
+      if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
+        connectionSpeed.value = 'slow'
+      } else if (connection.effectiveType === '3g') {
+        connectionSpeed.value = 'medium'
+      } else {
+        connectionSpeed.value = 'fast'
+      }
+    }
+  }
+}
+
+// Computed untuk menentukan kualitas gambar berdasarkan device dan koneksi
+const getImageQuality = computed(() => {
+  if (connectionSpeed.value === 'slow') return 40
+  if (connectionSpeed.value === 'medium') return 60
+  if (isMobile.value) return 70
+  return 85
+})
+
+// Computed untuk menentukan format gambar
+const getImageFormat = computed(() => {
+  if (connectionSpeed.value === 'slow') return 'webp,jpg'
+  return 'webp,avif,jpg'
+})
+
+// Computed untuk menentukan ukuran gambar
+const getImageSizes = computed(() => {
+  if (isMobile.value) {
+    return connectionSpeed.value === 'slow' 
+      ? '(max-width: 768px) 480px, 768px'
+      : '(max-width: 768px) 768px, 1024px'
+  }
+  return connectionSpeed.value === 'slow'
+    ? '(max-width: 1024px) 768px, 1200px'
+    : '(max-width: 1024px) 1024px, 1920px'
+})
+
+// Preload images for better UX
+const preloadImages = () => {
+  carouselItems.forEach((item, index) => {
+    // Preload current and next images with higher priority
+    if (index <= 2) {
+      const img = new Image()
+      img.onload = () => loadedImages.value.add(item.id)
+      img.onerror = () => imageLoadingErrors.value.add(item.id)
+      
+      // Use Nuxt Image API for preloading
+      const quality = getImageQuality.value
+      const format = connectionSpeed.value === 'slow' ? 'webp' : 'avif'
+      const width = isMobile.value ? 768 : 1920
+      
+      img.src = `/_ipx/q_${quality},f_${format},w_${width}${item.imageUrl}`
+    }
+  })
+}
+
+// Image loading handler
+const handleImageLoad = (itemId: number) => {
+  loadedImages.value.add(itemId)
+}
+
+const handleImageError = (itemId: number) => {
+  imageLoadingErrors.value.add(itemId)
+}
+
+// Check if image is loaded
+const isImageLoaded = (itemId: number) => {
+  return loadedImages.value.has(itemId)
 }
 
 // Fungsi untuk mengatur slide
@@ -83,18 +161,46 @@ const goToSlide = (index) => {
   if (isTransitioning.value) return
   currentSlide.value = index
   triggerContentAnimation()
+  
+  // Preload adjacent images
+  preloadAdjacentImages(index)
 }
 
 const nextSlide = () => {
   if (isTransitioning.value) return
-  currentSlide.value = (currentSlide.value + 1) % carouselItems.length
+  const nextIndex = (currentSlide.value + 1) % carouselItems.length
+  currentSlide.value = nextIndex
   triggerContentAnimation()
+  preloadAdjacentImages(nextIndex)
 }
 
 const prevSlide = () => {
   if (isTransitioning.value) return
-  currentSlide.value = (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
+  const prevIndex = (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
+  currentSlide.value = prevIndex
   triggerContentAnimation()
+  preloadAdjacentImages(prevIndex)
+}
+
+// Preload adjacent images
+const preloadAdjacentImages = (currentIndex: number) => {
+  const nextIndex = (currentIndex + 1) % carouselItems.length
+  const prevIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length
+  
+  [nextIndex, prevIndex].forEach(index => {
+    const item = carouselItems[index]
+    if (!loadedImages.value.has(item.id) && !imageLoadingErrors.value.has(item.id)) {
+      const img = new Image()
+      img.onload = () => loadedImages.value.add(item.id)
+      img.onerror = () => imageLoadingErrors.value.add(item.id)
+      
+      const quality = getImageQuality.value
+      const format = connectionSpeed.value === 'slow' ? 'webp' : 'avif'
+      const width = isMobile.value ? 768 : 1920
+      
+      img.src = `/_ipx/q_${quality},f_${format},w_${width}${item.imageUrl}`
+    }
+  })
 }
 
 // Animation trigger
@@ -153,7 +259,11 @@ const handleClick = (e) => {
   }
 }
 
-// Autoplay functions
+// Autoplay functions with slower interval for slow connections
+const getAutoplayInterval = () => {
+  return connectionSpeed.value === 'slow' ? 6000 : 4000
+}
+
 const startAutoplay = () => {
   if (autoplayInterval.value) {
     clearInterval(autoplayInterval.value)
@@ -162,7 +272,7 @@ const startAutoplay = () => {
     if (!isSwiping.value && !isTransitioning.value) {
       nextSlide()
     }
-  }, 4000)
+  }, getAutoplayInterval())
 }
 
 const stopAutoplay = () => {
@@ -190,18 +300,36 @@ const handleResize = () => {
   detectDevice()
 }
 
+// Connection change handler
+const handleConnectionChange = () => {
+  detectDevice()
+  // Restart autoplay with new interval
+  stopAutoplay()
+  setTimeout(() => startAutoplay(), 100)
+}
+
 onMounted(() => {
   detectDevice()
+  preloadImages()
   startAutoplay()
   triggerContentAnimation()
   
-  // Add resize listener
+  // Add event listeners
   window.addEventListener('resize', handleResize)
+  
+  // Listen for connection changes
+  if ('connection' in navigator) {
+    (navigator as any).connection?.addEventListener('change', handleConnectionChange)
+  }
 })
 
 onBeforeUnmount(() => {
   stopAutoplay()
   window.removeEventListener('resize', handleResize)
+  
+  if ('connection' in navigator) {
+    (navigator as any).connection?.removeEventListener('change', handleConnectionChange)
+  }
 })
 </script>
 
@@ -226,14 +354,54 @@ onBeforeUnmount(() => {
           currentSlide === index ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'
         ]"
       >
-        <!-- Background Image -->
+        <!-- Background Image with Nuxt Image -->
         <div 
-          class="w-full h-full bg-cover bg-center transition-all duration-1000"
+          class="relative w-full h-full transition-all duration-1000 overflow-hidden"
           :class="[
             currentSlide === index ? 'scale-100' : 'scale-110'
           ]"
-          :style="{ backgroundImage: `url(${item.imageUrl})` }"
         >
+          <!-- Loading placeholder -->
+          <div 
+            v-if="!isImageLoaded(item.id)"
+            class="absolute inset-0 bg-gradient-to-br from-green-900/30 via-green-800/20 to-green-700/30 animate-pulse"
+          >
+            <!-- Loading skeleton -->
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+          </div>
+
+          <!-- Nuxt Image Component -->
+          <NuxtImg
+            :src="item.imageUrl"
+            :alt="`${item.title} - ${item.caption}`"
+            class="w-full h-full object-cover transition-opacity duration-500"
+            :class="[
+              isImageLoaded(item.id) ? 'opacity-100' : 'opacity-0',
+              imageLoadingErrors.has(item.id) ? 'hidden' : ''
+            ]"
+            :quality="getImageQuality"
+            :format="getImageFormat"
+            :sizes="getImageSizes"
+            :loading="index <= 1 ? 'eager' : 'lazy'"
+            :priority="index === 0"
+            :placeholder="[50, 30, 75, 5]"
+            @load="handleImageLoad(item.id)"
+            @error="handleImageError(item.id)"
+          />
+
+          <!-- Fallback for failed images -->
+          <div 
+            v-if="imageLoadingErrors.has(item.id)"
+            class="absolute inset-0 bg-gradient-to-br from-green-900 via-green-800 to-green-700 flex items-center justify-center"
+          >
+            <div class="text-center text-white/80">
+              <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+              </svg>
+              <p class="text-sm">Gambar tidak dapat dimuat</p>
+            </div>
+          </div>
+
           <!-- Modern Gradient Overlay -->
           <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent"/>
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"/>
@@ -315,7 +483,7 @@ onBeforeUnmount(() => {
       <!-- Modern Dots Indicators -->
       <div class="absolute bottom-6 md:bottom-8 inset-x-0 flex justify-center gap-2 md:gap-3 z-20">
         <button
-          v-for="(_, index) in carouselItems"
+          v-for="(item, index) in carouselItems"
           :key="index"
           class="relative overflow-hidden rounded-full transition-all duration-500 hover:scale-110 touch-target"
           :class="[
@@ -325,12 +493,26 @@ onBeforeUnmount(() => {
           ]"
           @click="goToSlide(index)"
         >
+          <!-- Loading indicator for images -->
+          <div 
+            v-if="!isImageLoaded(item.id) && currentSlide === index"
+            class="absolute inset-0 bg-yellow-400/60 rounded-full animate-pulse"
+          />
+          
           <!-- Active indicator glow effect -->
           <div 
-            v-if="currentSlide === index"
+            v-if="currentSlide === index && isImageLoaded(item.id)"
             class="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"
           />
         </button>
+      </div>
+
+      <!-- Connection Status Indicator -->
+      <div 
+        v-if="connectionSpeed === 'slow'"
+        class="absolute top-4 right-4 z-20 bg-orange-500/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full"
+      >
+        Koneksi Lambat - Kualitas Rendah
       </div>
 
       <!-- Swipe/Click Indicators -->
@@ -388,6 +570,20 @@ onBeforeUnmount(() => {
   justify-content: center;
 }
 
+/* Shimmer loading animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
 /* Smooth transitions for better performance */
 * {
   will-change: transform, opacity;
@@ -438,5 +634,16 @@ onBeforeUnmount(() => {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Image loading optimizations */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Progressive image loading */
+.nuxt-img {
+  transition: opacity 0.3s ease;
 }
 </style>
