@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-// Data untuk carousel dengan multiple image sizes
+// Data untuk carousel
 const carouselItems = [
   {
     id: 1,
-    imageUrl: {
-      mobile: '/hero/bertani-mobile.webp',
-      tablet: '/hero/bertani-tablet.webp',
-      desktop: '/hero/bertani.webp',
-      blur: '/hero/bertani-blur.webp' // Very small blur placeholder
-    },
+    imageUrl: '/hero/bertani.webp',
     caption: 'Pertanian Modern',
     title: 'Penyuluhan Digital',
     description: 'Ikuti penyuluhan digital seputar pertanian modern berbasis teknologi.',
@@ -19,12 +14,7 @@ const carouselItems = [
   },
   {
     id: 2,
-    imageUrl: {
-      mobile: '/hero/pembelajaran-pertanian-mobile.webp',
-      tablet: '/hero/pembelajaran-pertanian-tablet.webp',
-      desktop: '/hero/pembelajaran-pertanian.webp',
-      blur: '/hero/pembelajaran-pertanian-blur.webp'
-    },
+    imageUrl: '/hero/pembelajaran-pertanian.webp',
     caption: 'Bibit Unggul',
     title: 'Edukasi Pertanian',
     description: 'Pelajari teknik budidaya dan perawatan tanaman melalui edukasi pertanian berkualitas.',
@@ -33,12 +23,7 @@ const carouselItems = [
   },
   {
     id: 3,
-    imageUrl: {
-      mobile: '/hero/penjualan-mobile.webp',
-      tablet: '/hero/penjualan-tablet.webp',
-      desktop: '/hero/penjualan.webp',
-      blur: '/hero/penjualan-blur.webp'
-    },
+    imageUrl: '/hero/penjualan.webp',
     caption: 'Alat Canggih',
     title: 'Marketplace Jurutani',
     description: 'Jelajahi berbagai produk pertanian di marketplace Jurutani.',
@@ -47,12 +32,7 @@ const carouselItems = [
   },
   {
     id: 4,
-    imageUrl: {
-      mobile: '/hero/diskusi-pertanian-mobile.webp',
-      tablet: '/hero/diskusi-pertanian-tablet.webp',
-      desktop: '/hero/diskusi-pertanian.webp',
-      blur: '/hero/diskusi-pertanian-blur.webp'
-    },
+    imageUrl: '/hero/diskusi-pertanian.webp',
     caption: 'Update Terkini',
     title: 'Berita Terkini',
     description: 'Dapatkan informasi terbaru seputar dunia pertanian dan inovasi teknologi.',
@@ -61,12 +41,7 @@ const carouselItems = [
   },
   {
     id: 5,
-    imageUrl: {
-      mobile: '/hero/pelatihan-pertanian-mobile.webp',
-      tablet: '/hero/pelatihan-pertanian-tablet.webp',
-      desktop: '/hero/pelatihan-pertanian.webp',
-      blur: '/hero/pelatihan-pertanian-blur.webp'
-    },
+    imageUrl: '/hero/pelatihan-pertanian.webp',
     caption: 'Program Pelatihan',
     title: 'Pelatihan Jurutani',
     description: 'Ikuti pelatihan eksklusif dari Jurutani untuk meningkatkan keahlianmu.',
@@ -75,12 +50,7 @@ const carouselItems = [
   },
   {
     id: 6,
-    imageUrl: {
-      mobile: '/hero/pakar-pertanian-mobile.webp',
-      tablet: '/hero/pakar-pertanian-tablet.webp',
-      desktop: '/hero/pakar-pertanian.webp',
-      blur: '/hero/pakar-pertanian-blur.webp'
-    },
+    imageUrl: '/hero/pakar-pertanian.webp',
     caption: 'Bersama Ahli',
     title: 'Konsultasi Pakar',
     description: 'Dapatkan solusi langsung dari pakar pertanian melalui sesi konsultasi.',
@@ -94,12 +64,7 @@ const currentSlide = ref(0)
 const autoplayInterval = ref(null)
 const isTransitioning = ref(false)
 
-// Image loading states
-const loadedImages = ref(new Set())
-const isSlowConnection = ref(false)
-const connectionQuality = ref('high') // 'high', 'medium', 'low'
-
-// Touch/Swipe states - Simplified
+// Touch/Swipe states
 const isSwiping = ref(false)
 const startX = ref(0)
 const startY = ref(0)
@@ -107,107 +72,10 @@ const swipeThreshold = 50
 
 // Device detection
 const isMobile = ref(false)
-const isTablet = ref(false)
-
-// Detect connection quality
-const detectConnectionQuality = () => {
-  if ('connection' in navigator) {
-    const conn = navigator.connection
-    const effectiveType = conn.effectiveType
-    
-    if (effectiveType === 'slow-2g' || effectiveType === '2g') {
-      connectionQuality.value = 'low'
-      isSlowConnection.value = true
-    } else if (effectiveType === '3g') {
-      connectionQuality.value = 'medium'
-      isSlowConnection.value = false
-    } else {
-      connectionQuality.value = 'high'
-      isSlowConnection.value = false
-    }
-  }
-}
 
 // Detect device type
 const detectDevice = () => {
-  const width = window.innerWidth
-  isMobile.value = width < 768
-  isTablet.value = width >= 768 && width < 1024
-}
-
-// Get appropriate image URL based on device and connection
-const getOptimizedImageUrl = (imageUrls) => {
-  if (isSlowConnection.value) {
-    return imageUrls.blur
-  }
-  
-  if (isMobile.value) {
-    return imageUrls.mobile
-  }
-  
-  if (isTablet.value) {
-    return imageUrls.tablet
-  }
-  
-  return imageUrls.desktop
-}
-
-// Preload critical images (current, next, previous)
-const preloadCriticalImages = () => {
-  const indicesToPreload = [
-    currentSlide.value,
-    (currentSlide.value + 1) % carouselItems.length,
-    (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
-  ]
-  
-  indicesToPreload.forEach(index => {
-    const item = carouselItems[index]
-    const imageUrl = getOptimizedImageUrl(item.imageUrl)
-    
-    if (!loadedImages.value.has(imageUrl)) {
-      const img = new Image()
-      img.onload = () => {
-        loadedImages.value.add(imageUrl)
-      }
-      img.src = imageUrl
-    }
-  })
-}
-
-// Lazy load images for visible slides
-const lazyLoadImage = (imageUrls, index) => {
-  const imageUrl = getOptimizedImageUrl(imageUrls)
-  
-  // Only load if not already loaded and if it's visible or adjacent
-  const shouldLoad = index === currentSlide.value || 
-                    index === (currentSlide.value + 1) % carouselItems.length ||
-                    index === (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
-  
-  if (shouldLoad && !loadedImages.value.has(imageUrl)) {
-    const img = new Image()
-    img.onload = () => {
-      loadedImages.value.add(imageUrl)
-    }
-    img.onerror = () => {
-      // Fallback to blur image if main image fails
-      if (imageUrl !== imageUrls.blur) {
-        const fallbackImg = new Image()
-        fallbackImg.src = imageUrls.blur
-        fallbackImg.onload = () => {
-          loadedImages.value.add(imageUrls.blur)
-        }
-      }
-    }
-    img.src = imageUrl
-  }
-  
-  return imageUrl
-}
-
-// Check if image is loaded
-const isImageLoaded = (imageUrls) => {
-  const imageUrl = getOptimizedImageUrl(imageUrls)
-  return loadedImages.value.has(imageUrl)
+  isMobile.value = window.innerWidth < 768
 }
 
 // Fungsi untuk mengatur slide
@@ -215,31 +83,18 @@ const goToSlide = (index) => {
   if (isTransitioning.value) return
   currentSlide.value = index
   triggerContentAnimation()
-  
-  // Preload adjacent images when slide changes
-  nextTick(() => {
-    preloadCriticalImages()
-  })
 }
 
 const nextSlide = () => {
   if (isTransitioning.value) return
   currentSlide.value = (currentSlide.value + 1) % carouselItems.length
   triggerContentAnimation()
-  
-  nextTick(() => {
-    preloadCriticalImages()
-  })
 }
 
 const prevSlide = () => {
   if (isTransitioning.value) return
   currentSlide.value = (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
   triggerContentAnimation()
-  
-  nextTick(() => {
-    preloadCriticalImages()
-  })
 }
 
 // Animation trigger
@@ -250,7 +105,7 @@ const triggerContentAnimation = () => {
   }, 800)
 }
 
-// Simplified Touch/Swipe events
+// Touch/Swipe events
 const handleTouchStart = (e) => {
   if (isTransitioning.value) return
   
@@ -298,13 +153,7 @@ const handleClick = (e) => {
   }
 }
 
-// Autoplay functions (slower for slow connections)
-const getAutoplayInterval = () => {
-  if (isSlowConnection.value) return 6000 // Slower for slow connections
-  if (isMobile.value) return 5000 // Slightly slower on mobile
-  return 4000 // Normal speed
-}
-
+// Autoplay functions
 const startAutoplay = () => {
   if (autoplayInterval.value) {
     clearInterval(autoplayInterval.value)
@@ -313,7 +162,7 @@ const startAutoplay = () => {
     if (!isSwiping.value && !isTransitioning.value) {
       nextSlide()
     }
-  }, getAutoplayInterval())
+  }, 4000)
 }
 
 const stopAutoplay = () => {
@@ -339,29 +188,10 @@ const handleMouseLeave = () => {
 // Window resize handler
 const handleResize = () => {
   detectDevice()
-  // Refresh images if device type changed
-  nextTick(() => {
-    preloadCriticalImages()
-  })
 }
 
 onMounted(() => {
-  detectConnectionQuality()
   detectDevice()
-  
-  // Preload first image immediately
-  const firstImageUrl = getOptimizedImageUrl(carouselItems[0].imageUrl)
-  const img = new Image()
-  img.onload = () => {
-    loadedImages.value.add(firstImageUrl)
-  }
-  img.src = firstImageUrl
-  
-  // Start preloading critical images
-  setTimeout(() => {
-    preloadCriticalImages()
-  }, 100)
-  
   startAutoplay()
   triggerContentAnimation()
   
@@ -396,48 +226,14 @@ onBeforeUnmount(() => {
           currentSlide === index ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'
         ]"
       >
-        <!-- Background Image with Lazy Loading and Blur Placeholder -->
+        <!-- Background Image -->
         <div 
-          class="w-full h-full bg-cover bg-center transition-all duration-1000 relative"
+          class="w-full h-full bg-cover bg-center transition-all duration-1000"
           :class="[
             currentSlide === index ? 'scale-100' : 'scale-110'
           ]"
+          :style="{ backgroundImage: `url(${item.imageUrl})` }"
         >
-          <!-- Blur placeholder (always visible until main image loads) -->
-          <div 
-            class="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-500 filter blur-sm scale-110"
-            :style="{ backgroundImage: `url(${item.imageUrl.blur})` }"
-            :class="[
-              isImageLoaded(item.imageUrl) ? 'opacity-0' : 'opacity-100'
-            ]"
-          />
-          
-          <!-- Main optimized image -->
-          <div 
-            class="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-500"
-            :style="{ 
-              backgroundImage: isImageLoaded(item.imageUrl) 
-                ? `url(${lazyLoadImage(item.imageUrl, index)})` 
-                : 'none'
-            }"
-            :class="[
-              isImageLoaded(item.imageUrl) ? 'opacity-100' : 'opacity-0'
-            ]"
-          />
-          
-          <!-- Loading indicator for slow connections -->
-          <div 
-            v-if="!isImageLoaded(item.imageUrl) && currentSlide === index"
-            class="absolute inset-0 flex items-center justify-center bg-black/20"
-          >
-            <div class="bg-white/10 backdrop-blur-sm rounded-full p-4">
-              <svg class="animate-spin h-8 w-8 text-white" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            </div>
-          </div>
-          
           <!-- Modern Gradient Overlay -->
           <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent"/>
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"/>
@@ -537,14 +333,6 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
-      <!-- Connection Quality Indicator (for debugging) -->
-      <div 
-        v-if="isSlowConnection"
-        class="absolute top-4 right-4 z-20 bg-orange-500/80 backdrop-blur-sm px-3 py-1 rounded-full text-white text-xs font-medium"
-      >
-        Mode Hemat Data
-      </div>
-
       <!-- Swipe/Click Indicators -->
       <div class="absolute bottom-16 md:bottom-24 inset-x-0 flex justify-center z-20">
         <div class="text-white/60 text-xs md:text-sm font-medium flex items-center gap-2 md:gap-4 bg-black/20 backdrop-blur-sm px-4 md:px-6 py-2 md:py-3 rounded-full">
@@ -598,40 +386,6 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Enhanced animations */
-@keyframes fadeSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes slideFromLeft {
-  0% {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideFromRight {
-  0% {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
 }
 
 /* Smooth transitions for better performance */

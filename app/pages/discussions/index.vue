@@ -74,22 +74,22 @@ export default {
   <UContainer class="py-12">
     <!-- Header Section -->
     <div class="mx-auto mb-16 max-w-4xl text-center">
-      <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-full">
-        <UIcon name="i-heroicons-sparkles" class="w-5 h-5 text-green-600 dark:text-green-400" />
-        <span class="text-sm font-medium text-green-700 dark:text-green-300">Platform Diskusi Pertanian #1 Indonesia</span>
-      </div>
-      
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-green-700 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
-        Forum Diskusi JuruTani
-      </h1>
-      
-      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
-        Temukan solusi pertanian terbaik melalui diskusi interaktif dengan 
-        <span class="font-semibold text-green-600 dark:text-green-400">penyuluh berpengalaman</span>, 
-        <span class="font-semibold text-blue-600 dark:text-blue-400">pakar pertanian</span>, dan 
-        <span class="font-semibold text-amber-600 dark:text-amber-400">komunitas petani</span> seluruh Indonesia.
-      </p>
-    </div>
+          <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
+              <UIcon name="i-heroicons-sparkles" class="w-5 h-5 text-green-600 dark:text-green-400" />
+            <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Platform Diskusi Pertanian #1 Indonesia</span>
+          </div>
+          
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+            Forum Diskusi JuruTani
+          </h2>
+          
+          <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+            Temukan solusi pertanian terbaik melalui diskusi interaktif dengan 
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">penyuluh berpengalaman</span>, 
+            <span class="font-semibold text-teal-600 dark:text-teal-400">pakar pertanian</span>, dan 
+            <span class="font-semibold text-cyan-600 dark:text-cyan-400">komunitas petani</span> seluruh Indonesia.
+          </p> 
+        </div>
 
     <!-- Service Cards - Loop -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto mb-16">
@@ -99,25 +99,25 @@ export default {
         class="group"
       >
         <div
-class="h-full rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-transparent overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+class="h-full rounded-3xl border border-gray-200 dark:border-gray-700 bg-white overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
              :class="`hover:shadow-${service.color}-500/10`">
           <div class="p-6 h-full flex items-center gap-6">
             <!-- Content Section (Left) -->
             <div class="flex-1">
               <div class="flex items-center gap-3 mb-3">
                 <div :class="service.bgColor" class="p-2.5 rounded-xl">
-                  <UIcon :name="service.icon" :class="`w-5 h-5 text-${service.color}-800 dark:text-${service.color}-600`" />
+                  <UIcon :name="service.icon" :class="`w-5 h-5 text-${service.color}-800`" />
                 </div>
-                <span :class="`text-sm font-medium text-${service.color}-400 dark:text-${service.color}-300 uppercase tracking-wide`">
+                <span :class="`text-sm font-medium text-${service.color}-400 uppercase tracking-wide`">
                   {{ service.subtitle }}
                 </span>
               </div>
               
-              <h3 class="text-xl font-bold text-gray-900 dark:text-gray-600 mb-3">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-gray-800 mb-3">
                 {{ service.title }}
               </h3>
               
-              <p class="text-gray-800 dark:text-gray-300 text-sm leading-relaxed mb-4">
+              <p class="text-gray-800 text-sm leading-relaxed mb-4">
                 {{ service.description }}
               </p>
               

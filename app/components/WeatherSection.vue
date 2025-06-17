@@ -269,7 +269,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gradient-to-br from-green-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen border-radius-md">
+  <div class="bg-gradient-to-br from-green-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen rounded-md">
     <div class="container mx-auto px-4 py-6">
       <!-- Header -->
       <div class="text-center mb-6">
