@@ -22,15 +22,27 @@ const error = ref(null);
 
 // Filter states
 const selectedCategory = ref<string>('Budidaya');
+const categories = ref<string[]>([]);
 
-// Available categories
-const categories = [
-  'Budidaya',
-  'Pasca Panen',
-  'Pemasaran',
-  'Agroteknologi',
-  'Peternakan'
-];
+// Fetch categories from Supabase
+const fetchCategories = async () => {
+  try {
+    const { data, error: fetchError } = await supabase
+      .from('category-experts')
+      .select('name')
+      .order('name', { ascending: true });
+
+    if (fetchError) {
+      console.error('Error fetching categories:', fetchError);
+      categories.value = [];
+    } else {
+      categories.value = (data || []).map((item: { name: string }) => item.name);
+    }
+  } catch (err) {
+    console.error('Error fetching categories:', err);
+    categories.value = [];
+  }
+};
 
 // Computed properties
 const filteredExperts = computed(() => {
@@ -76,37 +88,10 @@ const selectCategory = (category: string) => {
   selectedCategory.value = category;
 };
 
-// Popular topics by category
-const getPopularTopics = (category: string) => {
-  const topics = {
-    'Budidaya': [
-      'Teknik pengendalian hama pada tanaman padi organik',
-      'Strategi irigasi hemat air untuk musim kemarau'
-    ],
-    'Pasca Panen': [
-      'Metode penyimpanan hasil panen agar tahan lama',
-      'Teknologi pengeringan gabah yang efisien'
-    ],
-    'Pemasaran': [
-      'Strategi pemasaran digital untuk produk pertanian',
-      'Cara mendapatkan sertifikasi organik untuk produk pertanian'
-    ],
-    'Agroteknologi': [
-      'Implementasi IoT untuk monitoring tanaman',
-      'Sistem hidroponik otomatis berbasis mikrokontroler'
-    ],
-    'Peternakan': [
-      'Manajemen kesehatan ternak sapi perah',
-      'Formulasi pakan ternak berkualitas dengan bahan lokal'
-    ]
-  };
-  
-  return topics[category] || [];
-};
-
 // Initial data fetch
 onMounted(async () => {
   await fetchExperts();
+  await fetchCategories();
 });
 
 // Head meta
@@ -226,26 +211,7 @@ useHead({
               </svg>
               <p>Tidak ada pakar tersedia untuk kategori {{ selectedCategory }} saat ini.</p>
             </div>
-          </div>
-
-          <!-- Popular topics -->
-          <div class="mt-8 pt-6 border-t">
-            <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">Topik Diskusi Populer - {{ selectedCategory }}</h2>
-            <ul class="space-y-3">
-              <li 
-                v-for="(topic, index) in getPopularTopics(selectedCategory)" 
-                :key="index"
-                class="flex items-center"
-              >
-                <div class="bg-green-100 p-2 rounded-full mr-3 flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </div>
-                <span class="text-gray-800">{{ topic }}</span>
-              </li>
-            </ul>
-          </div>
+          </div>          
         </div>
       </div>
     </div>
