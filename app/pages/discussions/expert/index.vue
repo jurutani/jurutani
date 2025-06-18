@@ -28,7 +28,7 @@ const categories = ref<string[]>([]);
 const fetchCategories = async () => {
   try {
     const { data, error: fetchError } = await supabase
-      .from('category-expert')
+      .from('category_expert')
       .select('name')
       .order('name', { ascending: true });
 

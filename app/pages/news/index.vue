@@ -40,7 +40,7 @@ const filteredCount = ref(0)
 const { data: categoriesData } = await useAsyncData('news-categories', async () => {
   try {
     const { data, error: catError } = await supabase
-      .from('category-news')
+      .from('category_news')
       .select('name')
       .order('name', { ascending: true })
 

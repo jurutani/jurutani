@@ -40,7 +40,7 @@ const filteredCount = ref(0)
 const { data: categoriesData } = await useAsyncData('categories', async () => {
   try {
     const { data, error: catError } = await supabase
-      .from('category-markets')
+      .from('category_markets')
       .select('name')
       .order('name', { ascending: true })
 
