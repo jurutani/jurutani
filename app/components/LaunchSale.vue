@@ -6,10 +6,7 @@ import { useSupabase } from '~/composables/useSupabase'
 interface Banner {
   id: string
   image_url: string
-  title?: string
-  description?: string
-  is_active?: boolean
-  created_at: string
+  updated_at: string
 }
 
 const { supabase } = useSupabase()
@@ -24,17 +21,22 @@ const BUCKET_NAME = 'banner-image'
 
 // Get full image URL from Supabase Storage
 const getImageUrl = (imagePath: string): string => {
-  if (!imagePath) return '/placeholder-banner.jpg'
+  if (!imagePath) return '/placeholder.png'
   
   // Jika sudah URL lengkap, return as is
   if (imagePath.startsWith('http')) return imagePath
   
   // Jika hanya path, build URL dari bucket
-  const { data } = supabase.storage
-    .from(BUCKET_NAME)
-    .getPublicUrl(imagePath)
-  
-  return data.publicUrl
+  try {
+    const { data } = supabase.storage
+      .from(BUCKET_NAME)
+      .getPublicUrl(imagePath)
+    
+    return data.publicUrl
+  } catch (err) {
+    console.error('Error getting image URL:', err)
+    return '/placeholder.png'
+  }
 }
 
 // Computed
@@ -51,8 +53,7 @@ const fetchBanner = async () => {
     const { data, error: fetchError } = await supabase
       .from('banner')
       .select('*')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
+      .order('updated_at', { ascending: false })
       .limit(1)
       .single()
 
@@ -134,7 +135,7 @@ onMounted(() => {
       <!-- Main Image -->
       <img
         :src="bannerImageUrl"
-        :alt="banner.title || 'Banner JuruTani'"
+        alt="Banner JuruTani"
         class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         @error="handleImageError"
       >
@@ -145,14 +146,6 @@ onMounted(() => {
       <!-- Optional floating decoration -->
       <div class="absolute top-4 right-4 w-3 h-3 bg-white/30 rounded-full animate-pulse"/>
       <div class="absolute top-6 right-8 w-2 h-2 bg-white/20 rounded-full animate-pulse" style="animation-delay: 0.5s;"/>
-      
-      <!-- Optional content overlay -->
-      <div v-if="banner.title || banner.description" class="absolute bottom-4 left-4 right-4">
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-white">
-          <h3 v-if="banner.title" class="font-semibold text-lg mb-1">{{ banner.title }}</h3>
-          <p v-if="banner.description" class="text-sm opacity-90">{{ banner.description }}</p>
-        </div>
-      </div>
     </div>
   </section>
 </template>
