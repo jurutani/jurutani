@@ -1,77 +1,147 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
-import { useSupabase } from '~/composables/useSupabase';
-import { CreateButton } from '#components';
+import { ref, computed, watchEffect } from 'vue'
+import { useSupabase } from '~/composables/useSupabase'
+import { CreateButton } from '#components'
+import { useAsyncData } from '#app'
 
-const { supabase } = useSupabase();
+// Types
+interface News {
+  id: string
+  category: string
+  status_news: string
+  created_at: string
+  title?: string
+  content?: string
+}
 
-// Data
-const newsList = ref([]);
-const loading = ref(true);
-const error = ref(null);
+interface Category {
+  name: string
+}
 
-// Filter and pagination
-const currentCategory = ref('Semua');
-const categories = ['Semua', 'Pertanian', 'Teknologi', 'Prestasi', 'Peternakan', 'Lainya'];
-const currentPage = ref(1);
-const pageSize = ref(10);
-const totalPages = ref(1);
+// Supabase client
+const { supabase } = useSupabase()
 
-// Fetch news with filters
-const fetchNews = async () => {
-  loading.value = true;
-  error.value = null;
-  
+// Data utama
+const newsList = ref<News[]>([])
+const error = ref<string | null>(null)
+const loading = ref(true)
+
+// Filter & pagination
+const currentCategory = ref('Semua')
+const currentPage = ref(1)
+const pageSize = 10
+const totalPages = ref(1)
+const categories = ref<string[]>(['Semua'])
+
+// Computed untuk filtered news count
+const filteredCount = ref(0)
+
+// Ambil kategori dari tabel 'category-news'
+const { data: categoriesData } = await useAsyncData('news-categories', async () => {
   try {
-    let query = supabase
+    const { data, error: catError } = await supabase
+      .from('category-news')
+      .select('name')
+      .order('name', { ascending: true })
+
+    if (catError) throw catError
+    
+    return data as Category[]
+  } catch (err) {
+    console.error('Error fetching news categories:', err)
+    return []
+  }
+})
+
+// Set categories setelah data dimuat
+if (categoriesData.value) {
+  categories.value = ['Semua', ...categoriesData.value.map(c => c.name)]
+}
+
+// Fungsi fetch data yang dioptimasi
+const fetchNews = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    // Build query dengan method chaining yang lebih efisien
+    const baseQuery = supabase
       .from('news')
       .select('*', { count: 'exact' })
       .eq('status_news', 'approved')
+
+    // Apply category filter jika bukan 'Semua'
+    const query = currentCategory.value !== 'Semua' 
+      ? baseQuery.eq('category', currentCategory.value)
+      : baseQuery
+
+    // Apply pagination dan ordering
+    const { data, error: fetchError, count } = await query
       .order('created_at', { ascending: false })
-      .range((currentPage.value - 1) * pageSize.value, currentPage.value * pageSize.value - 1);
-    
-    // Apply category filter if not 'Semua'
-    if (currentCategory.value !== 'Semua') {
-      query = query.eq('category', currentCategory.value);
-    }
-    
-    const { data, error: fetchError, count } = await query;
+      .range(
+        (currentPage.value - 1) * pageSize,
+        currentPage.value * pageSize - 1
+      )
 
-    if (fetchError) {
-      console.error(fetchError);
-      error.value = fetchError;
-    } else {
-      newsList.value = data || [];
-      totalPages.value = Math.ceil((count || 0) / pageSize.value);
-    }
-  } catch (err) {
-    console.error(err);
-    error.value = err;
+    if (fetchError) throw fetchError
+
+    newsList.value = data as News[] || []
+    filteredCount.value = count || 0
+    totalPages.value = Math.ceil(filteredCount.value / pageSize)
+  } catch (err: any) {
+    error.value = err.message || 'Terjadi kesalahan saat memuat berita'
+    console.error('Error fetching news:', err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
-// Reset to page 1 when category changes
-watch(currentCategory, () => {
-  currentPage.value = 1;
-  fetchNews();
-});
+// SSR-friendly data fetch on first load
+await useAsyncData('news', fetchNews)
 
-// Refetch when page changes
-watch(currentPage, () => {
-  fetchNews();
-});
+// Gunakan watchEffect untuk reaktivitas yang lebih efisien
+watchEffect(() => {
+  // Reset ke halaman 1 saat kategori berubah
+  if (currentCategory.value !== 'Semua') {
+    currentPage.value = 1
+  }
+  fetchNews()
+})
 
-// Initial fetch
-onMounted(() => {
-  fetchNews();
-});
+// Computed untuk status loading yang lebih baik
+const isLoading = computed(() => loading.value)
+const hasError = computed(() => !!error.value)
+const hasData = computed(() => newsList.value.length > 0)
+const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
+
+// Handler untuk pagination
+const handlePrevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
+const handleNextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+  }
+}
+
+const handleGotoPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+  }
+}
+
+// Handler untuk category change
+const handleCategoryChange = (category: string) => {
+  currentCategory.value = category
+}
 </script>
 
 <template>
   <div class="news-page container mx-auto px-4 py-12">
-     <!-- Pasar Section Header -->
+    <!-- News Section Header -->
     <div class="mx-auto mb-6 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
         <UIcon name="i-heroicons-newspaper" class="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -94,14 +164,14 @@ onMounted(() => {
     <NewsFilterCategory 
       :categories="categories" 
       :current-category="currentCategory" 
-      @update:category="currentCategory = $event" 
+      @update:category="handleCategoryChange" 
     />
     
     <!-- News Content -->
     <div class="mt-8">
-      <LoadingData v-if="loading"/>      
-      <ErrorData v-else-if="error" />
-      <NotFoundData v-else-if="newsList.length === 0" />
+      <LoadingData v-if="isLoading" />      
+      <ErrorData v-else-if="hasError" :error="error" />
+      <NotFoundData v-else-if="!hasData" />
       
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <NewsCardContent 
@@ -114,13 +184,14 @@ onMounted(() => {
     
     <!-- Pagination -->
     <Pagination 
-      v-if="!loading && newsList.length > 0" 
+      v-if="showPagination"
       :current-page="currentPage" 
       :total-pages="totalPages" 
-      @prev="currentPage > 1 ? currentPage-- : null" 
-      @next="currentPage < totalPages ? currentPage++ : null" 
-      @goto="page => currentPage = page" 
+      @prev="handlePrevPage" 
+      @next="handleNextPage" 
+      @goto="handleGotoPage" 
     />
+    
     <CreateButton />
   </div>
 </template>

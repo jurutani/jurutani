@@ -1,71 +1,144 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 import { CreateButton } from '#components'
 import { useAsyncData } from '#app'
+
+// Types
+interface Market {
+  id: string
+  category: string
+  status: string
+  created_at: string
+  deleted_at?: string
+  archived_at?: string
+}
+
+interface Category {
+  name: string
+}
 
 // Supabase client
 const { supabase } = useSupabase()
 
 // Data utama
-const marketsList = ref([])
-const error = ref<any>(null)
+const marketsList = ref<Market[]>([])
+const error = ref<string | null>(null)
 const loading = ref(true)
 
 // Filter & pagination
 const currentCategory = ref('Semua')
-const categories = ['Semua', 'Hasil Pertanian', 'Hasil Peternakan', 'Produk Olahan', 'Penunjang Pertanian', 'Lainya']
 const currentPage = ref(1)
-const pageSize = ref(12)
+const pageSize = 12
 const totalPages = ref(1)
+const categories = ref<string[]>(['Semua'])
 
-// Fungsi fetch data
+// Computed untuk filtered markets count
+const filteredCount = ref(0)
+
+// Ambil kategori dari tabel 'category-market'
+const { data: categoriesData } = await useAsyncData('categories', async () => {
+  try {
+    const { data, error: catError } = await supabase
+      .from('category-markets')
+      .select('name')
+      .order('name', { ascending: true })
+
+    if (catError) throw catError
+    
+    return data as Category[]
+  } catch (err) {
+    console.error('Error fetching categories:', err)
+    return []
+  }
+})
+
+// Set categories setelah data dimuat
+if (categoriesData.value) {
+  categories.value = ['Semua', ...categoriesData.value.map(c => c.name)]
+}
+
+// Fungsi fetch data yang dioptimasi
 const fetchMarkets = async () => {
   loading.value = true
   error.value = null
 
   try {
-    let query = supabase
+    // Build query dengan method chaining yang lebih efisien
+    const baseQuery = supabase
       .from('markets')
       .select('*', { count: 'exact' })
       .is('deleted_at', null)
       .is('archived_at', null)
-      .eq('status', 'Approved') // perbaikan di sini
+      .eq('status', 'Approved')
+
+    // Apply category filter jika bukan 'Semua'
+    const query = currentCategory.value !== 'Semua' 
+      ? baseQuery.eq('category', currentCategory.value)
+      : baseQuery
+
+    // Apply pagination dan ordering
+    const { data, error: fetchError, count } = await query
       .order('created_at', { ascending: false })
       .range(
-        (currentPage.value - 1) * pageSize.value,
-        currentPage.value * pageSize.value - 1
+        (currentPage.value - 1) * pageSize,
+        currentPage.value * pageSize - 1
       )
-
-    if (currentCategory.value !== 'Semua') {
-      query = query.eq('category', currentCategory.value)
-    }
-
-    const { data, error: fetchError, count } = await query
 
     if (fetchError) throw fetchError
 
-    marketsList.value = data || []
-    totalPages.value = Math.ceil((count || 0) / pageSize.value)
-  } catch (err) {
-    error.value = err
+    marketsList.value = data as Market[] || []
+    filteredCount.value = count || 0
+    totalPages.value = Math.ceil(filteredCount.value / pageSize)
+  } catch (err: any) {
+    error.value = err.message || 'Terjadi kesalahan saat memuat data'
+    console.error('Error fetching markets:', err)
   } finally {
     loading.value = false
   }
 }
 
 // SSR-friendly data fetch on first load
-await useAsyncData('markets', () => fetchMarkets())
+await useAsyncData('markets', fetchMarkets)
 
-// Watchers untuk filter dan pagination
-watch(currentCategory, () => {
-  currentPage.value = 1
+// Gunakan watchEffect untuk reaktivitas yang lebih efisien
+watchEffect(() => {
+  // Reset ke halaman 1 saat kategori berubah
+  if (currentCategory.value !== 'Semua') {
+    currentPage.value = 1
+  }
   fetchMarkets()
 })
 
-watch(currentPage, () => {
-  fetchMarkets()
-})
+// Computed untuk status loading yang lebih baik
+const isLoading = computed(() => loading.value)
+const hasError = computed(() => !!error.value)
+const hasData = computed(() => marketsList.value.length > 0)
+const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
+
+// Handler untuk pagination
+const handlePrevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
+const handleNextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+  }
+}
+
+const handleGotoPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+  }
+}
+
+// Handler untuk category change
+const handleCategoryChange = (category: string) => {
+  currentCategory.value = category
+}
 </script>
 
 <template>
@@ -95,14 +168,14 @@ watch(currentPage, () => {
     <MarketsFilterCategory 
       :categories="categories" 
       :current-category="currentCategory" 
-      @update:category="currentCategory = $event" 
+      @update:category="handleCategoryChange" 
     />
     
     <!-- Markets Content -->
     <div class="mt-8">
-      <LoadingData v-if="loading"/>      
-      <ErrorData v-else-if="error" />
-      <NotFoundData v-else-if="marketsList.length === 0" />
+      <LoadingData v-if="isLoading" />      
+      <ErrorData v-else-if="hasError" :error="error" />
+      <NotFoundData v-else-if="!hasData" />
       
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <MarketsCardContent 
@@ -115,13 +188,14 @@ watch(currentPage, () => {
     
     <!-- Pagination -->
     <Pagination 
-      v-if="!loading && marketsList.length > 0" 
+      v-if="showPagination"
       :current-page="currentPage" 
       :total-pages="totalPages" 
-      @prev="currentPage > 1 ? currentPage-- : null" 
-      @next="currentPage < totalPages ? currentPage++ : null" 
-      @goto="page => currentPage = page" 
+      @prev="handlePrevPage" 
+      @next="handleNextPage" 
+      @goto="handleGotoPage" 
     />
+    
     <CreateButton />
   </div>
 </template>
