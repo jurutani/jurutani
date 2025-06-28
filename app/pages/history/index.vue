@@ -416,71 +416,15 @@ onMounted(() => {
     </div>
     
     <!-- Pagination -->
-    <div 
-      v-if="!loading && historyItems.length > 0 && totalPages > 1" 
-      class="flex justify-center mt-8"
-    >
-      <nav class="inline-flex rounded-lg border border-gray-200 bg-white shadow-sm">
-        <button
-          :disabled="currentPage === 1"
-          :class="[
-            'px-4 py-2 text-sm font-medium rounded-l-lg border-r border-gray-200',
-            currentPage === 1 
-              ? 'bg-gray-50 text-gray-400 cursor-not-allowed' 
-              : 'text-gray-700 hover:bg-gray-50'
-          ]"
-          @click="changePage(currentPage - 1)"
-        >
-          ← Sebelumnya
-        </button>
-        
-        <div class="flex">
-          <template v-for="page in totalPages" :key="page">
-            <button
-              v-if="
-                page === 1 || 
-                page === totalPages || 
-                (page >= currentPage - 1 && page <= currentPage + 1)
-              "
-              :class="[
-                'px-4 py-2 text-sm font-medium border-r border-gray-200',
-                currentPage === page 
-                  ? 'bg-green-600 text-white' 
-                  : 'text-gray-700 hover:bg-gray-50'
-              ]"
-              @click="changePage(page)"
-            >
-              {{ page }}
-            </button>
-            
-            <span
-              v-else-if="page === currentPage - 2 || page === currentPage + 2"
-              class="px-4 py-2 text-sm text-gray-400 border-r border-gray-200"
-            >
-              ...
-            </span>
-          </template>
-        </div>
-        
-        <button
-          :disabled="currentPage === totalPages"
-          :class="[
-            'px-4 py-2 text-sm font-medium rounded-r-lg',
-            currentPage === totalPages 
-              ? 'bg-gray-50 text-gray-400 cursor-not-allowed' 
-              : 'text-gray-700 hover:bg-gray-50'
-          ]"
-          @click="changePage(currentPage + 1)"
-        >
-          Selanjutnya →
-        </button>
-      </nav>
-    </div>
+     <AppPaginationInfo 
+      v-if="!loading && courseList.length > 0" 
+      :current-page="currentPage" 
+      :total-pages="totalPages" 
+      @prev="currentPage > 1 ? currentPage-- : null" 
+      @next="currentPage < totalPages ? currentPage++ : null" 
+      @goto="page => currentPage = page" 
+    />
     
-    <!-- Stats Summary -->
-    <div v-if="!loading && historyItems.length > 0" class="mt-8 text-center text-sm text-gray-500">
-      Menampilkan {{ ((currentPage - 1) * pageSize) + 1 }} - {{ Math.min(currentPage * pageSize, totalItems) }} dari {{ totalItems }} item
-    </div>
   </div>
 </template>
 

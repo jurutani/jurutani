@@ -9,6 +9,10 @@ const { supabase } = useSupabase()
 const { userData, fetchUserData } = useProfile()
 
 // Types
+interface Category {
+  name: string
+}
+
 interface FormState {
   title: string
   sub_title: string
@@ -27,13 +31,32 @@ const emit = defineEmits<{
 }>()
 
 // Constants
-const CATEGORIES = [
-  { value: 'Pertanian', label: 'Pertanian' },
-  { value: 'Teknologi', label: 'Teknologi' },
-  { value: 'Prestasi', label: 'Prestasi' },
-  { value: 'Peternakan', label: 'Peternakan' },
-  { value: 'Lainnya', label: 'Lainnya' }
-] as const
+// Ambil kategori dari tabel 'category-news'
+const { data: CATEGORY } = await useAsyncData('category_news', async () => {
+  try {
+    const { data, error: catError } = await supabase
+      .from('category_news')
+      .select('name')
+      .order('name', { ascending: true })
+
+    if (catError) throw catError
+    
+    return data as Category[]
+  } catch (err) {
+    console.error('Error fetching categories:', err)
+    return []
+  }
+})
+
+// Transform categories for USelect component
+const categoryOptions = computed(() => {
+  if (!CATEGORY.value) return []
+  
+  return CATEGORY.value.map(cat => ({
+    label: cat.name,
+    value: cat.name
+  }))
+})
 
 const STORAGE_BUCKETS = {
   images: 'news-images',
@@ -258,7 +281,7 @@ onMounted(async () => {
           name="i-heroicons-newspaper"
           class="text-green-600 dark:text-green-400 text-xl"
         />
-        <h2 class="text-xl font-bold text-green-700 dark:text-green-400">
+        <h2 class="text-xl font-bold text-green-700 dark:text-green-400 my-auto flex items-center h-full">
           Tambah Berita Baru
         </h2>
       </div>
@@ -296,10 +319,16 @@ onMounted(async () => {
       <UFormGroup label="Kategori">
         <USelect
           v-model="form.category"
-          :options="CATEGORIES"
+          :options="categoryOptions"
+          option-attribute="label"
+          value-attribute="value"
           placeholder="Pilih kategori"
           color="green"
-        />
+        >
+          <template #leading>
+            <UIcon name="i-heroicons-tag" class="text-gray-400" />
+          </template>
+        </USelect>
       </UFormGroup>
 
       <!-- Content -->

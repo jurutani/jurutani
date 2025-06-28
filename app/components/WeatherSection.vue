@@ -71,6 +71,7 @@ const fetchForecastData = async (lat: number, lon: number) => {
   try {
     const response = await fetch(url)
     const data = await response.json()
+    console.log(data)
     
     // Group forecast data by day (5 days)
     const dailyForecast = groupForecastByDay(data.list)
@@ -269,7 +270,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gradient-to-br from-green-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen rounded-md">
+  <div class="rounded-lg">
     <div class="container mx-auto px-4 py-6">
       <!-- Header -->
       <div class="text-center mb-6">
@@ -338,7 +339,7 @@ onMounted(() => {
           <!-- Weather Data -->
           <div v-else-if="weatherData" class="space-y-6">
             <!-- Main Weather Card -->
-            <div class="bg-gradient-to-br from-green-500 to-purple-600 rounded-3xl p-8 text-white shadow-2xl">
+            <div class="bg-gradient-to-br from-green-500 to-green-800 rounded-3xl p-8 text-white shadow-2xl">
               <div class="flex justify-between items-start mb-6">
                 <div>
                   <h2 class="text-2xl font-bold mb-1">{{ weatherData.name }}, {{ weatherData.sys.country }}</h2>
@@ -514,35 +515,49 @@ onMounted(() => {
           <DataNotFound v-else-if="forecastError" :message="forecastError" />
           
           <div v-else-if="forecastData && forecastData.length > 0">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-              <h3 class="text-xl font-bold mb-6 dark:text-white">Ramalan 5 Hari Kedepan</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-lg">
+              <h3 class="text-lg sm:text-xl font-bold mb-4 sm:mb-6 dark:text-white">Ramalan 5 Hari Kedepan</h3>
               
-              <div class="space-y-4">
+              <div class="space-y-3 sm:space-y-4">
                 <div
                   v-for="(day, index) in forecastData"
                   :key="day.date"
-                  class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                  class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
                 >
-                  <div class="flex items-center flex-1">
-                    <img
-                      :src="`https://openweathermap.org/img/wn/${day.main_weather.icon}@2x.png`"
-                      class="w-16 h-16 mr-4"
-                      :alt="day.main_weather.description"
-                    >
-                    <div>
-                      <h4 class="font-semibold text-lg dark:text-white">
-                        {{ index === 0 ? 'Hari Ini' : formatDateShort(day.date) }}
-                      </h4>
-                      <p class="text-sm text-gray-600 dark:text-gray-300 capitalize">
-                        {{ day.main_weather.description }}
+                  <!-- Mobile Layout: Stacked -->
+                  <div class="flex items-center justify-between sm:justify-start sm:flex-1 mb-3 sm:mb-0">
+                    <div class="flex items-center flex-1 sm:flex-none">
+                      <img
+                        :src="`https://openweathermap.org/img/wn/${day.main_weather.icon}@2x.png`"
+                        class="w-12 h-12 sm:w-16 sm:h-16 mr-3 sm:mr-4 flex-shrink-0"
+                        :alt="day.main_weather.description"
+                      >
+                      <div class="min-w-0 flex-1">
+                        <h4 class="font-semibold text-base sm:text-lg dark:text-white truncate">
+                          {{ index === 0 ? 'Hari Ini' : formatDateShort(day.date) }}
+                        </h4>
+                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 capitalize leading-tight">
+                          {{ day.main_weather.description }}
+                        </p>
+                        <p class="text-xs text-green-600 dark:text-green-400 mt-1">
+                          Hujan: {{ Math.round(day.pop * 100) }}%
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <!-- Temperature - Always visible on mobile -->
+                    <div class="text-center sm:hidden ml-2">
+                      <p class="text-xl font-bold dark:text-white">
+                        {{ Math.round(day.temp_max) }}°
                       </p>
-                      <p class="text-xs text-green-600 dark:text-green-400">
-                        Kemungkinan hujan: {{ Math.round(day.pop * 100) }}%
+                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ Math.round(day.temp_min) }}°
                       </p>
                     </div>
                   </div>
                   
-                  <div class="flex items-center space-x-6 text-right">
+                  <!-- Desktop Layout: Right side info -->
+                  <div class="hidden sm:flex sm:items-center sm:space-x-6 sm:text-right">
                     <div class="text-center">
                       <p class="text-2xl font-bold dark:text-white">
                         {{ Math.round(day.temp_max) }}°
@@ -558,6 +573,22 @@ onMounted(() => {
                     <div class="text-center min-w-[60px]">
                       <p class="text-xs text-gray-500 dark:text-gray-400">Angin</p>
                       <p class="font-semibold dark:text-white">{{ day.wind_speed.toFixed(1) }} m/s</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Mobile Layout: Bottom row with additional info -->
+                  <div class="flex justify-between items-center sm:hidden pt-2 border-t border-gray-200 dark:border-gray-600">
+                    <div class="text-center flex-1">
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Kelembaban</p>
+                      <p class="text-sm font-semibold dark:text-white">{{ day.humidity }}%</p>
+                    </div>
+                    <div class="text-center flex-1">
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Angin</p>
+                      <p class="text-sm font-semibold dark:text-white">{{ day.wind_speed.toFixed(1) }} m/s</p>
+                    </div>
+                    <div class="text-center flex-1">
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Terasa</p>
+                      <p class="text-sm font-semibold dark:text-white">{{ day.feels_like !== undefined ? Math.round(day.feels_like) : '-' }}°</p>
                     </div>
                   </div>
                 </div>

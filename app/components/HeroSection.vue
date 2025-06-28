@@ -1,57 +1,29 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { useSupabase } from '~/composables/useSupabase'
+import { useAsyncData } from '#app'
+
+// Types
+interface HeroData {
+  id: string
+  caption: string
+  title: string
+  description: string
+  button_text: string
+  button_link: string
+  image_name?: string
+  status: string
+  created_at: string
+  deleted_at?: string
+}
+
+// Supabase client
+const { supabase } = useSupabase()
 
 // Data untuk carousel
-const carouselItems = [
-  {
-    id: 1,
-    caption: 'Pertanian Modern',
-    title: 'Penyuluhan Digital',
-    description: 'Ikuti penyuluhan digital seputar pertanian modern berbasis teknologi.',
-    buttonText: 'Pelajari Selengkapnya',
-    buttonLink: '/discussions'
-  },
-  {
-    id: 2,
-    caption: 'Bibit Unggul',
-    title: 'Edukasi Pertanian',
-    description: 'Pelajari teknik budidaya dan perawatan tanaman melalui edukasi pertanian berkualitas.',
-    buttonText: 'Pelajari Selengkapnya',
-    buttonLink: '/courses'
-  },
-  {
-    id: 3,
-    caption: 'Alat Canggih',
-    title: 'Marketplace Jurutani',
-    description: 'Jelajahi berbagai produk pertanian di marketplace Jurutani.',
-    buttonText: 'Kunjungi Marketplace',
-    buttonLink: '/markets'
-  },
-  {
-    id: 4,
-    caption: 'Update Terkini',
-    title: 'Berita Terkini',
-    description: 'Dapatkan informasi terbaru seputar dunia pertanian dan inovasi teknologi.',
-    buttonText: 'Lihat Berita',
-    buttonLink: '/news'
-  },
-  {
-    id: 5,
-    caption: 'Program Pelatihan',
-    title: 'Pelatihan Jurutani',
-    description: 'Ikuti pelatihan eksklusif dari Jurutani untuk meningkatkan keahlianmu.',
-    buttonText: 'Ikuti Pelatihan',
-    buttonLink: '/educations'
-  },
-  {
-    id: 6,
-    caption: 'Bersama Ahli',
-    title: 'Konsultasi Pakar',
-    description: 'Dapatkan solusi langsung dari pakar pertanian melalui sesi konsultasi.',
-    buttonText: 'Konsultasikan Sekarang',
-    buttonLink: '/discussions/expert'
-  }
-]
+const carouselItems = ref<HeroData[]>([])
+const error = ref<string | null>(null)
+const loading = ref(true)
 
 // State untuk carousel
 const currentSlide = ref(0)
@@ -67,6 +39,57 @@ const swipeThreshold = 50
 // Device detection
 const isMobile = ref(false)
 
+// Fungsi untuk mendapatkan URL gambar dari bucket
+const getImageUrl = (heroId: string, imageName: string) => {
+  if (!imageName) return null
+  
+  const { data } = supabase.storage
+    .from('hero-image')
+    .getPublicUrl(`${heroId}/${imageName}`)
+  
+  return data.publicUrl
+}
+
+// Computed untuk mendapatkan URL gambar slide saat ini
+const currentSlideImageUrl = computed(() => {
+  if (carouselItems.value.length === 0) return null
+  const currentItem = carouselItems.value[currentSlide.value]
+  if (!currentItem?.image_name) return null
+  return getImageUrl(currentItem.id, currentItem.image_name)
+})
+
+// Fetch data hero dari Supabase
+const fetchHeroData = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    const { data, error: fetchError } = await supabase
+      .from('hero_data')
+      .select('*')
+      .eq('status', 'active')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: true })
+
+    if (fetchError) throw fetchError
+
+    carouselItems.value = data as HeroData[] || []
+    
+    // Reset current slide jika data berubah
+    if (carouselItems.value.length > 0 && currentSlide.value >= carouselItems.value.length) {
+      currentSlide.value = 0
+    }
+  } catch (err: any) {
+    error.value = err.message || 'Terjadi kesalahan saat memuat data hero'
+    console.error('Error fetching hero data:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+// SSR-friendly data fetch
+await useAsyncData('hero-data', fetchHeroData)
+
 // Detect device type
 const detectDevice = () => {
   isMobile.value = window.innerWidth < 768
@@ -74,21 +97,21 @@ const detectDevice = () => {
 
 // Fungsi untuk mengatur slide
 const goToSlide = (index) => {
-  if (isTransitioning.value) return
+  if (isTransitioning.value || carouselItems.value.length === 0) return
   currentSlide.value = index
   triggerContentAnimation()
 }
 
 const nextSlide = () => {
-  if (isTransitioning.value) return
-  const nextIndex = (currentSlide.value + 1) % carouselItems.length
+  if (isTransitioning.value || carouselItems.value.length === 0) return
+  const nextIndex = (currentSlide.value + 1) % carouselItems.value.length
   currentSlide.value = nextIndex
   triggerContentAnimation()
 }
 
 const prevSlide = () => {
-  if (isTransitioning.value) return
-  const prevIndex = (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
+  if (isTransitioning.value || carouselItems.value.length === 0) return
+  const prevIndex = (currentSlide.value - 1 + carouselItems.value.length) % carouselItems.value.length
   currentSlide.value = prevIndex
   triggerContentAnimation()
 }
@@ -103,7 +126,7 @@ const triggerContentAnimation = () => {
 
 // Touch/Swipe events
 const handleTouchStart = (e) => {
-  if (isTransitioning.value) return
+  if (isTransitioning.value || carouselItems.value.length === 0) return
   
   isSwiping.value = true
   startX.value = e.touches[0].clientX
@@ -112,7 +135,7 @@ const handleTouchStart = (e) => {
 }
 
 const handleTouchEnd = (e) => {
-  if (!isSwiping.value) return
+  if (!isSwiping.value || carouselItems.value.length === 0) return
   
   const endX = e.changedTouches[0].clientX
   const endY = e.changedTouches[0].clientY
@@ -135,7 +158,7 @@ const handleTouchEnd = (e) => {
 
 // Click handlers for desktop
 const handleClick = (e) => {
-  if (isTransitioning.value || isMobile.value) return
+  if (isTransitioning.value || isMobile.value || carouselItems.value.length === 0) return
   
   const rect = e.currentTarget.getBoundingClientRect()
   const clickX = e.clientX - rect.left
@@ -151,14 +174,17 @@ const handleClick = (e) => {
 
 // Autoplay functions
 const startAutoplay = () => {
-  if (autoplayInterval.value) {
+  if (autoplayInterval.value || carouselItems.value.length <= 1) {
     clearInterval(autoplayInterval.value)
   }
-  autoplayInterval.value = setInterval(() => {
-    if (!isSwiping.value && !isTransitioning.value) {
-      nextSlide()
-    }
-  }, 4000)
+  
+  if (carouselItems.value.length > 1) {
+    autoplayInterval.value = setInterval(() => {
+      if (!isSwiping.value && !isTransitioning.value) {
+        nextSlide()
+      }
+    }, 4000)
+  }
 }
 
 const stopAutoplay = () => {
@@ -186,10 +212,20 @@ const handleResize = () => {
   detectDevice()
 }
 
+// Handle button click
+const handleButtonClick = (buttonLink: string) => {
+  if (buttonLink) {
+    // Navigate to the link
+    navigateTo(buttonLink)
+  }
+}
+
 onMounted(() => {
   detectDevice()
-  startAutoplay()
-  triggerContentAnimation()
+  if (carouselItems.value.length > 0) {
+    startAutoplay()
+    triggerContentAnimation()
+  }
   
   // Add event listeners
   window.addEventListener('resize', handleResize)
@@ -199,12 +235,70 @@ onBeforeUnmount(() => {
   stopAutoplay()
   window.removeEventListener('resize', handleResize)
 })
+
+// Watch for data changes to restart autoplay
+watch(() => carouselItems.value.length, (newLength) => {
+  if (newLength > 0) {
+    startAutoplay()
+    if (currentSlide.value >= newLength) {
+      currentSlide.value = 0
+    }
+  } else {
+    stopAutoplay()
+  }
+})
 </script>
 
 <template>
   <section class="relative overflow-hidden select-none">
+    <!-- Loading State -->
+    <div 
+      v-if="loading" 
+      class="relative w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-emerald-900"
+    >
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-green-400 mx-auto mb-4"/>
+        <p class="text-white text-lg">Memuat konten...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div 
+      v-else-if="error" 
+      class="relative w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-orange-900"
+    >
+      <div class="text-center max-w-md mx-auto px-4">
+        <svg class="w-16 h-16 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 18.5c-.77.833.192 2.5 1.732 2.5z"/>
+        </svg>
+        <h3 class="text-xl font-semibold text-white mb-2">Terjadi Kesalahan</h3>
+        <p class="text-red-200">{{ error }}</p>
+        <button 
+          class="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          @click="fetchHeroData"
+        >
+          Coba Lagi
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div 
+      v-else-if="carouselItems.length === 0" 
+      class="relative w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-slate-900"
+    >
+      <div class="text-center max-w-md mx-auto px-4">
+        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+        </svg>
+        <h3 class="text-xl font-semibold text-white mb-2">Belum Ada Konten</h3>
+        <p class="text-gray-300">Konten hero sedang tidak tersedia.</p>
+      </div>
+    </div>
+
     <!-- Carousel Container -->
     <div 
+      v-else
       class="relative w-full h-screen max-h-screen cursor-pointer select-none"
       :class="{ 'cursor-default': isMobile }"
       @mouseenter="handleMouseEnter"
@@ -213,8 +307,23 @@ onBeforeUnmount(() => {
       @touchstart.passive="handleTouchStart"
       @touchend.passive="handleTouchEnd"
     >
-      <!-- Animated Background Decorations -->
-      <div class="absolute inset-0 overflow-hidden">
+      <!-- Background Image -->
+      <div 
+        v-if="currentSlideImageUrl"
+        class="absolute inset-0 transition-all duration-1000 ease-out"
+      >
+        <img 
+          :src="currentSlideImageUrl" 
+          :alt="carouselItems[currentSlide]?.title || 'Hero Image'"
+          class="w-full h-full object-cover"
+          loading="lazy"
+        >
+        <!-- Overlay untuk readability -->
+        <div class="absolute inset-0 bg-black/40"/>
+      </div>
+
+      <!-- Animated Background Decorations (ketika tidak ada gambar) -->
+      <div v-else class="absolute inset-0 overflow-hidden">
         <!-- Primary Gradient Background -->
         <div class="absolute inset-0 bg-gradient-to-br from-green-900 via-green-800 to-emerald-900 animate-gradient-slow"/>
         
@@ -250,9 +359,9 @@ onBeforeUnmount(() => {
         <div class="absolute bottom-0 left-0 w-full h-24 opacity-20">
           <svg class="w-full h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
             <path
-d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
-                  fill="currentColor" 
-                  class="text-green-600/30 animate-wave"/>
+              d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
+              fill="currentColor" 
+              class="text-green-600/30 animate-wave"/>
           </svg>
         </div>
         
@@ -334,14 +443,16 @@ d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C
               ]"
             >
               <button
+                v-if="item.button_text"
                 class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg border-none"
                 :class="[
                   isMobile 
                     ? 'px-6 py-3 text-base' 
                     : 'px-8 py-4 text-lg'
                 ]"
+                @click.stop="handleButtonClick(item.button_link)"
               >
-                {{ item.buttonText }}
+                {{ item.button_text }}
               </button>
             </div>
           </div>
@@ -349,7 +460,10 @@ d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C
       </div>
 
       <!-- Modern Dots Indicators -->
-      <div class="absolute bottom-6 md:bottom-8 inset-x-0 flex justify-center gap-2 md:gap-3 z-20">
+      <div 
+        v-if="carouselItems.length > 1"
+        class="absolute bottom-6 md:bottom-8 inset-x-0 flex justify-center gap-2 md:gap-3 z-20"
+      >
         <button
           v-for="(item, index) in carouselItems"
           :key="index"
@@ -359,7 +473,7 @@ d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C
               ? 'w-8 md:w-12 h-2 md:h-3 bg-gradient-to-r from-green-400 to-emerald-500 shadow-lg' 
               : 'w-2 md:w-3 h-2 md:h-3 bg-white/40 hover:bg-white/60 backdrop-blur-sm'
           ]"
-          @click="goToSlide(index)"
+          @click.stop="goToSlide(index)"
         >
           <!-- Active indicator glow effect -->
           <div 
@@ -370,7 +484,10 @@ d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C
       </div>
 
       <!-- Swipe/Click Indicators -->
-      <div class="absolute bottom-16 md:bottom-24 inset-x-0 flex justify-center z-20">
+      <div 
+        v-if="carouselItems.length > 1"
+        class="absolute bottom-16 md:bottom-24 inset-x-0 flex justify-center z-20"
+      >
         <div class="text-white/60 text-xs md:text-sm font-medium flex items-center gap-2 md:gap-4 bg-black/20 backdrop-blur-sm px-4 md:px-6 py-2 md:py-3 rounded-full">
           <!-- Mobile indicator -->
           <div class="flex items-center gap-1 md:gap-2 md:hidden">
@@ -529,71 +646,7 @@ d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C
 .animate-float-3 { animation: float-3 7s ease-in-out infinite; }
 .animate-float-4 { animation: float-4 5s ease-in-out infinite; }
 
-.animate-rotate-slow { animation: rotate-slow 20s linear infinite; }
-.animate-rotate-reverse { animation: rotate-reverse 25s linear infinite; }
-.animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
-.animate-spin-slow { animation: spin-slow 8s linear infinite; }
-.animate-bounce-slow { animation: bounce-slow 3s ease-in-out infinite; }
-.animate-ping-slow { animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite; }
-.animate-wave { animation: wave 4s linear infinite; }
-
-.animate-twinkle-1 { animation: twinkle-1 2s ease-in-out infinite; }
-.animate-twinkle-2 { animation: twinkle-2 2.5s ease-in-out infinite; }
-.animate-twinkle-3 { animation: twinkle-3 3s ease-in-out infinite; }
-.animate-twinkle-4 { animation: twinkle-4 2.2s ease-in-out infinite; }
-.animate-twinkle-5 { animation: twinkle-5 2.8s ease-in-out infinite; }
-
-/* Smooth transitions for better performance */
-* {
-  will-change: transform, opacity;
-}
-
-/* Button hover effects - disabled on mobile for better performance */
-@media (hover: hover) {
-  button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* Enhanced glow effect for active dot */
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
-  }
-}
-
-.animate-pulse {
-  animation: glow 2s ease-in-out infinite;
-}
-
-/* Optimize for mobile performance */
-@media (max-width: 768px) {
-  /* Reduce backdrop blur on mobile for better performance */
-  .backdrop-blur-xl {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-  
-  /* Simplify animations on mobile */
-  .animate-float-1, .animate-float-2, .animate-float-3, .animate-float-4 {
-    animation-duration: 8s;
-  }
-  
-  .animate-rotate-slow, .animate-rotate-reverse {
-    animation-duration: 30s;
-  }
-}
-
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+.animate-rotate-slow {
+  animation: rotate-slow 12s linear infinite;
 }
 </style>

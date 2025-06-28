@@ -15,7 +15,9 @@ interface Market {
 }
 
 interface Category {
+  id?: string
   name: string
+  value?: string
 }
 
 // Supabase client
@@ -27,17 +29,15 @@ const error = ref<string | null>(null)
 const loading = ref(true)
 
 // Filter & pagination
-const currentCategory = ref('Semua')
+const currentCategory = ref('all')
 const currentPage = ref(1)
 const pageSize = 12
 const totalPages = ref(1)
-const categories = ref<string[]>(['Semua'])
-
-// Computed untuk filtered markets count
-const filteredCount = ref(0)
+const totalItems = ref(0)
+const categories = ref<Category[]>([])
 
 // Ambil kategori dari tabel 'category-market'
-const { data: categoriesData } = await useAsyncData('categories', async () => {
+const { data: categoriesData } = await useAsyncData('market-categories', async () => {
   try {
     const { data, error: catError } = await supabase
       .from('category_markets')
@@ -55,7 +55,10 @@ const { data: categoriesData } = await useAsyncData('categories', async () => {
 
 // Set categories setelah data dimuat
 if (categoriesData.value) {
-  categories.value = ['Semua', ...categoriesData.value.map(c => c.name)]
+  categories.value = categoriesData.value.map(cat => ({
+    name: cat.name,
+    value: cat.name
+  }))
 }
 
 // Fungsi fetch data yang dioptimasi
@@ -72,8 +75,8 @@ const fetchMarkets = async () => {
       .is('archived_at', null)
       .eq('status', 'Approved')
 
-    // Apply category filter jika bukan 'Semua'
-    const query = currentCategory.value !== 'Semua' 
+    // Apply category filter jika bukan 'all'
+    const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'
       ? baseQuery.eq('category', currentCategory.value)
       : baseQuery
 
@@ -88,8 +91,8 @@ const fetchMarkets = async () => {
     if (fetchError) throw fetchError
 
     marketsList.value = data as Market[] || []
-    filteredCount.value = count || 0
-    totalPages.value = Math.ceil(filteredCount.value / pageSize)
+    totalItems.value = count || 0
+    totalPages.value = Math.ceil(totalItems.value / pageSize)
   } catch (err: any) {
     error.value = err.message || 'Terjadi kesalahan saat memuat data'
     console.error('Error fetching markets:', err)
@@ -103,41 +106,25 @@ await useAsyncData('markets', fetchMarkets)
 
 // Gunakan watchEffect untuk reaktivitas yang lebih efisien
 watchEffect(() => {
-  // Reset ke halaman 1 saat kategori berubah
-  if (currentCategory.value !== 'Semua') {
-    currentPage.value = 1
-  }
   fetchMarkets()
 })
 
-// Computed untuk status loading yang lebih baik
+// Computed untuk status
 const isLoading = computed(() => loading.value)
 const hasError = computed(() => !!error.value)
 const hasData = computed(() => marketsList.value.length > 0)
 const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
 
-// Handler untuk pagination
-const handlePrevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--
-  }
-}
-
-const handleNextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++
-  }
-}
-
-const handleGotoPage = (page: number) => {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page
-  }
-}
-
 // Handler untuk category change
 const handleCategoryChange = (category: string) => {
+  // Reset ke halaman 1 saat kategori berubah
   currentCategory.value = category
+  currentPage.value = 1
+}
+
+// Handler untuk pagination change
+const handlePageChange = (page: number) => {
+  currentPage.value = page
 }
 </script>
 
@@ -165,10 +152,13 @@ const handleCategoryChange = (category: string) => {
     </div>
     
     <!-- Category Filter -->
-    <MarketsFilterCategory 
+    <AppCategoryFilter 
       :categories="categories" 
-      :current-category="currentCategory" 
-      @update:category="handleCategoryChange" 
+      :current-category="currentCategory"
+      :show-all-option="true"
+      all-option-text="Semua"
+      all-option-value="all"
+      @update:category="handleCategoryChange"
     />
     
     <!-- Markets Content -->
@@ -187,13 +177,15 @@ const handleCategoryChange = (category: string) => {
     </div>
     
     <!-- Pagination -->
-    <Pagination 
+    <AppPagination 
       v-if="showPagination"
       :current-page="currentPage" 
-      :total-pages="totalPages" 
-      @prev="handlePrevPage" 
-      @next="handleNextPage" 
-      @goto="handleGotoPage" 
+      :total-pages="totalPages"
+      :total-items="totalItems"
+      :page-size="pageSize"
+      :show-page-info="true"
+      :show-first-last="true"
+      @update:page="handlePageChange"
     />
     
     <CreateButton />

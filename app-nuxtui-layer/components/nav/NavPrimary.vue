@@ -52,7 +52,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
     </div>
 
     <!-- Desktop Layout with max width and scroll -->
-    <div class="hidden sm:flex w-full justify-center">
+    <div class="hidden xl:flex md:flex sm:flex w-full justify-center">
       <div class="max-w-4xl w-full overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent">
         <div class="flex items-center justify-center gap-1 py-1 min-w-fit px-2">
           <ULink

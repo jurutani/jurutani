@@ -9,6 +9,10 @@ const { supabase } = useSupabase()
 const { userData, fetchUserData } = useProfile()
 
 // Types
+interface Category {
+  name: string;
+}
+
 interface FormState {
   name: string;
   description: string;
@@ -28,14 +32,33 @@ const emit = defineEmits<{
   close: []
 }>()
 
-// Constants
-const CATEGORIES = [
-  { value: 'Hasil Pertanian', label: 'Hasil Pertanian' },
-  { value: 'Hasil Peternakan', label: 'Hasil Peternakan' },
-  { value: 'Produk Olahan', label: 'Produk Olahan' },
-  { value: 'Penunjang Pertanian', label: 'Penunjang Pertanian' },
-  { value: 'Lainnya', label: 'Lainnya' }
-] as const
+// Ambil kategori dari tabel 'category-markets'
+const { data: CATEGORY } = await useAsyncData('category_markets', async () => {
+  try {
+    const { data, error: catError } = await supabase
+      .from('category_markets')
+      .select('name')
+      .order('name', { ascending: true })
+
+    if (catError) throw catError
+    
+    return data as Category[]
+  } catch (err) {
+    console.error('Error fetching categories:', err)
+    return []
+  }
+})
+
+// Transform categories for USelect component
+const categoryOptions = computed(() => {
+  if (!CATEGORY.value) return []
+  
+  return CATEGORY.value.map(cat => ({
+    label: cat.name,
+    value: cat.name
+  }))
+})
+
 
 const STORAGE_BUCKET = 'markets-attachments' as const
 
@@ -262,7 +285,7 @@ onMounted(async () => {
           name="i-heroicons-shopping-bag"
           class="text-green-600 dark:text-green-400 text-xl"
         />
-        <h2 class="text-xl font-bold text-green-700 dark:text-green-400">
+        <h2 class="text-xl font-bold text-green-700 dark:text-green-400 my-auto flex items-center h-full">
           Tambah Produk Baru
         </h2>
       </div>
@@ -307,17 +330,19 @@ onMounted(async () => {
       </UFormGroup>
 
       <!-- Kategori -->
-      <UFormGroup label="Kategori" required>
+       <UFormGroup label="Kategori">
         <USelect
           v-model="form.category"
-          :options="CATEGORIES"
+          :options="categoryOptions"
+          option-attribute="label"
+          value-attribute="value"
           placeholder="Pilih kategori"
-          :error="!!errors.category"
           color="green"
-        />
-        <template #hint>
-          <p v-if="errors.category" class="text-red-500 text-sm">{{ errors.category }}</p>
-        </template>
+        >
+          <template #leading>
+            <UIcon name="i-heroicons-tag" class="text-gray-400" />
+          </template>
+        </USelect>
       </UFormGroup>
 
       <!-- Harga dan Rentang Harga -->
