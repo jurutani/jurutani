@@ -317,6 +317,22 @@ useHead({
                   >
                     Penyuluh
                   </UBadge>
+                  <UBadge 
+                    v-else-if="user.role === 'admin'"
+                    color="green" 
+                    variant="soft" 
+                    size="xs"
+                  >
+                    Admin
+                  </UBadge>
+                  <UBadge 
+                    v-else-if="user.role === 'petani'"
+                    color="gray" 
+                    variant="soft" 
+                    size="xs"
+                  >
+                    Petani
+                  </UBadge>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</p>
               </div>
