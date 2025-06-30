@@ -59,9 +59,6 @@ const categoryOptions = computed(() => {
   }))
 })
 
-
-const STORAGE_BUCKET = 'markets-attachments' as const
-
 // Reactive State
 const form = ref<FormState>({
   name: '',
@@ -157,25 +154,6 @@ const isValidUrl = (url: string): boolean => {
   }
 }
 
-// File Upload Utilities
-const uploadFile = async (bucket: string, path: string, file: File): Promise<string> => {
-  const { error } = await supabase.storage
-    .from(bucket)
-    .upload(path, file, {
-      cacheControl: '3600',
-      upsert: true
-    })
-  
-  if (error) throw error
-  return path
-}
-
-const generateFilePath = (id: string, fileName: string): string => {
-  const timestamp = Date.now()
-  const cleanFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_')
-  return `markets/${id}/${timestamp}_${cleanFileName}`
-}
-
 // File Handlers
 const handleImageUpload = (event: Event): void => {
   const file = (event.target as HTMLInputElement).files?.[0]
@@ -217,11 +195,21 @@ const handleSubmit = async (): Promise<void> => {
 
     // Upload image if file selected
     if (form.value.imageFile) {
-      const imagePath = generateFilePath(marketId, form.value.imageFile.name)
-      const uploadedPath = await uploadFile(STORAGE_BUCKET, imagePath, form.value.imageFile)
+      const timestamp = Date.now()
+      const cleanFileName = form.value.imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+      const imagePath = `markets/${marketId}/${timestamp}_${cleanFileName}`
+      
+      const { error } = await supabase.storage
+        .from('markets-attachments')
+        .upload(imagePath, form.value.imageFile, {
+          cacheControl: '3600',
+          upsert: true
+        })
+      
+      if (error) throw error
       
       attachmentsData = {
-        url_image: uploadedPath
+        url_image: imagePath
       }
     }
 

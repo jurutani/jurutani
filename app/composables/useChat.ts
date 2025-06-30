@@ -342,69 +342,111 @@ export const useChat = () => {
 
   // Delete conversation (enhanced with image cleanup)
   const deleteConversation = async (conversationId: string) => {
-    try {
-      loading.value = true
-      const currentUser = await getCurrentUser()
-      
-      if (!currentUser) throw new Error('User not authenticated')
+  try {
+    loading.value = true
+    const currentUser = await getCurrentUser()
+    
+    if (!currentUser) throw new Error('User not authenticated')
 
-      // First get all messages with images to delete from storage
-      const { data: messagesWithImages } = await supabase
-        .from('messages')
-        .select('image_url')
-        .eq('conversation_id', conversationId)
-        .not('image_url', 'is', null)
+    // Verify user has permission to delete this conversation
+    const { data: conversation, error: conversationCheckError } = await supabase
+      .from('conversations')
+      .select('participant1_id, participant2_id')
+      .eq('id', conversationId)
+      .single()
 
-      // Delete images from storage
-      if (messagesWithImages && messagesWithImages.length > 0) {
-        const imageUrls = messagesWithImages.map(msg => msg.image_url).filter(Boolean)
-        for (const imageUrl of imageUrls) {
+    if (conversationCheckError) throw conversationCheckError
+    if (!conversation) throw new Error('Conversation not found')
+
+    const isParticipant = conversation.participant1_id === currentUser.id || 
+                         conversation.participant2_id === currentUser.id
+    
+    if (!isParticipant) {
+      throw new Error('You do not have permission to delete this conversation')
+    }
+
+    // Get all messages with images for cleanup
+    const { data: messagesWithImages, error: messagesQueryError } = await supabase
+      .from('messages')
+      .select('image_url')
+      .eq('conversation_id', conversationId)
+      .not('image_url', 'is', null)
+
+    if (messagesQueryError) {
+      console.warn('Failed to fetch messages with images:', messagesQueryError)
+    }
+
+    // Use database transaction-like approach by deleting in correct order
+    // First delete messages (child records)
+    const { error: messagesError } = await supabase
+      .from('messages')
+      .delete()
+      .eq('conversation_id', conversationId)
+
+    if (messagesError) throw messagesError
+
+    // Then delete the conversation (parent record)
+    const { error: conversationError } = await supabase
+      .from('conversations')
+      .delete()
+      .eq('id', conversationId)
+      .or(`participant1_id.eq.${currentUser.id},participant2_id.eq.${currentUser.id}`)
+
+    if (conversationError) throw conversationError
+
+    // Clean up images from storage (do this after DB operations succeed)
+    if (messagesWithImages && messagesWithImages.length > 0) {
+      const imageCleanupPromises = messagesWithImages
+        .map(msg => msg.image_url)
+        .filter(Boolean)
+        .map(async (imageUrl) => {
           try {
             // Extract file path from public URL
             const urlParts = imageUrl.split('/chat-images/')
             if (urlParts.length > 1) {
-              const filePath = urlParts[1]
-              await supabase.storage.from('chat-images').remove([filePath])
+              const filePath = urlParts[1].split('?')[0] // Remove query parameters if any
+              const { error: storageError } = await supabase.storage
+                .from('chat-images')
+                .remove([filePath])
+              
+              if (storageError) {
+                console.warn(`Failed to delete image ${filePath}:`, storageError)
+              }
             }
           } catch (imgError) {
-            console.error('Failed to delete image:', imgError)
+            console.warn('Failed to delete image:', imgError)
+            // Don't throw - storage cleanup failures shouldn't fail the whole operation
           }
+        })
+
+      // Run all image deletions in parallel, but don't wait for them to complete
+      Promise.allSettled(imageCleanupPromises).then((results) => {
+        const failures = results.filter(result => result.status === 'rejected')
+        if (failures.length > 0) {
+          console.warn(`Failed to delete ${failures.length} images from storage`)
         }
-      }
-
-      // Delete all messages in the conversation
-      const { error: messagesError } = await supabase
-        .from('messages')
-        .delete()
-        .eq('conversation_id', conversationId)
-
-      if (messagesError) throw messagesError
-
-      // Then delete the conversation
-      const { error: conversationError } = await supabase
-        .from('conversations')
-        .delete()
-        .eq('id', conversationId)
-        .or(`participant1_id.eq.${currentUser.id},participant2_id.eq.${currentUser.id}`)
-
-      if (conversationError) throw conversationError
-
-      // Remove from local state
-      conversations.value = conversations.value.filter(c => c.id !== conversationId)
-      
-      if (currentConversation.value?.id === conversationId) {
-        currentConversation.value = null
-        messages.value = []
-      }
-
-      return true
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to delete conversation'
-      throw err
-    } finally {
-      loading.value = false
+      })
     }
+
+    // Update local state
+    conversations.value = conversations.value.filter(c => c.id !== conversationId)
+    
+    // Clear current conversation if it was the deleted one
+    if (currentConversation.value?.id === conversationId) {
+      currentConversation.value = null
+      messages.value = []
+    }
+
+    return true
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Failed to delete conversation'
+    error.value = errorMessage
+    console.error('Delete conversation error:', err)
+    throw new Error(errorMessage)
+  } finally {
+    loading.value = false
   }
+}
 
   // Delete single message (enhanced with image cleanup)
   const deleteMessage = async (messageId: string) => {
@@ -414,12 +456,14 @@ export const useChat = () => {
       if (!currentUser) throw new Error('User not authenticated')
 
       // First get the message to check if it has an image
-      const { data: messageToDelete } = await supabase
+      const { data: messageToDelete, error: fetchError } = await supabase
         .from('messages')
         .select('image_url')
         .eq('id', messageId)
         .eq('sender_id', currentUser.id)
-        .single()
+        .maybeSingle()
+
+      if (fetchError) throw fetchError
 
       if (messageToDelete?.image_url) {
         try {
@@ -445,12 +489,16 @@ export const useChat = () => {
       // Remove from local state
       messages.value = messages.value.filter(m => m.id !== messageId)
 
+      // Tambahan: log ke console kalau berhasil
+      console.log(`Message with ID ${messageId} successfully deleted.`)
+
       return true
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to delete message'
       throw err
     }
   }
+
 
   // Clear all messages in a conversation (keep conversation)
   const clearConversationMessages = async (conversationId: string) => {

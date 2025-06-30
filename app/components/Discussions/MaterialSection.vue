@@ -70,6 +70,7 @@ const fetchCourses = async () => {
     const baseQuery = supabase
       .from('courses')
       .select('*', { count: 'exact' })
+      .is('deleted_at', null)
 
     // Apply category filter jika bukan 'all'
     const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'

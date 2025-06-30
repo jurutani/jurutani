@@ -38,37 +38,23 @@ const totalItems = ref(0)
 const categories = ref<Category[]>([])
 
 // Ambil kategori dari tabel 'category_videos' atau gunakan kategori statis
-const { data: categoriesData } = await useAsyncData('video-categories', async () => {
-  try {
-    // Coba ambil dari tabel kategori terlebih dahulu
-    const { data, error: catError } = await supabase
-      .from('category_videos')
-      .select('name')
-      .order('name', { ascending: true })
+const { data: categoriesData } = await useAsyncData('category', async () => {
+  const { data, error } = await supabase
+    .from('category')
+    .select('name')
+    .order('name', { ascending: true })
 
-    if (catError) {
-      // Jika tabel kategori tidak ada, gunakan kategori statis
-      console.warn('Category table not found, using static categories')
-      return [
-        { name: 'Pertanian' },
-        { name: 'Peternakan' },
-        { name: 'Teknologi' },
-        { name: 'Lainya' }
-      ]
-    }
-    
-    return data as Category[]
-  } catch (err) {
-    console.error('Error fetching video categories:', err)
-    // Fallback ke kategori statis
+  if (error || !data) {
     return [
       { name: 'Pertanian' },
       { name: 'Peternakan' },
-      { name: 'Teknologi' },
-      { name: 'Lainya' }
+      { name: 'Teknologi' }
     ]
   }
+
+  return data
 })
+
 
 // Set categories setelah data dimuat
 if (categoriesData.value) {

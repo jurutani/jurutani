@@ -1,4 +1,4 @@
-<!-- pages/room-chat/index.vue - Fixed Search Function -->
+<!-- pages/room-chat/index.vue - Fixed Delete Conversation Function -->
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -16,6 +16,7 @@ const {
   getUserConversations, 
   getOrCreateConversation,
   getCurrentUser,
+  deleteConversation,
   loading 
 } = useChat()
 
@@ -35,6 +36,7 @@ const userSearchQuery = ref('')
 const searchResults = ref([])
 const searchingUsers = ref(false)
 const currentUser = ref(null)
+const deletingConversationId = ref(null)
 
 // Computed properties
 const filteredConversations = computed(() => {
@@ -77,7 +79,7 @@ const startChat = async (userId: string) => {
     router.push(`/room-chat/${conversation.id}`)
   } catch (error) {
     console.error('Failed to start chat:', error)
-    toastStore.error('Gagal memulai chat', 'Terjadi kesalahan saat membuat chat baru')
+    toastStore.error('Gagal membuat chat baru')
   }
 }
 
@@ -87,6 +89,25 @@ const handleClearSearch = () => {
 
 const updateSearchQuery = (value: string) => {
   searchQuery.value = value
+}
+
+// Handle delete conversation
+const handleDeleteConversation = async (conversationId: string) => {
+  try {
+    deletingConversationId.value = conversationId
+    
+    await deleteConversation(conversationId)
+    
+    toastStore.success('Percakapan berhasil dihapus')
+    
+    // Refresh conversations list
+    await getUserConversations()
+  } catch (error) {
+    console.error('Failed to delete conversation:', error)
+    toastStore.error('Gagal menghapus percakapan')
+  } finally {
+    deletingConversationId.value = null
+  }
 }
 
 // Search users for new chat
@@ -101,7 +122,7 @@ const searchUsers = async (query: string) => {
     searchResults.value = await searchUsersUtil(query.trim())
   } catch (error) {
     console.error('Failed to search users:', error)
-    toastStore.error('Gagal mencari pengguna', 'Terjadi kesalahan saat mencari pengguna')
+    toastStore.error('Gagal mencari pengguna')
     searchResults.value = []
   } finally {
     searchingUsers.value = false
@@ -120,7 +141,7 @@ onMounted(async () => {
     await getUserConversations()
   } catch (error) {
     console.error('Failed to load conversations:', error)
-    toastStore.error('Gagal memuat conversation', 'Terjadi kesalahan saat mengambil data conversation')
+    toastStore.error('Gagal memuat conversation')
   }
 })
 
@@ -212,18 +233,21 @@ useHead({
           :format-last-message-time="formatLastMessageTime"
           :truncate-message="truncateMessage"
           :get-avatar-fallback="getAvatarFallback"
+          :is-deleting="deletingConversationId === conversation.id"
           class="hover:bg-green-50 dark:hover:bg-gray-800 transition-colors duration-200"
           @open-chat="openChat"
+          @delete-conversation="handleDeleteConversation"
         />
       </div>
 
       <!-- Empty State Component -->
-      <ChatEmptyState
+      <div
         v-if="!loading && filteredConversations.length === 0"
-        :search-query="searchQuery"
-        @start-new-chat="handleNewChat"
-        @clear-search="handleClearSearch"
-      />
+        class="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400"
+      >
+        <UIcon name="i-heroicons-chat-bubble-left-ellipsis" class="w-10 h-10 mb-4 text-green-400" />
+        <p class="text-lg font-semibold">Belum ada percakapan dimulai</p>
+      </div>
     </div>
 
     <!-- New Chat Modal -->
