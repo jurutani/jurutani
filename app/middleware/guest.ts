@@ -18,7 +18,6 @@ export default defineNuxtRouteMiddleware(async () => {
       await fetchUserData()
     }
 
-    toastStore.info('Kamu sudah login.')
     return navigateTo('/', { replace: true })
   }
 

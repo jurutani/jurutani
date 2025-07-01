@@ -13,7 +13,6 @@ export default defineNuxtRouteMiddleware(async () => {
 
   // Jika tidak ada user atau session, arahkan ke login
   if (!user.value || !session.value) {
-    toastStore.error('Silakan login untuk mengakses halaman.')
     return navigateTo('/auth/login', { replace: true })
   }
 
@@ -24,7 +23,6 @@ export default defineNuxtRouteMiddleware(async () => {
 
   // Jika data profil gagal dimuat, arahkan ke login
   if (!userData.value) {
-    toastStore.error('Gagal memuat data profil. Silakan coba lagi.')
     return navigateTo('/auth/login', { replace: true })
   }
 
