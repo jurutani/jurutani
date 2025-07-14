@@ -14,6 +14,9 @@ const props = defineProps<{
   video: VideoData;
 }>();
 
+// State untuk expand deskripsi
+const isDescriptionExpanded = ref(false);
+
 // Composable for YouTube functionality
 const useYouTube = (videoUrl: string) => {
   const isLoading = ref(false);
@@ -73,13 +76,31 @@ const formatDate = (dateString?: string) => {
   }
 };
 
-const truncateText = (text: string, maxLength: number = 120) => {
+const truncateText = (text: string, maxLength: number = 150) => {
   return text.length <= maxLength ? text : text.substring(0, maxLength).trim() + '...';
+};
+
+// Computed untuk menentukan apakah deskripsi perlu dipotong
+const shouldTruncateDescription = computed(() => {
+  return props.video.description.length > 150;
+});
+
+// Computed untuk menampilkan deskripsi
+const displayedDescription = computed(() => {
+  if (!shouldTruncateDescription.value || isDescriptionExpanded.value) {
+    return props.video.description;
+  }
+  return truncateText(props.video.description, 150);
+});
+
+// Toggle expand deskripsi
+const toggleDescription = () => {
+  isDescriptionExpanded.value = !isDescriptionExpanded.value;
 };
 </script>
 
 <template>
-  <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 group">
+  <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group h-full flex flex-col">
     <!-- Video Section -->
     <div class="relative aspect-video bg-gradient-to-r from-gray-100 to-gray-200">
       <!-- Video Player (always shown if valid) -->
@@ -101,37 +122,57 @@ const truncateText = (text: string, maxLength: number = 120) => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           </div>
-          <p class="text-gray-600 font-medium">Video tidak tersedia</p>
+          <p class="text-gray-600 font-medium text-base">Video tidak tersedia</p>
           <p class="text-gray-500 text-sm mt-1">URL YouTube tidak valid</p>
         </div>
       </div>
     </div>
 
     <!-- Content -->
-    <div class="p-6">
-      <!-- Category Badge (no colors) -->
+    <div class="p-6 flex-1 flex flex-col">
+      <!-- Category Badge -->
       <div class="mb-4">
-        <UBadge color="green" variant="soft" class="font-semibold text-xs">
+        <UBadge color="green" variant="soft" class="font-semibold text-sm px-3 py-1">
           {{ video.category }}
         </UBadge>
       </div>
 
       <!-- Title -->
-      <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-gray-700 transition-colors duration-200">
+      <h3 class="text-xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-gray-700 transition-colors duration-200 leading-tight">
         {{ video.title }}
       </h3>
 
-      <!-- Description -->
-      <p class="text-gray-600 text-sm mb-6 line-clamp-3 leading-relaxed">
-        {{ truncateText(video.description) }}
-      </p>
+      <!-- Description dengan expand functionality -->
+      <div class="mb-6 flex-1">
+        <p class="text-gray-600 text-sm leading-relaxed" :class="{'line-clamp-4': !isDescriptionExpanded}">
+          {{ displayedDescription }}
+        </p>
+        
+        <!-- Tombol Expand/Collapse -->
+        <button
+          v-if="shouldTruncateDescription"
+          @click="toggleDescription"
+          class="mt-2 text-emerald-600 hover:text-emerald-700 text-sm font-medium transition-colors duration-200 flex items-center gap-1"
+        >
+          <span>{{ isDescriptionExpanded ? 'Sembunyikan' : 'Selengkapnya' }}</span>
+          <svg 
+            class="w-4 h-4 transition-transform duration-200"
+            :class="{ 'rotate-180': isDescriptionExpanded }"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
 
       <!-- Footer -->
-      <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+      <div class="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
         <!-- Date -->
-        <div class="flex items-center text-xs text-gray-500">
-          <div class="bg-gray-100 rounded-full p-1.5 mr-2">
-            <svg class="w-3 h-3 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="flex items-center text-sm text-gray-500">
+          <div class="bg-gray-100 rounded-full p-2 mr-3">
+            <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
@@ -141,7 +182,7 @@ const truncateText = (text: string, maxLength: number = 120) => {
         <!-- YouTube Link -->
         <button
           type="button"
-          class="flex items-center text-xs text-white bg-red-600 hover:bg-red-700 font-semibold transition-all duration-200 px-4 py-2 rounded-lg shadow-md hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-200"
+          class="flex items-center text-sm text-white bg-red-600 hover:bg-red-700 font-semibold transition-all duration-200 px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-200"
           @click="window.open(video.link_yt, '_blank', 'noopener,noreferrer')"
         >
           <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -162,9 +203,9 @@ const truncateText = (text: string, maxLength: number = 120) => {
   overflow: hidden;
 }
 
-.line-clamp-3 {
+.line-clamp-4 {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

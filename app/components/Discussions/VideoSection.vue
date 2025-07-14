@@ -32,7 +32,7 @@ const loading = ref(true)
 // Filter & pagination
 const currentCategory = ref('all')
 const currentPage = ref(1)
-const pageSize = 10
+const pageSize = 6 // Kurangi dari 5 ke 6 untuk layout yang lebih baik
 const totalPages = ref(1)
 const totalItems = ref(0)
 const categories = ref<Category[]>([])
@@ -54,7 +54,6 @@ const { data: categoriesData } = await useAsyncData('category', async () => {
 
   return data
 })
-
 
 // Set categories setelah data dimuat
 if (categoriesData.value) {
@@ -132,7 +131,7 @@ const handlePageChange = (page: number) => {
 <template>
   <div class="video-page container mx-auto px-4 py-12">
     <!-- Video Section Header -->
-    <div class="mx-auto mb-6 max-w-4xl text-center">
+    <div class="mx-auto mb-8 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
         <UIcon name="i-heroicons-play-circle" class="w-5 h-5 text-green-600 dark:text-green-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Pembelajaran Visual & Interaktif</span>
@@ -161,12 +160,13 @@ const handlePageChange = (page: number) => {
     />
     
     <!-- Video Content -->
-    <div class="mt-8">
+    <div class="mt-10">
       <LoadingData v-if="isLoading" />      
       <ErrorData v-else-if="hasError" :error="error" />
       <NotFoundData v-else-if="!hasData" />
       
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Grid Layout yang diperbaiki -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-8">
         <VideoCardContent 
           v-for="video in videoList" 
           :key="video.id" 
@@ -184,6 +184,7 @@ const handlePageChange = (page: number) => {
       :page-size="pageSize"
       :show-page-info="true"
       :show-first-last="true"
+      class="mt-12"
       @update:page="handlePageChange"
     />
     
@@ -194,5 +195,22 @@ const handlePageChange = (page: number) => {
 <style scoped>
 .video-page {
   min-height: calc(100vh - 200px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .video-page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Custom grid untuk layar yang sangat besar */
+@media (min-width: 1920px) {
+  .video-page .grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 }
 </style>

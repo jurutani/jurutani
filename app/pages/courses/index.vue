@@ -11,7 +11,9 @@ interface Announcement {
   deleted_at?: string
   archived_at?: string
   title?: string
-  description?: string
+  content?: string
+  image_url?: string // Kolom baru untuk image URL
+  attachments?: string[] // Array string untuk nama file attachments
 }
 
 interface Category {
@@ -63,6 +65,22 @@ if (categoriesData.value) {
   }))
 }
 
+// Fungsi untuk generate URL image dan attachment
+const generateImageUrl = (id: string, imageFileName?: string) => {
+  if (!imageFileName) return null
+  return supabase.storage
+    .from('meetings')
+    .getPublicUrl(`${id}/image/${imageFileName}`)
+    .data.publicUrl
+}
+
+const generateAttachmentUrl = (id: string, attachmentFileName: string) => {
+  return supabase.storage
+    .from('meetings')
+    .getPublicUrl(`${id}/attachment/${attachmentFileName}`)
+    .data.publicUrl
+}
+
 // Fungsi fetch data yang dioptimasi
 const fetchAnnouncements = async () => {
   loading.value = true
@@ -72,7 +90,7 @@ const fetchAnnouncements = async () => {
     // Build query dengan method chaining yang lebih efisien
     const baseQuery = supabase
       .from('meetings')
-      .select('*', { count: 'exact' })
+      .select('id, category, created_at, title, content, image_url, attachments', { count: 'exact' })
       .is('deleted_at', null)
       .is('archived_at', null)
 
@@ -91,7 +109,19 @@ const fetchAnnouncements = async () => {
 
     if (fetchError) throw fetchError
 
-    announcements.value = data as Announcement[] || []
+    // Process data untuk menambahkan full URLs
+    const processedData = (data as Announcement[] || []).map(item => ({
+      ...item,
+      // Generate full URL untuk image
+      fullImageUrl: generateImageUrl(item.id, item.image_url),
+      // Generate full URLs untuk attachments
+      fullAttachmentUrls: item.attachments?.map(filename => ({
+        filename,
+        url: generateAttachmentUrl(item.id, filename)
+      })) || []
+    }))
+
+    announcements.value = processedData
     totalItems.value = count || 0
     totalPages.value = Math.ceil(totalItems.value / pageSize)
   } catch (err: any) {
