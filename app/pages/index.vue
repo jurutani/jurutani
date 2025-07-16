@@ -36,6 +36,7 @@
     <UContainer class="pt-8">
       <FeatureSection class="mt-8" />
     </UContainer>
+    <ChatbotJurutani />
   </div>
 </template>
 <style scoped></style>

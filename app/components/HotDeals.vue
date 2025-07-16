@@ -188,6 +188,5 @@ const handlePageChange = (page: number) => {
       @update:page="handlePageChange"
     />
     
-    <CreateButton />
   </div>
 </template>

@@ -48,7 +48,7 @@ const { data: categoriesData } = await useAsyncData('announcement-categories', a
     //   .order('name', { ascending: true })
 
     // Atau jika menggunakan hardcoded categories seperti sebelumnya:
-    const hardcodedCategories = ['Online', 'Offline', 'Lainya']
+    const hardcodedCategories = ['online', 'offline']
     
     return hardcodedCategories.map(cat => ({ name: cat })) as Category[]
   } catch (err) {

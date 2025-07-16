@@ -2,7 +2,7 @@
   "name": "pg-nuxtui",
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://pg-nuxtui.netlify.app",
+  "homepage": "https://jurutani.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/pinegrow/pg-nuxtui.git"
@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "now": "npm run build && npm run preview",
-    "lighthouse": "npx unlighthouse --no-cache --site https://pg-nuxtui.netlify.app",
+    "lighthouse": "npx unlighthouse --no-cache --site https://jurutani.com",
     "build": "nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

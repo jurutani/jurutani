@@ -15,10 +15,10 @@ const hourlyError = ref('')
 const activeTab = ref('current')
 
 // Environment variables
-// const API_KEY = process.env.OPENWEATHER_API_KEY || '416f0ed0bb28d3110beedecf5fa9cf85'
-// const BASE_URL = process.env.OPENWEATHER_BASE_URL || 'https://api.openweathermap.org/data/2.5'
-const API_KEY = process.env.OPENWEATHER_API_KEY || ''
-const BASE_URL = process.env.OPENWEATHER_BASE_URL || ''
+const API_KEY = process.env.OPENWEATHER_API_KEY || '416f0ed0bb28d3110beedecf5fa9cf85'
+const BASE_URL = process.env.OPENWEATHER_BASE_URL || 'https://api.openweathermap.org/data/2.5'
+// const API_KEY = process.env.OPENWEATHER_API_KEY || ''
+// const BASE_URL = process.env.OPENWEATHER_BASE_URL || ''
 
 // Fungsi untuk mengakses lokasi pengguna
 const getLocation = () => {

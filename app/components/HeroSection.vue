@@ -11,7 +11,7 @@ interface HeroData {
   description: string
   button_text: string
   button_link: string
-  image_name?: string
+  image_url?: string  // Changed from image_name to image_url
   status: string
   created_at: string
   deleted_at?: string
@@ -40,12 +40,18 @@ const swipeThreshold = 50
 const isMobile = ref(false)
 
 // Fungsi untuk mendapatkan URL gambar dari bucket
-const getImageUrl = (heroId: string, imageName: string) => {
-  if (!imageName) return null
+const getImageUrl = (imageUrl: string) => {
+  if (!imageUrl) return null
   
+  // Jika sudah berupa URL lengkap, return langsung
+  if (imageUrl.startsWith('http')) {
+    return imageUrl
+  }
+  
+  // Jika hanya nama file, ambil dari bucket hero-image
   const { data } = supabase.storage
     .from('hero-image')
-    .getPublicUrl(`${heroId}/${imageName}`)
+    .getPublicUrl(imageUrl)
   
   return data.publicUrl
 }
@@ -54,8 +60,8 @@ const getImageUrl = (heroId: string, imageName: string) => {
 const currentSlideImageUrl = computed(() => {
   if (carouselItems.value.length === 0) return null
   const currentItem = carouselItems.value[currentSlide.value]
-  if (!currentItem?.image_name) return null
-  return getImageUrl(currentItem.id, currentItem.image_name)
+  if (!currentItem?.image_url) return null
+  return getImageUrl(currentItem.image_url)
 })
 
 // Fetch data hero dari Supabase
@@ -307,75 +313,50 @@ watch(() => carouselItems.value.length, (newLength) => {
       @touchstart.passive="handleTouchStart"
       @touchend.passive="handleTouchEnd"
     >
-      <!-- Background Image -->
-      <div 
-        v-if="currentSlideImageUrl"
-        class="absolute inset-0 transition-all duration-1000 ease-out"
-      >
-        <img 
-          :src="currentSlideImageUrl" 
-          :alt="carouselItems[currentSlide]?.title || 'Hero Image'"
-          class="w-full h-full object-cover"
-          loading="lazy"
+      <!-- Background Container -->
+      <div class="absolute inset-0">
+        <!-- Background Images dengan animasi transisi -->
+        <div 
+          v-for="(item, index) in carouselItems" 
+          :key="`bg-${item.id}`"
+          class="absolute inset-0 transition-all duration-1000 ease-out"
+          :class="[
+            currentSlide === index ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+          ]"
         >
-        <!-- Overlay untuk readability -->
-        <div class="absolute inset-0 bg-black/40"/>
-      </div>
-
-      <!-- Animated Background Decorations (ketika tidak ada gambar) -->
-      <div v-else class="absolute inset-0 overflow-hidden">
-        <!-- Primary Gradient Background -->
-        <div class="absolute inset-0 bg-gradient-to-br from-green-900 via-green-800 to-emerald-900 animate-gradient-slow"/>
-        
-        <!-- Floating Circles -->
-        <div class="absolute top-10 left-10 w-32 h-32 bg-green-400/20 rounded-full blur-xl animate-float-1"/>
-        <div class="absolute top-20 right-20 w-48 h-48 bg-emerald-300/15 rounded-full blur-2xl animate-float-2"/>
-        <div class="absolute bottom-32 left-32 w-40 h-40 bg-green-500/25 rounded-full blur-xl animate-float-3"/>
-        <div class="absolute bottom-20 right-10 w-24 h-24 bg-lime-400/30 rounded-full blur-lg animate-float-4"/>
-        
-        <!-- Leaf Patterns -->
-        <div class="absolute top-1/4 left-1/4 animate-rotate-slow">
-          <svg class="w-20 h-20 text-green-400/20" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L4 7v10c0 5.55 3.84 9.74 9 9.74s9-4.19 9-9.74V7l-8-5z"/>
-          </svg>
-        </div>
-        <div class="absolute top-3/4 right-1/3 animate-rotate-reverse">
-          <svg class="w-16 h-16 text-emerald-400/25" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L4 7v10c0 5.55 3.84 9.74 9 9.74s9-4.19 9-9.74V7l-8-5z"/>
-          </svg>
-        </div>
-        <div class="absolute bottom-1/3 left-1/2 animate-pulse-slow">
-          <svg class="w-12 h-12 text-green-300/20" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L4 7v10c0 5.55 3.84 9.74 9 9.74s9-4.19 9-9.74V7l-8-5z"/>
-          </svg>
+          <!-- Gambar Background jika ada -->
+          <div v-if="getImageUrl(item.image_url)" class="absolute inset-0">
+            <img 
+              :src="getImageUrl(item.image_url)" 
+              :alt="item.title || 'Hero Image'"
+              class="w-full h-full object-cover transition-transform duration-1000 ease-out"
+              :class="[
+                currentSlide === index ? 'scale-100' : 'scale-110'
+              ]"
+              loading="lazy"
+              @error="(e) => { console.error('Image load error:', e); e.target.style.display = 'none'; }"
+            >
+          </div>
+          
+          <!-- Background Hijau jika tidak ada gambar -->
+          <div 
+            v-else 
+            class="absolute inset-0 bg-gradient-to-br from-green-800 via-green-700 to-emerald-800 transition-all duration-1000 ease-out"
+            :class="[
+              currentSlide === index ? 'scale-100' : 'scale-105'
+            ]"
+          />
         </div>
         
-        <!-- Geometric Shapes -->
-        <div class="absolute top-1/3 right-1/4 w-3 h-3 bg-lime-400/40 rotate-45 animate-spin-slow"/>
-        <div class="absolute bottom-1/2 left-1/3 w-2 h-2 bg-green-400/50 rounded-full animate-bounce-slow"/>
-        <div class="absolute top-2/3 right-1/2 w-4 h-4 bg-emerald-400/30 rotate-45 animate-ping-slow"/>
+        <!-- Overlay untuk readability dan efek shadow dari bawah -->
+        <div class="absolute inset-0 bg-black/30"/>
         
-        <!-- Wave Pattern -->
-        <div class="absolute bottom-0 left-0 w-full h-24 opacity-20">
-          <svg class="w-full h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path
-              d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
-              fill="currentColor" 
-              class="text-green-600/30 animate-wave"/>
-          </svg>
-        </div>
+        <!-- Shadow dari bawah untuk efek menyatu -->
+        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 via-black/20 to-transparent"/>
         
-        <!-- Particle Effects -->
-        <div class="absolute inset-0">
-          <div class="absolute top-16 left-16 w-1 h-1 bg-green-300/60 rounded-full animate-twinkle-1"/>
-          <div class="absolute top-32 right-24 w-1 h-1 bg-emerald-300/60 rounded-full animate-twinkle-2"/>
-          <div class="absolute bottom-24 left-20 w-1 h-1 bg-lime-300/60 rounded-full animate-twinkle-3"/>
-          <div class="absolute bottom-40 right-32 w-1 h-1 bg-green-400/60 rounded-full animate-twinkle-4"/>
-          <div class="absolute top-48 left-3/4 w-1 h-1 bg-emerald-400/60 rounded-full animate-twinkle-5"/>
-        </div>
-        
-        <!-- Overlay Gradient -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20"/>
+        <!-- Side shadows untuk depth -->
+        <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black/30 to-transparent"/>
+        <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black/30 to-transparent"/>
       </div>
 
       <!-- Carousel Items -->
@@ -384,22 +365,22 @@ watch(() => carouselItems.value.length, (newLength) => {
         :key="item.id"
         class="absolute inset-0 transition-all duration-1000 ease-out"
         :class="[
-          currentSlide === index ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'
+          currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
         ]"
       >
-        <!-- Content Box with Enhanced Animations -->
+        <!-- Content Box dengan Enhanced Animations -->
         <div class="absolute inset-0 flex items-center justify-center px-4">
           <div 
-            class="text-center px-4 sm:px-6 md:px-8 py-8 md:py-12 rounded-xl md:rounded-2xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl max-w-xs sm:max-w-lg md:max-w-2xl w-full transform transition-all duration-1000"
+            class="text-center px-4 sm:px-6 md:px-8 py-8 md:py-12 rounded-xl md:rounded-2xl backdrop-blur-2xl bg-white/10 border border-white/20 shadow-2xl max-w-xs sm:max-w-lg md:max-w-2xl w-full transform transition-all duration-1000"
             :class="[
               currentSlide === index && !isTransitioning 
                 ? 'translate-y-0 opacity-100 scale-100' 
                 : 'translate-y-8 opacity-0 scale-95'
             ]"
           >
-            <!-- Caption with slide animation -->
+            <!-- Caption dengan slide animation -->
             <p 
-              class="text-green-400 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-2 md:mb-3 transition-all duration-700 delay-200"
+              class="text-green-300 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-2 md:mb-3 transition-all duration-700 delay-200"
               :class="[
                 currentSlide === index && !isTransitioning 
                   ? 'translate-x-0 opacity-100' 
@@ -409,7 +390,7 @@ watch(() => carouselItems.value.length, (newLength) => {
               {{ item.caption }}
             </p>
             
-            <!-- Title with opposite slide animation -->
+            <!-- Title dengan opposite slide animation -->
             <h2 
               class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-6 leading-tight transition-all duration-700 delay-300"
               :class="[
@@ -421,9 +402,9 @@ watch(() => carouselItems.value.length, (newLength) => {
               {{ item.title }}
             </h2>
             
-            <!-- Description with slide animation -->
+            <!-- Description dengan slide animation -->
             <p 
-              class="text-gray-200 text-sm sm:text-base md:text-lg mb-6 md:mb-8 leading-relaxed transition-all duration-700 delay-400"
+              class="text-gray-100 text-sm sm:text-base md:text-lg mb-6 md:mb-8 leading-relaxed transition-all duration-700 delay-400"
               :class="[
                 currentSlide === index && !isTransitioning 
                   ? 'translate-x-0 opacity-100' 
@@ -433,7 +414,7 @@ watch(() => carouselItems.value.length, (newLength) => {
               {{ item.description }}
             </p>
             
-            <!-- Button with scale animation -->
+            <!-- Button dengan scale animation -->
             <div 
               class="transition-all duration-700 delay-500"
               :class="[
@@ -444,7 +425,7 @@ watch(() => carouselItems.value.length, (newLength) => {
             >
               <button
                 v-if="item.button_text"
-                class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg border-none"
+                class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl shadow-lg border-none"
                 :class="[
                   isMobile 
                     ? 'px-6 py-3 text-base' 
@@ -541,112 +522,72 @@ watch(() => carouselItems.value.length, (newLength) => {
   justify-content: center;
 }
 
-/* Custom Animations */
-@keyframes gradient-slow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+/* Smooth transitions for better performance */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes float-1 {
-  0%, 100% { transform: translateY(0px) translateX(0px); }
-  33% { transform: translateY(-20px) translateX(10px); }
-  66% { transform: translateY(10px) translateX(-15px); }
+/* Enhanced shadow effects */
+.shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-@keyframes float-2 {
-  0%, 100% { transform: translateY(0px) translateX(0px); }
-  25% { transform: translateY(15px) translateX(-10px); }
-  50% { transform: translateY(-10px) translateX(20px); }
-  75% { transform: translateY(20px) translateX(-5px); }
+/* Improved hover effects */
+.hover\:shadow-2xl:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
 }
 
-@keyframes float-3 {
-  0%, 100% { transform: translateY(0px) translateX(0px); }
-  50% { transform: translateY(-25px) translateX(15px); }
+/* Optimized animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes float-4 {
-  0%, 100% { transform: translateY(0px) translateX(0px); }
-  33% { transform: translateY(12px) translateX(-8px); }
-  66% { transform: translateY(-18px) translateX(12px); }
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-@keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-@keyframes rotate-reverse {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.4; }
-}
-
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes bounce-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes ping-slow {
-  0% { transform: scale(1); opacity: 1; }
-  75%, 100% { transform: scale(2); opacity: 0; }
-}
-
-@keyframes wave {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100px); }
-}
-
-@keyframes twinkle-1 {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.5); }
-}
-
-@keyframes twinkle-2 {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  25% { opacity: 1; transform: scale(1.2); }
-  75% { opacity: 0.6; transform: scale(1.3); }
-}
-
-@keyframes twinkle-3 {
-  0%, 100% { opacity: 0.2; transform: scale(1); }
-  33% { opacity: 0.8; transform: scale(1.4); }
-  66% { opacity: 1; transform: scale(1.1); }
-}
-
-@keyframes twinkle-4 {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  40% { opacity: 1; transform: scale(1.6); }
-  80% { opacity: 0.3; transform: scale(1.2); }
-}
-
-@keyframes twinkle-5 {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  20% { opacity: 0.9; transform: scale(1.3); }
-  60% { opacity: 1; transform: scale(1.5); }
-}
-
-/* Apply animations */
-.animate-gradient-slow {
-  background-size: 400% 400%;
-  animation: gradient-slow 8s ease infinite;
-}
-
-.animate-float-1 { animation: float-1 6s ease-in-out infinite; }
-.animate-float-2 { animation: float-2 8s ease-in-out infinite; }
-.animate-float-3 { animation: float-3 7s ease-in-out infinite; }
-.animate-float-4 { animation: float-4 5s ease-in-out infinite; }
-
-.animate-rotate-slow {
-  animation: rotate-slow 12s linear infinite;
+/* Hardware acceleration for smoother animations */
+.transition-all,
+.transition-transform,
+.transition-opacity {
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 </style>
