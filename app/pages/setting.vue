@@ -11,7 +11,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div>
+  <div class="lg:pt-20 p-6">
     <NuxtPage />
   </div>
 </template>

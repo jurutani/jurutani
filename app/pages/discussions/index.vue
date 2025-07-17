@@ -7,10 +7,6 @@ interface DiscussionService {
   icon: string;
   image: string;
   route: string;
-  color: string;
-  gradient: string;
-  bgColor: string;
-  features: string[];
 }
 
 export default {
@@ -23,12 +19,8 @@ export default {
           subtitle: 'Konsultasi Langsung',
           description: 'Dapatkan panduan praktis dari penyuluh pertanian berpengalaman untuk mengatasi masalah budidaya, hama penyakit, dan teknik bertani modern.',
           icon: 'i-heroicons-chat-bubble-left-ellipsis',
-          image: '/services/penyuluh.jpg',
-          route: '/discussions/instructor',
-          color: 'emerald',
-          gradient: 'from-emerald-400 to-green-600',
-          bgColor: 'bg-emerald-50 dark:bg-emerald-900/20',
-          features: ['Konsultasi 1-on-1', 'Panduan Praktis', 'Solusi Lapangan']
+          image: '/services/penyuluhjurutani.jpg',
+          route: '/discussions/instructor'
         },
         {
           id: 'expert',
@@ -36,12 +28,8 @@ export default {
           subtitle: 'Konsultasi Ahli',
           description: 'Konsultasi mendalam dengan ahli pertanian bersertifikat untuk analisis ilmiah, diagnosa penyakit tanaman, dan rekomendasi teknologi terbaru.',
           icon: 'i-heroicons-shield-check',
-          image: '/services/pakar.jpg',
-          route: '/discussions/expert',
-          color: 'blue',
-          gradient: 'from-blue-400 to-indigo-600',
-          bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-          features: ['Analisis Ilmiah', 'Diagnosa Akurat', 'Teknologi Terbaru']
+          image: '/services/pakarjurutani.jpg',
+          route: '/discussions/expert'
         },
         {
           id: 'community',
@@ -49,12 +37,8 @@ export default {
           subtitle: 'Berbagi Pengalaman',
           description: 'Bergabung dengan komunitas petani dari seluruh Indonesia untuk berbagi tips sukses, pengalaman lapangan, dan inovasi pertanian.',
           icon: 'i-heroicons-users',
-          image: '/services/komunitas.jpg',
-          route: '/discussions/group',
-          color: 'amber',
-          gradient: 'from-amber-400 to-yellow-600',
-          bgColor: 'bg-amber-50 dark:bg-amber-900/20',
-          features: ['Komunitas Aktif', 'Tips Sukses', 'Sharing Pengalaman']
+          image: '/services/komunitasjurutani.jpg',
+          route: '/discussions/group'
         },
         {
           id: 'chat',
@@ -62,25 +46,17 @@ export default {
           subtitle: 'Diskusi Real-time',
           description: 'Diskusi langsung dalam room chat khusus berdasarkan komoditas seperti padi, sayuran, buah-buahan, dan peternakan untuk solusi cepat.',
           icon: 'i-heroicons-chat-bubble-oval-left-ellipsis',
-          image: '/services/chat.jpg',
-          route: '/room-chat',
-          color: 'purple',
-          gradient: 'from-purple-400 to-violet-600',
-          bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-          features: ['Chat Real-time', 'Room Tematik', 'Diskusi Grup']
+          image: '/services/chatjurutani.jpg',
+          route: '/room-chat'
         },
         {
           id: 'chat-admin',
           title: 'Support Center',
           subtitle: 'Bantuan Langsung',
           description: 'Hubungi tim support JuruTani untuk bantuan teknis aplikasi, keluhan layanan, atau pertanyaan umum dengan respon prioritas.',
-          icon: 'i-heroicons-headphones',
-          image: '/services/support.jpg',
-          route: '/room-chat/admin',
-          color: 'rose',
-          gradient: 'from-rose-400 to-pink-600',
-          bgColor: 'bg-rose-50 dark:bg-rose-900/20',
-          features: ['Support 24/7', 'Respon Cepat', 'Bantuan Teknis']
+          icon: 'i-heroicons-user-circle',
+          image: '/services/admin.JPG',
+          route: '/room-chat/admin'
         }
       ] as DiscussionService[]
     }
@@ -109,85 +85,62 @@ export default {
       </p> 
     </div>
 
-    <!-- Service Cards - Enhanced Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
+    <!-- Service Cards - Image Overlay Style -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
       <div 
         v-for="service in services" 
         :key="service.id" 
-        class="group relative"
-        :class="service.id === 'chat-admin' ? 'md:col-span-2 lg:col-span-1' : ''"
+        class="group relative overflow-hidden rounded-2xl aspect-[4/5] cursor-pointer"
       >
-        <!-- Background Gradient -->
-        <div
-          class="absolute inset-0 rounded-3xl bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-          :class="service.gradient"
-        />
+        <!-- Background Image -->
+        <div class="absolute inset-0">
+          <img 
+            :src="service.image" 
+            :alt="service.title" 
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          >
+          <!-- Dark Overlay -->
+          <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"/>
+        </div>
         
-        <!-- Main Card -->
-        <div class="relative h-full rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+        <!-- Content Overlay -->
+        <div class="absolute inset-0 p-6 flex flex-col justify-between text-white">
+          <!-- Top Section -->
+          <div class="flex items-start justify-between">
+            <div class="bg-white bg-opacity-20 backdrop-blur-sm p-3 rounded-xl">
+              <UIcon :name="service.icon" class="w-6 h-6 text-white" />
+            </div>
+            <div class="bg-white bg-opacity-20 backdrop-blur-sm px-3 py-1 rounded-full">
+              <span class="text-xs font-medium">{{ service.subtitle }}</span>
+            </div>
+          </div>
           
-          <!-- Header with Icon and Image -->
-          <div class="p-6 pb-4">
-            <div class="flex items-center justify-between mb-4">
-              <div :class="service.bgColor" class="p-3 rounded-xl">
-                <UIcon :name="service.icon" class="w-6 h-6" :class="`text-${service.color}-600 dark:text-${service.color}-400`" />
-              </div>
-              <div class="flex-shrink-0">
-                <img :src="service.image" :alt="service.title" class="w-20 h-20 rounded-full object-cover border-3 border-white dark:border-gray-700 shadow-xl">
-              </div>
+          <!-- Bottom Section -->
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-xl font-bold mb-2">{{ service.title }}</h3>
+              <p class="text-sm text-gray-100 opacity-90 leading-relaxed">
+                {{ service.description }}
+              </p>
             </div>
             
-            <div class="mb-3">
-              <div :class="`text-xs font-medium text-${service.color}-600 dark:text-${service.color}-400 uppercase tracking-wide mb-1`">
-                {{ service.subtitle }}
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                {{ service.title }}
-              </h3>
+            <!-- Action Button - Hidden by default, shown on hover -->
+            <div class="max-w-sm transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+              <UButton 
+                :to="service.route"
+                color="white"
+                variant="solid"
+                size="sm"
+                class="w-full font-medium"
+              >
+                <template #leading>
+                  <UIcon name="i-heroicons-arrow-right" class="w-4 h-4" />
+                </template>
+                Mulai Diskusi
+              </UButton>
             </div>
-          </div>
 
-          <!-- Content -->
-          <div class="px-6 pb-6 text-center">
-            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
-              {{ service.description }}
-            </p>
-            
-            <!-- Features List -->
-            <div class="mb-6">
-              <div class="flex flex-wrap gap-2 justify-center">
-                <span 
-                  v-for="feature in service.features" 
-                  :key="feature"
-                  class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
-                  :class="service.bgColor"
-                >
-                  <UIcon name="i-heroicons-check" class="w-3 h-3" :class="`text-${service.color}-600 dark:text-${service.color}-400`" />
-                  <span :class="`text-${service.color}-700 dark:text-${service.color}-300`">{{ feature }}</span>
-                </span>
-              </div>
-            </div>
-            
-            <!-- Action Button -->
-            <UButton 
-              :to="service.route" 
-              :color="service.color" 
-              size="sm"
-              class="w-full max-w-[200px] mx-auto font-medium group-hover:scale-105 transition-transform duration-200"
-              variant="solid"
-            >
-              <template #leading>
-                <UIcon name="i-heroicons-arrow-right" class="w-4 h-4" />
-              </template>
-              Mulai Diskusi
-            </UButton>
           </div>
-
-          <!-- Decorative Bottom Border -->
-          <div
-            class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            :class="service.gradient"
-          />
         </div>
       </div>
     </div>
@@ -274,47 +227,24 @@ export default {
   background-clip: text;
 }
 
+/* Custom aspect ratio for cards */
+.aspect-\[4\/5\] {
+  aspect-ratio: 4/5;
+}
+
 /* Enhanced hover animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-3px); }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
-  }
-  50% { 
-    box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
-  }
-}
-
 .group:hover .group-hover\:scale-110 {
   animation: float 2s ease-in-out infinite;
 }
 
-/* Image styling */
-.w-20 {
-  width: 5rem;
-}
-
-.h-20 {
-  height: 5rem;
-}
-
-.border-3 {
-  border-width: 3px;
-}
-
-.shadow-xl {
-  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-/* Button max-width */
-.max-w-[200px] {
-  max-width: 200px;
+/* Backdrop blur utility */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
 }
 
 /* Custom scrollbar for better UX */
@@ -350,7 +280,7 @@ export default {
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-  .lg\:grid-cols-3 {
+  .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -360,8 +290,8 @@ export default {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
   
-  .md\:col-span-2 {
-    grid-column: span 1;
+  .aspect-\[4\/5\] {
+    aspect-ratio: 3/4;
   }
 }
 
@@ -370,12 +300,16 @@ export default {
     padding: 1.25rem;
   }
   
-  .gap-8 {
-    gap: 1.5rem;
+  .gap-6 {
+    gap: 1rem;
   }
   
   .text-xl {
     font-size: 1.125rem;
+  }
+  
+  .aspect-\[4\/5\] {
+    aspect-ratio: 1/1;
   }
 }
 

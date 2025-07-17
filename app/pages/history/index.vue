@@ -266,7 +266,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="history-page container mx-auto px-4 py-8 max-w-4xl">
+  <div class="history-page container mx-auto px-4 py-12 max-w-4xl">
     <!-- Header -->
     <div class="text-center mb-8">
       <h1 class="text-3xl font-bold text-gray-800 mb-2">Riwayat Aktivitas</h1>

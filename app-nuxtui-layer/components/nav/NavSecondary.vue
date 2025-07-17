@@ -111,11 +111,6 @@ const handleLogout = async () => {
 
     <template #account>
       <div class="my-2 w-full px-3">
-        <!-- Logo dan Judul -->
-        <div class="flex items-center space-x-2 mb-3">
-          <TheLogo />
-        </div>
-
         <ProfileActions class="sm:!hidden mb-2" />
 
         <!-- Tombol Sign In & Register atau Logout -->

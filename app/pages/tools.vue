@@ -8,7 +8,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
+  <div class="lg:pt-20 pt-6">
     <NuxtPage />
   </div>
 </template>

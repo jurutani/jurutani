@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-2xl mx-auto p-6 space-y-8">
+  <div class="max-w-2xl mx-auto py-12 space-y-8">
     <!-- Header -->
     <div class="text-center">
       <h2 class="text-2xl font-bold text-gray-900 mb-2">Pengaturan Akun</h2>

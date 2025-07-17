@@ -4,10 +4,10 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 py-6 px-4 rounded-xl backdrop-blur-sm border border-green-100 dark:border-green-800 shadow-sm">
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 px-4 rounded-xl backdrop-blur-sm border border-green-100 dark:border-green-800 shadow-sm">
     
     <!-- Mobile Layout: Logo + Menu -->
-    <div class="w-full sm:hidden flex flex-col items-center bg-gradient-to-r from-green-50 via-green-25 to-blue-50 dark:from-green-950 dark:via-green-900 dark:to-green-950 rounded-xl p-4">
+    <div class="w-full sm:hidden flex flex-col items-center bg-gradient-to-r from-green-50 via-green-25 to-green-500 dark:from-green-950 dark:via-green-900 dark:to-green-950 rounded-xl p-4">
       <TheLogo class="mb-4 justify-center" />
 
       <!-- Mobile Bottom Sheet Menu Layout with scroll -->
@@ -51,17 +51,17 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
       </div>
     </div>
 
-    <!-- Desktop Layout with max width and scroll -->
+    <!-- Desktop Layout with overflow scroll -->
     <div class="hidden xl:flex md:flex sm:flex w-full justify-center">
-      <div class="max-w-4xl w-full overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent">
-        <div class="flex items-center justify-center gap-1 py-1 min-w-fit px-2">
+      <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent">
+        <div class="flex items-center justify-center gap-2 py-2 min-w-fit">
           <ULink
             v-for="(nav, index) in navsPrimary"
             :key="index"
             :label="nav.title"
             :to="nav.to"
             variant="link"
-            class="desktop-nav-link flex-shrink-0 items-center gap-2 font-medium px-4 py-2.5 text-sm rounded-lg transition-all duration-300 ease-out whitespace-nowrap"
+            class="desktop-nav-link flex-shrink-0 items-center gap-2 font-medium px-6 py-3 text-sm rounded-lg transition-all duration-300 ease-out whitespace-nowrap"
             color="gray"
             active-class="desktop-active"
             exact
@@ -319,58 +319,9 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
   }
 }
 
-/* Responsive breakpoints for max-width */
-@media (max-width: 1280px) {
-  .max-w-4xl {
-    max-width: 56rem; /* 896px */
-  }
-}
-
-@media (max-width: 1024px) {
-  .max-w-4xl {
-    max-width: 48rem; /* 768px */
-  }
-}
-
-@media (max-width: 768px) {
-  .max-w-4xl {
-    max-width: 36rem; /* 576px */
-  }
-}
-
 /* Smooth scroll behavior */
 .overflow-x-auto {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-}
-
-/* Fade edges for better scroll indication */
-.overflow-x-auto::before,
-.overflow-x-auto::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 20px;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.overflow-x-auto::before {
-  left: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.8), transparent);
-}
-
-.overflow-x-auto::after {
-  right: 0;
-  background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
-}
-
-.dark .overflow-x-auto::before {
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);
-}
-
-.dark .overflow-x-auto::after {
-  background: linear-gradient(to left, rgba(0, 0, 0, 0.8), transparent);
 }
 </style>

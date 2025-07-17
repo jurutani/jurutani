@@ -9,15 +9,15 @@ interface AttachmentFile {
 interface Announcement {
   id: string;
   title?: string;
-  description?: string;
+  content?: string; // Changed from description to content to match the main component
   category: string;
   created_at: string;
   organization?: string;
   link?: string;
   image_url?: string;
-  fullImageUrl?: string; // URL lengkap untuk image
-  attachments?: string[]; // Array nama file
-  fullAttachmentUrls?: AttachmentFile[]; // Array object dengan nama file dan URL
+  fullImageUrl?: string;
+  attachments?: string[];
+  fullAttachmentUrls?: AttachmentFile[];
 }
 
 const props = defineProps<{
@@ -34,17 +34,30 @@ const formattedDate = computed(() => {
 });
 
 const formattedCategory = computed(() => {
-  return props.announcement.category.charAt(0).toUpperCase() + props.announcement.category.slice(1);
+  const categoryMap: { [key: string]: string } = {
+    'online': 'Online',
+    'offline': 'Offline',
+    'hybrid': 'Hybrid'
+  };
+  return categoryMap[props.announcement.category] || props.announcement.category.charAt(0).toUpperCase() + props.announcement.category.slice(1);
+});
+
+const categoryColor = computed(() => {
+  const colorMap: { [key: string]: string } = {
+    'online': 'bg-blue-500/90',
+    'offline': 'bg-emerald-500/90',
+    'hybrid': 'bg-purple-500/90'
+  };
+  return colorMap[props.announcement.category] || 'bg-gray-500/90';
 });
 
 const excerpt = computed(() => {
-  const content = props.announcement.description || '';
+  const content = props.announcement.content || '';
   const stripHtml = content.replace(/<[^>]*>?/gm, '');
-  return stripHtml.length > 150 ? stripHtml.substring(0, 150) + '...' : stripHtml;
+  return stripHtml.length > 120 ? stripHtml.substring(0, 120) + '...' : stripHtml;
 });
 
 const imageUrl = computed(() => {
-  // Prioritas: fullImageUrl dari storage bucket > image_url > placeholder
   if (props.announcement.fullImageUrl) {
     return props.announcement.fullImageUrl;
   }
@@ -63,89 +76,145 @@ const hasAttachments = computed(() => {
 const attachmentCount = computed(() => {
   return props.announcement.fullAttachmentUrls?.length || 0;
 });
+
+const getFileIcon = (filename: string) => {
+  const ext = filename.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'pdf':
+      return 'i-heroicons-document-text';
+    case 'doc':
+    case 'docx':
+      return 'i-heroicons-document';
+    case 'xls':
+    case 'xlsx':
+      return 'i-heroicons-table-cells';
+    case 'ppt':
+    case 'pptx':
+      return 'i-heroicons-presentation-chart-bar';
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+      return 'i-heroicons-photo';
+    case 'zip':
+    case 'rar':
+      return 'i-heroicons-archive-box';
+    default:
+      return 'i-heroicons-document';
+  }
+};
 </script>
 
 <template>
-  <div class="announcement-card bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-green-100 dark:border-green-900 overflow-hidden transition-all hover:shadow-md duration-200 flex flex-col">
-    <div class="relative h-40 bg-green-50 dark:bg-green-900 overflow-hidden">
+  <div class="group announcement-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1 flex flex-col">
+    <!-- Image Section with Overlay -->
+    <div class="relative h-48 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 overflow-hidden">
       <img
         :src="imageUrl"
-        :alt="announcement.title || 'Gambar Pengumuman'"
-        class="w-full h-full object-cover"
+        :alt="announcement.title || 'Gambar Meeting'"
+        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         @error="$event.target.src = '/placeholder.png'"
       >
-      <div class="absolute top-3 left-3 bg-green-600/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
-        {{ formattedCategory }}
+      
+      <!-- Gradient Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"/>
+      
+      <!-- Category Badge -->
+      <div class="absolute top-3 left-3">
+        <div :class="['backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-lg', categoryColor]">
+          <div class="flex items-center space-x-1">
+            <UIcon :name="announcement.category === 'online' ? 'i-heroicons-computer-desktop' : announcement.category === 'offline' ? 'i-heroicons-map-pin' : 'i-heroicons-globe-alt'" class="w-3 h-3" />
+            <span>{{ formattedCategory }}</span>
+          </div>
+        </div>
       </div>
       
-      <!-- Indicator untuk attachments -->
-      <div v-if="hasAttachments" class="absolute top-3 right-3 bg-blue-600/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-        </svg>
-        {{ attachmentCount }}
+      <!-- Attachment Indicator -->
+      <div v-if="hasAttachments" class="absolute top-3 right-3">
+        <div class="bg-indigo-500/90 backdrop-blur-sm text-white text-xs px-2.5 py-1.5 rounded-full flex items-center font-medium shadow-lg">
+          <UIcon name="i-heroicons-paper-clip" class="w-3 h-3 mr-1" />
+          {{ attachmentCount }}
+        </div>
       </div>
     </div>
 
-    <div class="p-5 flex-grow flex flex-col">
-      <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-2">
-        <span class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
+    <!-- Content Section -->
+    <div class="p-6 flex-grow flex flex-col">
+      <!-- Date and Organization -->
+      <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-3">
+        <span class="flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md">
+          <UIcon name="i-heroicons-calendar-days" class="w-3.5 h-3.5 mr-1.5" />
           {{ formattedDate }}
         </span>
-        <span v-if="announcement.organization" class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg>
+        <span v-if="announcement.organization" class="flex items-center bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-md text-emerald-700 dark:text-emerald-400">
+          <UIcon name="i-heroicons-building-office" class="w-3.5 h-3.5 mr-1.5" />
           {{ announcement.organization }}
         </span>
       </div>
 
-      <h3 class="text-lg font-medium mb-2 text-gray-800 dark:text-white line-clamp-2">
+      <!-- Title -->
+      <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-white line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
         {{ announcement.title }}
       </h3>
       
-      <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
+      <!-- Excerpt -->
+      <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow leading-relaxed">
         {{ excerpt }}
       </p>
 
-      <!-- Attachments Preview (Optional) -->
-      <div v-if="hasAttachments" class="mb-4">
-        <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-          </svg>
+      <!-- Attachments Preview -->
+      <div v-if="hasAttachments" class="mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+        <div class="flex items-center text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
+          <UIcon name="i-heroicons-paper-clip" class="w-4 h-4 mr-1.5" />
           {{ attachmentCount }} file lampiran
         </div>
-        <div class="flex flex-wrap gap-1">
-          <span 
-            v-for="attachment in announcement.fullAttachmentUrls?.slice(0, 3)" 
+        <div class="grid grid-cols-1 gap-1">
+          <div 
+            v-for="attachment in announcement.fullAttachmentUrls?.slice(0, 2)" 
             :key="attachment.filename"
-            class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded truncate max-w-[120px]"
-            :title="attachment.filename"
+            class="flex items-center text-xs bg-white dark:bg-gray-800 px-2 py-1.5 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            {{ attachment.filename }}
-          </span>
-          <span 
-            v-if="attachmentCount > 3"
-            class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded"
+            <UIcon :name="getFileIcon(attachment.filename)" class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
+            <span class="truncate flex-1" :title="attachment.filename">
+              {{ attachment.filename }}
+            </span>
+          </div>
+          <div 
+            v-if="attachmentCount > 2"
+            class="text-xs text-gray-500 dark:text-gray-400 italic px-2 py-1"
           >
-            +{{ attachmentCount - 3 }}
-          </span>
+            +{{ attachmentCount - 2 }} file lainnya
+          </div>
         </div>
       </div>
 
+      <!-- Action Button -->
       <router-link
         :to="`/courses/${announcement.id}`"
-        class="mt-auto inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white text-sm rounded-md transition-colors duration-200 w-full sm:w-auto"
+        class="mt-auto group/button relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-sm font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25"
       >
-        <span>Baca Selengkapnya</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
+        <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"/>
+        <div class="relative flex items-center justify-center px-4 py-3">
+          <span class="mr-2">Lihat Detail</span>
+          <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover/button:translate-x-1" />
+        </div>
       </router-link>
     </div>
   </div>
 </template>
+
+<style scoped>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

@@ -12,14 +12,16 @@ interface Announcement {
   archived_at?: string
   title?: string
   content?: string
-  image_url?: string // Kolom baru untuk image URL
-  attachments?: string[] // Array string untuk nama file attachments
+  image_url?: string
+  attachments?: string[]
 }
 
 interface Category {
   id?: string
   name: string
   value?: string
+  icon?: string
+  color?: string
 }
 
 // Supabase client
@@ -33,36 +35,39 @@ const loading = ref(true)
 // Filter & pagination
 const currentCategory = ref('all')
 const currentPage = ref(1)
-const pageSize = 10
+const pageSize = 9 // Changed to 9 for better 3-column layout
 const totalPages = ref(1)
 const totalItems = ref(0)
 const categories = ref<Category[]>([])
 
-// Ambil kategori dari tabel 'category_meetings' atau sesuai dengan struktur database Anda
-const { data: categoriesData } = await useAsyncData('announcement-categories', async () => {
+// Enhanced categories with icons and colors
+const { data: categoriesData } = await useAsyncData('meeting-categories', async () => {
   try {
-    // Jika ada tabel khusus untuk kategori meetings, gunakan ini:
-    // const { data, error: catError } = await supabase
-    //   .from('category_meetings')
-    //   .select('name')
-    //   .order('name', { ascending: true })
-
-    // Atau jika menggunakan hardcoded categories seperti sebelumnya:
-    const hardcodedCategories = ['online', 'offline']
+    const enhancedCategories = [
+      { 
+        name: 'online', 
+        value: 'online',
+        icon: 'i-heroicons-computer-desktop',
+        color: 'text-blue-600'
+      },
+      { 
+        name: 'offline', 
+        value: 'offline',
+        icon: 'i-heroicons-map-pin',
+        color: 'text-emerald-600'
+      }
+    ]
     
-    return hardcodedCategories.map(cat => ({ name: cat })) as Category[]
+    return enhancedCategories as Category[]
   } catch (err) {
-    console.error('Error fetching announcement categories:', err)
+    console.error('Error fetching meeting categories:', err)
     return []
   }
 })
 
 // Set categories setelah data dimuat
 if (categoriesData.value) {
-  categories.value = categoriesData.value.map(cat => ({
-    name: cat.name,
-    value: cat.name
-  }))
+  categories.value = categoriesData.value
 }
 
 // Fungsi untuk generate URL image dan attachment
@@ -87,19 +92,16 @@ const fetchAnnouncements = async () => {
   error.value = null
 
   try {
-    // Build query dengan method chaining yang lebih efisien
     const baseQuery = supabase
       .from('meetings')
       .select('id, category, created_at, title, content, image_url, attachments', { count: 'exact' })
       .is('deleted_at', null)
       .is('archived_at', null)
 
-    // Apply category filter jika bukan 'all'
     const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'
       ? baseQuery.eq('category', currentCategory.value)
       : baseQuery
 
-    // Apply pagination dan ordering
     const { data, error: fetchError, count } = await query
       .order('created_at', { ascending: false })
       .range(
@@ -109,12 +111,9 @@ const fetchAnnouncements = async () => {
 
     if (fetchError) throw fetchError
 
-    // Process data untuk menambahkan full URLs
     const processedData = (data as Announcement[] || []).map(item => ({
       ...item,
-      // Generate full URL untuk image
       fullImageUrl: generateImageUrl(item.id, item.image_url),
-      // Generate full URLs untuk attachments
       fullAttachmentUrls: item.attachments?.map(filename => ({
         filename,
         url: generateAttachmentUrl(item.id, filename)
@@ -125,15 +124,15 @@ const fetchAnnouncements = async () => {
     totalItems.value = count || 0
     totalPages.value = Math.ceil(totalItems.value / pageSize)
   } catch (err: any) {
-    error.value = err.message || 'Terjadi kesalahan saat memuat pengumuman'
-    console.error('Error fetching announcements:', err)
+    error.value = err.message || 'Terjadi kesalahan saat memuat data meeting'
+    console.error('Error fetching meetings:', err)
   } finally {
     loading.value = false
   }
 }
 
 // SSR-friendly data fetch on first load
-await useAsyncData('announcements', fetchAnnouncements)
+await useAsyncData('meetings', fetchAnnouncements)
 
 // Gunakan watchEffect untuk reaktivitas yang lebih efisien
 watchEffect(() => {
@@ -146,9 +145,12 @@ const hasError = computed(() => !!error.value)
 const hasData = computed(() => announcements.value.length > 0)
 const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
 
+// Statistics
+const totalOnline = computed(() => announcements.value.filter(item => item.category === 'online').length)
+const totalOffline = computed(() => announcements.value.filter(item => item.category === 'offline').length)
+
 // Handler untuk category change
 const handleCategoryChange = (category: string) => {
-  // Reset ke halaman 1 saat kategori berubah
   currentCategory.value = category
   currentPage.value = 1
 }
