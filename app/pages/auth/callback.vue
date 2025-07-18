@@ -5,7 +5,7 @@ import { toastStore } from '~/composables/useJuruTaniToast'
 
 // Define layout
 definePageMeta({
-  layout: 'blank',
+  layout: 'default',
   middleware: ['guest']
 })
 
