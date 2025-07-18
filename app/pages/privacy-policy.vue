@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-gray-900 min-h-screen py-20 px-6 md:px-10 lg:pt-32 text-gray-800 dark:text-gray-200 transition-colors duration-300">
     <div class="max-w-3xl mx-auto">
       <!-- Header dengan logo -->
-      <div class="flex justify-between items-center mb-6">
+      <div class="flex justify-between items-center mb-6 pt-4">
         <div class="flex items-center">
           <div class="mr-3 p-2 bg-green-100 dark:bg-green-900 rounded-full">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

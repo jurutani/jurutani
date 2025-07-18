@@ -150,7 +150,7 @@
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-green-950 dark:to-gray-900 p-6 lg:pt-32">
+  <div class="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-green-950 dark:to-gray-900 p-6 pt-20 lg:pt-32">
     <!-- Hero Section -->
     <div class="relative bg-gradient-to-r from-green-700 to-green-600 dark:from-green-800 dark:to-green-700 overflow-hidden">
       <div class="absolute inset-0 opacity-10">

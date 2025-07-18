@@ -23,6 +23,11 @@
             <p class="text-sm text-green-700/80 dark:text-green-300/90 max-w-xs">
               Memberdayakan petani Indonesia dengan teknologi modern dan solusi berkelanjutan untuk pertanian yang lebih baik.
             </p>
+            <div class="mt-4 p-4 bg-green-100/50 dark:bg-green-800/20 rounded-lg border border-green-200/30 dark:border-green-700/30">
+              <p class="text-xs text-green-700/70 dark:text-green-300/70 font-medium">
+                Inovasi dari Politeknik Pembangunan dan Pertanian Yogyakarta
+              </p>
+            </div>
           </div>
           
           <!-- Menu Links -->
@@ -65,22 +70,22 @@
             <h4 class="font-semibold text-lg mb-1">Kontak Kami</h4>
             <div class="space-y-3">
               <div class="flex items-center">
-                <Icon name="heroicons:map-pin" class="text-green-600 dark:text-green-400 mr-2" />
+                <Icon name="i-mdi:map-marker" class="text-green-600 dark:text-green-400 mr-2" />
                 <div>
                 <p class="text-sm">Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo, </p>
                 <p class="text-sm">Kota Yogyakarta, Daerah Istimewa Yogyakarta 55161</p>
                 </div>
               </div>
               <div class="flex items-center">
-                <Icon name="heroicons:phone" class="text-green-600 dark:text-green-400 mr-2" />
+                <Icon name="i-mdi:phone" class="text-green-600 dark:text-green-400 mr-2" />
                 <p class="text-sm">+62 815-7552-5260</p>
               </div>
               <div class="flex items-center">
-                <Icon name="heroicons:envelope" class="text-green-600 dark:text-green-400 mr-2" />
+                <Icon name="i-mdi:email" class="text-green-600 dark:text-green-400 mr-2" />
                 <p class="text-sm">jurutani2@gmail.com</p>
               </div>
               <div class="flex items-center">
-                <Icon name="heroicons:clock" class="text-green-600 dark:text-green-400 mr-2" />
+                <Icon name="i-mdi:clock-outline" class="text-green-600 dark:text-green-400 mr-2" />
                 <p class="text-sm">Senin - Jumat: 08.00 - 16.00 WIB</p>
               </div>
             </div>
@@ -100,7 +105,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="ic:baseline-whatsapp" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-mdi:whatsapp" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
           
@@ -112,7 +117,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="ic:baseline-tiktok" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-ic-baseline-tiktok" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
           
@@ -123,7 +128,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="logos:google-gmail" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-mdi:gmail" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
           
@@ -135,7 +140,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="ri:instagram-fill" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-mdi:instagram" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
           
@@ -147,7 +152,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="ri:youtube-fill" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-mdi:youtube" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
         </div>
@@ -161,6 +166,20 @@
             <NuxtLink to="/privacy-policy" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">Kebijakan Privasi</NuxtLink>
             <NuxtLink to="/terms" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">Syarat & Ketentuan</NuxtLink>
           </div>
+        </div>
+        
+        <!-- Powered by section -->
+        <div class="mt-6 pt-4 border-t border-green-200/20 dark:border-green-700/20 text-center">
+          <p class="text-xs text-green-600/60 dark:text-green-400/60">
+            Powered by 
+            <a 
+              href="https://kairav-portfolio.vercel.app/" 
+              target="_blank"
+              class="font-medium hover:text-green-600 dark:hover:text-green-400 transition-colors underline decoration-dotted"
+            >
+              Politeknik Pembangunan dan Pertanian Yogyakarta
+            </a>
+          </p>
         </div>
       </div>
     </div>

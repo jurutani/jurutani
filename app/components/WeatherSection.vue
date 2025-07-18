@@ -297,7 +297,7 @@ onMounted(() => {
               ]"
               @click="activeTab = 'current'"
             >
-              <Icon name="mdi:weather-sunny" class="w-4 h-4 mr-2 inline-block" />
+              <Icon name="i-mdi:weather-sunny" class="w-4 h-4 mr-2 inline-block" />
               Cuaca Saat Ini
             </button>
             <button
@@ -309,7 +309,7 @@ onMounted(() => {
               ]"
               @click="activeTab = 'hourly'"
             >
-              <Icon name="mdi:clock-outline" class="w-4 h-4 mr-2 inline-block" />
+              <Icon name="i-mdi:clock-outline" class="w-4 h-4 mr-2 inline-block" />
               Ramalan 24 Jam
             </button>
             <button
@@ -321,7 +321,7 @@ onMounted(() => {
               ]"
               @click="activeTab = 'forecast'"
             >
-              <Icon name="mdi:calendar-week" class="w-4 h-4 mr-2 inline-block" />
+              <Icon name="i-mdi:calendar-week" class="w-4 h-4 mr-2 inline-block" />
               Ramalan 5 Hari
             </button>
           </nav>
@@ -378,7 +378,7 @@ onMounted(() => {
               <!-- Kelembaban -->
               <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
                 <div class="flex items-center mb-2">
-                  <Icon name="mdi:water-percent" class="w-6 h-6 text-green-500 mr-2" />
+                  <Icon name="i-mdi:water-percent" class="w-6 h-6 text-green-500 mr-2" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">Kelembaban</span>
                 </div>
                 <p class="text-2xl font-bold dark:text-white">{{ weatherData.main.humidity }}%</p>
@@ -387,7 +387,7 @@ onMounted(() => {
               <!-- Angin -->
               <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
                 <div class="flex items-center mb-2">
-                  <Icon name="mdi:weather-windy" class="w-6 h-6 text-green-500 mr-2" />
+                  <Icon name="i-mdi:weather-windy" class="w-6 h-6 text-green-500 mr-2" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">Angin</span>
                 </div>
                 <p class="text-2xl font-bold dark:text-white">{{ weatherData.wind?.speed || 0 }} m/s</p>
@@ -397,7 +397,7 @@ onMounted(() => {
               <!-- Matahari Terbit -->
               <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
                 <div class="flex items-center mb-2">
-                  <Icon name="mdi:weather-sunset-up" class="w-6 h-6 text-orange-500 mr-2" />
+                  <Icon name="i-mdi:weather-sunset-up" class="w-6 h-6 text-orange-500 mr-2" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">Terbit</span>
                 </div>
                 <p class="text-2xl font-bold dark:text-white">{{ sunriseTime }}</p>
@@ -406,7 +406,7 @@ onMounted(() => {
               <!-- Matahari Terbenam -->
               <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
                 <div class="flex items-center mb-2">
-                  <Icon name="mdi:weather-sunset-down" class="w-6 h-6 text-red-500 mr-2" />
+                  <Icon name="i-mdi:weather-sunset-down" class="w-6 h-6 text-red-500 mr-2" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">Terbenam</span>
                 </div>
                 <p class="text-2xl font-bold dark:text-white">{{ sunsetTime }}</p>
@@ -415,7 +415,7 @@ onMounted(() => {
               <!-- Jarak Pandang -->
               <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
                 <div class="flex items-center mb-2">
-                  <Icon name="mdi:eye" class="w-6 h-6 text-purple-500 mr-2" />
+                  <Icon name="i-mdi:eye" class="w-6 h-6 text-purple-500 mr-2" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">Pandang</span>
                 </div>
                 <p class="text-2xl font-bold dark:text-white">{{ (weatherData.visibility / 1000).toFixed(1) }} km</p>
@@ -424,7 +424,7 @@ onMounted(() => {
               <!-- Tekanan -->
               <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg">
                 <div class="flex items-center mb-2">
-                  <Icon name="mdi:gauge" class="w-6 h-6 text-indigo-500 mr-2" />
+                  <Icon name="i-mdi:gauge" class="w-6 h-6 text-indigo-500 mr-2" />
                   <span class="text-sm text-gray-600 dark:text-gray-400">Tekanan</span>
                 </div>
                 <p class="text-2xl font-bold dark:text-white">{{ weatherData.main.pressure }}</p>
@@ -435,7 +435,7 @@ onMounted(() => {
             <!-- Rekomendasi Pertanian -->
             <div v-if="farmingConditions" class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
               <h3 class="text-xl font-bold mb-4 flex items-center dark:text-white">
-                <Icon name="mdi:tractor" class="w-6 h-6 mr-2 text-green-500" />
+                <Icon name="i-mdi:tractor" class="w-6 h-6 mr-2 text-green-500" />
                 Rekomendasi Pertanian
               </h3>
               
@@ -449,7 +449,7 @@ onMounted(() => {
               >
                 <p class="font-semibold flex items-center dark:text-gray-200">
                   <Icon
-                    :name="farmingConditions.suitable ? 'mdi:check-circle' : 'mdi:alert-circle'"
+                    :name="farmingConditions.suitable ? 'i-mdi:check-circle' : 'i-mdi:alert-circle'"
                     :class="[
                       'w-5 h-5 mr-2',
                       farmingConditions.suitable ? 'text-green-600' : 'text-yellow-600'
@@ -465,7 +465,7 @@ onMounted(() => {
                   :key="index"
                   class="flex items-start p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
                 >
-                  <Icon name="mdi:information" class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" />
+                  <Icon name="i-mdi:information" class="w-5 h-5 mr-3 text-green-500 flex-shrink-0 mt-0.5" />
                   <span class="text-sm dark:text-gray-300">{{ rec }}</span>
                 </div>
               </div>

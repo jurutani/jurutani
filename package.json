@@ -1,11 +1,11 @@
 {
-  "name": "pg-nuxtui",
+  "name": "jurutani",
   "version": "0.0.0",
   "type": "module",
   "homepage": "https://jurutani.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pinegrow/pg-nuxtui.git"
+    "url": "https://github.com/jurutani/jurutani"
   },
   "scripts": {
     "dev": "nuxt dev",

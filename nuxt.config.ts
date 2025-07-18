@@ -64,12 +64,15 @@ export default defineNuxtConfig({
     baseURL: '/', // defaulted by nuxt
     // Look into HeadAndMeta.vue for the rest
     head: {
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'og:image', content: 'https://jurutani.com/og-image.png' },
-      { name: 'twitter:image', content: 'https://jurutani.com/og-image.png' },
-      { name: 'twitter:card', content: 'summary_large_image' },
-    ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      ],
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'og:image', content: 'https://jurutani.com/og-image.png' },
+        { name: 'twitter:image', content: 'https://jurutani.com/og-image.png' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+      ],
   },
   },
 

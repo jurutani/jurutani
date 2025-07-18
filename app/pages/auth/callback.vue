@@ -72,7 +72,7 @@ onMounted(async () => {
         
         <div v-else-if="error" class="space-y-4">
           <div class="rounded-full h-12 w-12 bg-red-100 dark:bg-red-900 flex items-center justify-center mx-auto">
-            <Icon name="ph:x-circle" class="h-8 w-8 text-red-600 dark:text-red-400" />
+            <Icon name="i-ph:x-circle" class="h-8 w-8 text-red-600 dark:text-red-400" />
           </div>
           <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
             Login Gagal
@@ -87,7 +87,7 @@ onMounted(async () => {
         
         <div v-else class="space-y-4">
           <div class="rounded-full h-12 w-12 bg-green-100 dark:bg-green-900 flex items-center justify-center mx-auto">
-            <Icon name="ph:check-circle" class="h-8 w-8 text-green-600 dark:text-green-400" />
+            <Icon name="i-ph:check-circle" class="h-8 w-8 text-green-600 dark:text-green-400" />
           </div>
           <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
             Login Berhasil
