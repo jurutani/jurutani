@@ -70,22 +70,22 @@
             <h4 class="font-semibold text-lg mb-1">Kontak Kami</h4>
             <div class="space-y-3">
               <div class="flex items-center">
-                <Icon name="i-ic-baseline-place" class="text-green-600 dark:text-green-400 mr-2" />
+                <Icon name="i-mdi-map-marker" class="text-green-600 dark:text-green-400 mr-2" />
                 <div>
                 <p class="text-sm">Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo, </p>
                 <p class="text-sm">Kota Yogyakarta, Daerah Istimewa Yogyakarta 55161</p>
                 </div>
               </div>
               <div class="flex items-center">
-                <Icon name="i-ic-baseline-phone" class="text-green-600 dark:text-green-400 mr-2" />
+                <Icon name="i-mdi-phone" class="text-green-600 dark:text-green-400 mr-2" />
                 <p class="text-sm">+62 815-7552-5260</p>
               </div>
               <div class="flex items-center">
-                <Icon name="i-ic-baseline-email" class="text-green-600 dark:text-green-400 mr-2" />
+                <Icon name="i-mdi-email" class="text-green-600 dark:text-green-400 mr-2" />
                 <p class="text-sm">jurutani2@gmail.com</p>
               </div>
               <div class="flex items-center">
-                <Icon name="i-ic-baseline-access-time" class="text-green-600 dark:text-green-400 mr-2" />
+                <Icon name="i-mdi-clock-outline" class="text-green-600 dark:text-green-400 mr-2" />
                 <p class="text-sm">Senin - Jumat: 08.00 - 16.00 WIB</p>
               </div>
             </div>
@@ -105,7 +105,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="i-ic-baseline-chat" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-mdi-whatsapp" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
           
@@ -117,7 +117,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="i-ic-baseline-music-video" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-ic-baseline-tiktok" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
           
@@ -128,7 +128,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="i-ic-baseline-email" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-mdi-gmail" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
           
@@ -140,7 +140,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="i-ic-baseline-camera-alt" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-mdi-instagram" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
           
@@ -152,7 +152,7 @@
             class="social-icon-container"
           >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <Icon name="i-ic-baseline-play-circle-filled" class="text-2xl text-green-600 dark:text-green-400" />
+              <Icon name="i-mdi-youtube" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
           </a>
         </div>

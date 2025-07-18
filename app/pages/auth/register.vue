@@ -313,7 +313,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 }"
               >
                 <template #leading>
-                  <Icon v-if="!isLoading" name="i-ph-user-plus" class="w-5 h-5" />
+                        <Icon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
                 </template>
                 {{ isLoading ? 'Mendaftar...' : 'Daftar Sekarang' }}
               </UButton>
