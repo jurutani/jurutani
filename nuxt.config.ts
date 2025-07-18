@@ -135,6 +135,7 @@ export default defineNuxtConfig({
 
 icon: {
   componentName: 'NuxtIcon',
+  cdn: true, // <<=== ini bagian yang kamu ubah
   serverBundle: {
     collections: [
       'heroicons',
