@@ -1,3 +1,13 @@
+<script setup lang="ts">
+useHead({ 
+  title: 'Kebijakan Privasi - Juru Tani',
+  meta: [
+    { name: 'description', content: 'Kebijakan privasi platform Juru Tani untuk pengguna dan petani' },
+    { name: 'keywords', content: 'juru tani, kebijakan privasi, pertanian, data petani' }
+  ]
+})
+</script>
+
 <template>
   <section class="bg-white dark:bg-gray-900 min-h-screen py-20 px-6 md:px-10 lg:pt-32 text-gray-800 dark:text-gray-200 transition-colors duration-300">
     <div class="max-w-3xl mx-auto">
@@ -139,13 +149,3 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-useHead({ 
-  title: 'Kebijakan Privasi - Juru Tani',
-  meta: [
-    { name: 'description', content: 'Kebijakan privasi platform Juru Tani untuk pengguna dan petani' },
-    { name: 'keywords', content: 'juru tani, kebijakan privasi, pertanian, data petani' }
-  ]
-})
-</script>

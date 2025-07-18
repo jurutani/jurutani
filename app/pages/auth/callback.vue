@@ -5,7 +5,7 @@ import { toastStore } from '~/composables/useJuruTaniToast'
 
 // Define layout
 definePageMeta({
-  layout: 'default',
+  layout: 'blank',
   middleware: ['guest']
 })
 
@@ -33,7 +33,7 @@ onMounted(async () => {
 
       if (data.session) {
         toastStore.success('Login berhasil! Selamat datang.', 3000)
-        const redirectTo = route.query.redirect_to as string || '/'
+        const redirectTo = route.query.redirect_to as string || '/welcome'
         await navigateTo(redirectTo)
       } else {
         toastStore.warning('Sesi login tidak ditemukan. Silakan coba lagi.', 3000)

@@ -1,3 +1,13 @@
+<script setup lang="ts">
+useHead({ 
+  title: 'Tentang Kami - Juru Tani',
+  meta: [
+    { name: 'description', content: 'Tentang Kami platform Juru Tani untuk pengguna dan petani' },
+    { name: 'keywords', content: 'juru tani, Tentang Kami, pertanian, data petani' }
+  ]
+})
+</script>
+
 <template>
     <div class="max-w-7xl mx-auto p-4 pt-20 lg:pt-32">
       <div class="text-center">
@@ -87,11 +97,5 @@
     </div>
   </template>
   
-  <script setup>
-  // Any necessary logic or imports can go here.
-  </script>
-  
-  <style scoped>
-  /* Optional custom styles for a more modern feel */
-  </style>
+
   

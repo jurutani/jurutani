@@ -64,6 +64,7 @@ export default defineNuxtConfig({
     baseURL: '/', // defaulted by nuxt
     // Look into HeadAndMeta.vue for the rest
     head: {
+      title: 'Juru Tani - Website Resmi',
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],

@@ -1,3 +1,13 @@
+<script setup lang="ts">
+useHead({ 
+  title: 'Syarat & Ketentuan - Juru Tani',
+  meta: [
+    { name: 'description', content: 'Syarat dan ketentuan penggunaan platform Juru Tani' },
+    { name: 'keywords', content: 'juru tani, syarat dan ketentuan, platform pertanian, hak dan kewajiban' }
+  ]
+})
+</script>
+
 <template>
   <section class="bg-white dark:bg-gray-900 min-h-screen py-12 pt-8 lg:pt-32 px-6 md:px-10 lg:px-20 text-gray-800 dark:text-gray-200 transition-colors duration-300">
     <div class="max-w-3xl mx-auto">
@@ -137,13 +147,3 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-useHead({ 
-  title: 'Syarat & Ketentuan - Juru Tani',
-  meta: [
-    { name: 'description', content: 'Syarat dan ketentuan penggunaan platform Juru Tani' },
-    { name: 'keywords', content: 'juru tani, syarat dan ketentuan, platform pertanian, hak dan kewajiban' }
-  ]
-})
-</script>
