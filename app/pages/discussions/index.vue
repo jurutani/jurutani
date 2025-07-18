@@ -19,7 +19,7 @@ export default {
           subtitle: 'Konsultasi Langsung',
           description: 'Dapatkan panduan praktis dari penyuluh pertanian berpengalaman untuk mengatasi masalah budidaya, hama penyakit, dan teknik bertani modern.',
           icon: 'i-heroicons-chat-bubble-left-ellipsis',
-          image: '/services/penyuluhjurutani.jpg',
+          image: '/services/penyuluhjurutani.JPG',
           route: '/discussions/instructor'
         },
         {
@@ -28,7 +28,7 @@ export default {
           subtitle: 'Konsultasi Ahli',
           description: 'Konsultasi mendalam dengan ahli pertanian bersertifikat untuk analisis ilmiah, diagnosa penyakit tanaman, dan rekomendasi teknologi terbaru.',
           icon: 'i-heroicons-shield-check',
-          image: '/services/pakarjurutani.jpg',
+          image: '/services/pakarjurutani.JPG',
           route: '/discussions/expert'
         },
         {
@@ -37,7 +37,7 @@ export default {
           subtitle: 'Berbagi Pengalaman',
           description: 'Bergabung dengan komunitas petani dari seluruh Indonesia untuk berbagi tips sukses, pengalaman lapangan, dan inovasi pertanian.',
           icon: 'i-heroicons-users',
-          image: '/services/komunitasjurutani.jpg',
+          image: '/services/komunitasjurutani.JPG',
           route: '/discussions/group'
         },
         {
@@ -46,7 +46,7 @@ export default {
           subtitle: 'Diskusi Real-time',
           description: 'Diskusi langsung dalam room chat khusus berdasarkan komoditas seperti padi, sayuran, buah-buahan, dan peternakan untuk solusi cepat.',
           icon: 'i-heroicons-chat-bubble-oval-left-ellipsis',
-          image: '/services/chatjurutani.jpg',
+          image: '/services/chatjurutani.JPG',
           route: '/room-chat'
         },
         {

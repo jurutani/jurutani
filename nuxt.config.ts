@@ -141,7 +141,7 @@ icon: {
       'mdi'         // jika kamu juga pakai mdi:*
     ],
   },
-}
+},
 
 
   // Global styles
