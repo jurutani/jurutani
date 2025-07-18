@@ -60,8 +60,13 @@ export default defineNuxtConfig({
     baseURL: '/', // defaulted by nuxt
     // Look into HeadAndMeta.vue for the rest
     head: {
-      meta: [{ charset: 'utf-8' }], // defaulted by nuxt
-    },
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'og:image', content: 'https://jurutani.com/og-image.png' },
+      { name: 'twitter:image', content: 'https://jurutani.com/og-image.png' },
+      { name: 'twitter:card', content: 'summary_large_image' },
+    ],
+  },
   },
 
   modules: [
@@ -284,16 +289,16 @@ export default defineNuxtConfig({
   },
 
   ogImage: {
-    defaults: {
-      extension: 'jpeg',
-    },
-    // OG images and nuxtseo features can be previewed with nuxt-devtools during development. OG images can also be viewed using URL in this form - `/__og-image__/image/<path>/og.<extension>. For eg, {{site.url}}/__og-image__/image/og.png
-    fonts: ['Inter:400', 'Inter:700'],
-    
-    defaults: { width: 1200, height: 600, emojis: 'noto', renderer: 'satori', component: 'NuxtSeo', cacheMaxAgeSeconds: 60 * 60 * 24 * 3 },
-    
-    // disable at a global level
-    runtimeCacheStorage: false,
+    provider: 'satori',
+    static: false, // agar tidak error saat `npm run build`
+    fonts: [
+      {
+        name: 'Inter',
+        weight: 400,
+        style: 'normal',
+        src: 'https://rsms.me/inter/font-files/Inter-Regular.woff2',
+      }
+    ]
   },
 
   linkChecker: {
