@@ -88,7 +88,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         <div class="space-y-6">
           <!-- Highlight fitur -->
           <div class="flex items-start space-x-3">
-            <Icon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Pantau Lahan</h3>
               <p class="text-sm text-green-100">Lacak kondisi lahan dengan data real-time</p>
@@ -96,7 +96,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <Icon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Prediksi Panen</h3>
               <p class="text-sm text-green-100">Estimasi hasil panen dengan teknologi AI</p>
@@ -104,7 +104,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <Icon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Manajemen Bibit</h3>
               <p class="text-sm text-green-100">Kelola stok dan kualitas bibit tanaman</p>
@@ -145,7 +145,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 }"
               >
                 <template #trailing>
-                  <Icon name="i-ph-at" class="text-gray-400" />
+                  <UIcon name="i-ph-at" class="text-gray-400" />
                 </template>
               </UInput>
             </UFormGroup>
@@ -163,7 +163,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 }"
               >
                 <template #trailing>
-                  <Icon
+                  <UIcon
                     :name="showPassword ? 'i-ph-eye-slash' : 'i-ph-eye'"
                     class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
                     @click="showPassword = !showPassword"
@@ -209,7 +209,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                     }"
                     >
                     <template #leading>
-                        <Icon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
+                        <UIcon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
                     </template>
                     {{ isLoading ? 'Memproses...' : 'Masuk' }}
                     </UButton>
@@ -238,7 +238,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               :disabled="isLoading"
               @click="handleSocialLogin('google')"
             >
-              <Icon name="i-logos-google-icon" class="mr-2 h-5 w-5" />
+              <UIcon name="i-logos-google-icon" class="mr-2 h-5 w-5" />
               Google
             </UButton>
           </div>

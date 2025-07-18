@@ -89,8 +89,8 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     // '@nuxtjs/fontaine', // blocked by https://github.com/nuxt-modules/fontaine/issues/342
     '@nuxtjs/critters',
-    // '@nuxt/icon', // Pre-included by @nuxt/ui
-    'nuxt-icon', // To be replaced with @nuxt-icon (above), once NuxtSEO drops using this/becomes stable..
+    '@nuxt/icon', // Pre-included by @nuxt/ui
+    // 'nuxt-icon', // To be replaced with @nuxt-icon (above), once NuxtSEO drops using this/becomes stable..
     '@nuxt/eslint',
     '@nuxt/ui',
     function () {
@@ -135,18 +135,11 @@ export default defineNuxtConfig({
 
 icon: {
   componentName: 'NuxtIcon',
-  cdn: true, // <<=== ini bagian yang kamu ubah
+  cdn: true,
   serverBundle: {
-    collections: [
-      'heroicons',
-      'ic',         // untuk ic:baseline-*
-      'logos',      // untuk logos-*
-      'ri',         // untuk ri:*
-      'mdi'         // jika kamu juga pakai mdi-*
-    ],
+    collections: ['heroicons', 'ic', 'logos', 'ri', 'mdi', 'ph'],
   },
 },
-
 
   // Global styles
   css: [

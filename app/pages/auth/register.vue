@@ -153,7 +153,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         <div class="space-y-6">
           <!-- Highlight fitur -->
           <div class="flex items-start space-x-3">
-            <Icon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Komunitas Petani</h3>
               <p class="text-sm text-green-100">Terhubung dengan ribuan petani sukses di seluruh Indonesia</p>
@@ -161,7 +161,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <Icon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Teknologi Pertanian</h3>
               <p class="text-sm text-green-100">Akses teknologi terbaru untuk meningkatkan hasil panen</p>
@@ -169,7 +169,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <Icon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Analisis Pertanian</h3>
               <p class="text-sm text-green-100">Pantau perkembangan lahan dengan data analitik yang akurat</p>
@@ -211,7 +211,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 }"
               >
                 <template #trailing>
-                  <Icon name="i-ph-at" class="text-gray-400" />
+                  <UIcon name="i-ph-at" class="text-gray-400" />
                 </template>
               </UInput>
             </UFormGroup>
@@ -230,7 +230,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 }"
               >
                 <template #trailing>
-                  <Icon
+                  <UIcon
                     :name="showPassword ? 'i-ph-eye-slash' : 'i-ph-eye'"
                     class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
                     @click="showPassword = !showPassword"
@@ -253,7 +253,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 }"
               >
                 <template #trailing>
-                  <Icon
+                  <UIcon
                     :name="showConfirmPassword ? 'i-ph-eye-slash' : 'i-ph-eye'"
                     class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
                     @click="showConfirmPassword = !showConfirmPassword"
@@ -313,7 +313,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 }"
               >
                 <template #leading>
-                        <Icon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
+                        <UIcon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
                 </template>
                 {{ isLoading ? 'Mendaftar...' : 'Daftar Sekarang' }}
               </UButton>
@@ -343,7 +343,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               :loading="isLoading"
               @click="handleSocialLogin('google')"
             >
-              <Icon v-if="!isLoading" name="i-logos-google-icon" class="mr-2 h-5 w-5" />
+              <UIcon v-if="!isLoading" name="i-logos-google-icon" class="mr-2 h-5 w-5" />
               
               Google
             </UButton>
