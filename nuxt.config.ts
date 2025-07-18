@@ -3,6 +3,7 @@ import { resolve } from 'pathe'
 import { addComponent } from 'nuxt/kit'
 import presetIcons from '@unocss/preset-icons'
 import { bundledLanguages } from 'shiki'
+import ogImage from 'nuxt-og-image'
 
 import siteMeta from './app/site'
 const {
@@ -282,18 +283,18 @@ export default defineNuxtConfig({
     strictNuxtContentPaths: true,
   },
 
-  // ogImage: {
-  //   defaults: {
-  //     extension: 'jpeg',
-  //   },
-  //   // OG images and nuxtseo features can be previewed with nuxt-devtools during development. OG images can also be viewed using URL in this form - `/__og-image__/image/<path>/og.<extension>. For eg, {{site.url}}/__og-image__/image/og.png
-  //   // fonts: ['Inter:400', 'Inter:700'],
-  //   //
-  //   // defaults: { width: 1200, height: 600, emojis: 'noto', renderer: 'satori', component: 'NuxtSeo', cacheMaxAgeSeconds: 60 * 60 * 24 * 3 },
-  //   //
-  //   // disable at a global level
-  //   // runtimeCacheStorage: false,
-  // },
+  ogImage: {
+    defaults: {
+      extension: 'jpeg',
+    },
+    // OG images and nuxtseo features can be previewed with nuxt-devtools during development. OG images can also be viewed using URL in this form - `/__og-image__/image/<path>/og.<extension>. For eg, {{site.url}}/__og-image__/image/og.png
+    fonts: ['Inter:400', 'Inter:700'],
+    
+    defaults: { width: 1200, height: 600, emojis: 'noto', renderer: 'satori', component: 'NuxtSeo', cacheMaxAgeSeconds: 60 * 60 * 24 * 3 },
+    
+    // disable at a global level
+    runtimeCacheStorage: false,
+  },
 
   linkChecker: {
     enabled: false,
