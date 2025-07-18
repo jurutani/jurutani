@@ -139,9 +139,9 @@ icon: {
     collections: [
       'heroicons',
       'ic',         // untuk ic:baseline-*
-      'logos',      // untuk logos:*
+      'logos',      // untuk logos-*
       'ri',         // untuk ri:*
-      'mdi'         // jika kamu juga pakai mdi:*
+      'mdi'         // jika kamu juga pakai mdi-*
     ],
   },
 },

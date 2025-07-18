@@ -75,7 +75,7 @@
           {{ summary }}
         </h5>
         <div v-if="twitter" class="flex flex-row items-center mt-auto">
-          <NuxtIcon name="logos:twitter" size="32" />
+          <NuxtIcon name="logos-twitter" size="32" />
           <span class="ml-3 text-2xl text-white">{{ twitter }}</span>
         </div>
       </div>

@@ -6,10 +6,10 @@ export default {
   title: 'JuruTani',
   description:
     'JuruTani adalah platform yang membantu petani dalam berkebun melalui fitur-fitur yang membantu petani dalam mengatur kebunnya seperti pengingat jadwal, log aktivitas, dan prediksi cuaca.',
-  author: 'Pinegrow',
+  author: 'KAIRAV',
   url: 'https://jurutani.com',
   github: 'https://github.com/jurutani',
-  ogImageUrl: 'jurutani.png', // absolute url (or) from public folder
+  ogImageUrl: '/jurutani.png', // absolute url (or) from public folder
   generator: 'https://jurutani.com',
   defaultLocale: 'en', // default
   identity: {

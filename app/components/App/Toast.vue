@@ -19,14 +19,14 @@ const getToastClasses = (type: string) => {
 const getToastIcon = (type: string) => {
   switch (type) {
     case 'success':
-      return { name: 'heroicons:check-circle', class: 'text-emerald-500' }
+      return { name: 'heroicons-check-circle', class: 'text-emerald-500' }
     case 'error':
-      return { name: 'heroicons:x-circle', class: 'text-red-500' }
+      return { name: 'heroicons-x-circle', class: 'text-red-500' }
     case 'warning':
-      return { name: 'heroicons:exclamation-circle', class: 'text-yellow-500' }
+      return { name: 'heroicons-exclamation-circle', class: 'text-yellow-500' }
     case 'info':
     default:
-      return { name: 'heroicons:information-circle', class: 'text-blue-500' }
+      return { name: 'heroicons-information-circle', class: 'text-blue-500' }
   }
 }
 </script>
