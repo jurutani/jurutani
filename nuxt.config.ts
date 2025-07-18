@@ -130,12 +130,19 @@ export default defineNuxtConfig({
     },
   },
 
-  icon: {
-    componentName: 'NuxtIcon', // Instead of NuxtIcon, prefer using UIcon. Nuxt UI's UIcon is overridden with a local component `BaseIcon` that uses UnoCSS Preset-Icons which allows us to use any icons from the iconify iconsets and is very efficient in terms of automatic treeshaking.
-    serverBundle: {
-      collections: ['heroicons'],
-    },
+icon: {
+  componentName: 'NuxtIcon',
+  serverBundle: {
+    collections: [
+      'heroicons',
+      'ic',         // untuk ic:baseline-*
+      'logos',      // untuk logos:*
+      'ri',         // untuk ri:*
+      'mdi'         // jika kamu juga pakai mdi:*
+    ],
   },
+}
+
 
   // Global styles
   css: [
