@@ -185,8 +185,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen">
-    <div class="container mx-auto px-4 py-6 max-w-7xl">
+  <div class="min-h-screen py-14">
+    <div class="container mx-auto px-4 py-6 max-w-7xl ">
       <!-- Back Button -->
        <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
           <div class="container mx-auto px-4 py-4">

@@ -1,36 +1,36 @@
 <script setup>
 definePageMeta({
   layout: 'blank',
-  title: 'Selamat Datang - Juru Tani',
-  description: 'Selamat datang di Juru Tani - Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  keywords: 'juru tani, pertanian, agriculture, farming, Indonesia, teknologi pertanian, solusi pertanian',
-  ogTitle: 'Selamat Datang di Juru Tani',
+  title: 'Selamat Datang - Juru Tani Reborn',
+  description: 'Selamat datang di Juru Tani Reborn - Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
+  keywords: 'juru tani Reborn, pertanian, agriculture, farming, Indonesia, teknologi pertanian, solusi pertanian',
+  ogTitle: 'Selamat Datang di Juru Tani Reborn',
   ogDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
   ogImage: '/logo/sponsor1.png',
   ogUrl: 'https://jurutani.com',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'Selamat Datang di Juru Tani',
+  twitterTitle: 'Selamat Datang di Juru Tani Reborn',
   twitterDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
   twitterImage: '/logo/sponsor1.png'
 })
 
 // SEO Meta tags
 useSeoMeta({
-  title: 'Selamat Datang - Juru Tani',
-  description: 'Selamat datang di Juru Tani - Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  keywords: 'juru tani, pertanian, agriculture, farming, Indonesia, teknologi pertanian, solusi pertanian',
-  author: 'Juru Tani Team',
+  title: 'Selamat Datang - Juru Tani Reborn',
+  description: 'Selamat datang di Juru Tani Reborn - Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
+  keywords: 'juru tani Reborn, pertanian, agriculture, farming, Indonesia, teknologi pertanian, solusi pertanian',
+  author: 'Juru Tani Reborn Team',
   robots: 'index, follow',
-  ogTitle: 'Selamat Datang di Juru Tani',
+  ogTitle: 'Selamat Datang di Juru Tani Reborn',
   ogDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
   ogImage: '/logo/sponsor1.png',
   ogUrl: 'https://jurutani.com',
   ogType: 'website',
-  ogSiteName: 'Juru Tani',
+  ogSiteName: 'Juru Tani Reborn',
   twitterCard: 'summary_large_image',
   twitterSite: '@jurutani',
   twitterCreator: '@jurutani',
-  twitterTitle: 'Selamat Datang di Juru Tani',
+  twitterTitle: 'Selamat Datang di Juru Tani Reborn',
   twitterDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
   twitterImage: '/logo/sponsor1.png'
 })
@@ -39,7 +39,7 @@ useSeoMeta({
 useSchemaOrg([
   {
     '@type': 'WebSite',
-    name: 'Juru Tani',
+    name: 'Juru Tani Reborn',
     url: 'https://jurutani.com',
     description: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
     publisher: {
@@ -49,7 +49,7 @@ useSchemaOrg([
   },
   {
     '@type': 'Organization',
-    name: 'Juru Tani',
+    name: 'Juru Tani Reborn',
     url: 'https://jurutani.com',
     logo: 'https://jurutani.com/logo/sponsor1.png',
     description: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
@@ -66,7 +66,7 @@ useSchemaOrg([
     <div class="max-w-md w-full space-y-6">
       <!-- Logo -->
       <div class="flex justify-center">
-        <TheLogo class="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 -translate-x-4" />
+        <TheLogo class="h-24 md:h-32 lg:h-40" />
       </div>
 
       <!-- Main Content -->
@@ -106,7 +106,7 @@ useSchemaOrg([
       <!-- Powered by section -->
       <div class="pt-4 border-t border-green-200/30 text-center">
         <p class="text-xs md:text-sm text-green-600/60">
-          Powered by 
+          Powered by : <br>
           <a 
             href="https://kairav-portfolio.vercel.app/" 
             target="_blank"

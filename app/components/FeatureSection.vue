@@ -53,14 +53,27 @@ const features = [
   <section class="features-section py-16 bg-green-50 dark:bg-green-900/20 mb-8">
     <UContainer>
       <!-- Section Header -->
-      <div class="mx-auto mb-12 max-w-2xl text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-green-800 dark:text-green-300">
-          Layanan Jurutani
-        </h2>
-        <p class="text-gray-600 dark:text-gray-300">
-          Solusi lengkap untuk kebutuhan pertanian modern Anda dengan teknologi terkini
-        </p>
-      </div>
+       <div class="mx-auto mb-6 max-w-4xl text-center">
+          <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
+            <!-- Ikon Obeng -->
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.25 2.75l-3.5 3.5-1.5-1.5-3 3 3 3 3-3-1.5-1.5 3.5-3.5-1-1zm-6 7l-11 11H2v-2.25L13 7.75l2.25 2.25z" />
+            </svg>
+            <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Fitur Terbaru</span>
+          </div>
+
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+            Layanan Jurutani Reborn
+          </h2>
+
+          <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+            Solusi lengkap untuk kebutuhan pertanian modern Anda dengan teknologi terkini:
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400"> Diskusi dengan Penyuluh</span>, 
+            <span class="font-semibold text-teal-600 dark:text-teal-400">Pakar Juru Tani</span>, hingga  
+            <span class="font-semibold text-cyan-600 dark:text-cyan-400">AI</span> yang dibuat khusus untuk menyelesaikan permasalahan pertanian.
+          </p>
+        </div>
+
 
       <!-- Features Grid -->
       <div class="features-grid">

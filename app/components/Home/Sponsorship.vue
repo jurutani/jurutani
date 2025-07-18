@@ -27,22 +27,36 @@ const currentSponsor = ref<Sponsor | null>(sponsors[0])
 </script>
 
 <template>
-  <div class="bg-white py-16 px-4 sm:px-6 lg:px-8">
+  <div class="py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
       <!-- Header Section -->
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">
-          Partner Teknologi Pertanian
+     
+      <div class="mx-auto mb-6 max-w-4xl text-center">
+        <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
+            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Partnership</span>
+        </div>
+
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+            Mitra Kami
         </h2>
-        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-          Didukung oleh perusahaan terkemuka dalam bidang teknologi pertanian dan agrikultur modern
+
+        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+            Bergabunglah bersama kami untuk memberdayakan petani Indonesia melalui 
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">teknologi</span>, 
+            <span class="font-semibold text-teal-600 dark:text-teal-400">pakar Juru Tani</span>, dan 
+            <span class="font-semibold text-cyan-600 dark:text-cyan-400">AI</span> yang dirancang khusus untuk menyelesaikan permasalahan di bidang pertanian.
         </p>
-      </div>
+        </div>
+
+
 
       <!-- Sponsor Card -->
       <div class="flex justify-center">
         <div class="sponsor-card group max-w-sm">
-          <div class="bg-white p-8 rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-300 hover:shadow-lg">
+          <div class="p-8 rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-300 hover:shadow-lg">
             <div class="flex items-center justify-center h-20 mb-4">
               <img 
                 :src="currentSponsor?.logo" 
