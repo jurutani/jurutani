@@ -48,13 +48,17 @@ export default defineNuxtConfig({
     componentIslands: true,
   },
 
-  nitro: {
-    preset: 'netlify-static',
-    prerender: {
-      crawlLinks: true,
-      ignore: ['/room-chat', '/markets']
-    }
-  },
+ nitro: {
+  preset: 'netlify-static',
+  prerender: {
+    crawlLinks: true,
+    ignore: [
+      '/room-chat',
+      '/markets',
+      /^\/__og-image__\//, // tambahkan baris ini
+    ]
+  }
+},
 
   app: {
     baseURL: '/', // defaulted by nuxt
@@ -68,6 +72,7 @@ export default defineNuxtConfig({
     ],
   },
   },
+
 
   modules: [
     '@pinegrow/nuxt-module',
@@ -310,13 +315,14 @@ export default defineNuxtConfig({
     },
   },
 
-  unocss: {
-    presets: [
-      presetIcons({
-        prefix: 'i-', // default prefix, do not change
-      }),
-    ],
-  },
+ unocss: {
+  safelist: ['i-mdi-home', 'i-mdi-account', 'iconify'],
+  presets: [
+    presetIcons({
+      prefix: 'i-',
+    }),
+  ],
+},
 
   eslint: {
     // config: {
