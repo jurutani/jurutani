@@ -306,3 +306,4 @@ onMounted(() => {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+</style>
