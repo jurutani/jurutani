@@ -38,7 +38,8 @@ onMounted(async () => {
 
         // Tunggu sedikit biar toast sempat tampil
         setTimeout(() => {
-          // Force redirect full reload
+          // Force redirect full 
+          loading.value = false
           navigateTo('/welcome', { external: true })
         }, 1500)
       } else {
@@ -58,10 +59,10 @@ onMounted(async () => {
 
 <template>
   <!-- Tidak render UI apapun -->
-  <div v-if="loading" class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+  <div v-if="loading" class="min-h-screen flex items-center justify-center">
     <div class="max-w-md w-full space-y-8 p-8">
-      <div class="text-center flex items-center justify-center space-y-4">
-        <TheLogo  />
+      <div class="text-center">
+
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto" />
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Memproses Login...</h2>
         <p class="text-gray-500 dark:text-gray-400">Mohon tunggu sebentar</p>
