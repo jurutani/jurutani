@@ -1,7 +1,7 @@
 <script setup>
 definePageMeta({
   layout: 'blank',
-  title: 'Selamat Datang - Juru Tani Reborn',
+  title: 'Juru Tani Reborn - Selamat Datang',
   description: 'Selamat datang di Juru Tani Reborn - Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
   keywords: 'juru tani Reborn, pertanian, agriculture, farming, Indonesia, teknologi pertanian, solusi pertanian',
   ogTitle: 'Selamat Datang di Juru Tani Reborn',
@@ -16,14 +16,14 @@ definePageMeta({
 
 // SEO Meta tags
 useSeoMeta({
-  title: 'Selamat Datang - Juru Tani Reborn',
+  title: 'Juru Tani Reborn - Selamat Datang',
   description: 'Selamat datang di Juru Tani Reborn - Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
   keywords: 'juru tani Reborn, pertanian, agriculture, farming, Indonesia, teknologi pertanian, solusi pertanian',
   author: 'Juru Tani Reborn Team',
   robots: 'index, follow',
   ogTitle: 'Selamat Datang di Juru Tani Reborn',
   ogDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  ogImage: '/logo/sponsor1.png',
+  ogImage: '/jurutani.png',
   ogUrl: 'https://jurutani.com',
   ogType: 'website',
   ogSiteName: 'Juru Tani Reborn',
@@ -32,7 +32,7 @@ useSeoMeta({
   twitterCreator: '@jurutani',
   twitterTitle: 'Selamat Datang di Juru Tani Reborn',
   twitterDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  twitterImage: '/logo/sponsor1.png'
+  twitterImage: '/jurutani.png'
 })
 
 // Structured Data
@@ -44,14 +44,14 @@ useSchemaOrg([
     description: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
     publisher: {
       '@type': 'Organization',
-      name: 'Politeknik Pembangunan dan Pertanian Yogyakarta'
+      name: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang'
     }
   },
   {
     '@type': 'Organization',
     name: 'Juru Tani Reborn',
     url: 'https://jurutani.com',
-    logo: 'https://jurutani.com/logo/sponsor1.png',
+    logo: 'https://jurutani.com/jurutani.png',
     description: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
     foundingLocation: {
       '@type': 'Place',
@@ -112,7 +112,7 @@ useSchemaOrg([
             target="_blank"
             class="font-medium hover:text-green-600 transition-colors underline decoration-dotted ml-1"
           >
-            Politeknik Pembangunan dan Pertanian Yogyakarta
+            Politeknik Pembangunan Pertanian Yogyakarta Magelang
           </a>
         </p>
       </div>

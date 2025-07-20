@@ -25,7 +25,7 @@
             </p>
             <div class="mt-4 p-4 bg-green-100/50 dark:bg-green-800/20 rounded-lg border border-green-200/30 dark:border-green-700/30">
               <p class="text-xs text-green-700/70 dark:text-green-300/70 font-medium">
-                Inovasi dari Politeknik Pembangunan dan Pertanian Yogyakarta
+                Inovasi dari Politeknik Pembangunan Pertanian Yogyakarta Magelang
               </p>
             </div>
           </div>
@@ -177,7 +177,7 @@
               target="_blank"
               class="font-medium hover:text-green-600 dark:hover:text-green-400 transition-colors underline decoration-dotted"
             >
-              Politeknik Pembangunan dan Pertanian Yogyakarta
+              Politeknik Pembangunan Pertanian Yogyakarta Magelang
             </a>
           </p>
         </div>

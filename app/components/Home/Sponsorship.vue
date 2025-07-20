@@ -27,7 +27,7 @@ const currentSponsor = ref<Sponsor | null>(sponsors[0])
 </script>
 
 <template>
-  <div class="py-16 px-4 sm:px-6 lg:px-8">
+  <div class="py-16">
     <div class="max-w-7xl mx-auto">
       <!-- Header Section -->
      

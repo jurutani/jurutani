@@ -1,11 +1,10 @@
-<!-- pages/auth/callback.vue -->
 <script setup lang="ts">
 import { useSupabase } from '~/composables/useSupabase'
 import { toastStore } from '~/composables/useJuruTaniToast'
 
 // Define layout
 definePageMeta({
-  layout: 'blank',
+  layout: 'default',
   middleware: ['guest']
 })
 
@@ -16,12 +15,19 @@ const route = useRoute()
 const loading = ref(true)
 const error = ref<string | null>(null)
 
-// Hanya jalankan di client-side
 onMounted(async () => {
   try {
-    // Pastikan kode dijalankan di client
     if (import.meta.client) {
-      const { data, error: authError } = await supabase.auth.exchangeCodeForSession()
+      const authCode = route.query.code as string
+
+      if (!authCode) {
+        error.value = 'Kode otorisasi tidak ditemukan.'
+        toastStore.error('Login gagal: kode otorisasi tidak ditemukan.', 5000)
+        await navigateTo('/auth/login?error=missing_code')
+        return
+      }
+
+      const { data, error: authError } = await supabase.auth.exchangeCodeForSession(authCode)
 
       if (authError) {
         console.error('OAuth callback error:', authError)
@@ -50,6 +56,7 @@ onMounted(async () => {
   }
 })
 </script>
+
 
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">

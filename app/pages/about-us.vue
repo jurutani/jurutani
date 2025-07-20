@@ -9,7 +9,7 @@ useHead({
 </script>
 
 <template>
-    <div class="max-w-7xl mx-auto p-4 pt-20 lg:pt-32">
+    <div class="max-w-7xl mx-auto pt-20 lg:pt-32">
       <div class="text-center">
         <h1 class="text-5xl font-bold text-green-800 mb-6">Mengenal Juru Tani Polbangtan Yogyakarta</h1>
         <p class="text-lg text-gray-700 mb-12">
