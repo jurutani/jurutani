@@ -38,9 +38,10 @@ onMounted(async () => {
       }
 
       if (data.session) {
-        toastStore.success('Login berhasil! Selamat datang.', 3000)
-        const redirectTo = route.query.redirect_to as string || '/welcome'
-        window.location.href = redirectTo
+        toastStore.success('Login berhasil! Selamat datang.', 2000)
+        setTimeout(() => {
+          window.location.href = '/welcome'
+        }, 2000)
       } else {
         toastStore.warning('Sesi login tidak ditemukan. Silakan coba lagi.', 3000)
         await navigateTo('/auth/login')
