@@ -147,7 +147,7 @@ onMounted(async () => {
 
 // Meta
 useHead({
-  title: 'JuruTani Chat - Konsultasi Pertanian',
+  title: 'Juru Tani Chat - Konsultasi Pertanian',
   meta: [
     { name: 'description', content: 'Konsultasi langsung dengan ahli pertanian dan penyuluh terpercaya' }
   ]

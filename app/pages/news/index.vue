@@ -137,7 +137,7 @@ const handlePageChange = (page: number) => {
       </div>
       
       <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-        Berita Tani JuruTani
+        Berita Tani Juru Tani
       </h2>
       
       <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
