@@ -2,7 +2,7 @@
 useHead({ 
   title: 'Tentang Kami - Juru Tani Reborn',
   meta: [
-    { name: 'description', content: 'Mengenal Juru Tani Reborn - Inovasi digital dari Politeknik Pembangunan Pertanian Yogyakarta Magelang untuk memajukan pertanian Indonesia' },
+    { name: 'description', content: 'Mengenal Juru Tani Reborn | Inovasi digital dari Politeknik Pembangunan Pertanian Yogyakarta Magelang untuk memajukan pertanian Indonesia' },
     { name: 'keywords', content: 'juru tani reborn, polbangtan yogyakarta, polbangtan magelang, pertanian digital, inovasi pertanian' }
   ]
 })
@@ -75,7 +75,7 @@ const galleryData = [
 
     <div class="container mx-auto px-4 pb-16">
       
-      <!-- Tentang Juru Tani Reborn -->
+      <!-- Tentang Juru Tani Reborn |->
       <section class="mb-16">
         <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl border border-green-100 dark:border-green-800">
           <h2 class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-8 text-center">

@@ -64,14 +64,14 @@ export default defineNuxtConfig({
     baseURL: '/', // defaulted by nuxt
     // Look into HeadAndMeta.vue for the rest
     head: {
-      title: 'Juru Tani - Website Resmi',
+      title: 'Juru Tani Reborn | Solusi Penyuluhan Modern',
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
       meta: [
         { charset: 'utf-8' },
-        { name: 'og:image', content: 'https://jurutani.com/og-image.png' },
-        { name: 'twitter:image', content: 'https://jurutani.com/og-image.png' },
+        { name: 'og:image', content: 'https://jurutani.com/jurutani.png' },
+        { name: 'twitter:image', content: 'https://jurutani.com/jurutani.png' },
         { name: 'twitter:card', content: 'summary_large_image' },
       ],
   },

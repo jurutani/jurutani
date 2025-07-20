@@ -1,29 +1,30 @@
 <script setup>
 definePageMeta({
   layout: 'blank',
-  title: 'Juru Tani Reborn - Selamat Datang',
-  description: 'Selamat datang di Juru Tani Reborn - Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  keywords: 'juru tani Reborn, pertanian, agriculture, farming, Indonesia, teknologi pertanian, solusi pertanian',
+  title: 'Juru Tani Reborn | Selamat Datang',
+  description: 'Selamat datang di Juru Tani Reborn | Platform terdepan untuk penyuluhan modern dan siap membantu pertanian yang berkelanjutan di Indonesia.',
+  keywords: 'juru tani Reborn, pertanian, agriculture, farming, Indonesia, teknologi pertanian, penyuluhan',
   ogTitle: 'Selamat Datang di Juru Tani Reborn',
-  ogDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  ogImage: '/logo/sponsor1.png',
+  ogDescription: 'Platform terdepan untuk penyuluhan modern dan siap membantu pertanian yang berkelanjutan di Indonesia.',
+  ogImage: 'https://jurutani.com/jurutani.png',
   ogUrl: 'https://jurutani.com',
   twitterCard: 'summary_large_image',
   twitterTitle: 'Selamat Datang di Juru Tani Reborn',
-  twitterDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  twitterImage: '/logo/sponsor1.png'
+  twitterDescription: 'Platform terdepan untuk penyuluhan modern dan siap membantu pertanian yang berkelanjutan di Indonesia.',
+  twitterImage: 'https://jurutani.com/jurutani.png',
 })
 
 // SEO Meta tags
 useSeoMeta({
-  title: 'Juru Tani Reborn - Selamat Datang',
-  description: 'Selamat datang di Juru Tani Reborn - Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  keywords: 'juru tani Reborn, pertanian, agriculture, farming, Indonesia, teknologi pertanian, solusi pertanian',
+  title: 'Juru Tani Reborn | Selamat Datang',
+  description: 'Selamat datang di Juru Tani Reborn | Platform terdepan untuk penyuluhan modern dan siap membantu pertanian yang berkelanjutan di Indonesia.',
+  keywords: 'juru tani Reborn, pertanian, agriculture, farming, Indonesia, teknologi pertanian, penyuluhan',
   author: 'Juru Tani Reborn Team',
   robots: 'index, follow',
   ogTitle: 'Selamat Datang di Juru Tani Reborn',
-  ogDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  ogImage: '/jurutani.png',
+  ogDescription: 'Platform terdepan untuk penyuluhan modern dan siap membantu pertanian yang berkelanjutan di Indonesia.',
+  ogImage: 'https://jurutani.com/jurutani.png',
+  twitterImage: 'https://jurutani.com/jurutani.png',
   ogUrl: 'https://jurutani.com',
   ogType: 'website',
   ogSiteName: 'Juru Tani Reborn',
@@ -31,8 +32,7 @@ useSeoMeta({
   twitterSite: '@jurutani',
   twitterCreator: '@jurutani',
   twitterTitle: 'Selamat Datang di Juru Tani Reborn',
-  twitterDescription: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
-  twitterImage: '/jurutani.png'
+  twitterDescription: 'Platform terdepan untuk penyuluhan modern dan siap membantu pertanian yang berkelanjutan di Indonesia.',
 })
 
 // Structured Data
@@ -41,7 +41,7 @@ useSchemaOrg([
     '@type': 'WebSite',
     name: 'Juru Tani Reborn',
     url: 'https://jurutani.com',
-    description: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
+    description: 'Platform terdepan untuk penyuluhan modern dan berkelanjutan di Indonesia.',
     publisher: {
       '@type': 'Organization',
       name: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang'
@@ -52,10 +52,10 @@ useSchemaOrg([
     name: 'Juru Tani Reborn',
     url: 'https://jurutani.com',
     logo: 'https://jurutani.com/jurutani.png',
-    description: 'Platform terdepan untuk solusi pertanian modern dan berkelanjutan di Indonesia.',
+    description: 'Platform terdepan untuk penyuluhan modern dan berkelanjutan di Indonesia.',
     foundingLocation: {
       '@type': 'Place',
-      name: 'Yogyakarta, Indonesia'
+      name: 'Yogyakarta, Magelang, Indonesia'
     }
   }
 ])

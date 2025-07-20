@@ -2,7 +2,7 @@
 import { useHead } from '#imports'
 
 useHead({
-  title: 'Juru Tani - Website Resmi',
+  title: 'Juru Tani - Solusi Penyuluhan Modern',
   link: [
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
   ],
