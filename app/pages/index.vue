@@ -37,6 +37,7 @@ useSeoMeta({
 
 <template>
   <div>
+    <ChatbotJurutani />
     <HeroSection />
     <div class="py-8 gap">
       <WeatherSection class="mt-16" />
@@ -45,7 +46,6 @@ useSeoMeta({
       <FeatureSection class="mt-16" />
       <HomeSponsorship class="mt-16" />
     </div>
-    <ChatbotJurutani />
   </div>
 </template>
 
