@@ -2,7 +2,7 @@
 definePageMeta({
   layout: 'default',
   title: 'Juru Tani Reborn | Solusi Penyuluhan Modern',
-  description: 'Juru Tani Reborn adalah inovasi pertanian dari Politeknik Pembangunan  Pertanian Yogyakarta Magelang, membantu petani untuk Indonesia.',
+  description: 'Juru Tani Reborn merupakan inovasi terbaru dari Jurutani yang digagas oleh Politeknik Pembangunan Pertanian Yogyakarta Magelang, bertujuan membantu petani setempat dan mendukung pertanian Indonesia.',
   navOrder: 1,
   icon: 'i-mdi-home'
 })
@@ -10,7 +10,7 @@ definePageMeta({
 // SEO Meta Tags
 useSeoMeta({
   title: 'Juru Tani Reborn | Solusi Penyuluhan Modern',
-  description: 'Juru Tani Reborn adalah inovasi pertanian dari Politeknik Pembangunan  Pertanian Yogyakarta Magelang, membantu petani untuk Indonesia.',
+  description: 'Juru Tani Reborn merupakan inovasi terbaru dari Jurutani yang digagas oleh Politeknik Pembangunan Pertanian Yogyakarta Magelang, bertujuan membantu petani setempat dan mendukung pertanian Indonesia.',
   keywords: 'juru tani, pertanian indonesia, petani digital, inovasi pertanian, polbangtan yogyakarta, polbangtan magelang, teknologi petani',
   author: 'Juru Tani Reborn Team',
   robots: 'index, follow',
