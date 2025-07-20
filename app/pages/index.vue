@@ -1,32 +1,36 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'default',
-  title: 'Juru Tani Reborn | Solusi Penyuluhan Modern',
-  description: 'Juru Tani Reborn merupakan inovasi terbaru dari Jurutani yang digagas oleh Politeknik Pembangunan Pertanian Yogyakarta Magelang, bertujuan membantu petani setempat dan mendukung pertanian Indonesia.',
+  title: 'Juru Tani Reborn | Solusi Pertanian Modern & Digital',
+  description: 'Juru Tani Reborn adalah inovasi terbaru dari Politeknik Pembangunan Pertanian Yogyakarta Magelang untuk membantu petani Indonesia secara digital.',
   navOrder: 1,
   icon: 'i-mdi-home'
 })
 
 // SEO Meta Tags
 useSeoMeta({
-  title: 'Juru Tani Reborn | Solusi Penyuluhan Modern',
-  description: 'Juru Tani Reborn merupakan inovasi terbaru dari Jurutani yang digagas oleh Politeknik Pembangunan Pertanian Yogyakarta Magelang, bertujuan membantu petani setempat dan mendukung pertanian Indonesia.',
-  keywords: 'juru tani, pertanian indonesia, petani digital, inovasi pertanian, polbangtan yogyakarta, polbangtan magelang, teknologi petani',
+  // Basic Meta
+  title: 'Juru Tani Reborn | Solusi Pertanian Modern & Digital',
+  description: 'Juru Tani Reborn adalah platform inovatif dari Politeknik Pembangunan Pertanian Yogyakarta Magelang yang mendukung petani lokal dan pertanian berkelanjutan di Indonesia.',
+  keywords: 'juru tani, pertanian digital, inovasi pertanian, polbangtan yogyakarta, petani indonesia, teknologi pertanian',
   author: 'Juru Tani Reborn Team',
   robots: 'index, follow',
-
-  ogTitle: 'Juru Tani Reborn | Solusi Penyuluhan Modern',
-  ogDescription: 'Inovasi pertanian dari Politeknik Pembangunan  Pertanian Yogyakarta Magelang, membantu petani untuk Indonesia.',
+  viewport: 'width=device-width, initial-scale=1',
+  // Open Graph (Facebook, WhatsApp, LinkedIn)
+  ogTitle: 'Juru Tani Reborn | Solusi Pertanian Modern & Digital',
+  ogDescription: 'Platform pertanian digital dari Politeknik Pembangunan Pertanian Yogyakarta Magelang, membantu petani untuk masa depan Indonesia.',
   ogType: 'website',
   ogUrl: 'https://jurutani.com',
   ogSiteName: 'Juru Tani Reborn',
   ogImage: 'https://jurutani.com/jurutani.png',
+  ogLocale: 'id_ID',
 
+  // Twitter Cards
   twitterCard: 'summary_large_image',
   twitterSite: '@jurutani',
   twitterCreator: '@jurutani',
-  twitterTitle: 'Juru Tani Reborn | Solusi Penyuluhan Modern',
-  twitterDescription: 'Inovasi pertanian dari Politeknik Pembangunan  Pertanian Yogyakarta Magelang, membantu petani untuk Indonesia.',
+  twitterTitle: 'Juru Tani Reborn | Solusi Pertanian Modern & Digital',
+  twitterDescription: 'Inovasi digital dari Polbangtan Yogyakarta Magelang untuk mendukung pertanian Indonesia.',
   twitterImage: 'https://jurutani.com/jurutani.png'
 })
 </script>
@@ -35,7 +39,7 @@ useSeoMeta({
   <div>
     <HeroSection />
     <div class="py-8 gap">
-      <WeatherSection class="mt-16"/>
+      <WeatherSection class="mt-16" />
       <LaunchSale class="mt-16" />
       <HotDeals class="mt-16" />
       <FeatureSection class="mt-16" />
