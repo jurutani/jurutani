@@ -16,7 +16,7 @@ const messages = ref([
   {
     id: 1,
     type: 'bot',
-    text: 'Halo! Saya adalah Jurutani AI, asisten penyuluh untuk pertanian, peternakan, dan pembangunan. Saya dapat membantu Anda dengan informasi tentang:\n\n• Teknik budidaya tanaman dan peternakan\n• Teknologi pertanian modern\n• Manajemen sumber daya alam\n• Pembangunan infrastruktur pertanian\n• Pemasaran hasil pertanian\n• Program pemerintah untuk petani\n\nAda yang ingin Anda tanyakan?',
+    text: 'Halo! Saya adalah Jurutani AI, asisten penyuluh jurutani untuk pertanian, peternakan, dan pembangunan. Saya dapat membantu Anda dengan informasi tentang:\n\n• Teknik budidaya tanaman dan peternakan\n• Teknologi pertanian modern\n• Manajemen sumber daya alam\n• Pembangunan infrastruktur pertanian\n• Pemasaran hasil pertanian\n• Program pemerintah untuk petani\n\nAda yang ingin Anda tanyakan?',
     timestamp: new Date()
   }
 ])
@@ -25,7 +25,7 @@ const messages = ref([
 const GEMINI_API_KEY = 'AIzaSyB0B5HH0IPFc0eklYz4SpFdr_Lk90tGU2Q'
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`
 
-// Methods (localStorage tidak digunakan untuk artifact)
+// Methods
 const openChat = () => {
   if (!hasSeenSplash.value) {
     showSplash.value = true
@@ -37,6 +37,7 @@ const openChat = () => {
       if (inputRef.value) {
         inputRef.value.focus()
       }
+      scrollToBottom()
     })
   }
 }
@@ -48,13 +49,18 @@ const startChat = () => {
     if (inputRef.value) {
       inputRef.value.focus()
     }
+    scrollToBottom()
   })
 }
 
 const scrollToBottom = () => {
   if (messagesContainer.value) {
     nextTick(() => {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+      const element = messagesContainer.value
+      element.scrollTo({
+        top: element.scrollHeight,
+        behavior: 'smooth'
+      })
     })
   }
 }
@@ -91,6 +97,9 @@ const isMessageExpanded = (messageId) => {
 
 const toggleChatExpansion = () => {
   isExpanded.value = !isExpanded.value
+  nextTick(() => {
+    scrollToBottom()
+  })
 }
 
 const closeChat = () => {
@@ -99,7 +108,7 @@ const closeChat = () => {
 
 const sendMessageToGemini = async (message) => {
   try {
-    const systemPrompt = `Anda adalah Jurutani AI, asisten penyuluh pertanian dan pembangunan yang ahli dan berpengalaman. Tugas Anda adalah memberikan penjelasan yang jelas, akurat, praktis, dan mudah dipahami dalam bahasa Indonesia.
+    const systemPrompt = `Anda adalah Jurutani AI, asisten penyuluh jurutani yang ahli dan berpengalaman. Tugas Anda adalah memberikan penjelasan yang jelas, akurat, praktis, dan mudah dipahami dalam bahasa Indonesia.
 
     Bidang keahlian Anda meliputi:
     
@@ -190,6 +199,11 @@ const handleSendMessage = async () => {
   inputMessage.value = ''
   isLoading.value = true
 
+  // Auto scroll after user sends message
+  nextTick(() => {
+    scrollToBottom()
+  })
+
   try {
     const botResponse = await sendMessageToGemini(currentMessage)
     
@@ -214,9 +228,19 @@ const handleSendMessage = async () => {
   }
 }
 
+// Handle Enter key for sending messages
+const handleKeydown = (event) => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault()
+    handleSendMessage()
+  }
+}
+
 // Watchers
 watch(messages, () => {
-  scrollToBottom()
+  nextTick(() => {
+    scrollToBottom()
+  })
 }, { deep: true })
 
 watch(isOpen, (newVal) => {
@@ -231,7 +255,7 @@ watch(isOpen, (newVal) => {
 <template>
   <div class="fixed bottom-4 right-4 z-50">
     <!-- Chat Bubble Button -->
-    <div v-if="!isOpen">
+    <div v-if="!isOpen" class="relative">
       <UButton
         icon="i-heroicons-chat-bubble-left-ellipsis"
         size="xl"
@@ -239,19 +263,19 @@ watch(isOpen, (newVal) => {
         variant="solid"
         :ui="{ 
           rounded: 'rounded-full', 
-          base: 'w-16 h-16 shadow-lg',
+          base: 'w-16 h-16 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105',
           icon: { size: { xl: 'w-8 h-8' } }
         }"
         @click="openChat"
       />
       <!-- Notification dot -->
-      <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full"></div>
+      <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
     </div>
 
     <!-- Splash Screen -->
     <UCard 
       v-if="showSplash && isOpen"
-      class="w-80 border-2 border-green-400"
+      class="w-80 border-2 border-green-400 shadow-2xl"
       :ui="{ 
         base: 'transform transition-all duration-500',
         body: { padding: 'p-6' }
@@ -259,7 +283,7 @@ watch(isOpen, (newVal) => {
     >
       <div class="text-center space-y-4">
         <!-- Logo -->
-        <div class="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+        <div class="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center shadow-lg">
           <UIcon name="i-heroicons-microphone" class="w-10 h-10 text-green-600" />
         </div>
         
@@ -269,12 +293,12 @@ watch(isOpen, (newVal) => {
             Jurutani AI
           </h1>
           <p class="text-gray-600 text-sm">
-            Asisten Penyuluh Pertanian & Pembangunan
+            Asisten Penyuluh Jurutani
           </p>
         </div>
 
         <!-- Description -->
-        <p class="text-gray-700 text-sm">
+        <p class="text-gray-700 text-sm leading-relaxed">
           Konsultasi pertanian, peternakan, dan pembangunan. 
           Mari mulai percakapan untuk solusi terbaik!
         </p>
@@ -285,6 +309,7 @@ watch(isOpen, (newVal) => {
           size="lg"
           block
           @click="startChat"
+          class="hover:bg-green-700 transition-colors duration-200"
         >
           Mulai Konsultasi
         </UButton>
@@ -295,20 +320,20 @@ watch(isOpen, (newVal) => {
     <UCard
       v-if="isOpen && !showSplash"
       :class="[
-        'flex flex-col overflow-hidden border-2 border-green-400 transition-all duration-300',
+        'flex flex-col overflow-hidden border-2 border-green-400 shadow-2xl transition-all duration-300',
         isExpanded ? 'w-96 h-[600px]' : 'w-80 h-96'
       ]"
       :ui="{ body: { padding: 'p-0' } }"
     >
       <!-- Header -->
-      <div class="bg-green-600 text-white p-4 flex items-center justify-between">
+      <div class="bg-gradient-to-r from-green-600 to-green-500 text-white p-4 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-green-700 rounded-full flex items-center justify-center">
+          <div class="w-10 h-10 bg-green-700 rounded-full flex items-center justify-center shadow-inner">
             <UIcon name="i-heroicons-microphone" class="w-5 h-5 text-white" />
           </div>
           <div>
             <h3 class="font-semibold text-sm">Jurutani AI</h3>
-            <p class="text-xs text-green-100">Penyuluh Pertanian</p>
+            <p class="text-xs text-green-100">Penyuluh Jurutani</p>
           </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -318,6 +343,7 @@ watch(isOpen, (newVal) => {
             variant="ghost"
             size="xs"
             @click="toggleChatExpansion"
+            class="hover:bg-white/20"
           />
           <UButton
             icon="i-heroicons-x-mark"
@@ -325,37 +351,42 @@ watch(isOpen, (newVal) => {
             variant="ghost"
             size="xs"
             @click="closeChat"
+            class="hover:bg-white/20"
           />
         </div>
       </div>
 
-      <!-- Messages -->
-      <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+      <!-- Messages Container with improved scrolling -->
+      <div 
+        ref="messagesContainer" 
+        class="flex-1 overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-gray-50 to-gray-100 scroll-smooth"
+        style="scroll-behavior: smooth;"
+      >
         <div
           v-for="message in messages"
           :key="message.id"
           :class="[
-            'flex',
+            'flex animate-fade-in',
             message.type === 'user' ? 'justify-end' : 'justify-start'
           ]"
         >
           <div
             :class="[
               isExpanded ? 'max-w-md' : 'max-w-xs',
-              'px-3 py-2 rounded-lg',
+              'px-3 py-2 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md',
               message.type === 'user'
-                ? 'bg-green-600 text-white ml-4'
+                ? 'bg-gradient-to-r from-green-600 to-green-500 text-white ml-4'
                 : 'bg-white text-gray-800 mr-4 border border-gray-200'
             ]"
           >
             <div class="flex items-start space-x-2">
               <div v-if="message.type === 'bot'" class="flex-shrink-0 mt-0.5">
-                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center border border-green-200">
                   <UIcon name="i-heroicons-microphone" class="w-3 h-3 text-green-600" />
                 </div>
               </div>
-              <div class="flex-1">
-                <p class="text-sm whitespace-pre-wrap">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm whitespace-pre-wrap break-words leading-relaxed">
                   {{ shouldShowExpandButton(message) && !isMessageExpanded(message.id) 
                     ? truncateText(message.text) 
                     : message.text }}
@@ -368,7 +399,7 @@ watch(isOpen, (newVal) => {
                   size="2xs"
                   variant="ghost"
                   :color="message.type === 'user' ? 'white' : 'gray'"
-                  class="mt-1"
+                  class="mt-1 hover:bg-black/10"
                   @click="toggleMessageExpansion(message.id)"
                 >
                   {{ isMessageExpanded(message.id) ? 'Tutup' : 'Selengkapnya' }}
@@ -379,7 +410,7 @@ watch(isOpen, (newVal) => {
                 </p>
               </div>
               <div v-if="message.type === 'user'" class="flex-shrink-0 mt-0.5">
-                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
                   <UIcon name="i-heroicons-user" class="w-3 h-3 text-white" />
                 </div>
               </div>
@@ -388,25 +419,32 @@ watch(isOpen, (newVal) => {
         </div>
         
         <!-- Loading indicator -->
-        <div v-if="isLoading" class="flex justify-start">
+        <div v-if="isLoading" class="flex justify-start animate-fade-in">
           <div :class="[
             isExpanded ? 'max-w-md' : 'max-w-xs',
-            'px-3 py-2 rounded-lg bg-white text-gray-800 mr-4 border border-gray-200'
+            'px-3 py-2 rounded-lg bg-white text-gray-800 mr-4 border border-gray-200 shadow-sm'
           ]">
             <div class="flex items-center space-x-2">
-              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center border border-green-200">
                 <UIcon name="i-heroicons-microphone" class="w-3 h-3 text-green-600" />
               </div>
               <div class="flex items-center space-x-2">
-                <UIcon name="i-heroicons-arrow-path" class="w-4 h-4 animate-spin text-green-600" />
+                <div class="flex space-x-1">
+                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
+                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                </div>
                 <span class="text-sm text-gray-500">Mengetik...</span>
               </div>
             </div>
           </div>
         </div>
+        
+        <!-- Scroll anchor -->
+        <div id="scroll-anchor" style="height: 1px;"></div>
       </div>
 
-      <!-- Input -->
+      <!-- Input Area -->
       <div class="p-4 border-t border-gray-200 bg-white">
         <form class="flex space-x-2" @submit.prevent="handleSendMessage">
           <UInput
@@ -416,6 +454,7 @@ watch(isOpen, (newVal) => {
             :disabled="isLoading"
             size="sm"
             class="flex-1"
+            @keydown="handleKeydown"
           />
           <UButton
             type="submit"
@@ -423,6 +462,7 @@ watch(isOpen, (newVal) => {
             icon="i-heroicons-paper-airplane"
             color="green"
             size="sm"
+            class="transition-all duration-200 hover:scale-105"
           />
         </form>
       </div>
@@ -431,17 +471,65 @@ watch(isOpen, (newVal) => {
 </template>
 
 <style scoped>
-/* Custom scrollbar */
+/* Custom scrollbar styling */
 .overflow-y-auto::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f1f5f9;
+  border-radius: 3px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #10b981;
-  border-radius: 2px;
+  background: linear-gradient(180deg, #10b981, #059669);
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #059669, #047857);
+}
+
+/* Firefox scrollbar */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #10b981 #f1f5f9;
+}
+
+/* Smooth animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Better text wrapping for long messages */
+.break-words {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Improved scroll behavior */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced hover effects */
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.hover\:shadow-3xl:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 </style>
