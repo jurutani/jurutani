@@ -26,7 +26,7 @@ useHead({
       <!-- Header -->
       <div class="border-b border-gray-200 dark:border-gray-700 pb-6 mb-8">
         <h1 class="text-3xl md:text-4xl font-bold text-green-700 dark:text-green-400 mb-2">Syarat & Ketentuan</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Terakhir diperbarui: 20 Juli 2025</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Terakhir diperbarui: 21 Juli 2025</p>
       </div>
 
       <!-- Intro with decorative element -->
