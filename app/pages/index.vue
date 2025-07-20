@@ -36,8 +36,8 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
-    <div class="py-8">
+  <div class="m-0 p-0">
+    <div class="m-0 p-0">
       <HeroSection />
       <WeatherSection class="mt-16" />
       <LaunchSale class="mt-16" />
@@ -48,5 +48,6 @@ useSeoMeta({
     </div>
   </div>
 </template>
+
 
 <style scoped></style>
