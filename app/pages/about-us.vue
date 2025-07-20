@@ -11,11 +11,11 @@ useHead({
 const logoJuruTani = '/jurutani.png'
 const sponsorLogo = '/logo/sponsor1.png'
 const galleryImages = [
-  '/gallery/1.JPG',
-  '/gallery/2.JPG', 
-  '/gallery/3.JPG',
-  '/gallery/4.JPG',
-  '/gallery/5.JPG'
+  '/gallery/image1.JPG',
+  '/gallery/image2.JPG', 
+  '/gallery/image3.JPG',
+  '/gallery/image4.JPG',
+  '/gallery/image5.JPG'
 ]
 
 const galleryData = [
