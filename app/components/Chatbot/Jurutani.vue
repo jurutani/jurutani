@@ -256,18 +256,16 @@ watch(isOpen, (newVal) => {
   <div class="fixed bottom-4 right-4 z-50">
     <!-- Chat Bubble Button -->
     <div v-if="!isOpen" class="relative">
-      <UButton
-        icon="i-heroicons-chat-bubble-left-ellipsis"
-        size="xl"
-        color="green"
-        variant="solid"
-        :ui="{ 
-          rounded: 'rounded-full', 
-          base: 'w-16 h-16 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105',
-          icon: { size: { xl: 'w-8 h-8' } }
-        }"
+      <button
         @click="openChat"
-      />
+        class="w-16 h-16 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 overflow-hidden border-2 border-green-400"
+      >
+        <img 
+          src="/chatbot.png" 
+          alt="Chatbot" 
+          class="w-full h-full object-cover"
+        />
+      </button>
       <!-- Notification dot -->
       <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
     </div>
@@ -320,13 +318,13 @@ watch(isOpen, (newVal) => {
     <UCard
       v-if="isOpen && !showSplash"
       :class="[
-        'flex flex-col overflow-hidden border-2 border-green-400 shadow-2xl transition-all duration-300',
+        'relative overflow-hidden border-2 border-green-400 shadow-2xl transition-all duration-300',
         isExpanded ? 'w-96 h-[600px]' : 'w-80 h-96'
       ]"
       :ui="{ body: { padding: 'p-0' } }"
     >
       <!-- Header -->
-      <div class="bg-gradient-to-r from-green-600 to-green-500 text-white p-4 flex items-center justify-between">
+      <div class="absolute top-0 left-0 right-0 bg-gradient-to-r from-green-600 to-green-500 text-white p-4 flex items-center justify-between z-10">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 bg-green-700 rounded-full flex items-center justify-center shadow-inner">
             <UIcon name="i-heroicons-microphone" class="w-5 h-5 text-white" />
@@ -359,7 +357,7 @@ watch(isOpen, (newVal) => {
       <!-- Messages Container with improved scrolling -->
       <div 
         ref="messagesContainer" 
-        class="flex-1 overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-gray-50 to-gray-100 scroll-smooth"
+        class="absolute top-20 bottom-20 left-0 right-0 overflow-y-scroll p-4 space-y-3 bg-gradient-to-b from-gray-50 to-gray-100 scroll-smooth"
         style="scroll-behavior: smooth;"
       >
         <div
@@ -444,8 +442,8 @@ watch(isOpen, (newVal) => {
         <div id="scroll-anchor" style="height: 1px;"></div>
       </div>
 
-      <!-- Input Area -->
-      <div class="p-4 border-t border-gray-200 bg-white">
+      <!-- Input Area - Fixed at bottom -->
+      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white z-20">
         <form class="flex space-x-2" @submit.prevent="handleSendMessage">
           <UInput
             ref="inputRef"
@@ -472,27 +470,27 @@ watch(isOpen, (newVal) => {
 
 <style scoped>
 /* Custom scrollbar styling */
-.overflow-y-auto::-webkit-scrollbar {
+.overflow-y-scroll::-webkit-scrollbar {
   width: 6px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-track {
+.overflow-y-scroll::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 3px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb {
+.overflow-y-scroll::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #10b981, #059669);
   border-radius: 3px;
   transition: all 0.2s ease;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+.overflow-y-scroll::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #059669, #047857);
 }
 
 /* Firefox scrollbar */
-.overflow-y-auto {
+.overflow-y-scroll {
   scrollbar-width: thin;
   scrollbar-color: #10b981 #f1f5f9;
 }
