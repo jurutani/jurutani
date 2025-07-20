@@ -37,15 +37,13 @@ useSeoMeta({
 
 <template>
   <div>
-    <ChatbotJurutani />
     <HeroSection />
-    <div class="py-8 gap">
       <WeatherSection class="mt-16" />
       <LaunchSale class="mt-16" />
       <HotDeals class="mt-16" />
       <FeatureSection class="mt-16" />
       <HomeSponsorship class="mt-16" />
-    </div>
+      <ChatbotJurutani />
   </div>
 </template>
 
