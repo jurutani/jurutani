@@ -1,5 +1,5 @@
 <template>
-  <div class="join-community">
+  <div class="join-community py-12">
     <div class="container mx-auto py-10 px-4">
      <div class="flex items-center mb-10 gap-4">
         <NuxtLink 

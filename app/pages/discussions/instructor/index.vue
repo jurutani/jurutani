@@ -143,8 +143,8 @@ useHead({
 </script>
 
 <template>
-  <div class="instructor-discussions">
-    <div class="container mx-auto py-10 px-4">
+  <div class="instructor-discussions py-12">
+    <div class="container mx-auto py-10">
       <div class="flex items-center mb-10 gap-4">
         <NuxtLink 
           to="/discussions" 

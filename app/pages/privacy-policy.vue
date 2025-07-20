@@ -9,7 +9,7 @@ useHead({
 </script>
 
 <template>
-  <section class="bg-white dark:bg-gray-900 min-h-screen py-24 lg:pt-32 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+  <section class="bg-white dark:bg-gray-900 min-h-screen pt-24 pb-12 lg:pt-32 text-gray-800 dark:text-gray-200 transition-colors duration-300 px-2">
     <div class="max-w-3xl mx-auto">
       <!-- Header dengan logo -->
       <div class="flex justify-between items-center mb-6 pt-4">

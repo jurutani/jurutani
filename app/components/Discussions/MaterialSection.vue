@@ -170,7 +170,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="course-page container mx-auto px-4 py-12">
+  <div class="course-page container mx-auto py-12">
     <!-- Course Section Header -->
     <div class="mx-auto mb-4 max-w-4xl text-center py-12">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">

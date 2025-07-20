@@ -125,7 +125,7 @@ onMounted(() => {
 
 
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen py-12">
     <!-- Loading State -->
     <LoadingData v-if="loading" message="Memuat profil pakar..." />
 
@@ -133,7 +133,7 @@ onMounted(() => {
     <ErrorData v-else-if="error" :error="error" />
 
     <!-- Expert Profile -->
-    <div v-else-if="expert" class="max-w-6xl mx-auto px-4 py-8">
+    <div v-else-if="expert" class="max-w-6xl mx-auto py-8">
       <!-- Back Button -->
       <div class="mb-6">
         <NuxtLink 
@@ -162,7 +162,7 @@ onMounted(() => {
         </div>
 
         <!-- Profile Content -->
-        <div class="px-6 sm:px-8 pb-8">
+        <div class=" pb-8">
           <div class="flex flex-col lg:flex-row items-start lg:items-end gap-6 -mt-16">
             <!-- Avatar -->
             <div class="relative flex-shrink-0">
@@ -350,7 +350,7 @@ onMounted(() => {
     </div>
 
     <!-- Not Found State -->
-    <div v-else class="max-w-4xl mx-auto px-4 py-20 text-center">
+    <div v-else class="max-w-4xl mx-auto py-20 text-center">
       <div class="bg-white rounded-2xl shadow-lg p-12">
         <svg class="w-24 h-24 text-gray-300 mx-auto mb-6" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>

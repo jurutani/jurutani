@@ -123,7 +123,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-8 p-4 md:p-6">
+  <div class="flex flex-col gap-8 py-12">
     
     <!-- Loading State -->
     <div v-if="loading" class="flex items-center justify-center py-16">
