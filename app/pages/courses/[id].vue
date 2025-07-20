@@ -138,7 +138,7 @@ const fetchMeetingById = async () => {
 
     if (fetchError) {
       console.error('Error fetching meeting:', fetchError);
-      error.value = fetchError;
+      error.value = 'Gagal memuat course';
       if (fetchError.code === 'PGRST116') {
         notFound.value = true;
       }
@@ -153,7 +153,7 @@ const fetchMeetingById = async () => {
     }
   } catch (err) {
     console.error('Exception fetching meeting:', err);
-    error.value = err;
+    error.value = 'Terjadi kesalahan yang tidak terduga';
   } finally {
     loading.value = false;
   }
@@ -169,195 +169,246 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-16 max-w-4xl">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-14">
     <!-- Header -->
-    <div class="mb-6">
-      <button 
-        class="flex items-center gap-2 text-green-600 hover:text-green-700 mb-4"
-        @click="goBack"
-      >
-        <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
-        <span>Kembali ke Course</span>
-      </button>
+    <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <button 
+            class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+            @click="goBack"
+          >
+            <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
+            <span class="font-medium">Kembali ke Course</span>
+          </button>
+          
+          <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
+            <UIcon name="i-heroicons-academic-cap" class="w-5 h-5" />
+            <span class="font-semibold">JuruTani Courses</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Loading -->
-    <div v-if="loading" class="text-center py-12">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"/>
-      <p class="text-gray-500">Memuat course...</p>
-    </div>
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <!-- Loading State -->
+      <div v-if="loading" class="flex flex-col items-center justify-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent" />
+        <p class="text-gray-600 dark:text-gray-400 mt-4">Memuat course...</p>
+      </div>
 
-    <!-- Error -->
-    <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">
-      <p class="font-medium">Terjadi kesalahan saat memuat course</p>
-      <button class="mt-2 text-blue-600 hover:text-blue-800" @click="goBack">
-        ← Kembali ke daftar course
-      </button>
-    </div>
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-20">
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8 max-w-md mx-auto">
+          <UIcon name="i-heroicons-exclamation-triangle" class="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h3 class="text-lg font-semibold text-red-700 dark:text-red-400 mb-2">Oops! Terjadi Kesalahan</h3>
+          <p class="text-red-600 dark:text-red-300 mb-4">{{ error }}</p>
+          <UButton color="red" variant="outline" @click="goBack">
+            Kembali ke Daftar Course
+          </UButton>
+        </div>
+      </div>
 
-    <!-- Not Found -->
-    <div v-else-if="notFound" class="text-center py-16">
-      <div class="text-6xl mb-4">📚</div>
-      <h2 class="text-2xl font-bold text-gray-700 mb-4">Course tidak ditemukan</h2>
-      <p class="text-gray-500 mb-8">Course yang Anda cari mungkin telah dihapus atau tidak tersedia.</p>
-      <button 
-        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700" 
-        @click="goBack"
-      >
-        Kembali ke daftar course
-      </button>
-    </div>
+      <!-- Not Found -->
+      <div v-else-if="notFound" class="text-center py-20">
+        <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 max-w-md mx-auto">
+          <div class="text-6xl mb-4">📚</div>
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Course Tidak Ditemukan</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Course yang Anda cari mungkin telah dihapus atau tidak tersedia.</p>
+          <UButton color="gray" variant="outline" @click="goBack">
+            Kembali ke Daftar Course
+          </UButton>
+        </div>
+      </div>
 
-    <!-- Meeting Content -->
-    <div v-else-if="meeting" class="space-y-6">
-      <!-- Image or Placeholder -->
-      <div class="bg-white rounded-xl shadow-sm overflow-hidden border">
-        <div v-if="imageUrl" class="relative h-64 md:h-80">
+      <!-- Course Content -->
+      <article v-else-if="meeting" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Hero Image -->
+        <div class="relative h-64 md:h-80 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
           <img
+            v-if="imageUrl"
             :src="imageUrl"
             :alt="meeting.title"
             class="w-full h-full object-cover"
           >
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
-          <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-            <div class="flex items-center gap-3 mb-3">
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 backdrop-blur-sm">
-                <span class="mr-1">{{ getCategoryIcon(meeting.category) }}</span>
-                {{ meeting.category }}
-              </span>
-              <span class="text-sm opacity-90">{{ formatDate(meeting.created_at) }}</span>
-            </div>
-            <h1 class="text-2xl md:text-3xl font-bold">{{ meeting.title }}</h1>
-          </div>
-        </div>
-        <div v-else class="p-6">
-          <div class="flex items-center justify-center h-40 bg-gray-100 rounded-lg mb-4">
-            <div class="text-center">
-              <div class="text-6xl mb-2">📚</div>
-              <p class="text-gray-500 text-sm">Tidak ada gambar</p>
+          <div v-else class="flex items-center justify-center h-full">
+            <div class="text-center text-green-600 dark:text-green-400">
+              <UIcon name="i-heroicons-academic-cap" class="w-16 h-16 mx-auto mb-2 opacity-50" />
+              <p class="text-sm opacity-75">Tidak ada gambar</p>
             </div>
           </div>
-          <div class="flex items-center justify-between mb-4">
-            <span 
-              class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-              :class="getCategoryBadgeClass(meeting.category)"
-            >
-              <span class="mr-1">{{ getCategoryIcon(meeting.category) }}</span>
+
+          <!-- Category Badge -->
+          <div class="absolute top-4 right-4">
+            <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full shadow-sm">
+              <span>{{ getCategoryIcon(meeting.category) }}</span>
               {{ meeting.category }}
             </span>
-            <span class="text-sm text-gray-500">{{ formatDate(meeting.created_at) }}</span>
-          </div>
-          <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ meeting.title }}</h1>
-        </div>
-      </div>
-
-      <!-- Author -->
-      <div v-if="author" class="bg-white rounded-xl shadow-sm p-6 border">
-        <h2 class="text-lg font-semibold mb-4">👨‍🏫 Instruktur</h2>
-        <div class="flex items-center space-x-4">
-          <img
-            :src="authorAvatarUrl || '/placeholder.png'"
-            :alt="author.full_name"
-            class="w-12 h-12 rounded-full object-cover"
-          >
-          <div>
-            <h3 class="font-medium">{{ author.full_name || 'Nama tidak tersedia' }}</h3>
-            <p class="text-sm text-gray-500">{{ author.role || 'Role tidak tersedia' }}</p>
           </div>
         </div>
-      </div>
 
-      <!-- Description -->
-      <div class="bg-white rounded-xl shadow-sm p-6 border">
-        <h2 class="text-lg font-semibold mb-4">📝 Deskripsi Course</h2>
-        <div 
-          class="prose max-w-none" 
-          v-html="meeting.description || meeting.content"
-        />
-      </div>
+        <!-- Content -->
+        <div class="p-6 md:p-8">
+          <!-- Title -->
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+            {{ meeting.title }}
+          </h1>
 
-      <!-- Link -->
-      <div v-if="meeting.link" class="bg-white rounded-xl shadow-sm p-6 border">
-        <h2 class="text-lg font-semibold mb-4">🔗 Link Course</h2>
-        <div class="bg-gray-50 rounded-lg p-4">
-          <a 
-            :href="meeting.link" 
-            target="_blank" 
-            class="text-blue-600 hover:text-blue-800 font-medium break-all"
-          >
-            {{ meeting.link }} ↗
-          </a>
-        </div>
-      </div>
+          <!-- Meta Information -->
+          <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-1">
+              <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
+              <span>{{ formatDate(meeting.created_at) }}</span>
+            </div>
+            
+            <div v-if="author" class="flex items-center gap-1">
+              <UIcon name="i-heroicons-user" class="w-4 h-4" />
+              <span>{{ author.full_name || 'Instruktur' }}</span>
+            </div>
+          </div>
 
-      <!-- Attachments -->
-      <div class="bg-white rounded-xl shadow-sm p-6 border">
-        <h2 class="text-lg font-semibold mb-4">📎 Lampiran</h2>
-        <div v-if="attachmentUrls.length > 0" class="space-y-3">
-          <div 
-            v-for="attachment in attachmentUrls" 
-            :key="attachment.filename"
-            class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer"
-            @click="downloadAttachment(attachment)"
-          >
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <span class="text-blue-600 text-xs font-bold">
-                  {{ getFileExtension(attachment.filename) }}
-                </span>
-              </div>
+          <!-- Instructor -->
+          <div v-if="author" class="mb-8 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <UIcon name="i-heroicons-user-circle" class="w-5 h-5 text-green-600" />
+              Instruktur
+            </h2>
+            <div class="flex items-center space-x-4">
+              <img
+                :src="authorAvatarUrl || '/placeholder.png'"
+                :alt="author.full_name"
+                class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
+              >
               <div>
-                <p class="font-medium text-sm">{{ attachment.filename }}</p>
-                <p class="text-xs text-gray-500">Klik untuk mengunduh</p>
+                <h3 class="font-medium text-gray-900 dark:text-white">{{ author.full_name || 'Nama tidak tersedia' }}</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ author.role || 'Role tidak tersedia' }}</p>
               </div>
             </div>
-            <span class="text-gray-400">⬇️</span>
+          </div>
+
+          <!-- Main Content -->
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <UIcon name="i-heroicons-document-text" class="w-5 h-5 text-green-600" />
+              Deskripsi Course
+            </h2>
+            <div 
+              class="prose prose-lg max-w-none prose-green prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-green-600 hover:prose-a:text-green-700 dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300 dark:prose-a:text-green-400"
+              v-html="meeting.description || meeting.content"
+            />
+          </div>
+
+          <!-- Course Link -->
+          <div v-if="meeting.link" class="mb-8 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <UIcon name="i-heroicons-link" class="w-5 h-5 text-green-600" />
+              Link Course
+            </h2>
+            <div class="flex items-center justify-between">
+              <a 
+                :href="meeting.link" 
+                target="_blank" 
+                class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium break-all flex-1 mr-4"
+              >
+                {{ meeting.link }}
+              </a>
+              <UButton
+                color="green"
+                variant="solid"
+                icon="i-heroicons-arrow-top-right-on-square"
+                @click="openCourseLink"
+              >
+                Akses Course
+              </UButton>
+            </div>
+          </div>
+
+          <!-- Attachments -->
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <UIcon name="i-heroicons-paper-clip" class="w-5 h-5 text-green-600" />
+              Lampiran
+            </h2>
+            
+            <div v-if="attachmentUrls.length > 0" class="space-y-3">
+              <div 
+                v-for="attachment in attachmentUrls" 
+                :key="attachment.filename"
+                class="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30 cursor-pointer transition-colors"
+                @click="downloadAttachment(attachment)"
+              >
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center">
+                    <span class="text-blue-600 dark:text-blue-400 text-xs font-bold">
+                      {{ getFileExtension(attachment.filename) }}
+                    </span>
+                  </div>
+                  <div>
+                    <p class="font-medium text-sm text-blue-900 dark:text-blue-200">{{ attachment.filename }}</p>
+                    <p class="text-xs text-blue-600 dark:text-blue-400">Klik untuk mengunduh</p>
+                  </div>
+                </div>
+                <UIcon name="i-heroicons-arrow-down-tray" class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              </div>
+            </div>
+            
+            <div v-else class="text-center py-8 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+              <UIcon name="i-heroicons-paper-clip" class="w-12 h-12 mx-auto mb-3 text-gray-400" />
+              <p class="text-gray-500 dark:text-gray-400">Tidak ada lampiran</p>
+            </div>
           </div>
         </div>
-        <div v-else class="text-center py-8">
-          <div class="text-4xl mb-3">📎</div>
-          <p class="text-gray-500">Tidak ada lampiran</p>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="bg-white rounded-xl shadow-sm p-6 border">
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button 
-            v-if="meeting.link"
-            class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium"
-            @click="openCourseLink"
-          >
-            🚀 Akses Course
-          </button>
-          <button 
-            class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium"
-            @click="goBack"
-          >
-            ← Kembali
-          </button>
-        </div>
-      </div>
+      </article>
     </div>
   </div>
 </template>
 
 <style scoped>
 .prose {
-  line-height: 1.6;
+  line-height: 1.75;
 }
+
 .prose p {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
+
 .prose h1, .prose h2, .prose h3 {
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
 }
+
+.prose h1 {
+  font-size: 1.875rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+}
+
 .prose ul, .prose ol {
-  margin: 1rem 0;
-  padding-left: 1.5rem;
+  margin: 1.25rem 0;
+  padding-left: 1.75rem;
 }
+
 .prose li {
-  margin: 0.5rem 0;
+  margin: 0.75rem 0;
+}
+
+.prose blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 4px solid #10b981;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.dark .prose blockquote {
+  color: #9ca3af;
+  border-left-color: #34d399;
 }
 </style>
