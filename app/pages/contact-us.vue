@@ -94,7 +94,7 @@
             <UIcon name="i-heroicons-phone" class="text-green-600 dark:text-green-300 text-2xl" />
           </div>
           <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Telepon kami</h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">Layanan Panggilan JuruTani tersedia di hari Senin - jumat </p>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">Layanan Panggilan Juru Tani tersedia di hari Senin - jumat </p>
           <p class="text-gray-600 dark:text-gray-300 mb-4">Jam layanan : 09.00 - 16.00 WIB</p>
       <div class="font-medium text-green-600 dark:text-green-400">+62 815 7552 5260</div>
         </div>
@@ -105,7 +105,7 @@
             <UIcon name="i-heroicons-envelope" class="text-green-600 dark:text-green-300 text-2xl" />
           </div>
           <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Email kami</h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">Kirimi kami pesan email dan segera Tim JuruTani akan meberikan respon secepatnya.</p>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">Kirimi kami pesan email dan segera Tim Juru Tani akan meberikan respon secepatnya.</p>
           <div class="font-medium text-green-600 dark:text-green-400">jurutani2@gmail.com</div>
         </div>
 
@@ -115,7 +115,7 @@
             <UIcon name="i-heroicons-map-pin" class="text-green-600 dark:text-green-300 text-2xl" />
           </div>
           <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Lokasi kami</h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">Mari datang dan berdiskusi dengan tim JuruTani secara langsung.</p>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">Mari datang dan berdiskusi dengan tim Juru Tani secara langsung.</p>
           <div class="font-medium text-green-600 dark:text-green-400">Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo, </div>
           <div class="font-medium text-green-600 dark:text-green-400">Kota Yogyakarta, Daerah Istimewa Yogyakarta 55167</div>
         </div>

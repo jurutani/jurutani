@@ -166,7 +166,7 @@
         <div class="max-w-3xl mx-auto text-center">
           <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Pusat Bantuan</h1>
           <p class="text-lg md:text-xl text-green-100 mb-10">
-            Temukan jawaban dari pertanyaan - pertanyaan paling umum dari Tim Jurutani dalam Edukasi Pertanian.
+            Temukan jawaban dari pertanyaan - pertanyaan paling umum dari Tim Juru tani dalam Edukasi Pertanian.
           </p>         
         </div>
       </div>
@@ -228,7 +228,7 @@
           </div>
           <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Contact Support</h3>
           <p class="text-gray-600 dark:text-gray-300 mb-6">
-            Butuh bantuan lebih dalam dari Tim JuruTani untuk pertanian Anda?
+            Butuh bantuan lebih dalam dari Tim Juru Tani untuk pertanian Anda?
           </p>
           <UButton color="green" variant="ghost" to="/contact-us">
             Hubungi kami ...
@@ -290,7 +290,7 @@
             Tidak menemukan apa yang kamu cari?
           </h2>
           <p class="text-green-100 mb-8">
-            Tim JuruTani siap menjawab semua pertanyaan mu dalam bidang pertanian.
+            Tim Juru Tani siap menjawab semua pertanyaan mu dalam bidang pertanian.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <UButton 

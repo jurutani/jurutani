@@ -15,7 +15,7 @@
       </div>
       
       <h3 class="text-xl font-bold text-green-800 mb-3">
-        {{ searchQuery ? 'Conversation tidak ditemukan' : 'Selamat datang di JuruTani Chat!' }}
+        {{ searchQuery ? 'Conversation tidak ditemukan' : 'Selamat datang di Juru Tani Chat!' }}
       </h3>
       
       <p class="text-green-600 mb-6 leading-relaxed">
@@ -47,8 +47,8 @@
         color="green"
         variant="solid"
         size="lg"
-        @click="$emit('startNewChat')"
         class="shadow-lg hover:shadow-xl transition-all duration-200"
+        @click="$emit('startNewChat')"
       >
         Mulai Konsultasi Sekarang
       </UButton>

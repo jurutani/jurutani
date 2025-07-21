@@ -16,7 +16,7 @@ const messages = ref([
   {
     id: 1,
     type: 'bot',
-    text: 'Halo! Saya adalah Jurutani AI, asisten penyuluh jurutani untuk pertanian, peternakan, dan pembangunan. Saya dapat membantu Anda dengan informasi tentang:\n\n• Teknik budidaya tanaman dan peternakan\n• Teknologi pertanian modern\n• Manajemen sumber daya alam\n• Pembangunan infrastruktur pertanian\n• Pemasaran hasil pertanian\n• Program pemerintah untuk petani\n\nAda yang ingin Anda tanyakan?',
+    text: 'Halo! Saya adalah Juru tani AI, asisten penyuluh juru tani untuk pertanian, peternakan, dan pembangunan. Saya dapat membantu Anda dengan informasi tentang:\n\n• Teknik budidaya tanaman dan peternakan\n• Teknologi pertanian modern\n• Manajemen sumber daya alam\n• Pembangunan infrastruktur pertanian\n• Pemasaran hasil pertanian\n• Program pemerintah untuk petani\n\nAda yang ingin Anda tanyakan?',
     timestamp: new Date()
   }
 ])
@@ -108,7 +108,7 @@ const closeChat = () => {
 
 const sendMessageToGemini = async (message) => {
   try {
-    const systemPrompt = `Anda adalah Jurutani AI, asisten penyuluh jurutani yang ahli dan berpengalaman. Tugas Anda adalah memberikan penjelasan yang jelas, akurat, praktis, dan mudah dipahami dalam bahasa Indonesia.
+    const systemPrompt = `Anda adalah Juru tani AI, asisten penyuluh juru tani yang ahli dan berpengalaman. Tugas Anda adalah memberikan penjelasan yang jelas, akurat, praktis, dan mudah dipahami dalam bahasa Indonesia.
 
     Bidang keahlian Anda meliputi:
     
@@ -257,17 +257,17 @@ watch(isOpen, (newVal) => {
     <!-- Chat Bubble Button -->
     <div v-if="!isOpen" class="relative">
       <button
-        @click="openChat"
         class="w-16 h-16 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 overflow-hidden border-2 border-green-400"
+        @click="openChat"
       >
         <img 
           src="/chatbot.png" 
           alt="Chatbot" 
           class="w-full h-full object-cover"
-        />
+        >
       </button>
       <!-- Notification dot -->
-      <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
+      <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse"/>
     </div>
 
     <!-- Splash Screen -->
@@ -288,10 +288,10 @@ watch(isOpen, (newVal) => {
         <!-- Title -->
         <div>
           <h1 class="text-xl font-bold text-green-700 mb-2">
-            Jurutani AI
+            Juru tani AI
           </h1>
           <p class="text-gray-600 text-sm">
-            Asisten Penyuluh Jurutani
+            Asisten Penyuluh Juru tani
           </p>
         </div>
 
@@ -306,8 +306,8 @@ watch(isOpen, (newVal) => {
           color="green"
           size="lg"
           block
-          @click="startChat"
           class="hover:bg-green-700 transition-colors duration-200"
+          @click="startChat"
         >
           Mulai Konsultasi
         </UButton>
@@ -330,8 +330,8 @@ watch(isOpen, (newVal) => {
             <UIcon name="i-heroicons-microphone" class="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 class="font-semibold text-sm">Jurutani AI</h3>
-            <p class="text-xs text-green-100">Penyuluh Jurutani</p>
+            <h3 class="font-semibold text-sm">Juru tani AI</h3>
+            <p class="text-xs text-green-100">Penyuluh Juru tani</p>
           </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -340,16 +340,16 @@ watch(isOpen, (newVal) => {
             color="green"
             variant="ghost"
             size="xs"
-            @click="toggleChatExpansion"
             class="hover:bg-white/20"
+            @click="toggleChatExpansion"
           />
           <UButton
             icon="i-heroicons-x-mark"
             color="green"
             variant="ghost"
             size="xs"
-            @click="closeChat"
             class="hover:bg-white/20"
+            @click="closeChat"
           />
         </div>
       </div>
@@ -418,7 +418,8 @@ watch(isOpen, (newVal) => {
         
         <!-- Loading indicator -->
         <div v-if="isLoading" class="flex justify-start animate-fade-in">
-          <div :class="[
+          <div
+:class="[
             isExpanded ? 'max-w-md' : 'max-w-xs',
             'px-3 py-2 rounded-lg bg-white text-gray-800 mr-4 border border-gray-200 shadow-sm'
           ]">
@@ -428,9 +429,9 @@ watch(isOpen, (newVal) => {
               </div>
               <div class="flex items-center space-x-2">
                 <div class="flex space-x-1">
-                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
-                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce"/>
+                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.1s"/>
+                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.2s"/>
                 </div>
                 <span class="text-sm text-gray-500">Mengetik...</span>
               </div>
@@ -439,7 +440,7 @@ watch(isOpen, (newVal) => {
         </div>
         
         <!-- Scroll anchor -->
-        <div id="scroll-anchor" style="height: 1px;"></div>
+        <div id="scroll-anchor" style="height: 1px;"/>
       </div>
 
       <!-- Input Area - Fixed at bottom -->

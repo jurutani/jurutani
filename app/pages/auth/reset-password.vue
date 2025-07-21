@@ -120,7 +120,7 @@ const handleUpdatePassword = async () => {
             Reset Password
           </h1>
           <p class="text-gray-500 dark:text-gray-400 text-sm">
-            Buat password baru untuk akun Jurutani Anda
+            Buat password baru untuk akun Juru tani Anda
           </p>
         </div>
 

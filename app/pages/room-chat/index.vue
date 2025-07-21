@@ -169,7 +169,7 @@ useHead({
           </svg>
         </NuxtLink>        
         <div>
-          <h1 class="text-2xl font-bold text-green-800 dark:text-green-300">JuruTani Chat</h1>
+          <h1 class="text-2xl font-bold text-green-800 dark:text-green-300">Juru Tani Chat</h1>
           <p class="text-sm text-green-600 dark:text-green-400">Konsultasi dengan ahli pertanian</p>
         </div>
       </div>

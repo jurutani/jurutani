@@ -17,7 +17,7 @@
       </div>
       
       <h3 class="text-lg font-bold text-green-800 mb-2">
-        Memuat JuruTani Chat
+        Memuat Juru Tani Chat
       </h3>
       <p class="text-green-600 text-sm">
         Menyiapkan conversation dengan ahli pertanian...
@@ -25,9 +25,9 @@
       
       <!-- Progress dots -->
       <div class="flex justify-center space-x-1 mt-4">
-        <div class="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
-        <div class="w-2 h-2 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-        <div class="w-2 h-2 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+        <div class="w-2 h-2 bg-green-400 rounded-full animate-bounce"/>
+        <div class="w-2 h-2 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.1s"/>
+        <div class="w-2 h-2 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.2s"/>
       </div>
     </div>
   </div>

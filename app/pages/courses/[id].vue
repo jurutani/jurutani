@@ -49,14 +49,6 @@ const generateAttachmentUrl = (id: string, attachmentFileName: string) => {
     .data.publicUrl;
 };
 
-const generateAvatarUrl = (avatarFileName?: string) => {
-  if (!avatarFileName) return null;
-  return supabase.storage
-    .from('profiles')
-    .getPublicUrl(`avatar/${avatarFileName}`)
-    .data.publicUrl;
-};
-
 const imageUrl = computed(() => {
   if (!meeting.value || !meeting.value.image_url || meeting.value.image_url.trim() === '') {
     return null;
@@ -64,9 +56,9 @@ const imageUrl = computed(() => {
   return generateImageUrl(meeting.value.id, meeting.value.image_url);
 });
 
+// Langsung gunakan avatar_url tanpa perlakuan khusus
 const authorAvatarUrl = computed(() => {
-  if (!author.value || !author.value.avatar_url) return null;
-  return generateAvatarUrl(author.value.avatar_url);
+  return author.value?.avatar_url || null;
 });
 
 const attachmentUrls = computed(() => {
@@ -169,7 +161,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-14">
+  <div class="min-h-screen pt-14">
     <!-- Header -->
     <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
       <div class="container mx-auto px-4 py-4">
@@ -184,7 +176,7 @@ onMounted(() => {
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
             <UIcon name="i-heroicons-academic-cap" class="w-5 h-5" />
-            <span class="font-semibold">JuruTani Courses</span>
+            <span class="font-semibold">Juru Tani Courses</span>
           </div>
         </div>
       </div>

@@ -125,7 +125,7 @@ onMounted(() => {
 
 
 <template>
-  <div class="min-h-screen py-12">
+  <div class="min-h-screen py-12 px-6">
     <!-- Loading State -->
     <LoadingData v-if="loading" message="Memuat profil pakar..." />
 
@@ -162,8 +162,8 @@ onMounted(() => {
         </div>
 
         <!-- Profile Content -->
-        <div class=" pb-8">
-          <div class="flex flex-col lg:flex-row items-start lg:items-end gap-6 -mt-16">
+        <div class="pb-8">
+          <div class="flex flex-col lg:flex-row items-start lg:items-end gap-6 -mt-16 px-6">
             <!-- Avatar -->
             <div class="relative flex-shrink-0">
               <img 

@@ -167,7 +167,7 @@ onMounted(() => {
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
             <UIcon name="i-heroicons-academic-cap" class="w-5 h-5" />
-            <span class="font-semibold">JuruTani Edu</span>
+            <span class="font-semibold">Juru Tani Edu</span>
           </div>
         </div>
       </div>
