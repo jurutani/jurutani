@@ -242,10 +242,10 @@ useHead({
         v-if="!loading && !adminUser"
         class="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400"
       >
-        <UIcon name="i-heroicons-exclamation-triangle" class="w-10 h-10 mb-4 text-yellow-400" />
-        <p class="text-lg font-semibold">Admin tidak ditemukan</p>
+        <UIcon name="i-heroicons-headset" class="w-10 h-10 mb-4 text-blue-500" />
+        <p class="text-lg font-semibold">Ada pertanyaan lebih lanjut?</p>
         <p class="text-sm text-center mt-2">
-          Silakan hubungi support untuk bantuan lebih lanjut
+          Silakan hubungi tim support kami untuk bantuan
         </p>
       </div>
     </div>
