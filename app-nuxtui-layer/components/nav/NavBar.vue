@@ -49,7 +49,7 @@ onUnmounted(() => {
     <div class="flex h-full items-center justify-between navbar-grid pt-4 lg:pb-4 rounded-2xl">
       <div style="grid-area: logo" class="flex justify-center items-center">
          <ULink data-pg-name="Logo" class="flex items-center sm:flex-row" to="/">
-            <img src="/LOGO02.png" alt="Logo" class="h-10" >
+            <img src="/jurutani.png" alt="Logo" class="h-10" >
           </ULink>
       </div>
       
