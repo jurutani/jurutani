@@ -66,7 +66,7 @@ useSchemaOrg([
     <div class="max-w-md w-full space-y-6">
       <!-- Logo -->
       <div class="flex justify-center">
-        <TheLogo class="h-24 md:h-32 lg:h-40" />
+        <TheLogo class="h-24" />
       </div>
 
       <!-- Main Content -->
