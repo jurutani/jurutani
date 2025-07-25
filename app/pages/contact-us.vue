@@ -106,7 +106,7 @@
           </div>
           <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Email kami</h3>
           <p class="text-gray-600 dark:text-gray-300 mb-4">Kirimi kami pesan email dan segera Tim Juru Tani akan meberikan respon secepatnya.</p>
-          <div class="font-medium text-green-600 dark:text-green-400">jurutani2@gmail.com</div>
+          <div class="font-medium text-green-600 dark:text-green-400">si.jurutani@gmail.com</div>
         </div>
 
         <!-- Contact card 3 -->

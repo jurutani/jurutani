@@ -82,7 +82,7 @@
               </div>
               <div class="flex items-center">
                 <UIcon name="i-mdi-email" class="text-green-600 dark:text-green-400 mr-2" />
-                <p class="text-sm">jurutani2@gmail.com</p>
+                <p class="text-sm">si.jurutani@gmail.com</p>
               </div>
               <div class="flex items-center">
                 <UIcon name="i-mdi-clock-outline" class="text-green-600 dark:text-green-400 mr-2" />
@@ -123,7 +123,7 @@
           
           <!-- Email/Gmail -->
           <a 
-            href="mailto:jurutani2@gmail.com" 
+            href="mailto:si.jurutani@gmail.com" 
             aria-label="Email"
             class="social-icon-container"
           >

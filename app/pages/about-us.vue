@@ -108,8 +108,8 @@ const galleryData = [
         </div>
       </section>
 
-      <!-- Gallery Section -->
-      <section class="mb-16">
+      Gallery Section -->
+      <section class="mb-16 pt-6">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-4">
             <UIcon name="i-heroicons-camera" class="inline-block mr-2" />

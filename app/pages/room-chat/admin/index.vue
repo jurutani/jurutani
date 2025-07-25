@@ -25,7 +25,7 @@ const {
 } = useChatUtils()
 
 // Admin ID
-const ADMIN_ID = 'ce967618-14a4-41f9-a814-f919be31e545'
+const ADMIN_ID = 'dcbee036-0c31-43de-93b8-4e0e05d6498c'
 
 // Reactive data
 const currentUser = ref(null)
