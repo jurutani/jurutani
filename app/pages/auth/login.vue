@@ -19,6 +19,11 @@ const form = ref({
 const isLoading = ref(false)
 const showPassword = ref(false)
 
+// Function to toggle password visibility
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
+
 const handleLogin = async () => {
   if (!form.value.email || !form.value.password) {
     toastStore.warning('Email dan kata sandi harus diisi.', 3000)
@@ -59,9 +64,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
     toastStore.error(message, 3000)
   }
 }
-
 </script>
-
 
 <template>
   <div class="min-h-screen flex">
@@ -119,57 +122,61 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
     </div>
     
     <!-- Form login -->
-      <div class="w-full lg:w-1/2 flex items-center justify-center p-6">
-        <div class="w-full max-w-md">
-          <div class="lg:hidden flex items-center justify-center space-x-3 mb-8">
-            <TheLogo />
-      </div>
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6">
+      <div class="w-full max-w-md">
+        <div class="lg:hidden flex items-center justify-center space-x-3 mb-8">
+          <TheLogo />
+        </div>
 
-      <!-- Heading -->
-      <div class="text-center mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Selamat datang kembali</h2>
-        <p class="text-gray-500 dark:text-gray-400 mt-2">Masuk untuk melanjutkan ke sistem Juru Tani</p>
-      </div>
+        <!-- Heading -->
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Selamat datang kembali</h2>
+          <p class="text-gray-500 dark:text-gray-400 mt-2">Masuk untuk melanjutkan ke sistem Juru Tani</p>
+        </div>
         
         <UCard class="shadow-sm border-green-100 dark:border-green-700">
           <form @submit.prevent="handleLogin">
             <UFormGroup label="Email atau Username" name="email">
-              <UInput
-                v-model="form.email"
-                placeholder="nama@example.com"
-                size="lg"
-                :ui="{
-                  icon: { trailing: { pointer: '' } },
-                  base: 'relative block w-full rounded-lg',
-                  input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-                }"
-              >
-                <template #trailing>
-                  <UIcon name="i-ph-at" class="text-gray-400" />
-                </template>
-              </UInput>
+              <div class="relative">
+                <UInput
+                  v-model="form.email"
+                  placeholder="nama@example.com"
+                  size="lg"
+                  :ui="{
+                    base: 'relative block w-full rounded-lg pr-12',
+                    input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
+                  }"
+                />
+                <div class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none">
+                  <UIcon name="i-ph-envelope" class="w-5 h-5" />
+                </div>
+              </div>
             </UFormGroup>
 
             <UFormGroup label="Kata Sandi" name="password" class="mt-4">
-              <UInput
-                v-model="form.password"
-                :type="showPassword ? 'text' : 'password'"
-                placeholder="Masukkan kata sandi"
-                size="lg"
-                :ui="{
-                  icon: { trailing: { pointer: 'cursor-pointer' } },
-                  base: 'relative block w-full rounded-lg',
-                  input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-                }"
-              >
-                <template #trailing>
-                  <UIcon
-                    :name="showPassword ? 'i-ph-eye-slash' : 'i-ph-eye'"
-                    class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
-                    @click="showPassword = !showPassword"
+              <div class="relative">
+                <UInput
+                  v-model="form.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Masukkan kata sandi"
+                  size="lg"
+                  :ui="{
+                    base: 'relative block w-full rounded-lg pr-12',
+                    input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
+                  }"
+                />
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:text-gray-600 dark:focus:text-gray-300 transition-colors duration-200"
+                  :aria-label="showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                  @click="togglePasswordVisibility"
+                >
+                  <UIcon 
+                    :name="showPassword ? 'i-ph-eye-slash' : 'i-ph-eye'" 
+                    class="w-5 h-5" 
                   />
-                </template>
-              </UInput>
+                </button>
+              </div>
             </UFormGroup>
 
             <div class="flex justify-between items-center mt-4">
@@ -180,58 +187,57 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 color="green"
                 :ui="{ 
                   wrapper: 'items-center',
-                  label: 'text-sm text-gray-600'
+                  label: 'text-sm text-gray-600 dark:text-gray-400'
                 }" 
               />
               <UButton 
                 variant="link" 
                 to="/auth/forgot-password" 
-                class="text-sm text-green-600 hover:text-green-700 font-medium"
+                class="text-sm text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-medium"
               >
                 Lupa kata sandi?
               </UButton>
             </div>
 
             <div class="mt-6">
-                <UButton
-                    type="submit"
-                    block
-                    color="green"
-                    :loading="isLoading"
-                    :disabled="isLoading"
-                    :ui="{
-                        base: 'rounded-lg p-4 font-medium text-base',
-                        color: {
-                        green: {
-                            solid: 'bg-green-600 hover:bg-green-700 focus:ring-green-300 text-white'
-                        }
-                        }
-                    }"
-                    >
-                    <template #leading>
-                        <UIcon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
-                    </template>
-                    {{ isLoading ? 'Memproses...' : 'Masuk' }}
-                    </UButton>
-
+              <UButton
+                type="submit"
+                block
+                color="green"
+                :loading="isLoading"
+                :disabled="isLoading"
+                :ui="{
+                  base: 'rounded-lg p-4 font-medium text-base',
+                  color: {
+                    green: {
+                      solid: 'bg-green-600 hover:bg-green-700 focus:ring-green-300 text-white disabled:opacity-50 disabled:cursor-not-allowed'
+                    }
+                  }
+                }"
+              >
+                <template #leading>
+                  <UIcon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
+                </template>
+                {{ isLoading ? 'Memproses...' : 'Masuk' }}
+              </UButton>
             </div>
           </form>
 
           <div class="relative flex items-center justify-center gap-3 my-6">
-            <span class="h-px flex-1 bg-gray-200"/>
+            <span class="h-px flex-1 bg-gray-200 dark:bg-gray-700"/>
             <span class="text-sm text-gray-400">atau</span>
-            <span class="h-px flex-1 bg-gray-200"/>
+            <span class="h-px flex-1 bg-gray-200 dark:bg-gray-700"/>
           </div>
 
-         <div class="grid grid-cols-1 place-items-center gap-3">
-          <UButton
+          <div class="grid grid-cols-1 place-items-center gap-3">
+            <UButton
               color="white"
               variant="outline"
               :ui="{ 
-                base: 'rounded-lg p-2', 
+                base: 'rounded-lg p-2 w-full', 
                 color: {
                   white: {
-                    solid: 'bg-white hover:bg-gray-50'
+                    solid: 'bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600'
                   }
                 }
               }"
@@ -239,15 +245,18 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               @click="handleSocialLogin('google')"
             >
               <UIcon name="i-logos-google-icon" class="mr-2 h-5 w-5" />
-              Google
+              Masuk dengan Google
             </UButton>
           </div>
-
         </UCard>
         
-        <div class="text-center text-sm text-gray-500 mt-6">
+        <div class="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Belum punya akun?
-          <UButton variant="link" to="/auth/register" class="text-green-600 hover:text-green-700 font-medium">
+          <UButton 
+            variant="link" 
+            to="/auth/register" 
+            class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-medium"
+          >
             Daftar sekarang
           </UButton>
         </div>

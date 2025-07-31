@@ -9,14 +9,14 @@ interface AttachmentFile {
 interface Announcement {
   id: string;
   title?: string;
-  content?: string; // Changed from description to content to match the main component
+  content?: string;
   category: string;
   created_at: string;
   organization?: string;
   link?: string;
   image_url?: string;
   fullImageUrl?: string;
-  attachments?: string[];
+  attachments?: string;
   fullAttachmentUrls?: AttachmentFile[];
 }
 
@@ -58,15 +58,10 @@ const excerpt = computed(() => {
 });
 
 const imageUrl = computed(() => {
-  if (props.announcement.fullImageUrl) {
-    return props.announcement.fullImageUrl;
-  }
-  
-  if (props.announcement.image_url) {
-    return props.announcement.image_url;
-  }
-  
-  return '/placeholder.png';
+  // Prioritas: fullImageUrl > image_url > placeholder
+  return props.announcement.fullImageUrl || 
+         props.announcement.image_url || 
+         '/placeholder.png';
 });
 
 const hasAttachments = computed(() => {
@@ -103,6 +98,17 @@ const getFileIcon = (filename: string) => {
       return 'i-heroicons-document';
   }
 };
+
+// Handle image load error
+const handleImageError = (event: Event) => {
+  const img = event.target as HTMLImageElement;
+  img.src = '/placeholder.png';
+};
+
+// Format organization name if exists
+const organizationDisplay = computed(() => {
+  return props.announcement.organization || 'JuruTani';
+});
 </script>
 
 <template>
@@ -113,7 +119,8 @@ const getFileIcon = (filename: string) => {
         :src="imageUrl"
         :alt="announcement.title || 'Gambar Meeting'"
         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-        @error="$event.target.src = '/placeholder.png'"
+        loading="lazy"
+        @error="handleImageError"
       >
       
       <!-- Gradient Overlay -->
@@ -146,20 +153,20 @@ const getFileIcon = (filename: string) => {
           <UIcon name="i-heroicons-calendar-days" class="w-3.5 h-3.5 mr-1.5" />
           {{ formattedDate }}
         </span>
-        <span v-if="announcement.organization" class="flex items-center bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-md text-emerald-700 dark:text-emerald-400">
+        <span class="flex items-center bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-md text-emerald-700 dark:text-emerald-400">
           <UIcon name="i-heroicons-building-office" class="w-3.5 h-3.5 mr-1.5" />
-          {{ announcement.organization }}
+          {{ organizationDisplay }}
         </span>
       </div>
 
       <!-- Title -->
       <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-white line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
-        {{ announcement.title }}
+        {{ announcement.title || 'Meeting Tanpa Judul' }}
       </h3>
       
       <!-- Excerpt -->
       <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow leading-relaxed">
-        {{ excerpt }}
+        {{ excerpt || 'Tidak ada deskripsi tersedia.' }}
       </p>
 
       <!-- Attachments Preview -->
@@ -189,16 +196,31 @@ const getFileIcon = (filename: string) => {
       </div>
 
       <!-- Action Button -->
-      <router-link
-        :to="`/courses/${announcement.id}`"
-        class="mt-auto group/button relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-sm font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25"
-      >
-        <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"/>
-        <div class="relative flex items-center justify-center px-4 py-3">
-          <span class="mr-2">Lihat Detail</span>
-          <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover/button:translate-x-1" />
-        </div>
-      </router-link>
+      <div class="mt-auto flex gap-2">
+        <!-- Detail Button -->
+        <router-link
+          :to="`/courses/${announcement.id}`"
+          class="flex-1 group/button relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-sm font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25"
+        >
+          <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"/>
+          <div class="relative flex items-center justify-center px-4 py-3">
+            <span class="mr-2">Lihat Detail</span>
+            <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover/button:translate-x-1" />
+          </div>
+        </router-link>
+
+        <!-- External Link Button (if link exists) -->
+        <a 
+          v-if="announcement.link"
+          :href="announcement.link"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group/link bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center"
+          title="Buka link eksternal"
+        >
+          <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 transition-transform duration-300 group-hover/link:scale-110" />
+        </a>
+      </div>
     </div>
   </div>
 </template>

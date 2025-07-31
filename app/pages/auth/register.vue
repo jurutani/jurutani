@@ -23,7 +23,17 @@ const form = ref({
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
-const isLoading = ref(false) // Changed from computed to ref
+const isLoading = ref(false)
+
+// Function to toggle password visibility
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
+
+// Function to toggle confirm password visibility
+const toggleConfirmPasswordVisibility = () => {
+  showConfirmPassword.value = !showConfirmPassword.value
+}
 
 // Validation functions
 const validateEmail = (email: string) => {
@@ -34,6 +44,34 @@ const validateEmail = (email: string) => {
 const validatePassword = (password: string) => {
   return password.length >= 8
 }
+
+// Password strength indicator
+const passwordStrength = computed(() => {
+  const password = form.value.password
+  if (!password) return { score: 0, text: '', color: '' }
+  
+  let score = 0
+  const checks = {
+    length: password.length >= 8,
+    lowercase: /[a-z]/.test(password),
+    uppercase: /[A-Z]/.test(password),
+    number: /\d/.test(password),
+    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+  }
+  
+  score = Object.values(checks).filter(Boolean).length
+  
+  if (score <= 2) return { score, text: 'Lemah', color: 'text-red-500' }
+  if (score <= 3) return { score, text: 'Sedang', color: 'text-yellow-500' }
+  if (score <= 4) return { score, text: 'Kuat', color: 'text-green-500' }
+  return { score, text: 'Sangat Kuat', color: 'text-green-600' }
+})
+
+// Password match indicator
+const passwordsMatch = computed(() => {
+  if (!form.value.confirmPassword) return null
+  return form.value.password === form.value.confirmPassword
+})
 
 // Register handler
 const handleRegister = async () => {
@@ -68,7 +106,7 @@ const handleRegister = async () => {
   }
 
   try {
-    isLoading.value = true // Set loading to true
+    isLoading.value = true
 
     console.log('Attempting to register with:', {
       email: form.value.email
@@ -101,14 +139,14 @@ const handleRegister = async () => {
     console.error('Unexpected error during registration:', err)
     toastStore.error('Terjadi kesalahan tidak terduga. Silakan coba lagi.', 3000)
   } finally {
-    isLoading.value = false // Reset loading state
+    isLoading.value = false
   }
 }
 
 // Social login handler
 const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => {
   try {
-    isLoading.value = true // Set loading for social login too
+    isLoading.value = true
     
     const { success, error: loginError } = await loginWithSocialProvider(provider)
 
@@ -123,7 +161,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
     const message = err?.message || 'Terjadi kesalahan saat login.'
     toastStore.error(message, 3000)
   } finally {
-    isLoading.value = false // Reset loading state
+    isLoading.value = false
   }
 }
 </script>
@@ -192,74 +230,116 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         
         <div class="text-center mb-8">
           <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Buat Akun Baru</h2>
-          <p class="text-gray-500 mt-2">Bergabung dengan platform Juru Tani</p>
+          <p class="text-gray-500 dark:text-gray-400 mt-2">Bergabung dengan platform Juru Tani</p>
         </div>
         
-        <UCard class="shadow-sm border-0">
+        <UCard class="shadow-sm border-green-100 dark:border-green-700">
           <form @submit.prevent="handleRegister">
             <UFormGroup label="Email" name="email">
-              <UInput
-                v-model="form.email"
-                type="email"
-                placeholder="nama@example.com"
-                size="lg"
-                :disabled="isLoading"
-                :ui="{
-                  icon: { trailing: { pointer: '' } },
-                  base: 'relative block w-full rounded-lg',
-                  input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-                }"
-              >
-                <template #trailing>
-                  <UIcon name="i-ph-at" class="text-gray-400" />
-                </template>
-              </UInput>
+              <div class="relative">
+                <UInput
+                  v-model="form.email"
+                  type="email"
+                  placeholder="nama@example.com"
+                  size="lg"
+                  :disabled="isLoading"
+                  :ui="{
+                    base: 'relative block w-full rounded-lg pr-12',
+                    input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
+                  }"
+                />
+                <div class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none">
+                  <UIcon name="i-ph-envelope" class="w-5 h-5" />
+                </div>
+              </div>
             </UFormGroup>
 
             <UFormGroup label="Kata Sandi" name="password" class="mt-4">
-              <UInput
-                v-model="form.password"
-                :type="showPassword ? 'text' : 'password'"
-                placeholder="Minimal 8 karakter"
-                size="lg"
-                :disabled="isLoading"
-                :ui="{
-                  icon: { trailing: { pointer: 'cursor-pointer' } },
-                  base: 'relative block w-full rounded-lg',
-                  input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-                }"
-              >
-                <template #trailing>
-                  <UIcon
-                    :name="showPassword ? 'i-ph-eye-slash' : 'i-ph-eye'"
-                    class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
-                    @click="showPassword = !showPassword"
+              <div class="relative">
+                <UInput
+                  v-model="form.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Minimal 8 karakter"
+                  size="lg"
+                  :disabled="isLoading"
+                  :ui="{
+                    base: 'relative block w-full rounded-lg pr-12',
+                    input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
+                  }"
+                />
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:text-gray-600 dark:focus:text-gray-300 transition-colors duration-200"
+                  :aria-label="showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                  @click="togglePasswordVisibility"
+                >
+                  <UIcon 
+                    :name="showPassword ? 'i-ph-eye-slash' : 'i-ph-eye'" 
+                    class="w-5 h-5" 
                   />
-                </template>
-              </UInput>
+                </button>
+              </div>
+              
+              <!-- Password Strength Indicator -->
+              <div v-if="form.password" class="mt-2">
+                <div class="flex items-center justify-between text-xs mb-1">
+                  <span class="text-gray-500 dark:text-gray-400">Kekuatan kata sandi:</span>
+                  <span :class="passwordStrength.color" class="font-medium">
+                    {{ passwordStrength.text }}
+                  </span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1">
+                  <div 
+                    class="h-1 rounded-full transition-all duration-300"
+                    :class="{
+                      'bg-red-500': passwordStrength.score <= 2,
+                      'bg-yellow-500': passwordStrength.score === 3,
+                      'bg-green-500': passwordStrength.score >= 4
+                    }"
+                    :style="{ width: `${(passwordStrength.score / 5) * 100}%` }"
+                  />
+                </div>
+              </div>
             </UFormGroup>
 
             <UFormGroup label="Konfirmasi Kata Sandi" name="confirmPassword" class="mt-4">
-              <UInput
-                v-model="form.confirmPassword"
-                :type="showConfirmPassword ? 'text' : 'password'"
-                placeholder="Masukkan kembali kata sandi"
-                size="lg"
-                :disabled="isLoading"
-                :ui="{
-                  icon: { trailing: { pointer: 'cursor-pointer' } },
-                  base: 'relative block w-full rounded-lg',
-                  input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-                }"
-              >
-                <template #trailing>
-                  <UIcon
-                    :name="showConfirmPassword ? 'i-ph-eye-slash' : 'i-ph-eye'"
-                    class="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors"
-                    @click="showConfirmPassword = !showConfirmPassword"
+              <div class="relative">
+                <UInput
+                  v-model="form.confirmPassword"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  placeholder="Masukkan kembali kata sandi"
+                  size="lg"
+                  :disabled="isLoading"
+                  :ui="{
+                    base: 'relative block w-full rounded-lg pr-12',
+                    input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500',
+                    ring: passwordsMatch === false ? 'ring-2 ring-red-500' : ''
+                  }"
+                />
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:text-gray-600 dark:focus:text-gray-300 transition-colors duration-200"
+                  :aria-label="showConfirmPassword ? 'Sembunyikan konfirmasi kata sandi' : 'Tampilkan konfirmasi kata sandi'"
+                  @click="toggleConfirmPasswordVisibility"
+                >
+                  <UIcon 
+                    :name="showConfirmPassword ? 'i-ph-eye-slash' : 'i-ph-eye'" 
+                    class="w-5 h-5" 
                   />
-                </template>
-              </UInput>
+                </button>
+              </div>
+              
+              <!-- Password Match Indicator -->
+              <div v-if="form.confirmPassword" class="mt-2 flex items-center text-xs">
+                <UIcon 
+                  :name="passwordsMatch ? 'i-ph-check-circle-fill' : 'i-ph-x-circle-fill'"
+                  :class="passwordsMatch ? 'text-green-500' : 'text-red-500'"
+                  class="w-4 h-4 mr-1"
+                />
+                <span :class="passwordsMatch ? 'text-green-600' : 'text-red-600'">
+                  {{ passwordsMatch ? 'Kata sandi cocok' : 'Kata sandi tidak cocok' }}
+                </span>
+              </div>
             </UFormGroup>
 
             <div class="mt-4">
@@ -279,7 +359,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                     <UButton
                       variant="link"
                       to="/terms"
-                      class="text-green-600 hover:text-green-700 p-0 font-medium underline-offset-2"
+                      class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 p-0 font-medium underline-offset-2"
                     >
                       Syarat & Ketentuan
                     </UButton> 
@@ -287,7 +367,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                     <UButton
                       variant="link"
                       to="/privacy-policy"
-                      class="text-green-600 hover:text-green-700 p-0 font-medium underline-offset-2"
+                      class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 p-0 font-medium underline-offset-2"
                     >
                       Kebijakan Privasi
                     </UButton>
@@ -302,18 +382,18 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 block
                 color="green"
                 :loading="isLoading"
-                :disabled="isLoading"
+                :disabled="isLoading || !form.agreeTerms || passwordsMatch === false"
                 :ui="{
                   base: 'rounded-lg p-4 font-medium text-base',
                   color: {
                     green: {
-                      solid: 'bg-green-600 hover:bg-green-700 focus:ring-green-300 text-white'
+                      solid: 'bg-green-600 hover:bg-green-700 focus:ring-green-300 text-white disabled:opacity-50 disabled:cursor-not-allowed'
                     }
                   }
                 }"
               >
                 <template #leading>
-                        <UIcon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
+                  <UIcon v-if="!isLoading" name="i-ph-user-plus" class="w-5 h-5" />
                 </template>
                 {{ isLoading ? 'Mendaftar...' : 'Daftar Sekarang' }}
               </UButton>
@@ -332,10 +412,10 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               color="white"
               variant="outline"
               :ui="{ 
-                base: 'rounded-lg p-2', 
+                base: 'rounded-lg p-2 w-full', 
                 color: {
                   white: {
-                    solid: 'bg-white hover:bg-gray-50'
+                    solid: 'bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600'
                   }
                 }
               }"
@@ -344,15 +424,18 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               @click="handleSocialLogin('google')"
             >
               <UIcon v-if="!isLoading" name="i-logos-google-icon" class="mr-2 h-5 w-5" />
-              
-              Google
+              Daftar dengan Google
             </UButton>
           </div>
         </UCard>
         
         <div class="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
           Sudah punya akun?
-          <UButton variant="link" to="/auth/login" class="text-green-600 hover:text-green-700 font-medium">
+          <UButton 
+            variant="link" 
+            to="/auth/login" 
+            class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-medium"
+          >
             Masuk sekarang
           </UButton>
         </div>

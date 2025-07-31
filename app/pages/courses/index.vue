@@ -13,7 +13,17 @@ interface Announcement {
   title?: string
   content?: string
   image_url?: string
-  attachments?: string[]
+  attachments?: string
+  organization?: string
+  link?: string
+  author_id?: string
+  fullImageUrl?: string
+  fullAttachmentUrls?: AttachmentFile[]
+}
+
+interface AttachmentFile {
+  filename: string
+  url: string
 }
 
 interface Category {
@@ -70,20 +80,24 @@ if (categoriesData.value) {
   categories.value = categoriesData.value
 }
 
-// Fungsi untuk generate URL image dan attachment
-const generateImageUrl = (id: string, imageFileName?: string) => {
-  if (!imageFileName) return null
-  return supabase.storage
-    .from('meetings')
-    .getPublicUrl(`${id}/image/${imageFileName}`)
-    .data.publicUrl
-}
-
+// Fungsi untuk generate URL attachment
 const generateAttachmentUrl = (id: string, attachmentFileName: string) => {
   return supabase.storage
     .from('meetings')
     .getPublicUrl(`${id}/attachment/${attachmentFileName}`)
     .data.publicUrl
+}
+
+// Fungsi untuk parse attachments JSON string
+const parseAttachments = (attachmentsString?: string): string[] => {
+  if (!attachmentsString) return []
+  try {
+    const parsed = JSON.parse(attachmentsString)
+    return Array.isArray(parsed) ? parsed : []
+  } catch (err) {
+    console.error('Error parsing attachments:', err)
+    return []
+  }
 }
 
 // Fungsi fetch data yang dioptimasi
@@ -94,7 +108,7 @@ const fetchAnnouncements = async () => {
   try {
     const baseQuery = supabase
       .from('meetings')
-      .select('id, category, created_at, title, content, image_url, attachments', { count: 'exact' })
+      .select('*', { count: 'exact' })
       .is('deleted_at', null)
       .is('archived_at', null)
 
@@ -111,14 +125,18 @@ const fetchAnnouncements = async () => {
 
     if (fetchError) throw fetchError
 
-    const processedData = (data as Announcement[] || []).map(item => ({
-      ...item,
-      fullImageUrl: generateImageUrl(item.id, item.image_url),
-      fullAttachmentUrls: item.attachments?.map(filename => ({
-        filename,
-        url: generateAttachmentUrl(item.id, filename)
-      })) || []
-    }))
+    const processedData = (data as Announcement[] || []).map(item => {
+      const attachmentsList = parseAttachments(item.attachments)
+      
+      return {
+        ...item,
+        fullImageUrl: item.image_url, // Use direct URL from database
+        fullAttachmentUrls: attachmentsList.map(filename => ({
+          filename,
+          url: generateAttachmentUrl(item.id, filename)
+        }))
+      }
+    })
 
     announcements.value = processedData
     totalItems.value = count || 0
@@ -131,12 +149,16 @@ const fetchAnnouncements = async () => {
   }
 }
 
-// SSR-friendly data fetch on first load
-await useAsyncData('meetings', fetchAnnouncements)
+// Initial data fetch - remove SSR for now to avoid double loading
+const { refresh } = await useAsyncData('meetings', fetchAnnouncements, {
+  server: false // Client-side only untuk menghindari double loading
+})
 
-// Gunakan watchEffect untuk reaktivitas yang lebih efisien
-watchEffect(() => {
-  fetchAnnouncements()
+// Watch untuk perubahan category dan page
+watchEffect(async () => {
+  if (import.meta.client) {
+    await fetchAnnouncements()
+  }
 })
 
 // Computed untuk status

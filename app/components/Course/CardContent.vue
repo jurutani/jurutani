@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 
-
 // Props
 const props = defineProps({
   course: {
@@ -10,9 +9,60 @@ const props = defineProps({
   }
 });
 
+// Helper function to parse files
+const parseFiles = (filesData: any) => {
+  if (!filesData) return [];
+  
+  try {
+    // If it's already an array, return it
+    if (Array.isArray(filesData)) {
+      return filesData;
+    }
+    
+    // If it's a string, try to parse it
+    if (typeof filesData === 'string') {
+      // Handle double-encoded JSON string
+      let parsed = JSON.parse(filesData);
+      
+      // If it's still a string after first parse, parse again
+      if (typeof parsed === 'string') {
+        parsed = JSON.parse(parsed);
+      }
+      
+      // Ensure it's an array
+      if (Array.isArray(parsed)) {
+        // Convert URLs to file objects if they're just strings
+        return parsed.map((item, index) => {
+          if (typeof item === 'string') {
+            // Extract filename from URL
+            const urlParts = item.split('/');
+            const filename = urlParts[urlParts.length - 1];
+            const cleanFilename = filename.split('_').slice(1).join('_') || `Document ${index + 1}`;
+            
+            return {
+              name: cleanFilename,
+              url: item
+            };
+          }
+          return item;
+        });
+      }
+    }
+    
+    return [];
+  } catch (error) {
+    console.error('Error parsing files:', error);
+    return [];
+  }
+};
+
 // Computed properties
+const parsedFiles = computed(() => {
+  return parseFiles(props.course.files);
+});
+
 const hasFiles = computed(() => {
-  return props.course.files && Array.isArray(props.course.files) && props.course.files.length > 0;
+  return parsedFiles.value && parsedFiles.value.length > 0;
 });
 
 const hasLinks = computed(() => {
@@ -134,7 +184,7 @@ onMounted(async () => {
         </h4>
         <div class="space-y-2">
           <button
-            v-for="(file, index) in course.files.slice(0, 2)"
+            v-for="(file, index) in parsedFiles.slice(0, 2)"
             :key="index"
             class="flex items-center justify-between w-full p-3 text-sm bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 hover:from-green-50 hover:to-green-100 dark:hover:from-green-900/30 dark:hover:to-green-800/30 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-green-300 rounded-lg transition-all duration-300 group/file"
             @click="downloadFile(file)"
@@ -153,9 +203,9 @@ onMounted(async () => {
           </button>
           
           <!-- Show more files indicator -->
-          <div v-if="course.files.length > 2" class="text-center">
+          <div v-if="parsedFiles.length > 2" class="text-center">
             <span class="text-xs text-gray-500 dark:text-gray-400">
-              +{{ course.files.length - 2 }} file lainnya
+              +{{ parsedFiles.length - 2 }} file lainnya
             </span>
           </div>
         </div>

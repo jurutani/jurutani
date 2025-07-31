@@ -49,24 +49,50 @@ const generateAttachmentUrl = (id: string, attachmentFileName: string) => {
     .data.publicUrl;
 };
 
+// Fixed image URL handling
 const imageUrl = computed(() => {
   if (!meeting.value || !meeting.value.image_url || meeting.value.image_url.trim() === '') {
     return null;
   }
+  
+  // Check if image_url is already a full URL (starts with http/https)
+  if (meeting.value.image_url.startsWith('http')) {
+    return meeting.value.image_url;
+  }
+  
+  // If it's just a filename, generate the URL
   return generateImageUrl(meeting.value.id, meeting.value.image_url);
 });
 
-// Langsung gunakan avatar_url tanpa perlakuan khusus
 const authorAvatarUrl = computed(() => {
   return author.value?.avatar_url || null;
 });
 
+// Fixed attachments parsing
 const attachmentUrls = computed(() => {
-  if (!meeting.value?.attachments || !Array.isArray(meeting.value.attachments)) {
+  if (!meeting.value?.attachments) {
     return [];
   }
   
-  return meeting.value.attachments.map(filename => ({
+  let attachments = [];
+  
+  // Parse attachments if it's a string
+  if (typeof meeting.value.attachments === 'string') {
+    try {
+      attachments = JSON.parse(meeting.value.attachments);
+    } catch (e) {
+      console.error('Error parsing attachments:', e);
+      return [];
+    }
+  } else if (Array.isArray(meeting.value.attachments)) {
+    attachments = meeting.value.attachments;
+  }
+  
+  if (!Array.isArray(attachments)) {
+    return [];
+  }
+  
+  return attachments.map(filename => ({
     filename,
     url: generateAttachmentUrl(meeting.value.id, filename),
     name: filename
@@ -214,7 +240,7 @@ onMounted(() => {
       </div>
 
       <!-- Course Content -->
-      <article v-else-if="meeting" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <article v-else-if="meeting" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         <!-- Hero Image -->
         <div class="relative h-64 md:h-80 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
           <img
@@ -222,6 +248,7 @@ onMounted(() => {
             :src="imageUrl"
             :alt="meeting.title"
             class="w-full h-full object-cover"
+            @error="console.error('Image failed to load:', imageUrl)"
           >
           <div v-else class="flex items-center justify-center h-full">
             <div class="text-center text-green-600 dark:text-green-400">
@@ -232,7 +259,7 @@ onMounted(() => {
 
           <!-- Category Badge -->
           <div class="absolute top-4 right-4">
-            <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full shadow-sm">
+            <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full shadow-lg backdrop-blur-sm">
               <span>{{ getCategoryIcon(meeting.category) }}</span>
               {{ meeting.category }}
             </span>
@@ -257,50 +284,60 @@ onMounted(() => {
               <UIcon name="i-heroicons-user" class="w-4 h-4" />
               <span>{{ author.full_name || 'Instruktur' }}</span>
             </div>
+
+            <div v-if="meeting.organization" class="flex items-center gap-1">
+              <UIcon name="i-heroicons-building-office" class="w-4 h-4" />
+              <span>{{ meeting.organization }}</span>
+            </div>
           </div>
 
-          <!-- Instructor -->
-          <div v-if="author" class="mb-8 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+          <!-- Instructor Card -->
+          <div v-if="author" class="mb-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-xl border border-green-200 dark:border-green-700">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <UIcon name="i-heroicons-user-circle" class="w-5 h-5 text-green-600" />
               Instruktur
             </h2>
             <div class="flex items-center space-x-4">
-              <img
-                :src="authorAvatarUrl || '/placeholder.png'"
-                :alt="author.full_name"
-                class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
-              >
+              <div class="relative">
+                <img
+                  :src="authorAvatarUrl || '/placeholder.png'"
+                  :alt="author.full_name"
+                  class="w-16 h-16 rounded-full object-cover border-3 border-white shadow-lg"
+                >
+                <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"/>
+              </div>
               <div>
-                <h3 class="font-medium text-gray-900 dark:text-white">{{ author.full_name || 'Nama tidak tersedia' }}</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ author.role || 'Role tidak tersedia' }}</p>
+                <h3 class="font-semibold text-gray-900 dark:text-white text-lg">{{ author.full_name || 'Nama tidak tersedia' }}</h3>
+                <p class="text-green-600 dark:text-green-400 font-medium">{{ author.role || 'Role tidak tersedia' }}</p>
               </div>
             </div>
           </div>
 
           <!-- Main Content -->
           <div class="mb-8">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              <UIcon name="i-heroicons-document-text" class="w-5 h-5 text-green-600" />
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              <UIcon name="i-heroicons-document-text" class="w-6 h-6 text-green-600" />
               Deskripsi Course
             </h2>
-            <div 
-              class="prose prose-lg max-w-none prose-green prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-green-600 hover:prose-a:text-green-700 dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300 dark:prose-a:text-green-400"
-              v-html="meeting.description || meeting.content"
-            />
+            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200 dark:border-gray-600">
+              <div 
+                class="prose prose-lg max-w-none prose-green prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-green-600 hover:prose-a:text-green-700 dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300 dark:prose-a:text-green-400"
+                v-html="meeting.description || meeting.content"
+              />
+            </div>
           </div>
 
           <!-- Course Link -->
-          <div v-if="meeting.link" class="mb-8 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-              <UIcon name="i-heroicons-link" class="w-5 h-5 text-green-600" />
+          <div v-if="meeting.link" class="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-800">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <UIcon name="i-heroicons-link" class="w-6 h-6 text-green-600" />
               Link Course
             </h2>
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <a 
                 :href="meeting.link" 
                 target="_blank" 
-                class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium break-all flex-1 mr-4"
+                class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium break-all flex-1 text-sm bg-white dark:bg-gray-800 px-3 py-2 rounded-lg border border-green-200 dark:border-green-700"
               >
                 {{ meeting.link }}
               </a>
@@ -308,6 +345,8 @@ onMounted(() => {
                 color="green"
                 variant="solid"
                 icon="i-heroicons-arrow-top-right-on-square"
+                size="lg"
+                class="whitespace-nowrap"
                 @click="openCourseLink"
               >
                 Akses Course
@@ -317,36 +356,37 @@ onMounted(() => {
 
           <!-- Attachments -->
           <div class="mb-8">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              <UIcon name="i-heroicons-paper-clip" class="w-5 h-5 text-green-600" />
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              <UIcon name="i-heroicons-paper-clip" class="w-6 h-6 text-green-600" />
               Lampiran
             </h2>
             
-            <div v-if="attachmentUrls.length > 0" class="space-y-3">
+            <div v-if="attachmentUrls.length > 0" class="grid gap-4 sm:grid-cols-2">
               <div 
                 v-for="attachment in attachmentUrls" 
                 :key="attachment.filename"
-                class="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30 cursor-pointer transition-colors"
+                class="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/30 cursor-pointer transition-all duration-200 hover:shadow-md group"
                 @click="downloadAttachment(attachment)"
               >
-                <div class="flex items-center space-x-3">
-                  <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center">
+                <div class="flex items-center space-x-3 flex-1">
+                  <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <span class="text-blue-600 dark:text-blue-400 text-xs font-bold">
                       {{ getFileExtension(attachment.filename) }}
                     </span>
                   </div>
-                  <div>
-                    <p class="font-medium text-sm text-blue-900 dark:text-blue-200">{{ attachment.filename }}</p>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-medium text-sm text-blue-900 dark:text-blue-200 truncate">{{ attachment.filename }}</p>
                     <p class="text-xs text-blue-600 dark:text-blue-400">Klik untuk mengunduh</p>
                   </div>
                 </div>
-                <UIcon name="i-heroicons-arrow-down-tray" class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <UIcon name="i-heroicons-arrow-down-tray" class="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
               </div>
             </div>
             
-            <div v-else class="text-center py-8 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
-              <UIcon name="i-heroicons-paper-clip" class="w-12 h-12 mx-auto mb-3 text-gray-400" />
-              <p class="text-gray-500 dark:text-gray-400">Tidak ada lampiran</p>
+            <div v-else class="text-center py-12 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600">
+              <UIcon name="i-heroicons-paper-clip" class="w-16 h-16 mx-auto mb-4 text-gray-400" />
+              <p class="text-gray-500 dark:text-gray-400 text-lg">Tidak ada lampiran</p>
+              <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Lampiran akan ditampilkan di sini jika tersedia</p>
             </div>
           </div>
         </div>
@@ -402,5 +442,23 @@ onMounted(() => {
 .dark .prose blockquote {
   color: #9ca3af;
   border-left-color: #34d399;
+}
+
+/* Custom scrollbar for better UX */
+.prose::-webkit-scrollbar {
+  width: 6px;
+}
+
+.prose::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.prose::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 3px;
+}
+
+.prose::-webkit-scrollbar-thumb:hover {
+  background: #059669;
 }
 </style>
