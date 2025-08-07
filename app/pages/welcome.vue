@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: 'blank',
   title: 'Juru Tani Reborn | Selamat Datang',

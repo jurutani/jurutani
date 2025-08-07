@@ -1,25 +1,34 @@
-<script setup>
-  const props = defineProps({
-    error: {
-      type: Object,
-      default() {
-        return {
-          url: '-',
-          statusCode: 404,
-          statusMessage: 'Not Found',
-          message: '(404 Not Found)',
-          stack: '',
-          data: '{"error":"FetchError:  (404 Not Found)"}',
-        }
-      },
-    },
-  })
+<script setup lang="ts">
+import { computed } from 'vue'
 
-  const message = computed(() => String(props.error?.message || ''))
-  const is404 = computed(
-    () => props.error?.statusCode === 404 || message.value?.includes('404'),
-  )
+interface ErrorProps {
+  url?: string
+  statusCode?: number
+  statusMessage?: string
+  message?: string
+  stack?: string
+  data?: string
+}
+
+const props = defineProps<{ error?: ErrorProps }>()
+
+const defaultError: ErrorProps = {
+  url: '-',
+  statusCode: 404,
+  statusMessage: 'Not Found',
+  message: '(404 Not Found)',
+  stack: '',
+  data: '{"error":"FetchError:  (404 Not Found)"}',
+}
+
+const resolvedError = computed(() => props.error || defaultError)
+
+const message = computed(() => String(resolvedError.value?.message || ''))
+const is404 = computed(() => {
+  return resolvedError.value?.statusCode === 404 || message.value.includes('404')
+})
 </script>
+
 
 <template>
   <NuxtLoadingIndicator />

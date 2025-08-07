@@ -1,9 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 
 const { supabase } = useSupabase()
 
+// Interface definition
+interface DiscussionService {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  icon: string;
+  image: string;
+  route: string;
+}
+
+// Reactive data
 const profilesCount = ref(0)
 const instructorsCount = ref(0)
 const expertsCount = ref(0)
@@ -15,6 +27,55 @@ const profilesDisplayCount = ref(0)
 const instructorsDisplayCount = ref(0)
 const expertsDisplayCount = ref(0)
 const statsVisible = ref(false)
+
+// Services data
+const services = ref<DiscussionService[]>([
+  {
+    id: 'instructor',
+    title: 'Bicara dengan Penyuluh',
+    subtitle: 'Konsultasi Langsung',
+    description: 'Dapatkan panduan praktis dari penyuluh pertanian berpengalaman untuk mengatasi masalah budidaya, hama penyakit, dan teknik bertani modern.',
+    icon: 'i-heroicons-chat-bubble-left-ellipsis',
+    image: '/services/penyuluhjurutani.JPG',
+    route: '/discussions/instructor'
+  },
+  {
+    id: 'expert',
+    title: 'Tanya ke Pakar',
+    subtitle: 'Konsultasi Ahli',
+    description: 'Konsultasi mendalam dengan ahli pertanian bersertifikat untuk analisis ilmiah, diagnosa penyakit tanaman, dan rekomendasi teknologi terbaru.',
+    icon: 'i-heroicons-shield-check',
+    image: '/services/pakarjurutani.JPG',
+    route: '/discussions/expert'
+  },
+  {
+    id: 'community',
+    title: 'Forum Komunitas',
+    subtitle: 'Berbagi Pengalaman',
+    description: 'Bergabung dengan komunitas petani dari seluruh Indonesia untuk berbagi tips sukses, pengalaman lapangan, dan inovasi pertanian.',
+    icon: 'i-heroicons-users',
+    image: '/services/komunitasjurutani.JPG',
+    route: '/discussions/group'
+  },
+  {
+    id: 'chat',
+    title: 'Room Chat Tematik',
+    subtitle: 'Diskusi Real-time',
+    description: 'Diskusi langsung dalam room chat khusus berdasarkan komoditas seperti padi, sayuran, buah-buahan, dan peternakan untuk solusi cepat.',
+    icon: 'i-heroicons-chat-bubble-oval-left-ellipsis',
+    image: '/services/chatjurutani.JPG',
+    route: '/room-chat'
+  },
+  {
+    id: 'chat-admin',
+    title: 'Support Center',
+    subtitle: 'Bantuan Langsung',
+    description: 'Hubungi tim support Juru Tani untuk bantuan teknis aplikasi, keluhan layanan, atau pertanyaan umum dengan respon prioritas.',
+    icon: 'i-heroicons-user-circle',
+    image: '/services/admin.JPG',
+    route: '/room-chat/admin'
+  }
+])
 
 // Fallback data when no data is found
 const fallbackData = {
@@ -133,72 +194,6 @@ onBeforeUnmount(() => {
     observer.disconnect()
   }
 })
-</script>
-
-<script>
-interface DiscussionService {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  icon: string;
-  image: string;
-  route: string;
-}
-
-export default {
-  data() {
-    return {
-      services: [
-        {
-          id: 'instructor',
-          title: 'Bicara dengan Penyuluh',
-          subtitle: 'Konsultasi Langsung',
-          description: 'Dapatkan panduan praktis dari penyuluh pertanian berpengalaman untuk mengatasi masalah budidaya, hama penyakit, dan teknik bertani modern.',
-          icon: 'i-heroicons-chat-bubble-left-ellipsis',
-          image: '/services/penyuluhjurutani.JPG',
-          route: '/discussions/instructor'
-        },
-        {
-          id: 'expert',
-          title: 'Tanya ke Pakar',
-          subtitle: 'Konsultasi Ahli',
-          description: 'Konsultasi mendalam dengan ahli pertanian bersertifikat untuk analisis ilmiah, diagnosa penyakit tanaman, dan rekomendasi teknologi terbaru.',
-          icon: 'i-heroicons-shield-check',
-          image: '/services/pakarjurutani.JPG',
-          route: '/discussions/expert'
-        },
-        {
-          id: 'community',
-          title: 'Forum Komunitas',
-          subtitle: 'Berbagi Pengalaman',
-          description: 'Bergabung dengan komunitas petani dari seluruh Indonesia untuk berbagi tips sukses, pengalaman lapangan, dan inovasi pertanian.',
-          icon: 'i-heroicons-users',
-          image: '/services/komunitasjurutani.JPG',
-          route: '/discussions/group'
-        },
-        {
-          id: 'chat',
-          title: 'Room Chat Tematik',
-          subtitle: 'Diskusi Real-time',
-          description: 'Diskusi langsung dalam room chat khusus berdasarkan komoditas seperti padi, sayuran, buah-buahan, dan peternakan untuk solusi cepat.',
-          icon: 'i-heroicons-chat-bubble-oval-left-ellipsis',
-          image: '/services/chatjurutani.JPG',
-          route: '/room-chat'
-        },
-        {
-          id: 'chat-admin',
-          title: 'Support Center',
-          subtitle: 'Bantuan Langsung',
-          description: 'Hubungi tim support Juru Tani untuk bantuan teknis aplikasi, keluhan layanan, atau pertanyaan umum dengan respon prioritas.',
-          icon: 'i-heroicons-user-circle',
-          image: '/services/admin.JPG',
-          route: '/room-chat/admin'
-        }
-      ] as DiscussionService[]
-    }
-  }
-}
 </script>
 
 <template>
@@ -356,7 +351,7 @@ export default {
           <!-- Loading Indicator -->
           <div v-if="loading" class="text-center mt-4">
             <div class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-green-500"></div>
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-green-500"/>
               Memuat data terbaru...
             </div>
           </div>

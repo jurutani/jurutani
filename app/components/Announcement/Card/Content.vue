@@ -2,8 +2,10 @@
 import { computed } from 'vue';
 
 interface AttachmentFile {
-  filename: string;
+  name: string;  // Changed from 'filename' to 'name'
   url: string;
+  size?: number;
+  type?: string;
 }
 
 interface Announcement {
@@ -72,31 +74,58 @@ const attachmentCount = computed(() => {
   return props.announcement.fullAttachmentUrls?.length || 0;
 });
 
-const getFileIcon = (filename: string) => {
-  const ext = filename.split('.').pop()?.toLowerCase();
-  switch (ext) {
-    case 'pdf':
-      return 'i-heroicons-document-text';
-    case 'doc':
-    case 'docx':
-      return 'i-heroicons-document';
-    case 'xls':
-    case 'xlsx':
-      return 'i-heroicons-table-cells';
-    case 'ppt':
-    case 'pptx':
-      return 'i-heroicons-presentation-chart-bar';
-    case 'jpg':
-    case 'jpeg':
-    case 'png':
-    case 'gif':
-      return 'i-heroicons-photo';
-    case 'zip':
-    case 'rar':
-      return 'i-heroicons-archive-box';
-    default:
-      return 'i-heroicons-document';
+// Updated getFileIcon function to work with filename or type
+const getFileIcon = (attachment: AttachmentFile) => {
+  // Try to get extension from filename first
+  const ext = attachment.name?.split('.').pop()?.toLowerCase();
+  
+  // If we have MIME type, use it as fallback
+  const mimeType = attachment.type?.toLowerCase();
+  
+  // Check extension first
+  if (ext) {
+    switch (ext) {
+      case 'pdf':
+        return 'i-heroicons-document-text';
+      case 'doc':
+      case 'docx':
+        return 'i-heroicons-document';
+      case 'xls':
+      case 'xlsx':
+        return 'i-heroicons-table-cells';
+      case 'ppt':
+      case 'pptx':
+        return 'i-heroicons-presentation-chart-bar';
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+        return 'i-heroicons-photo';
+      case 'zip':
+      case 'rar':
+        return 'i-heroicons-archive-box';
+    }
   }
+  
+  // Check MIME type as fallback
+  if (mimeType) {
+    if (mimeType.includes('pdf')) return 'i-heroicons-document-text';
+    if (mimeType.includes('word') || mimeType.includes('document')) return 'i-heroicons-document';
+    if (mimeType.includes('sheet') || mimeType.includes('excel')) return 'i-heroicons-table-cells';
+    if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) return 'i-heroicons-presentation-chart-bar';
+    if (mimeType.includes('image')) return 'i-heroicons-photo';
+    if (mimeType.includes('zip') || mimeType.includes('archive')) return 'i-heroicons-archive-box';
+  }
+  
+  return 'i-heroicons-document';
+};
+
+// Format file size
+const formatFileSize = (bytes?: number) => {
+  if (!bytes) return '';
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${Math.round(bytes / Math.pow(1024, i) * 100) / 100} ${sizes[i]}`;
 };
 
 // Handle image load error
@@ -176,16 +205,22 @@ const organizationDisplay = computed(() => {
           {{ attachmentCount }} file lampiran
         </div>
         <div class="grid grid-cols-1 gap-1">
-          <div 
+          <a 
             v-for="attachment in announcement.fullAttachmentUrls?.slice(0, 2)" 
-            :key="attachment.filename"
-            class="flex items-center text-xs bg-white dark:bg-gray-800 px-2 py-1.5 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            :key="attachment.name"
+            :href="attachment.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center text-xs bg-white dark:bg-gray-800 px-2 py-1.5 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           >
-            <UIcon :name="getFileIcon(attachment.filename)" class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
-            <span class="truncate flex-1" :title="attachment.filename">
-              {{ attachment.filename }}
+            <UIcon :name="getFileIcon(attachment)" class="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
+            <span class="truncate flex-1" :title="attachment.name">
+              {{ attachment.name }}
             </span>
-          </div>
+            <span v-if="attachment.size" class="ml-2 text-gray-400 text-[10px]">
+              {{ formatFileSize(attachment.size) }}
+            </span>
+          </a>
           <div 
             v-if="attachmentCount > 2"
             class="text-xs text-gray-500 dark:text-gray-400 italic px-2 py-1"

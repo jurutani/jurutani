@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, nextTick, watch, onMounted } from 'vue'
 
 // Reactive state

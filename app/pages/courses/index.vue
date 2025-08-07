@@ -22,8 +22,10 @@ interface Announcement {
 }
 
 interface AttachmentFile {
-  filename: string
+  name: string  // Changed from 'filename' to 'name'
   url: string
+  size?: number
+  type?: string
 }
 
 interface Category {
@@ -80,20 +82,21 @@ if (categoriesData.value) {
   categories.value = categoriesData.value
 }
 
-// Fungsi untuk generate URL attachment
-const generateAttachmentUrl = (id: string, attachmentFileName: string) => {
-  return supabase.storage
-    .from('meetings')
-    .getPublicUrl(`${id}/attachment/${attachmentFileName}`)
-    .data.publicUrl
-}
-
-// Fungsi untuk parse attachments JSON string
-const parseAttachments = (attachmentsString?: string): string[] => {
+// Fungsi untuk parse attachments JSON string - Updated to handle new format
+const parseAttachments = (attachmentsString?: string): AttachmentFile[] => {
   if (!attachmentsString) return []
   try {
     const parsed = JSON.parse(attachmentsString)
-    return Array.isArray(parsed) ? parsed : []
+    if (Array.isArray(parsed)) {
+      // Handle new format with url, name, size, type
+      return parsed.map(attachment => ({
+        name: attachment.name || attachment.filename || 'Unknown file',
+        url: attachment.url,
+        size: attachment.size,
+        type: attachment.type
+      }))
+    }
+    return []
   } catch (err) {
     console.error('Error parsing attachments:', err)
     return []
@@ -131,10 +134,7 @@ const fetchAnnouncements = async () => {
       return {
         ...item,
         fullImageUrl: item.image_url, // Use direct URL from database
-        fullAttachmentUrls: attachmentsList.map(filename => ({
-          filename,
-          url: generateAttachmentUrl(item.id, filename)
-        }))
+        fullAttachmentUrls: attachmentsList // Direct use of parsed attachments
       }
     })
 
