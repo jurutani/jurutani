@@ -1,4 +1,141 @@
-<script lang="ts">
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useSupabase } from '~/composables/useSupabase'
+
+const { supabase } = useSupabase()
+
+const profilesCount = ref(0)
+const instructorsCount = ref(0)
+const expertsCount = ref(0)
+const loading = ref(false)
+const error = ref<any>(null)
+
+// Animation refs
+const profilesDisplayCount = ref(0)
+const instructorsDisplayCount = ref(0)
+const expertsDisplayCount = ref(0)
+const statsVisible = ref(false)
+
+// Fallback data when no data is found
+const fallbackData = {
+  profiles: 500,
+  instructors: 400,
+  experts: 200
+}
+
+// Intersection Observer for animation trigger
+let observer: IntersectionObserver | null = null
+const statsRef = ref<HTMLElement>()
+
+// Counter animation function
+const animateCounter = (
+  from: number,
+  to: number,
+  displayRef: any,
+  duration: number = 2000
+) => {
+  const increment = (to - from) / (duration / 16)
+  let current = from
+  
+  const updateCounter = () => {
+    current += increment
+    if (current < to) {
+      displayRef.value = Math.floor(current)
+      requestAnimationFrame(updateCounter)
+    } else {
+      displayRef.value = to
+    }
+  }
+  
+  updateCounter()
+}
+
+// Start animations when section becomes visible
+const startAnimations = () => {
+  if (statsVisible.value) return
+  
+  statsVisible.value = true
+  
+  // Use actual data if available, otherwise use fallback
+  const profilesTarget = profilesCount.value > 0 ? profilesCount.value : fallbackData.profiles
+  const instructorsTarget = instructorsCount.value > 0 ? instructorsCount.value : fallbackData.instructors
+  const expertsTarget = expertsCount.value > 0 ? expertsCount.value : fallbackData.experts
+  
+  // Animate counters with different delays for better visual effect
+  setTimeout(() => animateCounter(0, profilesTarget, profilesDisplayCount), 100)
+  setTimeout(() => animateCounter(0, instructorsTarget, instructorsDisplayCount), 200)
+  setTimeout(() => animateCounter(0, expertsTarget, expertsDisplayCount), 300)
+}
+
+const fetchCounts = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    const [profiles, instructors, experts] = await Promise.all([
+      supabase.from('profiles').select('*', { count: 'exact', head: true }),
+      supabase.from('instructors').select('*', { count: 'exact', head: true }),
+      supabase.from('experts').select('*', { count: 'exact', head: true })
+    ])
+
+    if (profiles.error || instructors.error || experts.error) {
+      throw profiles.error || instructors.error || experts.error
+    }
+
+    profilesCount.value = profiles.count || 0
+    instructorsCount.value = instructors.count || 0
+    expertsCount.value = experts.count || 0
+    
+    // If data is successfully fetched and section is visible, restart animations
+    if (statsVisible.value) {
+      statsVisible.value = false
+      startAnimations()
+    }
+  } catch (err) {
+    console.error('Error fetching counts:', err)
+    error.value = err
+    
+    // Use fallback data when there's an error
+    profilesCount.value = 0
+    instructorsCount.value = 0
+    expertsCount.value = 0
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchCounts()
+  
+  // Setup intersection observer for animation trigger
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !statsVisible.value) {
+          startAnimations()
+        }
+      })
+    },
+    {
+      threshold: 0.5 // Trigger when 50% of the element is visible
+    }
+  )
+  
+  // Start observing when the stats section is mounted
+  if (statsRef.value) {
+    observer.observe(statsRef.value)
+  }
+})
+
+// Cleanup observer on unmount
+onBeforeUnmount(() => {
+  if (observer) {
+    observer.disconnect()
+  }
+})
+</script>
+
+<script>
 interface DiscussionService {
   id: string;
   title: string;
@@ -189,24 +326,38 @@ export default {
           </div>
         </div>
         
-        <!-- Stats Section -->
-        <div class="mt-8 pt-8 border-t border-green-200 dark:border-green-700">
+        <!-- Enhanced Stats Section with Animation -->
+        <div ref="statsRef" class="mt-8 pt-8 border-t border-green-200 dark:border-green-700">
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div>
-              <div class="text-2xl font-bold text-green-600 dark:text-green-400">50K+</div>
+            <div class="stats-item">
+              <div class="text-2xl font-bold text-green-600 dark:text-green-400 transition-all duration-300">
+                {{ profilesDisplayCount > 0 ? `${profilesDisplayCount}+` : '500+' }}
+              </div>
               <div class="text-sm text-gray-600 dark:text-gray-400">Petani Bergabung</div>
             </div>
-            <div>
-              <div class="text-2xl font-bold text-green-600 dark:text-green-400">500+</div>
+            <div class="stats-item">
+              <div class="text-2xl font-bold text-green-600 dark:text-green-400 transition-all duration-300">
+                {{ instructorsDisplayCount > 0 ? `${instructorsDisplayCount}+` : '400+' }}
+              </div>
               <div class="text-sm text-gray-600 dark:text-gray-400">Penyuluh Aktif</div>
             </div>
-            <div>
-              <div class="text-2xl font-bold text-green-600 dark:text-green-400">100K+</div>
-              <div class="text-sm text-gray-600 dark:text-gray-400">Diskusi Terjawab</div>
+            <div class="stats-item">
+              <div class="text-2xl font-bold text-green-600 dark:text-green-400 transition-all duration-300">
+                {{ expertsDisplayCount > 0 ? `${expertsDisplayCount}+` : '200+' }}
+              </div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">Pakar Ahli</div>
             </div>
-            <div>
+            <div class="stats-item">
               <div class="text-2xl font-bold text-green-600 dark:text-green-400">98%</div>
               <div class="text-sm text-gray-600 dark:text-gray-400">Tingkat Kepuasan</div>
+            </div>
+          </div>
+          
+          <!-- Loading Indicator -->
+          <div v-if="loading" class="text-center mt-4">
+            <div class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-green-500"></div>
+              Memuat data terbaru...
             </div>
           </div>
         </div>
@@ -240,6 +391,30 @@ export default {
 
 .group:hover .group-hover\:scale-110 {
   animation: float 2s ease-in-out infinite;
+}
+
+/* Stats animation */
+.stats-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+.stats-item:nth-child(1) { animation-delay: 0.1s; }
+.stats-item:nth-child(2) { animation-delay: 0.2s; }
+.stats-item:nth-child(3) { animation-delay: 0.3s; }
+.stats-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Number counting animation */
+.stats-item .text-2xl {
+  font-variant-numeric: tabular-nums;
 }
 
 /* Backdrop blur utility */
@@ -329,5 +504,14 @@ export default {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+/* Spin animation for loading */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 </style>
