@@ -42,7 +42,7 @@ useSeoMeta({
       <HotDeals class="mt-16" />
       <FeatureSection class="mt-16" />
       <HomeSponsorship class="mt-16" />
-      <ChatbotJurutani />
+      <!-- <ChatbotJurutani /> -->
 </template>
 
 
