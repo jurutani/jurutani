@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Discussions - Juru Tani',
-  description: 'Stay updated with the latest Discussions from Juru Tani.',
-  ogTitle: 'Discussions - Juru Tani',
-  ogDescription: 'Stay updated with the latest Discussions from Juru Tani.',
+  title: 'Forum Diskusi - Juru Tani',
+  description: 'Tetap mendapatkan pembaruan terbaru dari Forum Diskusi Juru Tani.',
+  ogTitle: 'Forum Diskusi - Juru Tani',
+  ogDescription: 'Tetap mendapatkan pembaruan terbaru dari Forum Diskusi Juru Tani.',
 })
 
 </script>

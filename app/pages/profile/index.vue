@@ -36,7 +36,7 @@ onMounted(() => {
 
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 py-12">
+  <div class="min-h-screen py-12">
     <div class="container mx-auto px-4 py-8">
       <!-- Header dengan tema JuruTani -->
       <div class="text-center mb-8">
@@ -47,7 +47,7 @@ onMounted(() => {
             </svg>
           </div>
           <div>
-            <h1 class="text-3xl font-bold text-gray-800">Profil JuruTani</h1>
+            <h1 class="text-3xl font-bold">Profil JuruTani</h1>
             <p class="text-green-600 font-medium">Kelola informasi akun Anda</p>
           </div>
         </div>

@@ -4,10 +4,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   if (isBot) return // jangan redirect jika bot
 
-  const firstVisit = useCookie('firstVisit', { maxAge: 86400 })
-
-  if (!firstVisit.value && to.path === '/') {
-    firstVisit.value = 'visited'
-    return navigateTo('/welcome')
-  }
+  // Modal akan menangani first visit, jadi middleware tidak perlu melakukan apa-apa
+  // Cookie 'firstVisit' akan diset oleh component FirstVisitModal
 })

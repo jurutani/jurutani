@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Marketplace - Juru Tani',
-  description: 'Stay updated with the latest Marketplace from Juru Tani.',
-  ogTitle: 'Marketplace - Juru Tani',
-  ogDescription: 'Stay updated with the latest Marketplace from Juru Tani.',
+  title: 'Pasar Tani - Juru Tani',
+  description: 'Tetap mendapatkan informasi terbaru tentang Pasar Tani dari Juru Tani.',
+  ogTitle: 'Pasar Tani - Juru Tani',
+  ogDescription: 'Tetap mendapatkan informasi terbaru tentang Pasar Tani dari Juru Tani.',
 })
 
 </script>

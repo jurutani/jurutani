@@ -14,7 +14,7 @@
       </div>
 
       <!-- Current Email Display -->
-      <div class="mb-6 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-400">
+      <div class="mb-6 p-4 bg-gray-50 rounded-lg border-l-4 border-green-400">
         <p class="text-sm font-medium text-gray-700 mb-1">Email Saat Ini</p>
         <p class="text-gray-900 font-medium">{{ currentUser?.email || 'Tidak ada email' }}</p>
       </div>
@@ -75,15 +75,15 @@
     <!-- Password Settings -->
     <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
       <div class="flex items-center mb-6">
-        <UIcon name="i-heroicons-key" class="w-6 h-6 text-blue-600 mr-3" />
+        <UIcon name="i-heroicons-key" class="w-6 h-6 text-green-600 mr-3" />
         <h3 class="text-lg font-semibold text-gray-900">Pengaturan Password</h3>
       </div>
 
       <form class="space-y-4" @submit.prevent="handleResetPassword">
-        <div class="bg-blue-50 rounded-lg p-4 border border-blue-200 mb-4">
+        <div class="bg-green-50 rounded-lg p-4 border border-green-200 mb-4">
           <div class="flex items-start">
-            <UIcon name="i-heroicons-information-circle" class="w-5 h-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
-            <div class="text-sm text-blue-800">
+            <UIcon name="i-heroicons-information-circle" class="w-5 h-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+            <div class="text-sm text-green-800">
               <p class="font-medium mb-1">Reset Password</p>
               <p>Kami akan mengirim link reset password ke email Anda.</p>
             </div>
@@ -99,7 +99,7 @@
             v-model="resetEmail"
             type="email"
             placeholder="email@akun.anda"
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
             :class="{ 'border-red-300': resetEmailError }"
             required
           >
@@ -109,7 +109,7 @@
         <button
           type="submit"
           :disabled="isLoadingResetPassword || !resetEmail"
-          class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
+          class="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
         >
           <span v-if="isLoadingResetPassword" class="flex items-center justify-center">
             <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">

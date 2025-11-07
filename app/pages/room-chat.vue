@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Room Chat - Juru Tani',
-  description: 'Stay updated with the latest Room Chat from Juru Tani.',
-  ogTitle: 'Room Chat - Juru Tani',
-  ogDescription: 'Stay updated with the latest Room Chat from Juru Tani.',
+  title: 'Ruang Obrolan — Juru Tani',
+  description: 'Ikuti percakapan dan pembaruan terbaru di Ruang Obrolan Juru Tani untuk berdiskusi, berbagi tips, dan mendapatkan info pertanian terkini.',
+  ogTitle: 'Ruang Obrolan — Juru Tani',
+  ogDescription: 'Ikuti percakapan dan pembaruan terbaru di Ruang Obrolan Juru Tani untuk berdiskusi, berbagi tips, dan mendapatkan info pertanian terkini.',
 })
 definePageMeta({
   prerender: false,

@@ -40,7 +40,7 @@ onMounted(async () => {
         setTimeout(() => {
           // Force redirect full 
           loading.value = false
-          navigateTo('/welcome', { external: true })
+          navigateTo('/', { external: true })
         }, 1500)
       } else {
         toastStore.warning('Sesi login tidak ditemukan. Silakan coba lagi.', 3000)

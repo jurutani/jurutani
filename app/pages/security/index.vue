@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-12 px-4">
+  <div class="min-h-screen py-12 px-4">
     <div class="max-w-md mx-auto">
       <!-- Header Section -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-full mb-4">
           <UIcon name="i-heroicons-lock-closed" class="w-8 h-8 text-white" />
         </div>
-        <h1 class="text-2xl font-bold text-gray-900 mb-2">Ganti Password</h1>
+        <h1 class="text-2xl font-bold mb-2">Ganti Password</h1>
         <p class="text-gray-600 text-sm">
           Pastikan password baru Anda kuat dan mudah diingat
         </p>

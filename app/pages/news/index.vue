@@ -31,7 +31,7 @@ const loading = ref(true)
 // Filter & pagination
 const currentCategory = ref('all')
 const currentPage = ref(1)
-const pageSize = 10
+const pageSize = 9
 const totalPages = ref(1)
 const totalItems = ref(0)
 const categories = ref<Category[]>([])

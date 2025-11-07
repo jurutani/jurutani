@@ -1,0 +1,39 @@
+<script setup lang="ts">
+defineProps<{
+  isExpanded: boolean
+  onToggleExpand: () => void
+  onClose: () => void
+}>()
+</script>
+
+<template>
+  <div class="absolute top-0 left-0 right-0 bg-gradient-to-r from-green-600 to-green-500 text-white p-4 flex items-center justify-between z-10">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 bg-green-700 rounded-full flex items-center justify-center shadow-inner">
+        <UIcon name="i-heroicons-microphone" class="w-5 h-5 text-white" />
+      </div>
+      <div>
+        <h3 class="font-semibold text-sm">Juru tani AI</h3>
+        <p class="text-xs text-green-100">Penyuluh Juru tani</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-2">
+      <UButton
+        :icon="isExpanded ? 'i-heroicons-arrows-pointing-in' : 'i-heroicons-arrows-pointing-out'"
+        color="white"
+        variant="ghost"
+        size="xs"
+        class="hover:bg-white/20"
+        @click="onToggleExpand"
+      />
+      <UButton
+        icon="i-heroicons-x-mark"
+        color="white"
+        variant="ghost"
+        size="xs"
+        class="hover:bg-white/20"
+        @click="onClose"
+      />
+    </div>
+  </div>
+</template>

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Setting - Juru Tani',
-  description: 'Stay updated with the latest Setting from Juru Tani.',
-  ogTitle: 'Setting - Juru Tani',
-  ogDescription: 'Stay updated with the latest Setting from Juru Tani.',
+  title: 'Pengaturan - Juru Tani',
+  description: 'Kelola preferensi akun, notifikasi, dan pengaturan aplikasi Juru Tani untuk pengalaman yang lebih personal.',
+  ogTitle: 'Pengaturan - Juru Tani',
+  ogDescription: 'Kelola preferensi akun, notifikasi, dan pengaturan aplikasi Juru Tani untuk pengalaman yang lebih personal.',
 })
 definePageMeta({
   middleware: ['auth']

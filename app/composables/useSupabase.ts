@@ -12,30 +12,30 @@ export const useSupabase = () => {
   const user = ref(null)
   const session = ref(null)
   const loading = ref(true)
-  
+
   // Error state
   const error = reactive({
-    auth: null,
-    session: null
+    auth: null as string | null,
+    session: null as string | null
   })
-  
+
   // Inisialisasi - check session
   const initialize = async () => {
     loading.value = true
-    
+
     try {
       // Cek session yang sudah ada
       const { data, error: sessionError } = await supabase.auth.getSession()
-      
+
       if (sessionError) {
         error.session = sessionError.message
       } else {
         session.value = data.session
-        
+
         if (data.session) {
           // Ambil data user jika session ada
           const { data: userData, error: userError } = await supabase.auth.getUser()
-          
+
           if (userError) {
             error.auth = userError.message
           } else {
@@ -48,30 +48,30 @@ export const useSupabase = () => {
     } finally {
       loading.value = false
     }
-    
+
     // Setup auth state listener
     supabase.auth.onAuthStateChange((event, currentSession) => {
       session.value = currentSession
       user.value = currentSession?.user || null
     })
   }
-  
+
   // Login dengan email dan password
   const login = async (email: string, password: string) => {
     loading.value = true
     error.auth = null
-    
+
     try {
       const { data, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password
       })
-      
+
       if (authError) {
         error.auth = authError.message
         return { success: false, error: authError.message }
       }
-      
+
       user.value = data.user
       session.value = data.session
       return { success: true, data }
@@ -82,12 +82,12 @@ export const useSupabase = () => {
       loading.value = false
     }
   }
-  
+
   // FIXED: Register dengan email dan password - improved error handling
   const register = async (email: string, password: string, phone: string, fullName: string) => {
     loading.value = true
     error.auth = null
-    
+
     try {
       // Validasi input
       if (!email || !password || !phone || !fullName) {
@@ -120,7 +120,7 @@ export const useSupabase = () => {
       }
 
       // console.log('Starting registration process...')
-      
+
       const { data, error: authError } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password,
@@ -137,25 +137,25 @@ export const useSupabase = () => {
 
       if (authError) {
         console.error('Registration auth error:', authError)
-        
+
         // Handle specific error messages
         let errorMessage = authError.message
-        
-        if (authError.message.includes('already registered') || 
-            authError.message.includes('already been registered') ||
-            authError.message.includes('already in use')) {
+
+        if (authError.message.includes('already registered') ||
+          authError.message.includes('already been registered') ||
+          authError.message.includes('already in use')) {
           errorMessage = 'Email sudah terdaftar. Silakan gunakan email lain atau masuk ke akun Anda.'
         } else if (authError.message.includes('invalid email')) {
           errorMessage = 'Format email tidak valid.'
-        } else if (authError.message.includes('weak password') || 
-                   authError.message.includes('Password should be')) {
+        } else if (authError.message.includes('weak password') ||
+          authError.message.includes('Password should be')) {
           errorMessage = 'Kata sandi terlalu lemah. Gunakan kombinasi huruf, angka, dan simbol.'
         } else if (authError.message.includes('signup disabled')) {
           errorMessage = 'Pendaftaran akun baru sedang dinonaktifkan. Silakan coba lagi nanti.'
         } else if (authError.message.includes('rate limit')) {
           errorMessage = 'Terlalu banyak percobaan. Silakan tunggu beberapa menit.'
         }
-        
+
         error.auth = errorMessage
         return { success: false, error: errorMessage }
       }
@@ -172,9 +172,9 @@ export const useSupabase = () => {
       // Jika signup berhasil tapi user belum confirmed (butuh email verification)
       if (data.user && !data.user.email_confirmed_at) {
         // console.log('User needs email confirmation')
-        return { 
-          success: true, 
-          data, 
+        return {
+          success: true,
+          data,
           needsConfirmation: true,
           message: 'Akun berhasil dibuat! Silakan cek email Anda untuk mengkonfirmasi akun.'
         }
@@ -184,21 +184,21 @@ export const useSupabase = () => {
       // console.log('User registered and confirmed')
       user.value = data.user
       session.value = data.session
-      
+
       return { success: true, data }
-      
+
     } catch (err: any) {
       console.error('Registration error:', err)
-      
+
       let errorMessage = err.message || 'Terjadi kesalahan saat mendaftar'
-      
+
       // Handle network errors
       if (err.message?.includes('Failed to fetch') || err.message?.includes('NetworkError')) {
         errorMessage = 'Koneksi bermasalah. Periksa koneksi internet Anda.'
       } else if (err.message?.includes('timeout')) {
         errorMessage = 'Koneksi timeout. Silakan coba lagi.'
       }
-      
+
       error.auth = errorMessage
       return { success: false, error: errorMessage }
     } finally {
@@ -207,55 +207,55 @@ export const useSupabase = () => {
   }
 
   // Login dengan provider sosial (Google, Facebook, GitHub)
-const loginWithSocialProvider = async (
-  provider: 'google' | 'facebook' | 'github'
-) => {
-  loading.value = true
-  error.auth = null
+  const loginWithSocialProvider = async (
+    provider: 'google' | 'facebook' | 'github'
+  ) => {
+    loading.value = true
+    error.auth = null
 
-  try {
-    // Gunakan useRuntimeConfig untuk mendapatkan base URL
-    const config = useRuntimeConfig()
-    const baseUrl = import.meta.client 
-      ? window.location.origin 
-      : config.public.baseUrl || 'http://localhost:3000'
+    try {
+      // Gunakan useRuntimeConfig untuk mendapatkan base URL
+      const config = useRuntimeConfig()
+      const baseUrl = import.meta.client
+        ? window.location.origin
+        : config.public.baseUrl || 'http://localhost:3000'
 
-    const { data, error: authError } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        // Redirect kembali ke aplikasi setelah login
-        redirectTo: `${baseUrl}/auth/callback`
+      const { data, error: authError } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          // Redirect kembali ke aplikasi setelah login
+          redirectTo: `${baseUrl}/auth/callback`
+        }
+      })
+
+      if (authError) {
+        error.auth = authError.message
+        return { success: false, error: authError.message }
       }
-    })
 
-    if (authError) {
-      error.auth = authError.message
-      return { success: false, error: authError.message }
+      return { success: true, data }
+    } catch (err: any) {
+      const message = err?.message || 'Terjadi kesalahan saat login'
+      error.auth = message
+      return { success: false, error: message }
+    } finally {
+      loading.value = false
     }
-
-    return { success: true, data }
-  } catch (err: any) {
-    const message = err?.message || 'Terjadi kesalahan saat login'
-    error.auth = message
-    return { success: false, error: message }
-  } finally {
-    loading.value = false
   }
-}
 
   // Logout
   const logout = async () => {
     loading.value = true
     error.auth = null
-    
+
     try {
       const { error: authError } = await supabase.auth.signOut()
-      
+
       if (authError) {
         error.auth = authError.message
         return { success: false, error: authError.message }
       }
-      
+
       user.value = null
       session.value = null
       return { success: true }
@@ -266,22 +266,22 @@ const loginWithSocialProvider = async (
       loading.value = false
     }
   }
-  
+
   // Reset password
   const resetPassword = async (email: string) => {
     loading.value = true
     error.auth = null
-    
+
     try {
       const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/reset-password`
       })
-      
+
       if (authError) {
         error.auth = authError.message
         return { success: false, error: authError.message }
       }
-      
+
       return { success: true }
     } catch (err: any) {
       error.auth = err.message
@@ -290,22 +290,22 @@ const loginWithSocialProvider = async (
       loading.value = false
     }
   }
-  
+
   // Update password
   const updatePassword = async (newPassword: string) => {
     loading.value = true
     error.auth = null
-    
+
     try {
       const { error: authError } = await supabase.auth.updateUser({
         password: newPassword
       })
-      
+
       if (authError) {
         error.auth = authError.message
         return { success: false, error: authError.message }
       }
-      
+
       return { success: true }
     } catch (err: any) {
       error.auth = err.message
@@ -362,18 +362,18 @@ const loginWithSocialProvider = async (
   const resendConfirmation = async (email: string) => {
     loading.value = true
     error.auth = null
-    
+
     try {
       const { error: authError } = await supabase.auth.resend({
         type: 'signup',
         email: email
       })
-      
+
       if (authError) {
         error.auth = authError.message
         return { success: false, error: authError.message }
       }
-      
+
       return { success: true, message: 'Email konfirmasi telah dikirim ulang.' }
     } catch (err: any) {
       error.auth = err.message
@@ -382,7 +382,7 @@ const loginWithSocialProvider = async (
       loading.value = false
     }
   }
-  
+
   return {
     supabase,
     user,

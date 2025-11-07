@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Profile - Juru Tani',
-  description: 'Stay updated with the latest Profile from Juru Tani.',
-  ogTitle: 'Profile - Juru Tani',
-  ogDescription: 'Stay updated with the latest Profile from Juru Tani.',
+  title: 'Profil - Juru Tani',
+  description: 'Kelola informasi akun, preferensi, dan pengaturan privasi Anda di Juru Tani.',
+  ogTitle: 'Profil - Juru Tani',
+  ogDescription: 'Kelola informasi akun, preferensi, dan pengaturan privasi Anda di Juru Tani.',
 })
 definePageMeta({
   middleware: ['auth']

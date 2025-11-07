@@ -73,7 +73,7 @@ const fetchForecastData = async (lat: number, lon: number) => {
   try {
     const response = await fetch(url)
     const data = await response.json()
-    console.log(data)
+    // console.log(data)
     
     // Group forecast data by day (5 days)
     const dailyForecast = groupForecastByDay(data.list)
@@ -336,7 +336,7 @@ onMounted(() => {
           <LoadingData v-if="isLoading" message="Memuat data cuaca..." />
           
           <!-- Error State -->
-          <DataNotFound v-else-if="error" :message="error" />
+          <NotFoundData v-else-if="error" :message="error" />
           
           <!-- Weather Data -->
           <div v-else-if="weatherData" class="space-y-6">
@@ -476,7 +476,7 @@ onMounted(() => {
         <!-- Tab Ramalan 24 Jam -->
         <div v-if="activeTab === 'hourly'" class="space-y-6">
           <LoadingData v-if="isHourlyLoading" message="Memuat ramalan 24 jam..." />
-          <DataNotFound v-else-if="hourlyError" :message="hourlyError" />
+          <NotFoundData v-else-if="hourlyError" :message="hourlyError" />
           
           <div v-else-if="hourlyData && hourlyData.length > 0">
             <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
@@ -514,7 +514,7 @@ onMounted(() => {
         <!-- Tab Ramalan 5 Hari -->
         <div v-if="activeTab === 'forecast'" class="space-y-6">
           <LoadingData v-if="isForecastLoading" message="Memuat ramalan 5 hari..." />
-          <DataNotFound v-else-if="forecastError" :message="forecastError" />
+          <NotFoundData v-else-if="forecastError" :message="forecastError" />
           
           <div v-else-if="forecastData && forecastData.length > 0">
             <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-lg">

@@ -37,7 +37,7 @@ const handleLogin = async () => {
 
     if (success) {
       toastStore.success('Selamat datang di Juru Tani!', 3000)
-      navigateTo('/welcome')
+      navigateTo('/')
     } else {
       toastStore.error(error || 'Email atau kata sandi tidak valid.', 3000)
     }

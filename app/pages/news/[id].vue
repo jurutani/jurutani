@@ -5,7 +5,7 @@ import { useSupabase } from '~/composables/useSupabase'
 
 // Types
 interface NewsItem {
-  id: string
+  id: string | number
   title: string
   sub_title?: string
   content: string
@@ -31,6 +31,8 @@ const newsId = route.params.id as string
 const news = ref<NewsItem | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
+const similarNews = ref<NewsItem[]>([])
+const loadingSimilar = ref(false)
 
 // Computed
 const imageUrl = computed(() => {
@@ -77,6 +79,18 @@ const attachmentFileType = computed(() => {
   return extension?.toUpperCase() || 'FILE'
 })
 
+const similarNewsFormatted = computed(() => {
+  return similarNews.value.map(item => ({
+    id: item.id,
+    title: item.title,
+    content: item.content,
+    image_url: item.image_url,
+    category: item.category || 'Lainnya',
+    created_at: item.created_at,
+    author: item.author
+  }))
+})
+
 // Methods
 const fetchNewsDetail = async (): Promise<void> => {
   loading.value = true
@@ -102,11 +116,43 @@ const fetchNewsDetail = async (): Promise<void> => {
     }
 
     news.value = data
+    
+    // Fetch similar news after main news is loaded
+    await fetchSimilarNews(data.category)
   } catch (err) {
     console.error('Unexpected error:', err)
     error.value = 'Terjadi kesalahan yang tidak terduga'
   } finally {
     loading.value = false
+  }
+}
+
+const fetchSimilarNews = async (category?: string): Promise<void> => {
+  if (!category) return
+  
+  loadingSimilar.value = true
+  
+  try {
+    const { data, error: fetchError } = await supabase
+      .from('news')
+      .select('*')
+      .eq('category', category)
+      .eq('status_news', 'approved')
+      .neq('id', newsId)
+      .order('published_at', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(4)
+
+    if (fetchError) {
+      console.error('Error fetching similar news:', fetchError)
+      return
+    }
+
+    similarNews.value = data || []
+  } catch (err) {
+    console.error('Unexpected error fetching similar news:', err)
+  } finally {
+    loadingSimilar.value = false
   }
 }
 
@@ -149,34 +195,34 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-14">
-    <!-- Header -->
-    <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-      <div class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
-          <button 
-            class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
-            @click="goBack"
-          >
-            <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
-            <span class="font-medium">Kembali ke Berita</span>
-          </button>
-          
-          <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <UIcon name="i-heroicons-newspaper" class="w-5 h-5" />
-            <span class="font-semibold">Juru Tani News</span>
+  <div class="min-h-screen py-6">
+    
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <!-- Header -->
+      <div class="shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4 py-4">
+          <div class="flex items-center justify-between">
+            <button 
+              class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+              @click="goBack"
+            >
+              <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
+              <span class="font-medium">Kembali ke Berita</span>
+            </button>
+            
+            <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
+              <UIcon name="i-heroicons-newspaper" class="w-5 h-5" />
+              <span class="font-semibold">Juru Tani News</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
       <!-- Loading State -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-20">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent" />
         <p class="text-gray-600 dark:text-gray-400 mt-4">Memuat berita...</p>
       </div>
-
+      
       <!-- Error State -->
       <div v-else-if="error" class="text-center py-20">
         <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8 max-w-md mx-auto">
@@ -299,6 +345,54 @@ onMounted(() => {
           </div>
         </div>
       </article>
+
+      <!-- Similar News Section -->
+      <section v-if="news" class="mt-12">
+        <div class="container mx-auto px-4 mb-8">
+          <div class="flex items-center gap-3">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              Berita Serupa
+            </h2>
+          </div>
+          <p class="text-gray-600 dark:text-gray-400">
+            Kategori: <span class="font-semibold text-green-600 dark:text-green-400">{{ formatCategory(news.category) }}</span>
+            <br />
+            Berikut adalah berita serupa pilihan JuruTani. Kami menampilkan artikel terkait untuk membantu Anda menemukan informasi yang relevan dan terbaru.
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <LoadingData v-if="loadingSimilar" />
+
+        <!-- Similar News Grid -->
+        <div v-else-if="similarNews.length > 0">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <NewsCardContent 
+              v-for="item in similarNewsFormatted"
+              :key="item.id"
+              :news="item"
+            />
+          </div>
+
+          <!-- Button placed outside the grid so it won't become a grid item -->
+          <div class="mt-8 flex justify-center">
+            <NuxtLink
+              to="/news"
+              class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
+            >
+              <span>Lihat Semua Berita</span>
+              <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </NuxtLink>
+          </div>
+        </div>
+
+      
+
+        <!-- No Similar News -->
+        <NotFoundData v-else />
+      </section>
     </div>
   </div>
 </template>

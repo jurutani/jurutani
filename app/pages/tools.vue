@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Tools - Juru Tani',
-  description: 'Stay updated with the latest Tools from Juru Tani.',
-  ogTitle: 'Tools - Juru Tani',
-  ogDescription: 'Stay updated with the latest Tools from Juru Tani.',
+  title: 'Alat Pertanian - Juru Tani',
+  description: 'Kumpulan alat pertanian dan panduan praktis untuk membantu petani meningkatkan efisiensi dan hasil panen.',
+  ogTitle: 'Alat Pertanian — Juru Tani',
+  ogDescription: 'Temukan rekomendasi alat, cara pemakaian, dan tips perawatan untuk petani modern.',
+  ogLocale: 'id_ID'
 })
 </script>
 

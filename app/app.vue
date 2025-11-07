@@ -38,6 +38,7 @@ useHead({
 
 <template>
     <NuxtLoadingIndicator />
+    <FirstVisitModal />
     <AppModal /> <!-- ⬅️ Tambahkan di sini juga bisa -->
     <AppToast /> <!-- ⬅️ Tambahkan di sini juga bisa -->
     <NuxtLayout>

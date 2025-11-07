@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'History - Juru Tani',
-  description: 'Stay updated with the latest History from Juru Tani.',
-  ogTitle: 'History - Juru Tani',
-  ogDescription: 'Stay updated with the latest History from Juru Tani.',
+  title: 'Riwayat — Juru Tani',
+  description: 'Lihat riwayat aktivitas, pembaruan, dan perubahan penting di Juru Tani.',
+  ogTitle: 'Riwayat — Juru Tani',
+  ogDescription: 'Lihat riwayat aktivitas, pembaruan, dan perubahan penting di Juru Tani.',
 })
 definePageMeta({
   middleware: ['auth']

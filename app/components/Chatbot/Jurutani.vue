@@ -5,12 +5,10 @@ import { ref, nextTick, watch, onMounted } from 'vue'
 const isOpen = ref(false)
 const showSplash = ref(true)
 const isExpanded = ref(false)
-const expandedMessages = ref(new Set())
-const inputMessage = ref('')
 const isLoading = ref(false)
-const messagesContainer = ref(null)
-const inputRef = ref(null)
 const hasSeenSplash = ref(false)
+const messageListRef = ref(null)
+const inputRef = ref(null)
 
 const messages = ref([
   {
@@ -22,8 +20,9 @@ const messages = ref([
 ])
 
 // API Configuration
-const GEMINI_API_KEY = 'AIzaSyB0B5HH0IPFc0eklYz4SpFdr_Lk90tGU2Q'
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`
+const GEMINI_API_KEY = 'AIzaSyDkLlBPmVfFQUOq5Cb4RWF7TM2zUDIH6Kk'
+// const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}`
 
 // Methods
 const openChat = () => {
@@ -34,10 +33,8 @@ const openChat = () => {
     showSplash.value = false
     isOpen.value = true
     nextTick(() => {
-      if (inputRef.value) {
-        inputRef.value.focus()
-      }
-      scrollToBottom()
+      inputRef.value?.focus()
+      messageListRef.value?.scrollToBottom()
     })
   }
 }
@@ -46,59 +43,15 @@ const startChat = () => {
   hasSeenSplash.value = true
   showSplash.value = false
   nextTick(() => {
-    if (inputRef.value) {
-      inputRef.value.focus()
-    }
-    scrollToBottom()
+    inputRef.value?.focus()
+    messageListRef.value?.scrollToBottom()
   })
-}
-
-const scrollToBottom = () => {
-  if (messagesContainer.value) {
-    nextTick(() => {
-      const element = messagesContainer.value
-      element.scrollTo({
-        top: element.scrollHeight,
-        behavior: 'smooth'
-      })
-    })
-  }
-}
-
-const formatTime = (timestamp) => {
-  return timestamp.toLocaleTimeString('id-ID', { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  })
-}
-
-const toggleMessageExpansion = (messageId) => {
-  const newSet = new Set(expandedMessages.value)
-  if (newSet.has(messageId)) {
-    newSet.delete(messageId)
-  } else {
-    newSet.add(messageId)
-  }
-  expandedMessages.value = newSet
-}
-
-const truncateText = (text, maxLength = 100) => {
-  if (text.length <= maxLength) return text
-  return text.substring(0, maxLength) + '...'
-}
-
-const shouldShowExpandButton = (message) => {
-  return message.text.length > 150
-}
-
-const isMessageExpanded = (messageId) => {
-  return expandedMessages.value.has(messageId)
 }
 
 const toggleChatExpansion = () => {
   isExpanded.value = !isExpanded.value
   nextTick(() => {
-    scrollToBottom()
+    messageListRef.value?.scrollToBottom()
   })
 }
 
@@ -184,28 +137,26 @@ const sendMessageToGemini = async (message) => {
   }
 }
 
-const handleSendMessage = async () => {
-  if (!inputMessage.value.trim() || isLoading.value) return
+const handleSendMessage = async (userMessage: string) => {
+  if (!userMessage.trim() || isLoading.value) return
 
-  const userMessage = {
+  const messageToPush = {
     id: messages.value.length + 1,
     type: 'user',
-    text: inputMessage.value,
+    text: userMessage,
     timestamp: new Date()
   }
 
-  messages.value.push(userMessage)
-  const currentMessage = inputMessage.value
-  inputMessage.value = ''
+  messages.value.push(messageToPush)
   isLoading.value = true
 
   // Auto scroll after user sends message
   nextTick(() => {
-    scrollToBottom()
+    messageListRef.value?.scrollToBottom()
   })
 
   try {
-    const botResponse = await sendMessageToGemini(currentMessage)
+    const botResponse = await sendMessageToGemini(userMessage)
     
     const botMessage = {
       id: messages.value.length + 1,
@@ -229,20 +180,14 @@ const handleSendMessage = async () => {
 }
 
 // Handle Enter key for sending messages
-const handleKeydown = (event) => {
+const handleKeydown = (event: KeyboardEvent) => {
   if (event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault()
-    handleSendMessage()
+    // Event akan ditangani oleh ChatInput component
   }
 }
 
 // Watchers
-watch(messages, () => {
-  nextTick(() => {
-    scrollToBottom()
-  })
-}, { deep: true })
-
 watch(isOpen, (newVal) => {
   if (newVal && inputRef.value) {
     nextTick(() => {
@@ -256,63 +201,14 @@ watch(isOpen, (newVal) => {
   <div class="fixed bottom-4 right-4 z-50">
     <!-- Chat Bubble Button -->
     <div v-if="!isOpen" class="relative">
-      <button
-        class="w-16 h-16 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 overflow-hidden border-2 border-green-400"
-        @click="openChat"
-      >
-        <img 
-          src="/chatbot.png" 
-          alt="Chatbot" 
-          class="w-full h-full object-cover"
-        >
-      </button>
-      <!-- Notification dot -->
-      <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse"/>
+      <ChatbotChatBubbleButton @click="openChat" />
     </div>
 
     <!-- Splash Screen -->
-    <UCard 
+    <ChatbotSplashScreen
       v-if="showSplash && isOpen"
-      class="w-80 border-2 border-green-400 shadow-2xl"
-      :ui="{ 
-        base: 'transform transition-all duration-500',
-        body: { padding: 'p-6' }
-      }"
-    >
-      <div class="text-center space-y-4">
-        <!-- Logo -->
-        <div class="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center shadow-lg">
-          <UIcon name="i-heroicons-microphone" class="w-10 h-10 text-green-600" />
-        </div>
-        
-        <!-- Title -->
-        <div>
-          <h1 class="text-xl font-bold text-green-700 mb-2">
-            Juru tani AI
-          </h1>
-          <p class="text-gray-600 text-sm">
-            Asisten Penyuluh Juru tani
-          </p>
-        </div>
-
-        <!-- Description -->
-        <p class="text-gray-700 text-sm leading-relaxed">
-          Konsultasi pertanian, peternakan, dan pembangunan. 
-          Mari mulai percakapan untuk solusi terbaik!
-        </p>
-
-        <!-- Start Button -->
-        <UButton
-          color="green"
-          size="lg"
-          block
-          class="hover:bg-green-700 transition-colors duration-200"
-          @click="startChat"
-        >
-          Mulai Konsultasi
-        </UButton>
-      </div>
-    </UCard>
+      @start="startChat"
+    />
 
     <!-- Chat Window -->
     <UCard
@@ -324,211 +220,30 @@ watch(isOpen, (newVal) => {
       :ui="{ body: { padding: 'p-0' } }"
     >
       <!-- Header -->
-      <div class="absolute top-0 left-0 right-0 bg-gradient-to-r from-green-600 to-green-500 text-white p-4 flex items-center justify-between z-10">
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-green-700 rounded-full flex items-center justify-center shadow-inner">
-            <UIcon name="i-heroicons-microphone" class="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h3 class="font-semibold text-sm">Juru tani AI</h3>
-            <p class="text-xs text-green-100">Penyuluh Juru tani</p>
-          </div>
-        </div>
-        <div class="flex items-center space-x-2">
-          <UButton
-            :icon="isExpanded ? 'i-heroicons-arrows-pointing-in' : 'i-heroicons-arrows-pointing-out'"
-            color="white"
-            variant="ghost"
-            size="xs"
-            class="hover:bg-white/20"
-            @click="toggleChatExpansion"
-          />
-          <UButton
-            icon="i-heroicons-x-mark"
-            color="white"
-            variant="ghost"
-            size="xs"
-            class="hover:bg-white/20"
-            @click="closeChat"
-          />
-        </div>
-      </div>
+      <ChatbotChatHeader
+        :is-expanded="isExpanded"
+        @toggle-expand="toggleChatExpansion"
+        @close="closeChat"
+      />
 
-      <!-- Messages Container with improved scrolling -->
-      <div 
-        ref="messagesContainer" 
-        class="absolute top-20 bottom-20 left-0 right-0 overflow-y-scroll p-4 space-y-3 bg-gradient-to-b from-gray-50 to-gray-100 scroll-smooth"
-        style="scroll-behavior: smooth;"
-      >
-        <div
-          v-for="message in messages"
-          :key="message.id"
-          :class="[
-            'flex animate-fade-in',
-            message.type === 'user' ? 'justify-end' : 'justify-start'
-          ]"
-        >
-          <div
-            :class="[
-              isExpanded ? 'max-w-md' : 'max-w-xs',
-              'px-3 py-2 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md',
-              message.type === 'user'
-                ? 'bg-gradient-to-r from-green-600 to-green-500 text-white ml-4'
-                : 'bg-white text-gray-800 mr-4 border border-gray-200'
-            ]"
-          >
-            <div class="flex items-start space-x-2">
-              <div v-if="message.type === 'bot'" class="flex-shrink-0 mt-0.5">
-                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center border border-green-200">
-                  <UIcon name="i-heroicons-microphone" class="w-3 h-3 text-green-600" />
-                </div>
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm whitespace-pre-wrap break-words leading-relaxed">
-                  {{ shouldShowExpandButton(message) && !isMessageExpanded(message.id) 
-                    ? truncateText(message.text) 
-                    : message.text }}
-                </p>
-                
-                <!-- Expand/Collapse button -->
-                <UButton
-                  v-if="shouldShowExpandButton(message)"
-                  :icon="isMessageExpanded(message.id) ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"
-                  size="2xs"
-                  variant="ghost"
-                  :color="message.type === 'user' ? 'white' : 'gray'"
-                  class="mt-1 hover:bg-black/10"
-                  @click="toggleMessageExpansion(message.id)"
-                >
-                  {{ isMessageExpanded(message.id) ? 'Tutup' : 'Selengkapnya' }}
-                </UButton>
-                
-                <p class="text-xs mt-1 opacity-70">
-                  {{ formatTime(message.timestamp) }}
-                </p>
-              </div>
-              <div v-if="message.type === 'user'" class="flex-shrink-0 mt-0.5">
-                <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
-                  <UIcon name="i-heroicons-user" class="w-3 h-3 text-white" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Loading indicator -->
-        <div v-if="isLoading" class="flex justify-start animate-fade-in">
-          <div
-:class="[
-            isExpanded ? 'max-w-md' : 'max-w-xs',
-            'px-3 py-2 rounded-lg bg-white text-gray-800 mr-4 border border-gray-200 shadow-sm'
-          ]">
-            <div class="flex items-center space-x-2">
-              <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center border border-green-200">
-                <UIcon name="i-heroicons-microphone" class="w-3 h-3 text-green-600" />
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="flex space-x-1">
-                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce"/>
-                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.1s"/>
-                  <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.2s"/>
-                </div>
-                <span class="text-sm text-gray-500">Mengetik...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Scroll anchor -->
-        <div id="scroll-anchor" style="height: 1px;"/>
-      </div>
+      <!-- Messages Container -->
+      <ChatbotMessageList
+        ref="messageListRef"
+        :messages="messages"
+        :is-loading="isLoading"
+        :is-expanded="isExpanded"
+      />
 
-      <!-- Input Area - Fixed at bottom -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white z-20">
-        <form class="flex space-x-2" @submit.prevent="handleSendMessage">
-          <UInput
-            ref="inputRef"
-            v-model="inputMessage"
-            placeholder="Tanya tentang pertanian..."
-            :disabled="isLoading"
-            size="sm"
-            class="flex-1"
-            @keydown="handleKeydown"
-          />
-          <UButton
-            type="submit"
-            :disabled="!inputMessage.trim() || isLoading"
-            icon="i-heroicons-paper-airplane"
-            color="green"
-            size="sm"
-            class="transition-all duration-200 hover:scale-105"
-          />
-        </form>
-      </div>
+      <!-- Input Area -->
+      <ChatbotChatInput
+        ref="inputRef"
+        :disabled="isLoading"
+        @submit="handleSendMessage"
+      />
     </UCard>
   </div>
 </template>
 
 <style scoped>
-/* Custom scrollbar styling */
-.overflow-y-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.overflow-y-scroll::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 3px;
-}
-
-.overflow-y-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #10b981, #059669);
-  border-radius: 3px;
-  transition: all 0.2s ease;
-}
-
-.overflow-y-scroll::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #059669, #047857);
-}
-
-/* Firefox scrollbar */
-.overflow-y-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #10b981 #f1f5f9;
-}
-
-/* Smooth animations */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
-}
-
-/* Better text wrapping for long messages */
-.break-words {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Improved scroll behavior */
-.scroll-smooth {
-  scroll-behavior: smooth;
-}
-
-/* Enhanced hover effects */
-.hover\:scale-105:hover {
-  transform: scale(1.05);
-}
-
-.hover\:shadow-3xl:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
+/* Styles disediakan oleh component-component child */
 </style>

@@ -61,7 +61,7 @@ const currentSponsor = ref<Sponsor | null>(sponsors[0])
               <img 
                 :src="currentSponsor?.logo" 
                 :alt="currentSponsor?.name" 
-                class="max-h-full max-w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                class="max-h-full max-w-full object-contain"
               >
             </div>
             <p class="text-sm text-gray-600 text-center">

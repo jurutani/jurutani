@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Security - Juru Tani',
-  description: 'Stay updated with the latest Security from Juru Tani.',
-  ogTitle: 'Security - Juru Tani',
-  ogDescription: 'Stay updated with the latest Security from Juru Tani.',
+  title: 'Keamanan — Juru Tani',
+  description: 'Informasi terbaru dan panduan tentang keamanan aplikasi, perlindungan data, dan praktik terbaik untuk pengguna Juru Tani.',
+  ogTitle: 'Keamanan — Juru Tani',
+  ogDescription: 'Kumpulan pembaruan keamanan dan tips menjaga data Anda saat menggunakan Juru Tani.',
+  ogType: 'website'
 })
 definePageMeta({
   middleware: ['auth']

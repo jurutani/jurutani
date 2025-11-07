@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 useSeoMeta({
-  title: 'Materi - Juru Tani',
-  description: 'Stay updated with the latest Materi and news from Juru Tani.',
-  ogTitle: 'Materi - Juru Tani',
-  ogDescription: 'Stay updated with the latest Materi and news from Juru Tani.',
+  title: 'Edukasi - Juru Tani',
+  description: 'Kumpulan materi edukasi dan panduan pertanian praktis dari Juru Tani. Temukan artikel, tutorial, dan berita terbaru untuk membantu kegiatan pertanian Anda.',
+  ogTitle: 'Edukasi - Juru Tani',
+  ogDescription: 'Kumpulan materi edukasi dan panduan pertanian praktis dari Juru Tani. Temukan artikel, tutorial, dan berita terbaru untuk membantu kegiatan pertanian Anda.',
 })
 </script>
 

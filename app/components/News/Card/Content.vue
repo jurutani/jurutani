@@ -82,7 +82,7 @@ const getCategoryColor = (category: string) => {
 </script>
 
 <template>
-  <article class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-green-100 dark:border-gray-700 hover:border-green-200 dark:hover:border-gray-600">
+  <article class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-green-100 dark:border-gray-700 hover:border-green-200 dark:hover:border-gray-600 flex flex-col h-full">
     <!-- Image Container -->
     <div class="relative h-52 bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-700 dark:to-gray-800 overflow-hidden">
       <!-- Loading State -->
@@ -119,14 +119,14 @@ const getCategoryColor = (category: string) => {
     </div>
 
     <!-- Content -->
-    <div class="p-6">
+    <div class="p-6 flex flex-col flex-grow">
       <!-- Title -->
       <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200">
         {{ news.title }}
       </h3>
       
       <!-- Excerpt -->
-      <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
+      <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
         {{ excerpt }}
       </p>
 
@@ -147,15 +147,17 @@ const getCategoryColor = (category: string) => {
       </div>
 
       <!-- Read More Button -->
-      <router-link
-        :to="`/news/${news.id}`"
-        class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
-      >
-        <span>Baca Selengkapnya</span>
-        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </router-link>
+      <div class="flex justify-end">
+        <router-link
+          :to="`/news/${news.id}`"
+          class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
+        >
+          <span>Baca Selengkapnya</span>
+          <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </router-link>
+      </div>
     </div>
   </article>
 </template>

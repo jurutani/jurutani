@@ -31,7 +31,7 @@ const loading = ref(true)
 // Filter & pagination
 const currentCategory = ref('all')
 const currentPage = ref(1)
-const pageSize = 12
+const pageSize = 9
 const totalPages = ref(1)
 const totalItems = ref(0)
 const categories = ref<Category[]>([])
@@ -167,7 +167,7 @@ const handlePageChange = (page: number) => {
       <ErrorData v-else-if="hasError" :error="error" />
       <NotFoundData v-else-if="!hasData" />
       
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
         <MarketsCardContent 
           v-for="product in marketsList" 
           :key="product.id" 
