@@ -212,6 +212,21 @@ const openYouTubeLink = (): void => {
   }
 }
 
+const seoTitle = computed(() => course.value ? `${course.value.title} | Juru Tani Edukasi` : 'Memuat Materi...')
+const seoDescription = computed(() => {
+  if (!course.value) return 'Materi terkini seputar pertanian dari Juru Tani.'
+  if (course.value.description && course.value.description !== '') return course.value.description 
+  return ''
+})
+const seoImage = computed(() => imageUrl.value || '/jurutani.png')
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogImage: seoImage
+})
 // Lifecycle
 onMounted(() => {
   fetchCourseDetail()
@@ -221,7 +236,10 @@ onMounted(() => {
 <template>
   <div class="min-h-screen py-14">
     <!-- Header -->
-    <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+   
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+       <div class="shadow-sm">
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
           <button 
@@ -229,18 +247,16 @@ onMounted(() => {
             @click="goBack"
           >
             <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
-            <span class="font-medium">Kembali ke Daftar Materi</span>
+            <span class="font-medium">Kembali</span>
           </button>
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
             <UIcon name="i-heroicons-academic-cap" class="w-5 h-5" />
-            <span class="font-semibold">Juru Tani Edu</span>
+            <span class="font-semibold">Edukasi Jurutani</span>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="container mx-auto px-4 py-8 max-w-6xl">
       <!-- Loading State -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-20">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent" />

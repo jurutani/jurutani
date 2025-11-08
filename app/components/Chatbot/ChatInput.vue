@@ -53,7 +53,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white z-20">
+  <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white z-20 dark:bg-gray-900 dark:border-gray-700">
     <form class="flex space-x-2" @submit.prevent="handleSubmit">
       <UInput
         ref="inputRef"

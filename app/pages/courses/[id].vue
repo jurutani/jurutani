@@ -233,6 +233,22 @@ const fetchMeetingById = async () => {
   }
 };
 
+const seoTitle = computed(() => meeting.value ? `${meeting.value.title} | Juru Tani Meeting` : 'Memuat Meeting...')
+const seoDescription = computed(() => {
+  if (!meeting.value) return 'Pertemuan seputar pertanian dari Juru Tani.'
+  if (meeting.value.description && meeting.value.description !== '') return meeting.value.description
+  return ''
+})
+const seoImage = computed(() => imageUrl.value || '/jurutani.png')
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogImage: seoImage
+});
+
 const goBack = () => {
   router.push('/courses');
 };

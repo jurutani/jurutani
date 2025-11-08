@@ -9,11 +9,15 @@ defineProps<{
 <template>
   <div class="absolute top-0 left-0 right-0 bg-gradient-to-r from-green-600 to-green-500 text-white p-4 flex items-center justify-between z-10">
     <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 bg-green-700 rounded-full flex items-center justify-center shadow-inner">
-        <UIcon name="i-heroicons-microphone" class="w-5 h-5 text-white" />
+      <div class="w-10 h-10 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center shadow-inner">
+        <NuxtImg 
+          src="/chatbot.png" 
+          alt="Chatbot" 
+          class="w-5 h-5"
+        />
       </div>
       <div>
-        <h3 class="font-semibold text-sm">Juru tani AI</h3>
+        <h3 class="font-semibold text-sm">Juru tani </h3>
         <p class="text-xs text-green-100">Penyuluh Juru tani</p>
       </div>
     </div>

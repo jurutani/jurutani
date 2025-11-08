@@ -46,13 +46,17 @@ const shouldShowExpandButton = (message: Message) => {
         'px-3 py-2 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md',
         message.type === 'user'
           ? 'bg-gradient-to-r from-green-600 to-green-500 text-white ml-4'
-          : 'bg-white text-gray-800 mr-4 border border-gray-200'
+          : 'bg-white text-gray-800 mr-4 border border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
       ]"
     >
       <div class="flex items-start space-x-2">
         <div v-if="message.type === 'bot'" class="flex-shrink-0 mt-0.5">
-          <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center border border-green-200">
-            <UIcon name="i-heroicons-microphone" class="w-3 h-3 text-green-600" />
+          <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center border border-green-200 dark:bg-green-900 dark:border-green-800">
+            <NuxtImg 
+              src="/chatbot.png" 
+              alt="Chatbot" 
+              class="w-3 h-3 text-green-600 dark:text-green-300"
+            />
           </div>
         </div>
         <div class="flex-1 min-w-0">
@@ -69,13 +73,13 @@ const shouldShowExpandButton = (message: Message) => {
             size="2xs"
             variant="ghost"
             :color="message.type === 'user' ? 'white' : 'gray'"
-            class="mt-1 hover:bg-black/10"
+            class="mt-1 hover:bg-black/10 dark:hover:bg-white/10"
             @click="emit('toggleExpand', message.id)"
           >
             {{ isExpanded ? 'Tutup' : 'Selengkapnya' }}
           </UButton>
           
-          <p class="text-xs mt-1 opacity-70">
+          <p class="text-xs mt-1 opacity-70 text-gray-500 dark:text-gray-300">
             {{ formatTime(message.timestamp) }}
           </p>
         </div>

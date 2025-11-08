@@ -258,6 +258,23 @@ const openWhatsApp = (): void => {
   }
 }
 
+const seoTitle = computed(() => product.value ? `${product.value.name} | Pasar Tani` : 'Memuat Produk...')
+const seoDescription = computed(() => {
+  if (!product.value) return 'Produk terkini seputar pertanian dari Pasar Tani.'
+  if (product.value.description && product.value.description !== '') return product.value.description
+  if (product.value.price || product.value.price === 0) return formattedPrice.value
+  return ''
+})
+const seoImage = computed(() => images.value[currentImageIndex.value] || '/jurutani.png')
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogImage: seoImage
+})
+
 // Initial fetch
 onMounted(() => {
   fetchProduct()
@@ -277,12 +294,12 @@ onMounted(() => {
               @click="goBack"
             >
               <UIcon name="i-lucide-arrow-left" class="w-5 h-5" />
-              <span>Kembali ke Market</span>
+              <span>Kembali</span>
             </button>
             
             <div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
               <UIcon name="i-lucide-shopping-bag" class="w-5 h-5" />
-              <span class="font-semibold">Juru Tani Marketplace</span>
+              <span class="font-semibold">Pasar Tani</span>
             </div>
           </div>
         </div>
@@ -296,9 +313,7 @@ onMounted(() => {
       <!-- Product Details -->
       <article v-else-if="product" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
-          <!-- Left Column - Images -->
           <div class="relative bg-gray-50 dark:bg-gray-700 p-6">
-            <!-- Main Image with Navigation -->
             <div class="relative rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm h-96 lg:h-[500px]">
               <img 
                 :src="images[currentImageIndex]" 
@@ -496,8 +511,8 @@ onMounted(() => {
                   @click="openWhatsApp"
                   class="inline-flex items-center justify-center w-full px-6 py-4 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 transition-all transform hover:scale-105 text-lg font-semibold shadow-lg hover:shadow-xl"
                 >
-                  <UIcon name="i-lucide-message-circle" class="w-6 h-6 mr-3" />
-                  Hubungi Penjual via WhatsApp
+                  <UIcon name="i-mdi-whatsapp" class="text-2x mx-4" />
+                  Hubungi Penjual
                 </button>
               </div>
             </div>

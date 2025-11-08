@@ -3,7 +3,6 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSupabase } from '~/composables/useSupabase'
 
-// Types
 interface NewsItem {
   id: string | number
   title: string
@@ -187,6 +186,18 @@ const openLink = (): void => {
     window.open(news.value.link, '_blank', 'noopener,noreferrer')
   }
 }
+
+const seoTitle = computed(() => news.value ? `${news.value.title} | Berita Juru Tani` : 'Memuat Berita...')
+const seoDescription = computed(() => news.value ? (news.value.sub_title || (news.value.content ? news.value.content.slice(0, 160) : '')) : 'Berita terkini seputar pertanian dari Juru Tani.')
+const seoImage = computed(() => imageUrl.value || '/jurutani.png')
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogImage: seoImage
+})
 
 // Lifecycle
 onMounted(() => {

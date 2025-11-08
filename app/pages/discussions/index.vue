@@ -31,7 +31,7 @@ const services = ref<DiscussionService[]>([
     title: 'Bicara dengan Penyuluh',
     subtitle: 'Konsultasi Langsung',
     description: 'Dapatkan panduan praktis dari penyuluh pertanian berpengalaman untuk mengatasi masalah budidaya, hama penyakit, dan teknik bertani modern.',
-    icon: 'i-heroicons-chat-bubble-left-ellipsis',
+    icon: 'i-lucide-user-plus',
     image: '/services/penyuluhjurutani.JPG',
     route: '/discussions/instructor'
   },
@@ -40,7 +40,7 @@ const services = ref<DiscussionService[]>([
     title: 'Tanya ke Pakar',
     subtitle: 'Konsultasi Ahli',
     description: 'Konsultasi mendalam dengan ahli pertanian bersertifikat untuk analisis ilmiah, diagnosa penyakit tanaman, dan rekomendasi teknologi terbaru.',
-    icon: 'i-heroicons-shield-check',
+    icon: 'i-lucide-user-check',
     image: '/services/pakarjurutani.JPG',
     route: '/discussions/expert'
   },
@@ -49,7 +49,7 @@ const services = ref<DiscussionService[]>([
     title: 'Forum Komunitas',
     subtitle: 'Berbagi Pengalaman',
     description: 'Bergabung dengan komunitas petani dari seluruh Indonesia untuk berbagi tips sukses, pengalaman lapangan, dan inovasi pertanian.',
-    icon: 'i-heroicons-users',
+    icon: 'i-lucide-users',
     image: '/services/komunitasjurutani.JPG',
     route: '/discussions/group'
   },
@@ -58,7 +58,7 @@ const services = ref<DiscussionService[]>([
     title: 'Room Chat Tematik',
     subtitle: 'Diskusi Real-time',
     description: 'Diskusi langsung dalam room chat khusus berdasarkan komoditas seperti padi, sayuran, buah-buahan, dan peternakan untuk solusi cepat.',
-    icon: 'i-heroicons-chat-bubble-oval-left-ellipsis',
+    icon: 'i-lucide-message-circle',
     image: '/services/chatjurutani.JPG',
     route: '/room-chat'
   },
@@ -67,7 +67,7 @@ const services = ref<DiscussionService[]>([
     title: 'Support Center',
     subtitle: 'Bantuan Langsung',
     description: 'Hubungi tim support Juru Tani untuk bantuan teknis aplikasi, keluhan layanan, atau pertanyaan umum dengan respon prioritas.',
-    icon: 'i-heroicons-user-circle',
+    icon: 'i-lucide-headset',
     image: '/services/admin.JPG',
     route: '/room-chat/admin'
   }
@@ -254,7 +254,7 @@ onBeforeUnmount(() => {
       <div class="rounded-3xl bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 border border-green-200 dark:border-green-700 p-8">
         <div class="text-center mb-8">
           <div class="inline-flex items-center gap-2 mb-4 px-3 py-1 bg-green-100 dark:bg-green-800 rounded-full">
-            <UIcon name="i-heroicons-information-circle" class="w-4 h-4 text-green-600 dark:text-green-400" />
+            <UIcon name="i-lucide-check-circle" class="w-4 h-4 text-green-600 dark:text-green-400" />
             <span class="text-sm font-medium text-green-700 dark:text-green-300">Keunggulan Platform JuruTani</span>
           </div>
           
@@ -270,7 +270,7 @@ onBeforeUnmount(() => {
         <div class="grid md:grid-cols-3 gap-8">
           <div class="text-center group">
             <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <UIcon name="i-heroicons-check-badge" class="w-8 h-8 text-white" />
+              <UIcon name="i-lucide-user-check" class="w-8 h-8 text-white" />
             </div>
             <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Terverifikasi & Terpercaya</h4>
             <p class="text-sm text-gray-600 dark:text-gray-300">Semua penyuluh dan pakar telah melalui proses verifikasi ketat dan memiliki sertifikasi resmi</p>
@@ -278,7 +278,7 @@ onBeforeUnmount(() => {
           
           <div class="text-center group">
             <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <UIcon name="i-heroicons-clock" class="w-8 h-8 text-white" />
+              <UIcon name="i-lucide-clock" class="w-8 h-8 text-white" />
             </div>
             <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Respon Super Cepat</h4>
             <p class="text-sm text-gray-600 dark:text-gray-300">Dapatkan jawaban dalam hitungan menit dari komunitas aktif dan tim support 24/7</p>
@@ -286,7 +286,7 @@ onBeforeUnmount(() => {
           
           <div class="text-center group">
             <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <UIcon name="i-heroicons-heart" class="w-8 h-8 text-white" />
+              <UIcon name="i-lucide-star" class="w-8 h-8 text-white" />
             </div>
             <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">100% Gratis</h4>
             <p class="text-sm text-gray-600 dark:text-gray-300">Seluruh layanan konsultasi dan diskusi tersedia gratis untuk mendukung kemajuan pertanian Indonesia</p>
