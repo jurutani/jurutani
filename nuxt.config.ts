@@ -19,7 +19,7 @@ const {
 
 export default defineNuxtConfig({
   extends: [
-    './app-nuxtui-layer', // NavBar and Footer components
+    './app-nuxtui-layer',
   ],
   runtimeConfig: {
     public: {
@@ -28,21 +28,10 @@ export default defineNuxtConfig({
       supabaseKey: process.env.SUPABASE_KEY,
     },
   },
-  // ssr: false,
-  // devtools: { enabled: false }, // enabled by default, disable when using standalone Vue devtools
 
-  // Preparation for Nuxt 4 migration
   future: {
     compatibilityVersion: 4,
   },
-
-  // Before Nuxt 4 migration
-  // srcDir: 'app',
-  // serverDir: fileURLToPath(new URL('server', import.meta.url)),
-  // dir: {
-  //   public: fileURLToPath(new URL('public', import.meta.url)),
-  //   modules: fileURLToPath(new URL('modules', import.meta.url)),
-  // },
 
   experimental: {
     componentIslands: true,
@@ -55,13 +44,13 @@ export default defineNuxtConfig({
       ignore: [
         '/room-chat',
         '/markets',
-        /^\/__og-image__\//, // tambahkan baris ini
+        /^\/__og-image__\//,
       ]
     }
   },
 
   app: {
-    baseURL: '/', // defaulted by nuxt
+    baseURL: '/',
     head: {
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -76,14 +65,11 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@vueuse/nuxt',
     '@pinia/nuxt',
-    // '@nuxtjs/html-validator',
     '@nuxt/image',
     '@vee-validate/nuxt',
     '@nuxtjs/seo',
-    // '@nuxtjs/fontaine', // blocked by https://github.com/nuxt-modules/fontaine/issues/342
     '@nuxtjs/critters',
-    '@nuxt/icon', // Pre-included by @nuxt/ui
-    // 'nuxt-icon', // To be replaced with @nuxt-icon (above), once NuxtSEO drops using this/becomes stable..
+    '@nuxt/icon',
     '@nuxt/eslint',
     '@nuxt/ui',
     function () {
@@ -100,28 +86,10 @@ export default defineNuxtConfig({
   },
 
   ui: {
-    // safelistColors: [
-    //   'primary',
-    //   'secondary',
-    //   'tertiary',
-    //   'success',
-    //   'warning',
-    //   'error',
-    //   'info',
-    // ],
   },
 
-  // https://dev.to/jacobandrewsky/improving-performance-of-nuxt-with-fontaine-5dim
-  // blocked by https://github.com/nuxt-modules/fontaine/issues/342
-  // fontMetrics: {
-  //   fonts: ['Inter', 'Kalam'],
-  // },
-
-  // https://dev.to/jacobandrewsky/optimizing-css-performance-in-nuxt-with-critters-4k8i
   critters: {
-    // Options passed directly to critters: https://github.com/GoogleChromeLabs/critters#critters-2
     config: {
-      // Default: 'media'
       preload: 'swap',
     },
   },
@@ -134,7 +102,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // Global styles
   css: [
     '@/assets/css/tailwind.css',
   ],
@@ -148,26 +115,8 @@ export default defineNuxtConfig({
   },
 
   image: {
-    // dir: 'assets/images', // doesn't always work, for eg, with vercel etc, https://github.com/nuxt/image/issues/1006. Therefore, we are storing the images in public folder, to have them not processed by vite, but rather by nuxt-image module on-demand
-    // sizes: 'xs:100vw sm:100vw md:100vw lg:100vw xl:100vw', // Global sizes not yet supported, has to be specified in NuxtImg or NuxtPicture tags - https://github.com/nuxt/image/issues/216
-    // densities: [1,2], // default
-    // quality: 80, // can be overridden as NuxtImg prop
-    format: ['webp, png, jpg'], // default is ['webp']
-    // The screen sizes predefined by `@nuxt/image`:
-    // screens: {
-    //   xs: 320,
-    //   sm: 640,
-    //   md: 768,
-    //   lg: 1024,
-    //   xl: 1280,
-    //   xxl: 1536,
-    //   '2xl': 1536,
-    // },
-
-    // TODO: Currently image optimization is paused until some bugs in Nuxt Image modules are fixed
-    // provider: 'ipx',
+    format: ['webp, png, jpg'],
     provider: 'none',
-
     presets: {
       avatar: {
         modifiers: {
@@ -177,9 +126,7 @@ export default defineNuxtConfig({
         },
       },
     },
-    // netlify: {
-    //   baseURL: url,
-    // },
+
     domains: [
       'images.unsplash.com',
       'fakestoreapi.com',
@@ -194,9 +141,7 @@ export default defineNuxtConfig({
   },
 
   veeValidate: {
-    // disable or enable auto imports
     autoImports: true,
-    // Use different names for components
     componentNames: {
       Form: 'VeeForm',
       Field: 'VeeField',
@@ -206,7 +151,6 @@ export default defineNuxtConfig({
   },
 
   content: {
-    // Before Nuxt 4 migration
     sources: {
       content: {
         driver: 'fs',
@@ -234,11 +178,9 @@ export default defineNuxtConfig({
   },
 
   pinia: {
-    // storesDirs: ['./stores/**'],
   },
 
   imports: {
-    // dirs: ['my-components'],
   },
 
 
@@ -251,14 +193,11 @@ export default defineNuxtConfig({
     '/hidden': { robots: false },
   },
 
-  // Used by all modules in the @nuxtjs/seo collection
-  // https://nuxtseo.com/docs/nuxt-seo/guides/using-the-modules
   site: {
     url,
     name: title,
     description,
     defaultLocale,
-    // https://nuxtseo.com/docs/schema-org/guides/setup-identity
     identity,
     twitter,
     trailingSlash,
@@ -266,13 +205,10 @@ export default defineNuxtConfig({
   },
 
   robots: {
-    // https://nuxtseo.com/docs/robots/api/config#blocknonseobots-boolean
     blockNonSeoBots: true,
   },
 
   sitemap: {
-    // https://nuxtseo.com/docs/sitemap/getting-started/troubleshooting
-    // Open {{site.url}}/sitemap.xml
     xslColumns: [
       { label: 'URL', width: '50%' },
       { label: 'Last Modified', select: 'sitemap:lastmod', width: '12.5%' },
@@ -284,15 +220,12 @@ export default defineNuxtConfig({
       },
       { label: 'Hreflangs', select: 'count(xhtml:link)', width: '12.5%' },
     ],
-    // To turn off xls file when viewing sitemap.xml
-    // xsl: false,
-    // Remove strictNuxtContentPaths if using nuxt-content in documentDriven mode
     strictNuxtContentPaths: true,
   },
 
   ogImage: {
     provider: 'satori',
-    static: false, // agar tidak error saat `npm run build`
+    static: false,
     fonts: [
       {
         name: 'Inter',
@@ -322,40 +255,16 @@ export default defineNuxtConfig({
   },
 
   eslint: {
-    // config: {
-    //   stylistic: {
-    //     // All are default values
-    //     semi: false,
-    //     quotes: 'single',
-    //     blockSpacing: true,
-    //     indent: 2,
-    //     commaDangle: 'always-multiline',
-    //     // ...
-    //   },
-    // },
-    // ...
   },
 
   pinegrow: {
     liveDesigner: {
-      iconPreferredCase: 'unocss', // default value (can be removed), Nuxt UI uses the unocss format for icon names
+      iconPreferredCase: 'unocss',
       tailwindcss: {
-        /* Please ensure that you update the filenames and paths to accurately match those used in your project. */
         configPath: 'tailwind.config.ts',
         cssPath: '@/assets/css/tailwind.css',
-        // themePath: false, // Set to false so that Design Panel is not used
-        // restartOnConfigUpdate: true,
         restartOnThemeUpdate: true,
       },
-      // plugins: [
-      //   {
-      //     name: 'My Awesome Lib 3.0',
-      //     key: 'my-awesome-lib',
-      //     pluginPath: fileURLToPath(
-      //       new URL('./web-types/my-awesome-lib.json', import.meta.url),
-      //     ),
-      //   },
-      // ],
     },
   },
   compatibilityDate: '2025-01-14',

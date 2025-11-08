@@ -244,9 +244,6 @@ watch(() => course.value, (newVal) => {
 
 <template>
   <div class="min-h-screen py-14">
-    <!-- Header -->
-   
-
     <div class="container mx-auto px-4 py-8 max-w-6xl">
        <div class="shadow-sm">
       <div class="container mx-auto px-4 py-4">

@@ -6,7 +6,7 @@ export default {
   author: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang',
   url: 'https://jurutani.com',
   github: 'https://github.com/jurutani',
-  ogImageUrl: 'https://jurutani.com/jurutani.png',
+  ogImageUrl: 'https://jurutani.com/og-image.jpg',
   generator: 'Nuxt 3, Vercel, TailwindCSS',
   defaultLocale: 'id',
   identity: {

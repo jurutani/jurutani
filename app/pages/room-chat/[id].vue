@@ -223,7 +223,7 @@ onMounted(async () => {
       robots: 'noindex, follow', // Private page - don't index
       ogTitle: 'Room Chat - Juru Tani',
       ogDescription: 'Ruang percakapan pribadi di Juru Tani',
-      ogImage: 'https://jurutani.com/jurutani.png'
+      ogImage: 'https://jurutani.com/og-image.jpg',
     })
 
     if (conversationId.value) {
