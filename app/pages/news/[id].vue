@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSupabase } from '~/composables/useSupabase'
 
@@ -116,21 +116,6 @@ const fetchNewsDetail = async (): Promise<void> => {
 
     news.value = data
     
-    // SEO Optimization untuk berita detail
-    useSeoDetail({
-      title: data.title,
-      description: data.sub_title || data.content.substring(0, 160),
-      keywords: [
-        'berita pertanian',
-        data.category?.toLowerCase() || 'berita',
-        'inovasi tani',
-        'kabar tani'
-      ],
-      image: imageUrl.value || undefined,
-      url: `https://jurutani.com/news/${newsId}`,
-      type: 'article'
-    })
-    
     // Fetch similar news after main news is loaded
     await fetchSimilarNews(data.category)
   } catch (err) {
@@ -202,22 +187,34 @@ const openLink = (): void => {
   }
 }
 
-const seoTitle = computed(() => news.value ? `${news.value.title} | Berita Juru Tani` : 'Memuat Berita...')
+const seoTitle = computed(() => news.value ? `${news.value.title}` : 'Memuat Berita...')
 const seoDescription = computed(() => news.value ? (news.value.sub_title || (news.value.content ? news.value.content.slice(0, 160) : '')) : 'Berita terkini seputar pertanian dari Juru Tani.')
 const seoImage = computed(() => imageUrl.value || '/jurutani.png')
-
-useSeoMeta({
-  title: seoTitle,
-  description: seoDescription,
-  ogTitle: seoTitle,
-  ogDescription: seoDescription,
-  ogImage: seoImage
-})
+const seoKeywords = computed(() => news.value ? [
+  'berita pertanian',
+  news.value.category?.toLowerCase() || 'berita',
+  'inovasi tani',
+  'kabar tani'
+] : [])
 
 // Lifecycle
 onMounted(() => {
   fetchNewsDetail()
 })
+
+// Update SEO after news is loaded
+watch(() => news.value, (newVal) => {
+  if (newVal) {
+    useSeoDetail({
+      title: seoTitle.value,
+      description: seoDescription.value,
+      keywords: seoKeywords.value,
+      image: seoImage.value,
+      url: `https://jurutani.com/news/${newsId}`,
+      type: 'article'
+    })
+  }
+}, { immediate: false })
 </script>
 
 <template>
@@ -225,7 +222,7 @@ onMounted(() => {
     
     <div class="container mx-auto px-4 py-8 max-w-4xl">
       <!-- Header -->
-      <div class="shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <div class="shadow-sm">
         <div class="container mx-auto px-4 py-4">
           <div class="flex items-center justify-between">
             <button 

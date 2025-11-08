@@ -14,12 +14,13 @@
     return queryContent(base, path).findOne()
   })
 
-  useServerSeoMeta({
-    description: () => post.value?.title,
-  })
-
-  useHead({
-    title: () => post.value?.title,
+  // Use seo.ts composables untuk konsistensi
+  useSeoDetail({
+    title: post.value?.title || 'Konten',
+    description: post.value?.description || post.value?.title || 'Baca artikel lengkap di Juru Tani',
+    keywords: post.value?.tags || [],
+    image: post.value?.image,
+    type: 'article',
   })
 </script>
 <template>

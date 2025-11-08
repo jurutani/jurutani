@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSupabase } from '~/composables/useSupabase';
 
@@ -219,21 +219,6 @@ const fetchMeetingById = async () => {
     } else if (data) {
       meeting.value = data;
       
-      // SEO Optimization untuk course detail
-      useSeoDetail({
-        title: data.title || 'Course',
-        description: data.description || `Ikuti course ${data.title}`,
-        keywords: [
-          'kursus pertanian',
-          'course',
-          data.category?.toLowerCase() || 'pelatihan',
-          'pembelajaran'
-        ],
-        image: imageUrl.value || undefined,
-        url: `https://jurutani.com/courses/${meetingId}`,
-        type: 'article'
-      })
-      
       if (data.author_id) {
         await fetchAuthor(data.author_id);
       }
@@ -248,21 +233,19 @@ const fetchMeetingById = async () => {
   }
 };
 
-const seoTitle = computed(() => meeting.value ? `${meeting.value.title} | Juru Tani Meeting` : 'Memuat Meeting...')
+const seoTitle = computed(() => meeting.value ? `${meeting.value.title}` : 'Memuat Meeting...')
 const seoDescription = computed(() => {
-  if (!meeting.value) return 'Pertemuan seputar pertanian dari Juru Tani.'
+  if (!meeting.value) return 'Course seputar pertanian dari Juru Tani.'
   if (meeting.value.description && meeting.value.description !== '') return meeting.value.description
   return ''
 })
 const seoImage = computed(() => imageUrl.value || '/jurutani.png')
-
-useSeoMeta({
-  title: seoTitle,
-  description: seoDescription,
-  ogTitle: seoTitle,
-  ogDescription: seoDescription,
-  ogImage: seoImage
-});
+const seoKeywords = computed(() => meeting.value ? [
+  'kursus pertanian',
+  'course',
+  meeting.value.category?.toLowerCase() || 'pelatihan',
+  'pembelajaran'
+] : [])
 
 const goBack = () => {
   router.push('/courses');
@@ -271,6 +254,20 @@ const goBack = () => {
 onMounted(() => {
   fetchMeetingById();
 });
+
+// Update SEO after meeting is loaded
+watch(() => meeting.value, (newVal) => {
+  if (newVal) {
+    useSeoDetail({
+      title: seoTitle.value,
+      description: seoDescription.value,
+      keywords: seoKeywords.value,
+      image: seoImage.value,
+      url: `https://jurutani.com/courses/${route.params.id}`,
+      type: 'article'
+    })
+  }
+}, { immediate: false })
 </script>
 
 <template>

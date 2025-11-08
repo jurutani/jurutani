@@ -1,7 +1,7 @@
 // @unocss-include
 
 export default {
-  title: 'Juru Tani Reborn | Solusi Penyuluhan Pertanian Modern',
+  title: 'Juru Tani Reborn',
   description: 'Juru Tani Reborn merupakan inovasi terbaru dari Jurutani yang digagas oleh Politeknik Pembangunan Pertanian Yogyakarta Magelang, bertujuan membantu petani setempat dan mendukung pertanian Indonesia.',
   author: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang',
   url: 'https://jurutani.com',

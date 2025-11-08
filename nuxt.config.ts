@@ -48,33 +48,25 @@ export default defineNuxtConfig({
     componentIslands: true,
   },
 
- nitro: {
-  preset: 'netlify-static',
-  prerender: {
-    crawlLinks: true,
-    ignore: [
-      '/room-chat',
-      '/markets',
-      /^\/__og-image__\//, // tambahkan baris ini
-    ]
-  }
-},
+  nitro: {
+    preset: 'netlify-static',
+    prerender: {
+      crawlLinks: true,
+      ignore: [
+        '/room-chat',
+        '/markets',
+        /^\/__og-image__\//, // tambahkan baris ini
+      ]
+    }
+  },
 
   app: {
     baseURL: '/', // defaulted by nuxt
-    // Look into HeadAndMeta.vue for the rest
     head: {
-      title: 'Juru Tani Reborn | Solusi Penyuluhan Modern',
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
-      meta: [
-        { charset: 'utf-8' },
-        { name: 'og:image', content: 'https://jurutani.com/jurutani.png' },
-        { name: 'twitter:image', content: 'https://jurutani.com/jurutani.png' },
-        { name: 'twitter:card', content: 'summary_large_image' },
-      ],
-  },
+    },
   },
 
 
@@ -134,13 +126,13 @@ export default defineNuxtConfig({
     },
   },
 
-icon: {
-  componentName: 'NuxtIcon',
-  cdn: true,
-  serverBundle: {
-    collections: ['heroicons', 'ic', 'logos', 'ri', 'mdi', 'ph'],
+  icon: {
+    componentName: 'NuxtIcon',
+    cdn: true,
+    serverBundle: {
+      collections: ['heroicons', 'ic', 'logos', 'ri', 'mdi', 'ph'],
+    },
   },
-},
 
   // Global styles
   css: [
@@ -320,14 +312,14 @@ icon: {
     },
   },
 
- unocss: {
-  safelist: ['i-mdi-home', 'i-mdi-account', 'iconify'],
-  presets: [
-    presetIcons({
-      prefix: 'i-',
-    }),
-  ],
-},
+  unocss: {
+    safelist: ['i-mdi-home', 'i-mdi-account', 'iconify'],
+    presets: [
+      presetIcons({
+        prefix: 'i-',
+      }),
+    ],
+  },
 
   eslint: {
     // config: {

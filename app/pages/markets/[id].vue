@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -188,21 +188,6 @@ const fetchProduct = async (): Promise<void> => {
     
     product.value = data
     
-    // SEO Optimization untuk product/market detail
-    useSeoDetail({
-      title: data.name || 'Produk',
-      description: data.description || `${data.name} - Harga Rp${data.price?.toLocaleString('id-ID') || 'Nego'}`,
-      keywords: [
-        'marketplace pertanian',
-        data.category?.toLowerCase() || 'produk',
-        'jual beli pertanian',
-        'supplier pertanian'
-      ],
-      image: images.value[0] || undefined,
-      url: `https://jurutani.com/markets/${marketId}`,
-      type: 'website'
-    })
-    
     // Fetch similar markets after main product is loaded
     await fetchSimilarMarkets(data.category)
   } catch (err) {
@@ -273,30 +258,53 @@ const openWhatsApp = (): void => {
   }
 }
 
+const seoTitle = computed(() => product.value ? `${product.value.name}` : 'Memuat Produk...')
+const seoDescription = computed(() => product.value ? (product.value.description || `${product.value.name} - Harga Rp${product.value.price?.toLocaleString('id-ID') || 'Nego'}`) : 'Produk pertanian dari Juru Tani.')
+const seoImage = computed(() => images.value[0] || '/product.png')
+const seoKeywords = computed(() => product.value ? [
+  'marketplace pertanian',
+  product.value.category?.toLowerCase() || 'produk',
+  'jual beli pertanian',
+  'supplier pertanian'
+] : [])
+
 // Initial fetch
 onMounted(() => {
   fetchProduct()
 })
+
+// Update SEO after product is loaded
+watch(() => product.value, (newVal) => {
+  if (newVal) {
+    useSeoDetail({
+      title: seoTitle.value,
+      description: seoDescription.value,
+      keywords: seoKeywords.value,
+      image: seoImage.value,
+      url: `https://jurutani.com/markets/${marketId}`,
+      type: 'website'
+    })
+  }
+}, { immediate: false })
 </script>
 
 <template>
   <div class="min-h-screen">
-    <!-- Header -->
-    
     <div class="container mx-auto px-4 py-8 max-w-7xl">
-      <div class="sticky top-0 z-50 shadow-sm">
+      <!-- Header -->
+      <div class="shadow-sm ">
         <div class="container mx-auto px-4 py-4">
           <div class="flex items-center justify-between">
             <button 
-              class="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors font-medium"
+              class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
               @click="goBack"
             >
-              <UIcon name="i-lucide-arrow-left" class="w-5 h-5" />
-              <span>Kembali</span>
+              <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
+              <span class="font-medium">Kembali ke Pasar Tani</span>
             </button>
             
-            <div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
-              <UIcon name="i-lucide-shopping-bag" class="w-5 h-5" />
+            <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
+              <UIcon name="i-heroicons-shopping-bag" class="w-5 h-5" />
               <span class="font-semibold">Pasar Tani</span>
             </div>
           </div>

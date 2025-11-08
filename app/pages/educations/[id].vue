@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSupabase } from '~/composables/useSupabase'
 
@@ -154,21 +154,6 @@ const fetchCourseDetail = async (): Promise<void> => {
     }
 
     course.value = data
-    
-    // SEO Optimization untuk education detail
-    useSeoDetail({
-      title: data.title || 'Materi Edukasi',
-      description: data.description || `Pelajari ${data.title} - Materi edukasi pertanian dari Juru Tani`,
-      keywords: [
-        'edukasi pertanian',
-        'materi pertanian',
-        data.category?.toLowerCase() || 'pembelajaran',
-        'panduan pertanian'
-      ],
-      image: imageUrl.value || undefined,
-      url: `https://jurutani.com/educations/${courseId}`,
-      type: 'article'
-    })
   } catch (err) {
     console.error('Unexpected error:', err)
     error.value = 'Terjadi kesalahan yang tidak terduga'
@@ -227,10 +212,34 @@ const openYouTubeLink = (): void => {
   }
 }
 
+const seoTitle = computed(() => course.value ? `${course.value.title}` : 'Memuat Materi...')
+const seoDescription = computed(() => course.value ? (course.value.description || `Pelajari ${course.value.title} - Materi edukasi pertanian dari Juru Tani`) : 'Materi edukasi pertanian dari Juru Tani.')
+const seoImage = computed(() => imageUrl.value || '/jurutani.png')
+const seoKeywords = computed(() => course.value ? [
+  'edukasi pertanian',
+  'materi pertanian',
+  course.value.category?.toLowerCase() || 'pembelajaran',
+  'panduan pertanian'
+] : [])
+
 // Lifecycle
 onMounted(() => {
   fetchCourseDetail()
 })
+
+// Update SEO after course is loaded
+watch(() => course.value, (newVal) => {
+  if (newVal) {
+    useSeoDetail({
+      title: seoTitle.value,
+      description: seoDescription.value,
+      keywords: seoKeywords.value,
+      image: seoImage.value,
+      url: `https://jurutani.com/educations/${courseId}`,
+      type: 'article'
+    })
+  }
+}, { immediate: false })
 </script>
 
 <template>
