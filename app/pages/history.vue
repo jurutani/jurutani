@@ -1,10 +1,7 @@
 <script lang="ts" setup>
-useSeoMeta({
-  title: 'Riwayat — Juru Tani',
-  description: 'Lihat riwayat aktivitas, pembaruan, dan perubahan penting di Juru Tani.',
-  ogTitle: 'Riwayat — Juru Tani',
-  ogDescription: 'Lihat riwayat aktivitas, pembaruan, dan perubahan penting di Juru Tani.',
-})
+// SEO Optimization
+useSeoOptimized('history')
+
 definePageMeta({
   middleware: ['auth']
 });

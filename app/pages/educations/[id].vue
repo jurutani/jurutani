@@ -154,6 +154,21 @@ const fetchCourseDetail = async (): Promise<void> => {
     }
 
     course.value = data
+    
+    // SEO Optimization untuk education detail
+    useSeoDetail({
+      title: data.title || 'Materi Edukasi',
+      description: data.description || `Pelajari ${data.title} - Materi edukasi pertanian dari Juru Tani`,
+      keywords: [
+        'edukasi pertanian',
+        'materi pertanian',
+        data.category?.toLowerCase() || 'pembelajaran',
+        'panduan pertanian'
+      ],
+      image: imageUrl.value || undefined,
+      url: `https://jurutani.com/educations/${courseId}`,
+      type: 'article'
+    })
   } catch (err) {
     console.error('Unexpected error:', err)
     error.value = 'Terjadi kesalahan yang tidak terduga'
@@ -212,21 +227,6 @@ const openYouTubeLink = (): void => {
   }
 }
 
-const seoTitle = computed(() => course.value ? `${course.value.title} | Juru Tani Edukasi` : 'Memuat Materi...')
-const seoDescription = computed(() => {
-  if (!course.value) return 'Materi terkini seputar pertanian dari Juru Tani.'
-  if (course.value.description && course.value.description !== '') return course.value.description 
-  return ''
-})
-const seoImage = computed(() => imageUrl.value || '/jurutani.png')
-
-useSeoMeta({
-  title: seoTitle,
-  description: seoDescription,
-  ogTitle: seoTitle,
-  ogDescription: seoDescription,
-  ogImage: seoImage
-})
 // Lifecycle
 onMounted(() => {
   fetchCourseDetail()

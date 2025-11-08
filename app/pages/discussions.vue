@@ -1,11 +1,6 @@
 <script lang="ts" setup>
-useSeoMeta({
-  title: 'Forum Diskusi - Juru Tani',
-  description: 'Tetap mendapatkan pembaruan terbaru dari Forum Diskusi Juru Tani.',
-  ogTitle: 'Forum Diskusi - Juru Tani',
-  ogDescription: 'Tetap mendapatkan pembaruan terbaru dari Forum Diskusi Juru Tani.',
-})
-
+// SEO Optimization
+useSeoOptimized('discussions')
 </script>
 
 <template>

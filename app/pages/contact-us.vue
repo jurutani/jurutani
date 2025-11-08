@@ -1,13 +1,8 @@
 <script setup lang="ts">
-  definePageMeta({
-    title: 'Contact Us',
-    description: "Hubungi kami untuk menyelesaikan masalah dalam bidang pertanian",
-    navOrder: '11',
-    type: 'secondary',
-    icon: 'i-mdi-message-text-outline',
-  })
+// SEO Optimization
+useSeoOptimized('contact')
 
-  // Form handling
+// Form handling
   const contactForm = ref({
     name: '',
     email: '',

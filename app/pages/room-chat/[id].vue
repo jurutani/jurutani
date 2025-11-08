@@ -216,6 +216,16 @@ onMounted(async () => {
   try {
     currentUser.value = await getCurrentUser()
 
+    // SEO Optimization untuk chat room (private page)
+    useSeoMeta({
+      title: 'Room Chat - Juru Tani',
+      description: 'Room chat untuk berdiskusi dengan pengguna lain di Juru Tani',
+      robots: 'noindex, follow', // Private page - don't index
+      ogTitle: 'Room Chat - Juru Tani',
+      ogDescription: 'Ruang percakapan pribadi di Juru Tani',
+      ogImage: 'https://jurutani.com/jurutani.png'
+    })
+
     if (conversationId.value) {
       await getMessages(conversationId.value)
       await markAsRead(conversationId.value)

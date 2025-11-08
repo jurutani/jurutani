@@ -1,13 +1,8 @@
 <script setup lang="ts">
-  definePageMeta({
-    title: 'Help & FAQs',
-    description: "Dapatkan jawaban dari semua pertanyaan tentang pertanyaan di jurutani",
-    navOrder: '12',
-    type: 'secondary',
-    icon: 'i-heroicons-question-mark-circle',
-  })
+// SEO Optimization
+useSeoOptimized('help')
 
-  // Category tabs
+// Category tabs
   const categories = [
     { id: 'general', name: 'Umum', icon: 'i-heroicons-information-circle' },
     { id: 'account', name: 'Akun & Pendafataran', icon: 'i-heroicons-user-circle' },

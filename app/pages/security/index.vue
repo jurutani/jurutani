@@ -1,28 +1,28 @@
 <template>
-  <div class="min-h-screen py-12 px-4">
+  <div class="min-h-screen py-12 px-4 transition-colors duration-200">
     <div class="max-w-md mx-auto">
       <!-- Header Section -->
       <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-full mb-4">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 dark:bg-green-700 rounded-full mb-4 shadow-lg dark:shadow-green-900/50">
           <UIcon name="i-heroicons-lock-closed" class="w-8 h-8 text-white" />
         </div>
-        <h1 class="text-2xl font-bold mb-2">Ganti Password</h1>
-        <p class="text-gray-600 text-sm">
+        <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Ganti Password</h1>
+        <p class="text-gray-600 dark:text-gray-400 text-sm">
           Pastikan password baru Anda kuat dan mudah diingat
         </p>
       </div>
 
       <!-- Form Card -->
-      <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+      <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/50 border border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-200">
         <div class="p-6">
           <form class="space-y-6" @submit.prevent="handleChangePassword">
             <!-- Password Strength Info -->
-            <div class="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-400">
+            <div class="bg-blue-50 dark:bg-blue-950 rounded-lg p-4 border-l-4 border-blue-400 dark:border-blue-600 transition-colors duration-200">
               <div class="flex items-start">
-                <UIcon name="i-heroicons-information-circle" class="w-5 h-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" />
+                <UIcon name="i-heroicons-information-circle" class="w-5 h-5 text-blue-400 dark:text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
                 <div>
-                  <p class="text-sm font-medium text-blue-900 mb-1">Tips Password Kuat</p>
-                  <ul class="text-sm text-blue-800 space-y-1">
+                  <p class="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">Tips Password Kuat</p>
+                  <ul class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                     <li>• Minimal 8 karakter</li>
                     <li>• Kombinasi huruf besar, kecil, dan angka</li>
                     <li>• Gunakan simbol (!@#$%)</li>
@@ -33,28 +33,28 @@
 
             <!-- New Password Input -->
             <div class="space-y-2">
-              <label for="newPassword" class="block text-sm font-semibold text-gray-700">
+              <label for="newPassword" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Password Baru
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <UIcon name="i-heroicons-lock-closed" class="h-5 w-5 text-gray-400" />
+                  <UIcon name="i-heroicons-lock-closed" class="h-5 w-5 text-gray-400 dark:text-gray-600" />
                 </div>
                 <input
                   id="newPassword"
                   v-model="newPassword"
                   :type="showNewPassword ? 'text' : 'password'"
-                  class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg 
-                         focus:ring-2 focus:ring-green-500 focus:border-green-500 
-                         bg-white text-gray-900 placeholder-gray-500
+                  class="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                         focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-600 dark:focus:border-green-600
+                         bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                          transition-colors duration-200
-                         hover:border-gray-400"
+                         hover:border-gray-400 dark:hover:border-gray-500"
                   placeholder="Masukkan password baru"
                   required
                 >
                 <button
                   type="button"
-                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-200"
                   @click="showNewPassword = !showNewPassword"
                 >
                   <UIcon :name="showNewPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" class="h-5 w-5" />
@@ -63,14 +63,14 @@
               <!-- Password Strength Indicator -->
               <div v-if="newPassword" class="mt-2">
                 <div class="flex items-center space-x-2">
-                  <div class="flex-1 bg-gray-200 rounded-full h-2">
+                  <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div 
                       class="h-2 rounded-full transition-all duration-300"
                       :class="passwordStrengthColor"
                       :style="{ width: passwordStrengthWidth }"
                     />
                   </div>
-                  <span class="text-sm font-medium" :class="passwordStrengthTextColor">
+                  <span class="text-sm font-medium dark:text-gray-300" :class="passwordStrengthTextColor">
                     {{ passwordStrengthText }}
                   </span>
                 </div>
@@ -79,32 +79,32 @@
 
             <!-- Confirm Password Input -->
             <div class="space-y-2">
-              <label for="confirmPassword" class="block text-sm font-semibold text-gray-700">
+              <label for="confirmPassword" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Konfirmasi Password
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <UIcon name="i-heroicons-lock-closed" class="h-5 w-5 text-gray-400" />
+                  <UIcon name="i-heroicons-lock-closed" class="h-5 w-5 text-gray-400 dark:text-gray-600" />
                 </div>
                 <input
                   id="confirmPassword"
                   v-model="confirmPassword"
                   :type="showConfirmPassword ? 'text' : 'password'"
-                  class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg 
-                         focus:ring-2 focus:ring-green-500 focus:border-green-500 
-                         bg-white text-gray-900 placeholder-gray-500
+                  class="block w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                         focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-600 dark:focus:border-green-600
+                         bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                          transition-colors duration-200
-                         hover:border-gray-400"
+                         hover:border-gray-400 dark:hover:border-gray-500"
                   :class="{ 
-                    'border-red-300 focus:ring-red-500 focus:border-red-500': confirmPassword && newPassword !== confirmPassword,
-                    'border-green-300 focus:ring-green-500 focus:border-green-500': confirmPassword && newPassword === confirmPassword
+                    'border-red-300 dark:border-red-600 focus:ring-red-500 dark:focus:ring-red-600 focus:border-red-500 dark:focus:border-red-600': confirmPassword && newPassword !== confirmPassword,
+                    'border-green-300 dark:border-green-600 focus:ring-green-500 dark:focus:ring-green-600 focus:border-green-500 dark:focus:border-green-600': confirmPassword && newPassword === confirmPassword
                   }"
                   placeholder="Ulangi password baru"
                   required
                 >
                 <button
                   type="button"
-                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-200"
                   @click="showConfirmPassword = !showConfirmPassword"
                 >
                   <UIcon :name="showConfirmPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" class="h-5 w-5" />
@@ -114,11 +114,11 @@
               <div v-if="confirmPassword" class="flex items-center mt-2">
                 <UIcon 
                   :name="newPassword === confirmPassword ? 'i-heroicons-check-circle' : 'i-heroicons-x-circle'" 
-                  :class="newPassword === confirmPassword ? 'text-green-500' : 'text-red-500'"
+                  :class="newPassword === confirmPassword ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400'"
                   class="w-4 h-4 mr-2"
                 />
                 <span 
-                  :class="newPassword === confirmPassword ? 'text-green-600' : 'text-red-600'"
+                  :class="newPassword === confirmPassword ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'"
                   class="text-sm font-medium"
                 >
                   {{ newPassword === confirmPassword ? 'Password cocok' : 'Password tidak cocok' }}
@@ -130,15 +130,15 @@
             <button
               type="submit"
               :disabled="loading || !isFormValid"
-              class="w-full bg-gradient-to-r from-green-600 to-emerald-600 
-                     hover:from-green-700 hover:to-emerald-700 
-                     disabled:from-gray-400 disabled:to-gray-500
+              class="w-full bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700
+                     hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600
+                     disabled:from-gray-400 disabled:to-gray-500 dark:disabled:from-gray-600 dark:disabled:to-gray-700
                      text-white font-semibold py-3 px-4 rounded-lg 
                      transition-all duration-200 transform 
                      hover:scale-[1.02] active:scale-[0.98]
                      disabled:cursor-not-allowed disabled:transform-none
-                     focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
-                     shadow-lg hover:shadow-xl"
+                     focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950
+                     shadow-lg hover:shadow-xl dark:shadow-green-900/50"
             >
               <span v-if="loading" class="flex items-center justify-center">
                 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -156,17 +156,17 @@
         </div>
 
         <!-- Footer -->
-        <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+        <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-t border-gray-100 dark:border-gray-700 transition-colors duration-200">
           <div class="flex items-center justify-between text-sm">
             <button 
               type="button"
-              class="text-gray-600 hover:text-gray-900 transition-colors duration-200 flex items-center"
+              class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 flex items-center"
               @click="$router.back()"
             >
               <UIcon name="i-heroicons-arrow-left" class="w-4 h-4 mr-1" />
               Kembali
             </button>
-            <div class="flex items-center text-gray-500">
+            <div class="flex items-center text-gray-500 dark:text-gray-400">
               <UIcon name="i-heroicons-shield-check" class="w-4 h-4 mr-1" />
               <span>Enkripsi 256-bit</span>
             </div>

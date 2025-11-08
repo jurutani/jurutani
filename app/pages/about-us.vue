@@ -1,11 +1,6 @@
 <script setup lang="ts">
-useHead({ 
-  title: 'Tentang Kami - Juru Tani Reborn',
-  meta: [
-    { name: 'description', content: 'Mengenal Juru Tani Reborn | Inovasi digital dari Politeknik Pembangunan Pertanian Yogyakarta Magelang untuk memajukan pertanian Indonesia' },
-    { name: 'keywords', content: 'juru tani reborn, polbangtan yogyakarta, polbangtan magelang, pertanian digital, inovasi pertanian' }
-  ]
-})
+// SEO Optimization
+useSeoOptimized('about')
 
 // Image declarations
 const logoJuruTani = '/jurutani.png'

@@ -178,7 +178,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
 /* ===== DESKTOP STYLES ===== */
 .desktop-nav-link {
   position: relative;
-  color: rgb(75, 85, 99); /* gray-600 */
+  color: rgb(25, 34, 29); /* gray-600 */
   background: transparent;
   border: 1px solid transparent;
   align-items: center;
@@ -204,7 +204,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
 
 /* Desktop Active State */
 .desktop-active {
-  color: rgb(16, 185, 129) !important;
+  color: rgb(246, 248, 247) !important;
   background: rgba(16, 185, 129, 0.08) !important;
   border-color: rgba(16, 185, 129, 0.2) !important;
   font-weight: 600;
@@ -232,7 +232,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
 
 /* Dark mode desktop */
 .dark .desktop-nav-link {
-  color: rgb(156, 163, 175); /* gray-400 */
+  color: rgb(238, 239, 239); /* gray-400 */
 }
 
 .dark .desktop-nav-link:hover {
@@ -247,7 +247,7 @@ const { isMobileMenuOpen, openMobileMenu } = useMobileMenu()
 }
 
 .dark .desktop-active {
-  color: rgb(34, 197, 94) !important;
+  color: rgb(238, 243, 240) !important;
   background: rgba(34, 197, 94, 0.1) !important;
   border-color: rgba(34, 197, 94, 0.25) !important;
 }

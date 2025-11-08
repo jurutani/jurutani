@@ -4,6 +4,9 @@ import { ref, computed } from 'vue'
 import { toastStore } from '~/composables/useJuruTaniToast'
 import { useSupabase } from '~/composables/useSupabase'
 
+// SEO Optimization
+useSeoAuth('register')
+
 // Definisikan layout
 definePageMeta({
   layout: 'blank',

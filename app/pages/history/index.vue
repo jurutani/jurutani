@@ -69,71 +69,78 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="history-page container mx-auto px-4 py-12 max-w-4xl">
-    <!-- Header -->
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-800 mb-2">Riwayat Aktivitas</h1>
-      <p class="text-gray-600">Kelola dan pantau status submission Anda</p>
-    </div>
-    
-    <!-- Filter Tabs -->
-    <div class="bg-white rounded-lg shadow-sm border mb-6">
-      <div class="flex border-b">
+  <div class="min-h-screen py-12 px-4 transition-colors duration-200">
+    <div class="container mx-auto max-w-4xl">
+      <!-- Header Section -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 dark:bg-green-700 rounded-full mb-4 shadow-lg dark:shadow-green-900/50">
+          <UIcon name="i-lucide-clock" class="w-8 h-8 text-white" />
+        </div>
+        <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Riwayat Aktivitas</h1>
+        <p class="text-gray-600 dark:text-gray-400 text-sm">
+          Pantau dan kelola aktivitas Anda dengan mudah
+        </p>
+      </div>
+      
+      <!-- Filter Tabs -->
+      <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm dark:shadow-md border border-gray-100 dark:border-gray-800 mb-6 overflow-hidden transition-all duration-200">
+        <div class="flex border-b border-gray-100 dark:border-gray-800">
+          <button 
+            v-for="filter in filters" 
+            :key="filter"
+            :class="[
+              'flex-1 px-6 py-4 text-center font-medium transition-all duration-200',
+              activeFilter === filter 
+                ? 'text-green-600 dark:text-green-400 border-b-2 border-green-600 dark:border-green-500 bg-green-50 dark:bg-green-950/30' 
+                : 'text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
+            ]"
+            @click="changeFilter(filter)"
+          >
+            {{ filterLabels[filter] }}
+          </button>
+        </div>
+      </div>
+      
+      <!-- Loading State -->
+      <div v-if="loading" class="text-center py-16">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 dark:border-green-500 mb-4"/>
+        <p class="text-gray-500 dark:text-gray-400">Memuat riwayat aktivitas Anda...</p>
+      </div>
+      
+      <!-- Error State -->
+      <div v-else-if="error" class="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-6 py-4 rounded-lg transition-colors duration-200">
+        <div class="flex items-center">
+          <UIcon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-500 dark:text-red-400 mr-2 flex-shrink-0" />
+          <p class="font-medium">Terjadi kesalahan saat memuat riwayat aktivitas.</p>
+        </div>
         <button 
-          v-for="filter in filters" 
-          :key="filter"
-          :class="[
-            'flex-1 px-6 py-4 text-center font-medium transition-all duration-200',
-            activeFilter === filter 
-              ? 'text-green-600 border-b-2 border-green-600 bg-green-50' 
-              : 'text-gray-600 hover:text-green-600 hover:bg-gray-50'
-          ]"
-          @click="changeFilter(filter)"
+          class="mt-3 bg-red-100 dark:bg-red-900/50 hover:bg-red-200 dark:hover:bg-red-900/70 text-red-800 dark:text-red-200 px-3 py-1 rounded text-sm transition-colors duration-200 font-medium" 
+          @click="initializeUserData"
         >
-          {{ filterLabels[filter] }}
+          Coba lagi
         </button>
       </div>
-    </div>
-    
-    <!-- Loading State -->
-    <div v-if="loading" class="text-center py-16">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-4"/>
-      <p class="text-gray-500">Memuat riwayat aktivitas Anda...</p>
-    </div>
-    
-    <!-- Error State -->
-    <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg">
-      <div class="flex items-center">
-        <span class="text-red-500 mr-2">⚠️</span>
-        <p class="font-medium">Terjadi kesalahan saat memuat riwayat aktivitas.</p>
+      
+      <!-- Tab Content -->
+      <div v-else>
+        <!-- All Tab -->
+        <AllTab 
+          v-if="activeFilter === 'all'"
+          :user-id="currentUserId"
+        />
+        
+        <!-- News Tab -->
+        <NewTab 
+          v-else-if="activeFilter === 'news'"
+          :user-id="currentUserId"
+        />
+        
+        <!-- Markets Tab -->
+        <MarketTab 
+          v-else-if="activeFilter === 'markets'"
+          :user-id="currentUserId"
+        />
       </div>
-      <button 
-        class="mt-3 text-blue-600 hover:text-blue-700 font-medium underline" 
-        @click="initializeUserData"
-      >
-        Coba lagi
-      </button>
-    </div>
-    
-    <!-- Tab Content -->
-    <div v-else>
-      <!-- All Tab -->
-      <AllTab 
-        v-if="activeFilter === 'all'"
-        :user-id="currentUserId"
-      />
-      
-      <!-- News Tab -->
-      <NewTab 
-        v-else-if="activeFilter === 'news'"
-        :user-id="currentUserId"
-      />
-      
-      <!-- Markets Tab -->
-      <MarketTab 
-        v-else-if="activeFilter === 'markets'"
-        :user-id="currentUserId"
-      />
     </div>
   </div>
 </template>

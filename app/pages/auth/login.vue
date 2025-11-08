@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { toastStore } from '~/composables/useJuruTaniToast'
 import { useSupabase } from '~/composables/useSupabase'
 
+// SEO Optimization
+useSeoAuth('login')
+
 definePageMeta({
   layout: 'blank',
   middleware: ['guest']

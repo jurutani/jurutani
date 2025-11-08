@@ -18,21 +18,21 @@ export default {
 
   navs: {
     primary: [
-      { title: 'Beranda', to: '/', icon: 'i-ic-baseline-home' },
-      { title: 'Layanan', to: '/discussions', icon: 'i-ic-baseline-forum' },
-      { title: 'Berita', to: '/news', icon: 'i-ic-baseline-newspaper' },
-      { title: 'Marketplace', to: '/markets', icon: 'i-ic-baseline-storefront' },
-      { title: 'Edukasi', to: '/educations', icon: 'i-ic-baseline-book' },
-      { title: 'Course', to: '/courses', icon: 'i-ic-baseline-school' },
-      { title: 'Alat', to: '/tools', icon: 'i-ic-baseline-construction' },
+      { title: 'Beranda', to: '/', icon: 'i-lucide-home' },
+      { title: 'Layanan', to: '/discussions', icon: 'i-lucide-headset' }, // ikon layanan / kolaborasi
+      { title: 'Berita', to: '/news', icon: 'i-lucide-newspaper' },
+      { title: 'Marketplace', to: '/markets', icon: 'i-lucide-shopping-bag' },
+      { title: 'Edukasi', to: '/educations', icon: 'i-lucide-graduation-cap' },
+      { title: 'Course', to: '/courses', icon: 'i-lucide-book-open' },
+      { title: 'Alat', to: '/tools', icon: 'i-lucide-wrench' },
     ],
     secondary: [
-      { title: 'Profil', to: '/profile', icon: 'i-ic-round-person' },
-      { title: 'Keamanan', to: '/security', icon: 'i-material-symbols-lock-outline' },
-      { title: 'Pengaturan', to: '/setting', icon: 'i-material-symbols-settings-outline' },
-      { title: 'Riwayat', to: '/history', icon: 'i-ic-round-history' },
-      { title: 'Kontak', to: '/contact-us', icon: 'i-material-symbols-call-outline' },
-      { title: 'Bantuan', to: '/help-faqs', icon: 'i-material-symbols-help-outline' },
+      { title: 'Profil', to: '/profile', icon: 'i-lucide-user' },
+      { title: 'Keamanan', to: '/security', icon: 'i-lucide-lock' },
+      { title: 'Pengaturan', to: '/setting', icon: 'i-lucide-settings' },
+      { title: 'Riwayat', to: '/history', icon: 'i-lucide-history' },
+      { title: 'Kontak', to: '/contact-us', icon: 'i-lucide-phone' },
+      { title: 'Bantuan', to: '/help-faqs', icon: 'i-lucide-help-circle' },
     ],
   },
 }

@@ -116,6 +116,21 @@ const fetchNewsDetail = async (): Promise<void> => {
 
     news.value = data
     
+    // SEO Optimization untuk berita detail
+    useSeoDetail({
+      title: data.title,
+      description: data.sub_title || data.content.substring(0, 160),
+      keywords: [
+        'berita pertanian',
+        data.category?.toLowerCase() || 'berita',
+        'inovasi tani',
+        'kabar tani'
+      ],
+      image: imageUrl.value || undefined,
+      url: `https://jurutani.com/news/${newsId}`,
+      type: 'article'
+    })
+    
     // Fetch similar news after main news is loaded
     await fetchSimilarNews(data.category)
   } catch (err) {

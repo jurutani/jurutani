@@ -188,6 +188,21 @@ const fetchProduct = async (): Promise<void> => {
     
     product.value = data
     
+    // SEO Optimization untuk product/market detail
+    useSeoDetail({
+      title: data.name || 'Produk',
+      description: data.description || `${data.name} - Harga Rp${data.price?.toLocaleString('id-ID') || 'Nego'}`,
+      keywords: [
+        'marketplace pertanian',
+        data.category?.toLowerCase() || 'produk',
+        'jual beli pertanian',
+        'supplier pertanian'
+      ],
+      image: images.value[0] || undefined,
+      url: `https://jurutani.com/markets/${marketId}`,
+      type: 'website'
+    })
+    
     // Fetch similar markets after main product is loaded
     await fetchSimilarMarkets(data.category)
   } catch (err) {
@@ -257,23 +272,6 @@ const openWhatsApp = (): void => {
     window.open(whatsappLink.value, '_blank', 'noopener,noreferrer')
   }
 }
-
-const seoTitle = computed(() => product.value ? `${product.value.name} | Pasar Tani` : 'Memuat Produk...')
-const seoDescription = computed(() => {
-  if (!product.value) return 'Produk terkini seputar pertanian dari Pasar Tani.'
-  if (product.value.description && product.value.description !== '') return product.value.description
-  if (product.value.price || product.value.price === 0) return formattedPrice.value
-  return ''
-})
-const seoImage = computed(() => images.value[currentImageIndex.value] || '/jurutani.png')
-
-useSeoMeta({
-  title: seoTitle,
-  description: seoDescription,
-  ogTitle: seoTitle,
-  ogDescription: seoDescription,
-  ogImage: seoImage
-})
 
 // Initial fetch
 onMounted(() => {

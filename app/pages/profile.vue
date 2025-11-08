@@ -1,10 +1,7 @@
 <script lang="ts" setup>
-useSeoMeta({
-  title: 'Profil - Juru Tani',
-  description: 'Kelola informasi akun, preferensi, dan pengaturan privasi Anda di Juru Tani.',
-  ogTitle: 'Profil - Juru Tani',
-  ogDescription: 'Kelola informasi akun, preferensi, dan pengaturan privasi Anda di Juru Tani.',
-})
+// SEO Optimization
+useSeoOptimized('profile')
+
 definePageMeta({
   middleware: ['auth']
 });

@@ -1,11 +1,6 @@
 <script setup lang="ts">
-useHead({ 
-  title: 'Kebijakan Privasi - Juru Tani',
-  meta: [
-    { name: 'description', content: 'Kebijakan privasi platform Juru Tani untuk pengguna dan petani' },
-    { name: 'keywords', content: 'juru tani, kebijakan privasi, pertanian, data petani' }
-  ]
-})
+// SEO Optimization
+useSeoOptimized('privacy')
 </script>
 
 <template>

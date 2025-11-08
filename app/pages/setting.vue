@@ -1,10 +1,7 @@
 <script lang="ts" setup>
-useSeoMeta({
-  title: 'Pengaturan - Juru Tani',
-  description: 'Kelola preferensi akun, notifikasi, dan pengaturan aplikasi Juru Tani untuk pengalaman yang lebih personal.',
-  ogTitle: 'Pengaturan - Juru Tani',
-  ogDescription: 'Kelola preferensi akun, notifikasi, dan pengaturan aplikasi Juru Tani untuk pengalaman yang lebih personal.',
-})
+// SEO Optimization
+useSeoOptimized('setting')
+
 definePageMeta({
   middleware: ['auth']
 });

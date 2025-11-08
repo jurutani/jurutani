@@ -1,11 +1,6 @@
 <script setup lang="ts">
-useHead({ 
-  title: 'Syarat & Ketentuan - Juru Tani',
-  meta: [
-    { name: 'description', content: 'Syarat dan ketentuan penggunaan platform Juru Tani' },
-    { name: 'keywords', content: 'juru tani, syarat dan ketentuan, platform pertanian, hak dan kewajiban' }
-  ]
-})
+// SEO Optimization
+useSeoOptimized('terms')
 </script>
 
 <template>

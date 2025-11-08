@@ -277,15 +277,15 @@ const formatWebsiteUrl = (url: string) => {
 </script>
 
 <template>
-  <form class="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto" @submit.prevent="handleSubmit">
-    <h2 class="text-xl font-semibold mb-6">Edit Profil</h2>
+  <form class="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-lg border border-gray-100 dark:border-gray-800 p-6 max-w-2xl mx-auto transition-all duration-200" @submit.prevent="handleSubmit">
+    <h2 class="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Edit Profil</h2>
 
     <!-- Avatar Upload -->
     <div class="mb-6">
-      <label class="block text-gray-700 text-sm font-medium mb-2">Foto Profil</label>
+      <label class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">Foto Profil</label>
       
       <div class="flex items-center">
-        <div class="w-24 h-24 rounded-full overflow-hidden mr-4 bg-gray-100 flex-shrink-0">
+        <div class="w-24 h-24 rounded-full overflow-hidden mr-4 bg-gray-100 dark:bg-gray-800 flex-shrink-0">
           <img 
             :src="currentAvatar" 
             alt="Avatar Preview"
@@ -305,20 +305,20 @@ const formatWebsiteUrl = (url: string) => {
           <div class="flex space-x-2">
             <label 
               for="avatar" 
-              class="cursor-pointer bg-blue-100 text-blue-600 px-3 py-2 rounded hover:bg-blue-200 transition-colors"
+              class="cursor-pointer bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 px-3 py-2 rounded hover:bg-blue-200 dark:hover:bg-blue-900 transition-colors"
             >
               Pilih Gambar
             </label>
             <button 
               v-if="imagePreview" 
               type="button" 
-              class="bg-gray-100 text-gray-600 px-3 py-2 rounded hover:bg-gray-200 transition-colors"
+              class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-3 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               @click="resetImage"
             >
               Batal
             </button>
           </div>
-          <p class="text-xs text-gray-500 mt-1">
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
             Format: JPG, PNG, GIF. Maks. 2MB
           </p>
         </div>
@@ -329,7 +329,7 @@ const formatWebsiteUrl = (url: string) => {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       <!-- Full Name -->
       <div class="md:col-span-2">
-        <label for="full_name" class="block text-gray-700 text-sm font-medium mb-2">
+        <label for="full_name" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
           Nama Lengkap *
         </label>
         <input
@@ -337,115 +337,115 @@ const formatWebsiteUrl = (url: string) => {
           v-model="formData.full_name"
           type="text"
           required
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
           placeholder="Masukkan nama lengkap Anda"
         >
       </div>
 
       <!-- Username -->
       <div>
-        <label for="username" class="block text-gray-700 text-sm font-medium mb-2">
+        <label for="username" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
           Username
         </label>
         <input
           id="username"
           v-model="formData.username"
           type="text"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          :class="{ 'border-red-500': formErrors.username }"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
+          :class="{ 'border-red-500 dark:border-red-500': formErrors.username }"
           placeholder="username_anda"
         >
-        <p v-if="formErrors.username" class="text-red-500 text-xs mt-1">
+        <p v-if="formErrors.username" class="text-red-500 dark:text-red-400 text-xs mt-1">
           {{ formErrors.username }}
         </p>
       </div>
 
       <!-- Phone -->
       <div>
-        <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">
+        <label for="phone" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
           Nomor Telepon
         </label>
         <input
           id="phone"
           v-model="formData.phone"
           type="tel"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          :class="{ 'border-red-500': formErrors.phone }"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
+          :class="{ 'border-red-500 dark:border-red-500': formErrors.phone }"
           placeholder="08123456789"
         >
-        <p v-if="formErrors.phone" class="text-red-500 text-xs mt-1">
+        <p v-if="formErrors.phone" class="text-red-500 dark:text-red-400 text-xs mt-1">
           {{ formErrors.phone }}
         </p>
       </div>
 
       <!-- Birth Date -->
       <div>
-        <label for="birth_date" class="block text-gray-700 text-sm font-medium mb-2">
+        <label for="birth_date" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
           Tanggal Lahir
         </label>
         <input
           id="birth_date"
           v-model="formData.birth_date"
           type="date"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
         >
       </div>
 
       <!-- Website -->
       <div>
-        <label for="website" class="block text-gray-700 text-sm font-medium mb-2">
+        <label for="website" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
           Website
         </label>
         <input
           id="website"
           v-model="formData.website"
           type="url"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          :class="{ 'border-red-500': formErrors.website }"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
+          :class="{ 'border-red-500 dark:border-red-500': formErrors.website }"
           placeholder="https://website-anda.com"
         >
-        <p v-if="formErrors.website" class="text-red-500 text-xs mt-1">
+        <p v-if="formErrors.website" class="text-red-500 dark:text-red-400 text-xs mt-1">
           {{ formErrors.website }}
         </p>
       </div>
 
       <!-- Address -->
       <div class="md:col-span-2">
-        <label for="address" class="block text-gray-700 text-sm font-medium mb-2">
+        <label for="address" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
           Alamat
         </label>
         <input
           id="address"
           v-model="formData.address"
           type="text"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
           placeholder="Masukkan alamat lengkap Anda"
         >
       </div>
 
       <!-- Bio -->
       <div class="md:col-span-2">
-        <label for="bio" class="block text-gray-700 text-sm font-medium mb-2">
+        <label for="bio" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
           Bio
         </label>
         <textarea
           id="bio"
           v-model="formData.bio"
           rows="4"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none transition-colors"
           placeholder="Ceritakan sedikit tentang diri Anda..."
         />
-        <p class="text-xs text-gray-500 mt-1">
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
           {{ formData.bio.length }}/300 karakter
         </p>
       </div>
     </div>
 
     <!-- Buttons -->
-    <div class="flex justify-end space-x-3 pt-4 border-t">
+    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors">
       <button
         type="button"
-        class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+        class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         :disabled="loading"
         @click="handleCancel"
       >
@@ -453,14 +453,11 @@ const formatWebsiteUrl = (url: string) => {
       </button>
       <button
         type="submit"
-        class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:opacity-50"
+        class="px-6 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 transition-colors disabled:opacity-50"
         :disabled="loading || !isFormValid"
       >
         <span v-if="loading" class="flex items-center">
-          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-          </svg>
+          <UIcon name="i-heroicons-arrow-path" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" />
           Menyimpan...
         </span>
         <span v-else>Simpan Perubahan</span>

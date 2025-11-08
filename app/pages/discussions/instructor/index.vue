@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useSupabase } from '~/composables/useSupabase';
 
 const { supabase } = useSupabase();
+const colorMode = useColorMode();
 
 interface Instructor {
   id: number;
@@ -12,7 +13,7 @@ interface Instructor {
   profiles: {
     full_name: string;
     avatar_url: string;
-  };
+  } | null;
 }
 
 interface District {
@@ -30,6 +31,10 @@ const error = ref(null);
 // Filter states
 const selectedDistrict = ref<string>('');
 const searchQuery = ref<string>('');
+
+// Pagination states
+const currentPage = ref<number>(1);
+const pageSize = 10;
 
 // Computed properties
 const availableDistricts = computed(() => {
@@ -60,6 +65,17 @@ const filteredInstructors = computed(() => {
     
     return matchesDistrict && matchesSearch;
   });
+});
+
+// Pagination computed properties
+const totalPages = computed(() => {
+  return Math.ceil(filteredInstructors.value.length / pageSize);
+});
+
+const paginatedInstructors = computed(() => {
+  const startIndex = (currentPage.value - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  return filteredInstructors.value.slice(startIndex, endIndex);
 });
 
 // Fetch districts for filter options
@@ -107,7 +123,7 @@ const fetchInstructors = async () => {
       console.error('Error fetching instructors:', fetchError);
       error.value = fetchError;
     } else {
-      instructors.value = data || [];
+      instructors.value = (data || []) as unknown as Instructor[];
     }
   } catch (err) {
     console.error('Error fetching instructors:', err);
@@ -117,12 +133,10 @@ const fetchInstructors = async () => {
   }
 };
 
-// No watchers needed since we only have district filter
-
-// Clear search function
-const clearSearch = () => {
-  searchQuery.value = '';
-};
+// Watchers untuk reset page ketika filter berubah
+watch([selectedDistrict, searchQuery], () => {
+  currentPage.value = 1;
+});
 
 // Initial data fetch
 onMounted(async () => {
@@ -143,148 +157,226 @@ useHead({
 </script>
 
 <template>
-  <div class="instructor-discussions py-12">
-    <div class="container mx-auto py-10">
-      <div class="flex items-center mb-10 gap-4">
-        <NuxtLink 
-          to="/discussions" 
-          class="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 hover:bg-green-100 transition-colors"
-          aria-label="Kembali ke Diskusi"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-        </NuxtLink>
-        
-        <h1 class="text-3xl font-bold text-green-700 leading-tight flex items-center my-auto">
-          Diskusi Penyuluh
-        </h1>
-      </div>
-      
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <p class="text-lg text-gray-700 mb-6">
-          Diskusikan permasalahan pertanian Anda dengan penyuluh berpengalaman dan dapatkan saran profesional untuk meningkatkan hasil panen Anda.
-        </p>
-        
-        <!-- Search input -->
-        <div class="mb-6">
-          <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">Cari Penyuluh</h2>
-          <div class="relative">
-            <input 
-              v-model="searchQuery"
-              type="text" 
-              placeholder="Cari nama penyuluh..."
-              class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-            >
-            <button 
-              v-if="searchQuery" 
-              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              @click="clearSearch"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-              </svg>
-            </button>
+  <div class="min-h-screen py-8 md:py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header Section -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+        <div class="flex items-center gap-4">
+          <UButton
+            to="/discussions"
+            color="green"
+            variant="ghost"
+            icon="i-lucide-arrow-left"
+            size="lg"
+            aria-label="Kembali ke Diskusi"
+            class="rounded-full"
+          />
+          <div>
+            <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+              Diskusi Penyuluh
+            </h1>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              Konsultasi dengan penyuluh pertanian berpengalaman
+            </p>
           </div>
         </div>
-        
+      </div>
+
+      <!-- Main Card -->
+      <UCard 
+        class="mb-8 shadow-xl"
+        :ui="{ 
+          body: { padding: 'p-6 sm:p-8' },
+          header: { padding: 'px-6 sm:px-8 py-4 sm:py-6' }
+        }"
+      >
+        <template #header>
+          <div class="flex items-center gap-3">
+            <UIcon 
+              name="i-lucide-users" 
+              class="w-6 h-6 text-green-600 dark:text-green-400"
+            />
+            <p class="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium">
+              Diskusikan permasalahan pertanian Anda dengan penyuluh berpengalaman dan dapatkan saran profesional untuk meningkatkan hasil panen Anda.
+            </p>
+          </div>
+        </template>
+
         <!-- Loading state -->
-        <div v-if="loading" class="text-center py-8">
-          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"/>
-          <p class="mt-2 text-gray-600">Memuat data penyuluh...</p>
+        <div v-if="loading" class="flex flex-col items-center justify-center py-16">
+          <UIcon 
+            name="i-lucide-loader" 
+            class="w-12 h-12 text-green-600 dark:text-green-400 animate-spin mb-4"
+          />
+          <p class="text-gray-600 dark:text-gray-400">Memuat data penyuluh...</p>
         </div>
 
         <!-- Error state -->
-        <div v-else-if="error" class="text-center py-8 text-red-600">
-          <p>Terjadi kesalahan saat memuat data penyuluh.</p>
-          <button 
-            class="mt-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" 
+        <div v-else-if="error" class="flex flex-col items-center justify-center py-16">
+          <UAlert
+            title="Terjadi Kesalahan"
+            description="Gagal memuat data penyuluh. Silakan coba lagi."
+            color="red"
+            icon="i-lucide-alert-circle"
+            class="mb-4 max-w-md"
+          />
+          <UButton
+            color="green"
             @click="fetchInstructors"
+            icon="i-lucide-refresh-cw"
           >
             Coba Lagi
-          </button>
+          </UButton>
         </div>
 
-        <!-- Filters -->
-        <div v-else class="mb-6">
-          <div class="max-w-md">
-            <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">Pilih Kabupaten/Kota</h2>
-            <select
-              v-model="selectedDistrict"
-              class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-            >
-              <option value="">Semua Kabupaten/Kota</option>
-              <option v-for="district in availableDistricts" :key="district.value" :value="district.value">
-                {{ district.label }}
-              </option>
-            </select>
-          </div>
-        </div>
+        <!-- Content -->
+        <div v-else class="space-y-8">
+          <!-- Search input -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            <!-- Left: Search -->
+            <div>
+              <div class="flex items-center gap-2 mb-4">
+                <UIcon 
+                  name="i-lucide-search" 
+                  class="w-5 h-5 text-green-600 dark:text-green-400"
+                />
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Cari Penyuluh</h2>
+              </div>
+              <div class="relative">
+                <UInput
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Cari nama penyuluh..."
+                  icon="i-lucide-search"
+                  class="w-full"
+                />
+              </div>
+            </div>
 
-        <!-- Instructors list -->
-        <div v-if="!loading && !error">
-          <h2 class="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
-            Penyuluh
-            <span v-if="selectedDistrict"> 
-              di {{ selectedDistrict }}
-            </span>
-            <span v-if="searchQuery" class="text-green-600"> - "{{ searchQuery }}"</span>
-            <span class="text-sm font-normal text-gray-500">({{ filteredInstructors.length }} penyuluh)</span>
-          </h2>
-
-          <div v-if="filteredInstructors.length > 0" class="space-y-4">
-            <div 
-              v-for="instructor in filteredInstructors" 
-              :key="instructor.id"
-              class="flex items-start p-4 border rounded-lg hover:shadow-md transition-all"
-            >
-              <img 
-                :src="instructor.profiles?.avatar_url || '/placeholder.png'" 
-                :alt="instructor.profiles?.full_name || 'Penyuluh'"
-                class="w-16 h-16 rounded-full mr-4 object-cover"
-                @error="$event.target.src = '/placeholder.png'"
-              >
-              <div class="flex-1">
-                <h3 class="font-medium text-gray-900">
-                  {{ instructor.profiles?.full_name || 'Nama tidak tersedia' }}
-                </h3>
-                <p class="text-sm text-gray-600">
-                  {{ instructor.district }}, {{ instructor.provinces }}
-                </p>
-                <div class="mt-3">
-                  <NuxtLink
-                    :to="`/discussions/instructor/${instructor.id}`"
-                    class="text-sm py-1.5 px-4 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
-                    >
-                    Mulai Diskusi
-                    </NuxtLink>
-                </div>
+            <!-- Right: District select -->
+            <div>
+              <div class="flex items-center gap-2 mb-4">
+                <UIcon 
+                  name="i-lucide-map-pin" 
+                  class="w-5 h-5 text-green-600 dark:text-green-400"
+                />
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Pilih Kabupaten/Kota</h2>
+              </div>
+              <div>
+                <USelect
+                  v-model="selectedDistrict"
+                  :options="availableDistricts"
+                  option-attribute="label"
+                  value-attribute="value"
+                  placeholder="Semua Kabupaten/Kota"
+                  class="w-full"
+                />
               </div>
             </div>
           </div>
 
-          <div v-else class="text-center py-8 text-gray-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-            </svg>
-            <p v-if="searchQuery">
-              Tidak ada penyuluh dengan nama "{{ searchQuery }}"
-              <span v-if="selectedDistrict"> di {{ selectedDistrict }}</span>.
-            </p>
-            <p v-else>
-              Tidak ada penyuluh tersedia
-              <span v-if="selectedDistrict"> di {{ selectedDistrict }}</span>
-              saat ini.
-            </p>
+          <!-- Instructors list -->
+          <div>
+            <div class="flex items-center gap-2 mb-6">
+              <UIcon 
+                name="i-lucide-briefcase" 
+                class="w-5 h-5 text-green-600 dark:text-green-400"
+              />
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                Penyuluh
+                <span v-if="selectedDistrict" class="text-green-600"> di {{ selectedDistrict }}</span>
+                <UBadge color="green" variant="soft" class="ml-2">
+                  {{ filteredInstructors.length }}
+                </UBadge>
+              </h2>
+            </div>
+
+            <div v-if="filteredInstructors.length > 0">
+              <!-- Instructors grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <UCard
+                  v-for="instructor in paginatedInstructors"
+                  :key="instructor.id"
+                  class="hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  :ui="{ 
+                    body: { padding: 'p-4 sm:p-6' }
+                  }"
+                >
+                  <div class="flex flex-col items-center text-center space-y-4">
+                    <!-- Avatar -->
+                    <div class="relative">
+                      <img
+                        :src="instructor.profiles?.avatar_url || '/profile.png'"
+                        :alt="instructor.profiles?.full_name || 'Penyuluh'"
+                        class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-green-100 dark:border-green-900"
+                      />
+                      <div class="absolute -bottom-2 -right-2 bg-green-500 dark:bg-green-600 w-6 h-6 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center">
+                        <UIcon 
+                          name="i-lucide-check" 
+                          class="w-3 h-3 text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="space-y-2 flex-1">
+                      <h3 class="font-semibold text-lg text-gray-900 dark:text-white line-clamp-2">
+                        {{ instructor.profiles?.full_name || 'Nama tidak tersedia' }}
+                      </h3>
+                      <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ instructor.district }}, {{ instructor.provinces }}
+                      </p>
+                    </div>
+
+                    <!-- Button -->
+                    <UButton
+                      :to="`/discussions/instructor/${instructor.id}`"
+                      color="green"
+                      size="md"
+                      class="w-full"
+                      icon="i-lucide-message-circle"
+                    >
+                      Mulai Diskusi
+                    </UButton>
+                  </div>
+                </UCard>
+              </div>
+
+              <!-- Pagination -->
+              <AppPagination
+                :current-page="currentPage"
+                :total-pages="totalPages"
+                :total-items="filteredInstructors.length"
+                :page-size="pageSize"
+                :show-page-info="true"
+                :show-first-last="true"
+                @update:page="currentPage = $event"
+              />
+            </div>
+
+            <!-- Empty state -->
+            <div v-else class="flex flex-col items-center justify-center py-16">
+              <UIcon 
+                name="i-lucide-inbox" 
+                class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4"
+              />
+              <p class="text-gray-600 dark:text-gray-400 text-center max-w-sm">
+                Tidak ada penyuluh tersedia
+                <span v-if="selectedDistrict"> di {{ selectedDistrict }}</span>
+                <span v-if="searchQuery"> dengan nama "{{ searchQuery }}"</span>
+                saat ini.
+              </p>
+            </div>
           </div>
-        </div>       
-      </div>
+        </div>
+      </UCard>
     </div>
   </div>
 </template>
 
 <style scoped>
-.instructor-discussions {
-  min-height: 100vh;
+/* Smooth animations */
+:deep(.u-card) {
+  transition: all 0.3s ease;
 }
 </style>

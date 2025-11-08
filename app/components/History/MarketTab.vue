@@ -26,33 +26,33 @@ const totalPages = computed(() => Math.ceil(totalItems.value / pageSize.value));
 const statusConfig = {
   approved: {
     label: 'Disetujui',
-    class: 'bg-green-100 text-green-800 border-green-200',
-    icon: '✓'
+    class: 'bg-green-100 dark:bg-green-950/50 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800',
+    icon: 'i-heroicons-check-circle'
   },
   pending: {
     label: 'Menunggu',
-    class: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    icon: '⏳'
+    class: 'bg-yellow-100 dark:bg-yellow-950/50 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
+    icon: 'i-heroicons-clock'
   },
   rejected: {
     label: 'Ditolak',
-    class: 'bg-red-100 text-red-800 border-red-200',
-    icon: '✗'
+    class: 'bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800',
+    icon: 'i-heroicons-x-circle'
   },
   Approved: {
     label: 'Disetujui',
-    class: 'bg-green-100 text-green-800 border-green-200',
-    icon: '✓'
+    class: 'bg-green-100 dark:bg-green-950/50 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800',
+    icon: 'i-heroicons-check-circle'
   },
   Pending: {
     label: 'Menunggu',
-    class: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    icon: '⏳'
+    class: 'bg-yellow-100 dark:bg-yellow-950/50 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
+    icon: 'i-heroicons-clock'
   },
   Rejected: {
     label: 'Ditolak',
-    class: 'bg-red-100 text-red-800 border-red-200',
-    icon: '✗'
+    class: 'bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800',
+    icon: 'i-heroicons-x-circle'
   }
 };
 
@@ -175,18 +175,18 @@ onMounted(() => {
   <div>
     <!-- Loading State -->
     <div v-if="loading" class="text-center py-16">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-4"/>
-      <p class="text-gray-500">Memuat riwayat pasar...</p>
+      <UIcon name="i-heroicons-arrow-path" class="inline-block animate-spin h-8 w-8 text-green-600 dark:text-green-500 mb-4" />
+      <p class="text-gray-500 dark:text-gray-400">Memuat riwayat pasar...</p>
     </div>
     
     <!-- Error State -->
-    <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg">
+    <div v-else-if="error" class="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-6 py-4 rounded-lg transition-colors duration-200">
       <div class="flex items-center">
-        <span class="text-red-500 mr-2">⚠️</span>
+        <UIcon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-500 dark:text-red-400 mr-2 flex-shrink-0" />
         <p class="font-medium">Terjadi kesalahan saat memuat riwayat pasar.</p>
       </div>
       <button 
-        class="mt-3 text-blue-600 hover:text-blue-700 font-medium underline" 
+        class="mt-3 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline transition-colors" 
         @click="fetchMarketData"
       >
         Coba lagi
@@ -195,16 +195,16 @@ onMounted(() => {
     
     <!-- Empty State -->
     <div v-else-if="!marketItems || marketItems.length === 0" class="text-center py-16">
-      <div class="text-6xl mb-4">🛒</div>
-      <h3 class="text-xl font-medium text-gray-800 mb-2">Belum ada produk pasar</h3>
-      <p class="text-gray-500 mb-4">
+      <UIcon name="i-heroicons-shopping-cart" class="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+      <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200 mb-2">Belum ada produk pasar</h3>
+      <p class="text-gray-500 dark:text-gray-400 mb-4">
         Belum ada produk pasar yang Anda buat. Mulai posting produk pertama Anda!
       </p>
       <nuxt-link 
         to="/markets/create" 
-        class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+        class="inline-flex items-center px-6 py-3 bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white rounded-lg transition-colors"
       >
-        <span class="mr-2">+</span>
+        <UIcon name="i-heroicons-plus" class="w-5 h-5 mr-2" />
         Posting Produk
       </nuxt-link>
     </div>
@@ -214,19 +214,19 @@ onMounted(() => {
       <div 
         v-for="item in marketItems" 
         :key="'market-' + item.id"
-        class="bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200"
+        class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md dark:hover:shadow-lg dark:shadow-black/50 transition-all duration-200"
       >
         <div class="p-6">
           <div class="flex items-start justify-between mb-4">
             <!-- Type Badge -->
             <div class="flex items-center space-x-3">
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                <span class="mr-1">🛒</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-950/50 text-green-800 dark:text-green-300 transition-colors">
+                <UIcon name="i-heroicons-shopping-cart" class="w-4 h-4 mr-1" />
                 {{ item.typeLabel }}
               </span>
               
               <!-- Date -->
-              <span class="text-sm text-gray-500">
+              <span class="text-sm text-gray-500 dark:text-gray-400">
                 {{ item.created_at ? new Date(item.created_at).toLocaleDateString('id-ID', {
                   year: 'numeric',
                   month: 'long',
@@ -238,46 +238,47 @@ onMounted(() => {
             <!-- Status Badge -->
             <span 
               :class="[
-                'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border',
+                'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border transition-colors',
                 getNormalizedStatus(item.status).class
               ]"
             >
-              <span class="mr-1">
-                {{ getNormalizedStatus(item.status).icon }}
-              </span>
+              <UIcon 
+                :name="getNormalizedStatus(item.status).icon" 
+                class="w-4 h-4 mr-1"
+              />
               {{ getNormalizedStatus(item.status).label }}
             </span>
           </div>
           
           <div class="flex items-center space-x-4">
             <!-- Image -->
-            <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+            <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
               <img 
                 :src="item.imageUrl" 
                 :alt="item.title"
                 class="w-full h-full object-cover"
                 loading="lazy"
-                @error="$event.target.src = '/product.png'"
+                @error="(e) => (e.target as HTMLImageElement).src = '/product.png'"
               >
             </div>
             
             <!-- Content -->
             <div class="flex-1 min-w-0">
-              <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
                 {{ item.title }}
               </h3>
               
               <div class="flex items-center justify-between">
-                <div class="text-sm text-gray-500">
+                <div class="text-sm text-gray-500 dark:text-gray-400">
                   ID: MARKET-{{ item.id }}
                 </div>
                 
                 <nuxt-link 
                   :to="item.route"
-                  class="inline-flex items-center px-4 py-2 text-sm font-medium text-green-600 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors"
+                  class="inline-flex items-center px-4 py-2 text-sm font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-950/50 transition-colors"
                 >
                   Lihat Detail
-                  <span class="ml-1">→</span>
+                  <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 ml-1" />
                 </nuxt-link>
               </div>
             </div>

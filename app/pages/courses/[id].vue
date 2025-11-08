@@ -219,11 +219,26 @@ const fetchMeetingById = async () => {
     } else if (data) {
       meeting.value = data;
       
+      // SEO Optimization untuk course detail
+      useSeoDetail({
+        title: data.title || 'Course',
+        description: data.description || `Ikuti course ${data.title}`,
+        keywords: [
+          'kursus pertanian',
+          'course',
+          data.category?.toLowerCase() || 'pelatihan',
+          'pembelajaran'
+        ],
+        image: imageUrl.value || undefined,
+        url: `https://jurutani.com/courses/${meetingId}`,
+        type: 'article'
+      })
+      
       if (data.author_id) {
         await fetchAuthor(data.author_id);
       }
     } else {
-      notFound.value = true;
+      notFound.value = true
     }
   } catch (err) {
     console.error('Exception fetching meeting:', err);
