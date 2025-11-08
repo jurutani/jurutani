@@ -83,7 +83,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="relative w-full">
+  <section class="relative w-full px-4">
     <!-- Loading State -->
     <div v-if="loading" class="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl">
       <div class="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 flex items-center justify-center">
