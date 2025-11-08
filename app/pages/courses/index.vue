@@ -3,6 +3,13 @@ import { ref, computed, watchEffect } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 import { useAsyncData } from '#app'
 
+definePageMeta({
+  layout: 'default',
+})
+
+// SEO Optimization
+useSeoOptimized('courses')
+
 // Types
 interface Announcement {
   id: string

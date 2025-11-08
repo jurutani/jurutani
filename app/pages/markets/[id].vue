@@ -3,6 +3,10 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 import { useRoute, useRouter } from 'vue-router'
 
+definePageMeta({
+  layout: 'default',
+})
+
 // Types
 interface Market {
   id: string | number
@@ -285,7 +289,7 @@ watch(() => product.value, (newVal) => {
       type: 'website'
     })
   }
-}, { immediate: false })
+}, { immediate: true })
 </script>
 
 <template>

@@ -3,6 +3,10 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSupabase } from '~/composables/useSupabase'
 
+definePageMeta({
+  layout: 'default',
+})
+
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
@@ -122,6 +126,26 @@ const startConversation = async () => {
 onMounted(() => {
   fetchExpert()
 })
+
+// SEO Optimization for expert detail
+watch(() => expert.value, (newVal) => {
+  if (newVal) {
+    useSeoDetail({
+      title: newVal.profiles?.full_name || 'Pakar Pertanian',
+      description: `Konsultasi dengan ${newVal.profiles?.full_name || 'Pakar Pertanian'} - Spesialis ${newVal.category || 'Pertanian'}. Dapatkan solusi terbaik untuk masalah pertanian Anda.`,
+      keywords: [
+        'pakar pertanian',
+        'konsultasi pertanian',
+        newVal.category?.toLowerCase() || 'spesialis',
+        'ahli tani',
+        'expert advisor'
+      ],
+      image: newVal.profiles?.avatar_url || '/jurutani.png',
+      url: `https://jurutani.com/discussions/expert/${route.params.id}`,
+      type: 'profile'
+    })
+  }
+}, { immediate: true })
 </script>
 
 

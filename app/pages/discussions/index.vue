@@ -2,6 +2,13 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 
+definePageMeta({
+  layout: 'default',
+})
+
+// SEO Optimization
+useSeoOptimized('discussions')
+
 const { supabase } = useSupabase()
 
 interface DiscussionService {

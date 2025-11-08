@@ -4,6 +4,13 @@ import { useSupabase } from '~/composables/useSupabase'
 import { CreateButton } from '#components'
 import { useAsyncData } from '#app'
 
+definePageMeta({
+  layout: 'default',
+})
+
+// SEO Optimization
+useSeoOptimized('news')
+
 // Types
 interface News {
   id: string

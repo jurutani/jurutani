@@ -3,6 +3,10 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSupabase } from '~/composables/useSupabase'
 
+definePageMeta({
+  layout: 'default',
+})
+
 interface NewsItem {
   id: string | number
   title: string
@@ -214,7 +218,7 @@ watch(() => news.value, (newVal) => {
       type: 'article'
     })
   }
-}, { immediate: false })
+}, { immediate: true })
 </script>
 
 <template>

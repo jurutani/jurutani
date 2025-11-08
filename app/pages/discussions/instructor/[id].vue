@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSupabase } from '~/composables/useSupabase'
+
+definePageMeta({
+  layout: 'default',
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -121,6 +125,26 @@ const startConversation = async () => {
 onMounted(() => {
   fetchInstructor()
 })
+
+// SEO Optimization for instructor detail
+watch(() => instructor.value, (newVal) => {
+  if (newVal) {
+    useSeoDetail({
+      title: newVal.profiles?.full_name || 'Penyuluh Pertanian',
+      description: `Konsultasi dengan ${newVal.profiles?.full_name || 'Penyuluh Pertanian'} - Penyuluh berpengalaman untuk solusi pertanian Anda. Dapatkan panduan praktis untuk budidaya tanaman.`,
+      keywords: [
+        'penyuluh pertanian',
+        'konsultasi tani',
+        'penyuluh lapangan',
+        'expert agriculture',
+        'konsultasi pertanian'
+      ],
+      image: newVal.profiles?.avatar_url || '/jurutani.png',
+      url: `https://jurutani.com/discussions/instructor/${route.params.id}`,
+      type: 'profile'
+    })
+  }
+}, { immediate: true })
 </script>
 
 <template>
