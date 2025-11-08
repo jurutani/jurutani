@@ -1,30 +1,40 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+const isOpen = ref(false)
 
-const isOpen = ref(true)
-
-const openModal = () => {
-    isOpen.value = true
-}
-
-// Tutup modal
-const closeModal = () => {
-    isOpen.value = false
-    const firstVisit = useCookie('firstVisit', { maxAge: 21600 }) // 6 hours
-    firstVisit.value = 'visited'
-}
-
-defineExpose({
-    openModal,
-    closeModal,
-    isOpen
+// Cookie untuk menandai sudah pernah membuka
+const firstVisit = useCookie('firstVisit', {
+  maxAge: 21600, // 6 jam
+  path: '/',
+  sameSite: 'lax'
 })
 
+// Fungsi buka modal
+const openModal = () => {
+  isOpen.value = true
+}
+
+// Fungsi tutup modal
+const closeModal = () => {
+  isOpen.value = false
+  firstVisit.value = 'visited' // cookie diset di browser
+}
+
+// Pastikan hanya dijalankan di sisi client
 onMounted(() => {
-    const firstVisit = useCookie('firstVisit', { maxAge: 21600 }) // 6 hours
+  if (process.client) {
     if (!firstVisit.value) {
-        openModal()
+      openModal()
+    } else {
+      isOpen.value = false
     }
+  }
+})
+
+// Ekspor untuk bisa dipanggil dari luar (misal parent)
+defineExpose({
+  openModal,
+  closeModal,
+  isOpen
 })
 </script>
 
