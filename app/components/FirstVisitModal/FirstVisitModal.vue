@@ -4,7 +4,6 @@ const isOpen = ref(false)
 // Cookie untuk menandai sudah pernah membuka
 const firstVisit = useCookie('firstVisit', {
   maxAge: 21600, // 6 jam
-  path: '/',
   sameSite: 'lax'
 })
 
@@ -96,13 +95,13 @@ defineExpose({
             <div class="pt-4 border-t border-green-200/30 text-center w-full">
               <p class="text-xs md:text-sm text-green-600/60">
                 Powered by : <br>
-                <a
-                  href="https://kairav-portfolio.vercel.app/"
+                <NuxtLink
+                  to="https://kairav-portfolio.vercel.app/"
                   target="_blank"
                   class="font-medium hover:text-green-600 transition-colors underline decoration-dotted ml-1"
                 >
                   Politeknik Pembangunan Pertanian Yogyakarta Magelang
-                </a>
+                </NuxtLink>
               </p>
             </div>
 
@@ -110,9 +109,7 @@ defineExpose({
               @click="closeModal"
               class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
             >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <UIcon name="i-lucide-x" class="w-6 h-6" />
             </button>
           </div>
         </div>

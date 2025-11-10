@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 import { useAsyncData } from '#app'
 
@@ -11,7 +11,7 @@ interface HeroData {
   description: string
   button_text: string
   button_link: string
-  image_url?: string  // Changed from image_name to image_url
+  image_url?: string
   status: string
   created_at: string
   deleted_at?: string
@@ -27,7 +27,7 @@ const loading = ref(true)
 
 // State untuk carousel
 const currentSlide = ref(0)
-const autoplayInterval = ref(null)
+const autoplayInterval = ref<NodeJS.Timeout | null>(null)
 const isTransitioning = ref(false)
 
 // Touch/Swipe states
@@ -40,19 +40,17 @@ const swipeThreshold = 50
 const isMobile = ref(false)
 
 // Fungsi untuk mendapatkan URL gambar dari bucket
-const getImageUrl = (imageUrl: string) => {
+const getImageUrl = (imageUrl: string): string | null => {
   if (!imageUrl) return null
-  
+
   // Jika sudah berupa URL lengkap, return langsung
   if (imageUrl.startsWith('http')) {
     return imageUrl
   }
-  
+
   // Jika hanya nama file, ambil dari bucket hero-image
-  const { data } = supabase.storage
-    .from('hero-image')
-    .getPublicUrl(imageUrl)
-  
+  const { data } = supabase.storage.from('hero-image').getPublicUrl(imageUrl)
+
   return data.publicUrl
 }
 
@@ -79,10 +77,13 @@ const fetchHeroData = async () => {
 
     if (fetchError) throw fetchError
 
-    carouselItems.value = data as HeroData[] || []
-    
+    carouselItems.value = (data as HeroData[]) || []
+
     // Reset current slide jika data berubah
-    if (carouselItems.value.length > 0 && currentSlide.value >= carouselItems.value.length) {
+    if (
+      carouselItems.value.length > 0 &&
+      currentSlide.value >= carouselItems.value.length
+    ) {
       currentSlide.value = 0
     }
   } catch (err: any) {
@@ -102,7 +103,7 @@ const detectDevice = () => {
 }
 
 // Fungsi untuk mengatur slide
-const goToSlide = (index) => {
+const goToSlide = (index: number) => {
   if (isTransitioning.value || carouselItems.value.length === 0) return
   currentSlide.value = index
   triggerContentAnimation()
@@ -110,14 +111,17 @@ const goToSlide = (index) => {
 
 const nextSlide = () => {
   if (isTransitioning.value || carouselItems.value.length === 0) return
-  const nextIndex = (currentSlide.value + 1) % carouselItems.value.length
+  const nextIndex =
+    (currentSlide.value + 1) % carouselItems.value.length
   currentSlide.value = nextIndex
   triggerContentAnimation()
 }
 
 const prevSlide = () => {
   if (isTransitioning.value || carouselItems.value.length === 0) return
-  const prevIndex = (currentSlide.value - 1 + carouselItems.value.length) % carouselItems.value.length
+  const prevIndex =
+    (currentSlide.value - 1 + carouselItems.value.length) %
+    carouselItems.value.length
   currentSlide.value = prevIndex
   triggerContentAnimation()
 }
@@ -131,45 +135,48 @@ const triggerContentAnimation = () => {
 }
 
 // Touch/Swipe events
-const handleTouchStart = (e) => {
+const handleTouchStart = (e: TouchEvent) => {
   if (isTransitioning.value || carouselItems.value.length === 0) return
-  
+
   isSwiping.value = true
   startX.value = e.touches[0].clientX
   startY.value = e.touches[0].clientY
   stopAutoplay()
 }
 
-const handleTouchEnd = (e) => {
+const handleTouchEnd = (e: TouchEvent) => {
   if (!isSwiping.value || carouselItems.value.length === 0) return
-  
+
   const endX = e.changedTouches[0].clientX
   const endY = e.changedTouches[0].clientY
   const deltaX = endX - startX.value
   const deltaY = endY - startY.value
-  
+
   isSwiping.value = false
-  
+
   // Check if it's a horizontal swipe (not vertical scroll)
-  if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+  if (
+    Math.abs(deltaX) > Math.abs(deltaY) &&
+    Math.abs(deltaX) > swipeThreshold
+  ) {
     if (deltaX > 0) {
       prevSlide() // Swipe right -> previous
     } else {
       nextSlide() // Swipe left -> next
     }
   }
-  
+
   setTimeout(() => startAutoplay(), 100)
 }
 
 // Click handlers for desktop
-const handleClick = (e) => {
+const handleClick = (e: MouseEvent) => {
   if (isTransitioning.value || isMobile.value || carouselItems.value.length === 0) return
-  
-  const rect = e.currentTarget.getBoundingClientRect()
+
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
   const clickX = e.clientX - rect.left
   const containerWidth = rect.width
-  
+
   // Left half = previous, right half = next
   if (clickX < containerWidth / 2) {
     prevSlide()
@@ -181,9 +188,9 @@ const handleClick = (e) => {
 // Autoplay functions
 const startAutoplay = () => {
   if (autoplayInterval.value || carouselItems.value.length <= 1) {
-    clearInterval(autoplayInterval.value)
+    clearInterval(autoplayInterval.value!)
   }
-  
+
   if (carouselItems.value.length > 1) {
     autoplayInterval.value = setInterval(() => {
       if (!isSwiping.value && !isTransitioning.value) {
@@ -218,21 +225,13 @@ const handleResize = () => {
   detectDevice()
 }
 
-// Handle button click
-const handleButtonClick = (buttonLink: string) => {
-  if (buttonLink) {
-    // Navigate to the link
-    navigateTo(buttonLink)
-  }
-}
-
 onMounted(() => {
   detectDevice()
   if (carouselItems.value.length > 0) {
     startAutoplay()
     triggerContentAnimation()
   }
-  
+
   // Add event listeners
   window.addEventListener('resize', handleResize)
 })
@@ -243,67 +242,79 @@ onBeforeUnmount(() => {
 })
 
 // Watch for data changes to restart autoplay
-watch(() => carouselItems.value.length, (newLength) => {
-  if (newLength > 0) {
-    startAutoplay()
-    if (currentSlide.value >= newLength) {
-      currentSlide.value = 0
+watch(
+  () => carouselItems.value.length,
+  (newLength) => {
+    if (newLength > 0) {
+      startAutoplay()
+      if (currentSlide.value >= newLength) {
+        currentSlide.value = 0
+      }
+    } else {
+      stopAutoplay()
     }
-  } else {
-    stopAutoplay()
   }
-})
+)
 </script>
 
 <template>
   <section class="relative overflow-hidden select-none">
     <!-- Loading State -->
-    <div 
-      v-if="loading" 
-      class="relative w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-emerald-900"
+    <div
+      v-if="loading"
+      class="relative w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-emerald-900 dark:from-green-950 dark:via-green-900 dark:to-emerald-950"
     >
       <div class="text-center">
-        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-green-400 mx-auto mb-4"/>
-        <p class="text-white text-lg">Memuat konten...</p>
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-green-400 dark:border-green-500 mx-auto mb-4" />
+        <p class="text-white dark:text-gray-100 text-lg">Memuat konten...</p>
       </div>
     </div>
 
     <!-- Error State -->
-    <div 
-      v-else-if="error" 
-      class="relative w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-orange-900"
+    <UCard
+      v-else-if="error"
+      class="absolute inset-0 w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-orange-900 dark:from-red-950 dark:via-red-900 dark:to-orange-950 border-0 shadow-none bg-opacity-0"
     >
-      <div class="text-center max-w-md mx-auto px-4">
-        <svg class="w-16 h-16 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 18.5c-.77.833.192 2.5 1.732 2.5z"/>
-        </svg>
-        <h3 class="text-xl font-semibold text-white mb-2">Terjadi Kesalahan</h3>
-        <p class="text-red-200">{{ error }}</p>
-        <button 
-          class="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+      <template #header>
+        <div class="text-center max-w-md mx-auto px-4">
+          <div class="flex justify-center mb-4">
+            <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-red-400 dark:text-red-300" />
+          </div>
+          <h3 class="text-xl font-semibold text-white dark:text-gray-100 mb-2">Terjadi Kesalahan</h3>
+          <p class="text-red-200 dark:text-red-300">{{ error }}</p>
+        </div>
+      </template>
+
+      <div class="flex justify-center">
+        <UButton
           @click="fetchHeroData"
+          color="red"
+          size="md"
+          class="px-6"
         >
           Coba Lagi
-        </button>
+        </UButton>
       </div>
-    </div>
+    </UCard>
 
     <!-- Empty State -->
-    <div 
-      v-else-if="carouselItems.length === 0" 
-      class="relative w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-slate-900"
+    <UCard
+      v-else-if="carouselItems.length === 0"
+      class="absolute inset-0 w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-slate-900 dark:from-gray-950 dark:via-gray-900 dark:to-slate-950 border-0 shadow-none bg-opacity-0"
     >
-      <div class="text-center max-w-md mx-auto px-4">
-        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-        </svg>
-        <h3 class="text-xl font-semibold text-white mb-2">Belum Ada Konten</h3>
-        <p class="text-gray-300">Konten hero sedang tidak tersedia.</p>
-      </div>
-    </div>
+      <template #header>
+        <div class="text-center max-w-md mx-auto px-4">
+          <div class="flex justify-center mb-4">
+            <UIcon name="i-heroicons-photo" class="w-16 h-16 text-gray-400 dark:text-gray-500" />
+          </div>
+          <h3 class="text-xl font-semibold text-white dark:text-gray-100 mb-2">Belum Ada Konten</h3>
+          <p class="text-gray-300 dark:text-gray-400">Konten hero sedang tidak tersedia.</p>
+        </div>
+      </template>
+    </UCard>
 
     <!-- Carousel Container -->
-    <div 
+    <div
       v-else
       class="relative w-full h-screen max-h-screen cursor-pointer select-none"
       :class="{ 'cursor-default': isMobile }"
@@ -316,203 +327,183 @@ watch(() => carouselItems.value.length, (newLength) => {
       <!-- Background Container -->
       <div class="absolute inset-0">
         <!-- Background Images dengan animasi transisi -->
-        <div 
-          v-for="(item, index) in carouselItems" 
+        <div
+          v-for="(item, index) in carouselItems"
           :key="`bg-${item.id}`"
           class="absolute inset-0 transition-all duration-1000 ease-out"
-          :class="[
-            currentSlide === index ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
-          ]"
+          :class="[currentSlide === index ? 'opacity-100 scale-100' : 'opacity-0 scale-105']"
         >
           <!-- Gambar Background jika ada -->
-          <div v-if="getImageUrl(item.image_url)" class="absolute inset-0">
-            <img 
-              :src="getImageUrl(item.image_url)" 
-              :alt="item.title || 'Hero Image'"
-              class="w-full h-full object-cover transition-transform duration-1000 ease-out"
-              :class="[
-                currentSlide === index ? 'scale-100' : 'scale-110'
-              ]"
-              loading="lazy"
-              @error="(e) => { console.error('Image load error:', e); e.target.style.display = 'none'; }"
-            >
-          </div>
-          
+          <img
+            v-if="getImageUrl(item.image_url)"
+            :src="getImageUrl(item.image_url)"
+            :alt="item.title || 'Hero Image'"
+            class="w-full h-full object-cover transition-transform duration-1000 ease-out"
+            :class="[currentSlide === index ? 'scale-100' : 'scale-110']"
+            loading="lazy"
+            @error="(e: any) => {
+              console.error('Image load error:', e)
+              e.target.style.display = 'none'
+            }"
+          />
+
           <!-- Background Hijau jika tidak ada gambar -->
-          <div 
-            v-else 
+          <div
+            v-else
             class="absolute inset-0 bg-gradient-to-br from-green-800 via-green-700 to-emerald-800 transition-all duration-1000 ease-out"
-            :class="[
-              currentSlide === index ? 'scale-100' : 'scale-105'
-            ]"
+            :class="[currentSlide === index ? 'scale-100' : 'scale-105']"
           />
         </div>
-        
-        <!-- Overlay untuk readability dan efek shadow dari bawah -->
-        <div class="absolute inset-0 bg-black/30"/>
-        
-        <!-- Shadow dari bawah untuk efek menyatu -->
-        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 via-black/20 to-transparent"/>
-        
-        <!-- Side shadows untuk depth -->
-        <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black/30 to-transparent"/>
-        <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black/30 to-transparent"/>
+
+        <!-- Overlay untuk readability -->
+        <div class="absolute inset-0 bg-black/30 dark:bg-black/50" />
+
+        <!-- Shadow dari bawah -->
+        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+        <!-- Side shadows -->
+        <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black/30 to-transparent" />
+        <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black/30 to-transparent" />
       </div>
 
       <!-- Carousel Items -->
-      <div 
-        v-for="(item, index) in carouselItems" 
+      <div
+        v-for="(item, index) in carouselItems"
         :key="item.id"
         class="absolute inset-0 transition-all duration-1000 ease-out"
-        :class="[
-          currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
-        ]"
+        :class="[currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0']"
       >
-        <!-- Content Box dengan Enhanced Animations -->
+        <!-- Content Box with Glassmorphism -->
         <div class="absolute inset-0 flex items-center justify-center px-4">
-          <div 
-            class="text-center px-4 sm:px-6 md:px-8 py-8 md:py-12 rounded-xl md:rounded-2xl backdrop-blur-2xl bg-white/10 border border-white/20 shadow-2xl max-w-xs sm:max-w-lg md:max-w-2xl w-full transform transition-all duration-1000"
+          <div
+            class="max-w-xs sm:max-w-lg md:max-w-2xl w-full transform transition-all duration-1000 rounded-2xl border border-white/20 dark:border-white/10 shadow-2xl overflow-hidden group"
             :class="[
-              currentSlide === index && !isTransitioning 
-                ? 'translate-y-0 opacity-100 scale-100' 
+              currentSlide === index && !isTransitioning
+                ? 'translate-y-0 opacity-100 scale-100'
                 : 'translate-y-8 opacity-0 scale-95'
             ]"
           >
-            <!-- Caption dengan slide animation -->
-            <p 
-              class="text-green-300 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-2 md:mb-3 transition-all duration-700 delay-200"
+            <!-- Glassmorphism Background -->
+            <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 dark:from-white/5 dark:to-white/[0.02] backdrop-blur-2xl" />
+
+            <!-- Animated Shadow Effect -->
+            <div class="absolute inset-0 rounded-2xl bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            <!-- Enhanced Glass Effect on hover -->
+            <div class="absolute -inset-0.5 bg-black/20 dark:bg-black/40 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+
+            <!-- Content -->
+            <div class="relative px-4 sm:px-6 md:px-8 py-8 md:py-12 text-center">
+            <!-- Caption -->
+            <p
+              class="text-green-300 dark:text-green-400 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-2 md:mb-3 transition-all duration-700 delay-200"
               :class="[
-                currentSlide === index && !isTransitioning 
-                  ? 'translate-x-0 opacity-100' 
-                  : index % 2 === 0 ? '-translate-x-8 opacity-0' : 'translate-x-8 opacity-0'
+                currentSlide === index && !isTransitioning
+                  ? 'translate-x-0 opacity-100'
+                  : index % 2 === 0
+                    ? '-translate-x-8 opacity-0'
+                    : 'translate-x-8 opacity-0'
               ]"
             >
               {{ item.caption }}
             </p>
-            
-            <!-- Title dengan opposite slide animation -->
-            <h2 
-              class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-6 leading-tight transition-all duration-700 delay-300"
+
+            <!-- Title -->
+            <h2
+              class="text-white dark:text-gray-50 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-6 leading-tight transition-all duration-700 delay-300"
               :class="[
-                currentSlide === index && !isTransitioning 
-                  ? 'translate-x-0 opacity-100' 
-                  : index % 2 === 0 ? 'translate-x-8 opacity-0' : '-translate-x-8 opacity-0'
+                currentSlide === index && !isTransitioning
+                  ? 'translate-x-0 opacity-100'
+                  : index % 2 === 0
+                    ? 'translate-x-8 opacity-0'
+                    : '-translate-x-8 opacity-0'
               ]"
             >
               {{ item.title }}
             </h2>
-            
-            <!-- Description dengan slide animation -->
-            <p 
-              class="text-gray-100 text-sm sm:text-base md:text-lg mb-6 md:mb-8 leading-relaxed transition-all duration-700 delay-400"
+
+            <!-- Description -->
+            <p
+              class="text-gray-100 dark:text-gray-200 text-sm sm:text-base md:text-lg mb-6 md:mb-8 leading-relaxed transition-all duration-700 delay-400"
               :class="[
-                currentSlide === index && !isTransitioning 
-                  ? 'translate-x-0 opacity-100' 
-                  : index % 2 === 0 ? '-translate-x-8 opacity-0' : 'translate-x-8 opacity-0'
+                currentSlide === index && !isTransitioning
+                  ? 'translate-x-0 opacity-100'
+                  : index % 2 === 0
+                    ? '-translate-x-8 opacity-0'
+                    : 'translate-x-8 opacity-0'
               ]"
             >
               {{ item.description }}
             </p>
-            
-            <!-- Button dengan scale animation -->
-            <div 
+
+            <!-- Button -->
+            <div
               class="transition-all duration-700 delay-500"
               :class="[
-                currentSlide === index && !isTransitioning 
-                  ? 'translate-y-0 opacity-100 scale-100' 
+                currentSlide === index && !isTransitioning
+                  ? 'translate-y-0 opacity-100 scale-100'
                   : 'translate-y-4 opacity-0 scale-95'
               ]"
             >
-              <button
+              <UButton
                 v-if="item.button_text"
-                class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl shadow-lg border-none"
-                :class="[
-                  isMobile 
-                    ? 'px-6 py-3 text-base' 
-                    : 'px-8 py-4 text-lg'
-                ]"
-                @click.stop="handleButtonClick(item.button_link)"
+                as="NuxtLink"
+                :to="item.button_link"
+                color="green"
+                size="md"
+                @click.stop
               >
                 {{ item.button_text }}
-              </button>
+              </UButton>
+            </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Modern Dots Indicators -->
-      <div 
-        v-if="carouselItems.length > 1"
-        class="absolute bottom-6 md:bottom-8 inset-x-0 flex justify-center gap-2 md:gap-3 z-20"
-      >
+      <!-- Dots Indicators -->
+      <div v-if="carouselItems.length > 1" class="absolute bottom-6 md:bottom-8 inset-x-0 flex justify-center gap-2 md:gap-3 z-20">
         <button
           v-for="(item, index) in carouselItems"
           :key="index"
           class="relative overflow-hidden rounded-full transition-all duration-500 hover:scale-110 touch-target"
           :class="[
-            currentSlide === index 
-              ? 'w-8 md:w-12 h-2 md:h-3 bg-gradient-to-r from-green-400 to-emerald-500 shadow-lg' 
-              : 'w-2 md:w-3 h-2 md:h-3 bg-white/40 hover:bg-white/60 backdrop-blur-sm'
+            currentSlide === index
+              ? 'w-8 md:w-12 h-2 md:h-3 bg-gradient-to-r from-green-400 to-emerald-500 dark:from-green-500 dark:to-emerald-600 shadow-lg'
+              : 'w-2 md:w-3 h-2 md:h-3 bg-white/40 hover:bg-white/60 dark:bg-white/20 dark:hover:bg-white/40 backdrop-blur-sm'
           ]"
           @click.stop="goToSlide(index)"
         >
-          <!-- Active indicator glow effect -->
-          <div 
+          <div
             v-if="currentSlide === index"
-            class="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"
+            class="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 dark:from-green-500 dark:to-emerald-600 rounded-full animate-pulse"
           />
         </button>
       </div>
 
-      <!-- Swipe/Click Indicators -->
-      <div 
+      <!-- Navigation Hint -->
+      <UCard
         v-if="carouselItems.length > 1"
-        class="absolute bottom-16 md:bottom-24 inset-x-0 flex justify-center z-20"
+        class="absolute bottom-16 md:bottom-24 inset-x-0 mx-auto w-fit border-0 bg-black/20 dark:bg-white/5 backdrop-blur-sm"
       >
-        <div class="text-white/60 text-xs md:text-sm font-medium flex items-center gap-2 md:gap-4 bg-black/20 backdrop-blur-sm px-4 md:px-6 py-2 md:py-3 rounded-full">
-          <!-- Mobile indicator -->
-          <div class="flex items-center gap-1 md:gap-2 md:hidden">
-            <svg class="w-3 h-3 md:w-4 md:h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 3L8.59 4.41l5.17 5.17H2v2h11.76l-5.17 5.17L10 18l8-8-8-8z"/>
-            </svg>
-            Geser
-            <svg class="w-3 h-3 md:w-4 md:h-4 animate-pulse rotate-180" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 3L8.59 4.41l5.17 5.17H2v2h11.76l-5.17 5.17L10 18l8-8-8-8z"/>
-            </svg>
-          </div>
-          <!-- Desktop indicator -->
-          <div class="hidden md:flex items-center gap-2">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
-            </svg>
-            Klik kiri/kanan untuk navigasi
-          </div>
+        <!-- Mobile indicator -->
+        <div class="flex items-center gap-1 md:gap-2 md:hidden text-white/60 dark:text-white/70 text-xs font-medium">
+          <UIcon name="i-heroicons-arrow-right" class="w-3 h-3 animate-pulse" />
+          Geser
+          <UIcon name="i-heroicons-arrow-left" class="w-3 h-3 animate-pulse" />
         </div>
-      </div>
+
+        <!-- Desktop indicator -->
+        <div class="hidden md:flex items-center gap-2 text-white/60 dark:text-white/70 text-sm font-medium">
+          <UIcon name="i-heroicons-arrow-left-right" class="w-4 h-4" />
+          Klik kiri/kanan untuk navigasi
+        </div>
+      </UCard>
     </div>
   </section>
 </template>
 
 <style scoped>
-/* Modern glassmorphism effects */
-.backdrop-blur-xl {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* Smooth cursor */
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* Prevent text selection during interaction */
-.select-none {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 /* Touch target for better mobile usability */
 .touch-target {
   min-height: 44px;
@@ -520,67 +511,6 @@ watch(() => carouselItems.value.length, (newLength) => {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Smooth transitions for better performance */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Enhanced shadow effects */
-.shadow-2xl {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-/* Improved hover effects */
-.hover\:shadow-2xl:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-}
-
-/* Optimized animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
 }
 
 /* Hardware acceleration for smoother animations */

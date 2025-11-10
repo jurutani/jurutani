@@ -10,9 +10,7 @@ useSeoOptimized('terms')
       <div class="flex justify-between items-center mb-6">
         <div class="flex items-center">
           <div class="mr-3 p-2 bg-green-100 dark:bg-green-900 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
+            <UIcon name="i-lucide-book-open" class="h-6 w-6 text-green-600 dark:text-green-400" />
           </div>
           <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">Juru Tani</h3>
         </div>
@@ -38,9 +36,7 @@ useSeoOptimized('terms')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">1. Pengantar</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <UIcon name="i-lucide-info" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Dengan mengakses dan menggunakan platform <strong class="text-green-700 dark:text-green-400">Juru Tani</strong>, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Jika Anda tidak setuju dengan salah satu dari ketentuan ini, Anda tidak diperkenankan untuk menggunakan layanan kami.
@@ -54,25 +50,19 @@ useSeoOptimized('terms')
           <ul class="list-none space-y-3 text-base leading-relaxed pl-2">
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Anda bertanggung jawab atas keamanan akun Anda, termasuk kata sandi dan semua aktivitas yang terjadi di dalamnya.</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Dilarang menggunakan layanan untuk tindakan yang melanggar hukum atau merugikan pihak lain.</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Kami berhak menangguhkan atau menghentikan akses pengguna yang melanggar ketentuan ini.</span>
             </li>
@@ -84,9 +74,7 @@ useSeoOptimized('terms')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">3. Hak Kekayaan Intelektual</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
-              </svg>
+              <UIcon name="i-lucide-shield" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Semua konten di platform ini termasuk logo, teks, grafik, dan perangkat lunak adalah milik <strong class="text-green-700 dark:text-green-400">Juru Tani</strong> kecuali dinyatakan lain. Dilarang menyalin, mendistribusikan, atau menggunakan konten tersebut tanpa izin tertulis dari kami.
@@ -99,9 +87,7 @@ useSeoOptimized('terms')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">4. Tanggung Jawab</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+              <UIcon name="i-lucide-alert-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <div class="text-base leading-relaxed">
               <p class="mb-2">
@@ -129,9 +115,7 @@ useSeoOptimized('terms')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">5. Perubahan Ketentuan</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
+              <UIcon name="i-lucide-refresh-cw" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Kami berhak memperbarui syarat dan ketentuan ini tanpa pemberitahuan sebelumnya. Dengan terus menggunakan platform kami setelah perubahan tersebut, Anda dianggap telah menyetujui syarat dan ketentuan yang telah diperbarui.

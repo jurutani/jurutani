@@ -130,9 +130,7 @@ const handleImageError = () => {
       >
 
       <div v-else class="flex flex-col items-center justify-center h-full text-green-400 dark:text-gray-500">
-        <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
+        <UIcon name="i-lucide-image" class="w-12 h-12 mb-2" />
         <span class="text-sm font-medium">🌱 Produk</span>
       </div>
 
@@ -159,43 +157,41 @@ const handleImageError = () => {
 
       <div class="flex items-center justify-between mb-4 text-xs text-gray-500 dark:text-gray-400">
         <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
+          <UIcon name="i-lucide-user" class="w-4 h-4 text-green-500" />
           <span class="font-medium">{{ product.seller || product.profiles?.name || 'Penjual' }}</span>
         </div>
       </div>
 
       <div class="flex flex-wrap gap-2 mb-4">
-        <a
+        <NuxtLink
           v-if="hasShopeeLink"
-          :href="product.links!.shopee_link"
+          :to="product.links!.shopee_link"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center px-3 py-1.5 bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-200 rounded-full text-xs font-medium transition-colors hover:bg-orange-200 dark:hover:bg-orange-800"
         >
           Shopee
-        </a>
+        </NuxtLink>
 
-        <a
+        <NuxtLink
           v-if="hasTokopediaLink"
-          :href="product.links!.tokopedia_link"
+          :to="product.links!.tokopedia_link"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-200 rounded-full text-xs font-medium transition-colors hover:bg-green-200 dark:hover:bg-green-800"
         >
           Tokopedia
-        </a>
+        </NuxtLink>
 
-        <a
+        <NuxtLink
           v-if="hasTiktokLink"
-          :href="product.links!.tiktok_link"
+          :to="product.links!.tiktok_link"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center px-3 py-1.5 bg-gray-900 text-white dark:bg-gray-700 dark:text-gray-100 rounded-full text-xs font-medium transition-colors hover:bg-gray-800 dark:hover:bg-gray-600"
         >
           TikTok
-        </a>
+        </NuxtLink>
       </div>
 
       <div class="flex justify-between items-center gap-3 mt-auto">
@@ -204,22 +200,18 @@ const handleImageError = () => {
           class="inline-flex items-center space-x-2 px-4 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
         >
           <span>Detail</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
+          <UIcon name="i-lucide-arrow-right" class="w-4 h-4" />
         </NuxtLink>
 
-        <a
-          :href="whatsappLink"
+        <NuxtLink
+          :to="whatsappLink"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center space-x-2 px-4 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564c.173.087.289.129.332.202.043.72.043.433-.101.706z"/>
-          </svg>
+          <UIcon name="i-lucide-send" class="h-4 w-4" />
           <span>Hubungi</span>
-        </a>
+        </NuxtLink>
       </div>
     </div>
   </article>

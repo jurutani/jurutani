@@ -176,8 +176,8 @@ onUnmounted(() => {
   <div class="video-page container mx-auto px-4">
     <!-- Video Section Header -->
     <div class="mx-auto mb-8 max-w-4xl text-center">
-      <div class="inline-flex items-center gap-2 mb-6 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
-        <UIcon name="i-heroicons-play-circle" class="w-5 h-5 text-green-600 dark:text-green-400" />
+      <div class="inline-flex items-center gap-2 mb-6 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full px-2">
+        <UIcon name="i-lucide-video" class="w-5 h-5 text-green-600 dark:text-green-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Pembelajaran Visual & Interaktif</span>
       </div>
       
@@ -255,12 +255,13 @@ onUnmounted(() => {
         <p class="text-gray-500 dark:text-gray-400 mb-4">
           Coba gunakan kata kunci yang berbeda atau periksa ejaan Anda
         </p>
-        <button
-          class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
+        <UButton
+          type="button"
           @click="clearSearch"
+          class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
         >
           Hapus Pencarian
-        </button>
+        </UButton>
       </div>
       
       <NotFoundData v-else-if="!hasData" />

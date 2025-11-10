@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import type { Product } from '~~/types/store'
+  import { UIcon } from '#build/components';
+import type { Product } from '~~/types/store'
   const { id, title, price, image, badge, shipping, category, description } = defineProps<Product>()
 
   // Format harga dengan pemisah ribuan
@@ -27,15 +28,24 @@
   
         <!-- Tombol Action -->
         <div class="absolute bottom-0 left-0 right-0 flex justify-center gap-3 p-4 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-          <button class="action-btn bg-green-600 hover:bg-green-700" aria-label="WhatsApp">
-            <i class="fa fa-whatsapp"/>
-          </button>
-          <NuxtLink :to="`/store/${id}`" class="action-btn bg-primary hover:bg-primary-dark" aria-label="Detail Produk">
-            <i class="fa fa-eye"/>
+          <UButton 
+            icon="i-lucide-send" 
+            color="green"
+            variant="solid"
+            class="action-btn rounded-full"
+            aria-label="WhatsApp"
+            @click="() => window.open(`https://wa.me/62?text=Saya%20tertarik%20dengan%20produk%20ini`)"
+          />
+          <NuxtLink :to="`/store/${id}`" class="action-btn bg-primary hover:bg-primary-dark rounded-full flex items-center justify-center" aria-label="Detail Produk">
+            <UIcon name="i-lucide-eye" />
           </NuxtLink>
-          <button class="action-btn bg-orange-500 hover:bg-orange-600" aria-label="Keranjang">
-            <i class="fa fa-shopping-cart"/>
-          </button>
+          <UButton 
+            icon="i-lucide-shopping-cart" 
+            color="orange"
+            variant="solid"
+            class="action-btn rounded-full"
+            aria-label="Keranjang"
+          />
         </div>
       </div>
   
@@ -63,7 +73,7 @@
       <div class="border-t border-gray-100 p-4 dark:border-gray-700">
         <NuxtLink :to="`/store/${id}`" class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-center text-white transition-colors hover:bg-primary-dark">
           <span>Lihat Detail</span>
-          <i class="fa fa-arrow-right"/>
+          <UIcon name="i-lucide-arrow-right" />
         </NuxtLink>
       </div>
   </div>

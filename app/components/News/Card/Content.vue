@@ -103,10 +103,7 @@ const getCategoryColor = (category: string) => {
       
       <!-- Fallback when no image or error -->
       <div v-else class="flex flex-col items-center justify-center h-full text-green-400 dark:text-gray-500">
-        <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4" />
-        </svg>
+        <UIcon name="i-lucide-heart" class="w-12 h-12 mb-2" />
         <span class="text-sm font-medium">🌱 Juru Tani</span>
       </div>
       
@@ -133,30 +130,24 @@ const getCategoryColor = (category: string) => {
       <!-- Meta Info -->
       <div class="flex items-center justify-between mb-4 text-xs text-gray-500 dark:text-gray-400">
         <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
+          <UIcon name="i-lucide-user" class="w-4 h-4 text-green-500" />
           <span class="font-medium">{{ news.author || 'Admin Juru Tani' }}</span>
         </div>
         <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
+          <UIcon name="i-lucide-calendar" class="w-4 h-4 text-green-500" />
           <span>{{ formattedDate }}</span>
         </div>
       </div>
 
       <!-- Read More Button -->
       <div class="flex justify-end">
-        <router-link
+        <NuxtLink
           :to="`/news/${news.id}`"
           class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
         >
           <span>Baca Selengkapnya</span>
-          <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </router-link>
+          <UIcon name="i-lucide-arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </NuxtLink>
       </div>
     </div>
   </article>

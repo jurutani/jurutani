@@ -32,14 +32,14 @@ const handleAction = () => {
   <div class="text-center py-12">
     <!-- Image -->
     <div class="mb-6">
-      <img 
+      <NuxtImg 
         v-if="imageSrc" 
         :src="imageSrc" 
         alt="Empty state"
         class="w-32 h-32 mx-auto object-contain opacity-60"
-      >
+      />
       <div v-else class="w-32 h-32 mx-auto flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
-        <UIcon name="i-heroicons-folder-open" class="w-12 h-12 text-gray-400" />
+        <UIcon name="i-lucide-folder-open" class="w-12 h-12 text-gray-400" />
       </div>
     </div>
 

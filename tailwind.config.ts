@@ -1,6 +1,6 @@
 const pg_colors = {
   primary: {
-    DEFAULT: '#652103',
+    DEFAULT: '#2E7D32',
     50: '#f4eceb',
     100: '#eecec3',
     200: '#e5b09c',

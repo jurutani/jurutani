@@ -33,9 +33,7 @@ const currentSponsor = ref<Sponsor | null>(sponsors[0])
      
       <div class="mx-auto mb-6 max-w-4xl text-center">
         <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
-            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
+            <UIcon name="i-lucide-shopping-bag" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Partnership</span>
         </div>
 
@@ -58,11 +56,11 @@ const currentSponsor = ref<Sponsor | null>(sponsors[0])
         <div class="sponsor-card group max-w-sm">
           <div class="p-8 rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-300 hover:shadow-lg">
             <div class="flex items-center justify-center h-20 mb-4">
-              <img 
+              <NuxtImg 
                 :src="currentSponsor?.logo" 
                 :alt="currentSponsor?.name" 
                 class="max-h-full max-w-full object-contain"
-              >
+              />
             </div>
             <p class="text-sm text-gray-600 text-center">
               {{ currentSponsor?.description }}

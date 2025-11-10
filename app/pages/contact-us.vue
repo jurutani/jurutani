@@ -206,12 +206,12 @@ useSeoOptimized('contact')
           </div>
           <div class="flex-grow relative min-h-[300px] bg-gray-200 dark:bg-gray-700">
             <!-- Placeholder for map (in a real app, you'd use an actual map component) -->
-            <a href="https://maps.app.goo.gl/UPTBRghSuHci7GxR7?g_st=awb" target="_blank" class="absolute inset-0">
+            <NuxtLink to="https://maps.app.goo.gl/UPTBRghSuHci7GxR7?g_st=awb" target="_blank" class="absolute inset-0">
               <span class="sr-only">Lihat lokasi di Google Maps</span>
-            <div class="absolute inset-0 bg-opacity-70 flex items-center justify-center">
-              <img src="/maps.png" alt="Map of Juru Tani Office Location" class="w-full h-full object-cover" >
-            </div>
-          </a>
+              <div class="absolute inset-0 bg-opacity-70 flex items-center justify-center">
+                <NuxtImg src="/maps.png" alt="Map of Juru Tani Office Location" class="w-full h-full object-cover" />
+              </div>
+            </NuxtLink>
           </div>
         </div>
       </div>

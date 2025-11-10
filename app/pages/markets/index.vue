@@ -1,148 +1,167 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
-import { useSupabase } from '~/composables/useSupabase'
-import { CreateButton } from '#components'
-import { useAsyncData } from '#app'
+  import { ref, computed, watchEffect } from 'vue'
+  import { useSupabase } from '~/composables/useSupabase'
+  import { CreateButton } from '#components'
+  import { useAsyncData } from '#app'
 
-definePageMeta({
-  layout: 'default',
-})
+  definePageMeta({
+    layout: 'default',
+  })
 
-// SEO Optimization
-useSeoOptimized('markets')
+  // SEO Optimization
+  useSeoOptimized('markets')
 
-// Types
-interface Market {
-  id: string
-  category: string
-  status: string
-  created_at: string
-  deleted_at?: string
-  archived_at?: string
-}
-
-interface Category {
-  id?: string
-  name: string
-  value?: string
-}
-
-// Supabase client
-const { supabase } = useSupabase()
-
-// Data utama
-const marketsList = ref<Market[]>([])
-const error = ref<string | null>(null)
-const loading = ref(true)
-
-// Filter & pagination
-const currentCategory = ref('all')
-const currentPage = ref(1)
-const pageSize = 12
-const totalPages = ref(1)
-const totalItems = ref(0)
-const categories = ref<Category[]>([])
-
-// Ambil kategori dari tabel 'category-market'
-const { data: categoriesData } = await useAsyncData('market-categories', async () => {
-  try {
-    const { data, error: catError } = await supabase
-      .from('category_markets')
-      .select('name')
-      .order('name', { ascending: true })
-
-    if (catError) throw catError
-    
-    return data as Category[]
-  } catch (err) {
-    console.error('Error fetching categories:', err)
-    return []
+  // Types
+  interface Market {
+    id: string
+    name: string
+    description?: string
+    price: number
+    price_range?: string
+    category: string
+    location?: string
+    weight?: string
+    size?: string
+    stock?: string | number
+    status: string
+    created_at: string
+    attachments?: string
+    seller?: string
+    contact_seller?: string
+    links?: {
+      shopee_link?: string
+      tokopedia_link?: string
+      tiktok_link?: string
+    }
+    profiles?: {
+      full_name?: string
+      name?: string
+      avatar_url?: string
+    }
+    deleted_at?: string
+    archived_at?: string
   }
-})
 
-// Set categories setelah data dimuat
-if (categoriesData.value) {
-  categories.value = categoriesData.value.map(cat => ({
-    name: cat.name,
-    value: cat.name
-  }))
-}
-
-// Fungsi fetch data yang dioptimasi
-const fetchMarkets = async () => {
-  loading.value = true
-  error.value = null
-
-  try {
-    // Build query dengan method chaining yang lebih efisien
-    const baseQuery = supabase
-      .from('markets')
-      .select('*', { count: 'exact' })
-      .is('deleted_at', null)
-      .is('archived_at', null)
-      .eq('status', 'Approved')
-
-    // Apply category filter jika bukan 'all'
-    const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'
-      ? baseQuery.eq('category', currentCategory.value)
-      : baseQuery
-
-    // Apply pagination dan ordering
-    const { data, error: fetchError, count } = await query
-      .order('created_at', { ascending: false })
-      .range(
-        (currentPage.value - 1) * pageSize,
-        currentPage.value * pageSize - 1
-      )
-
-    if (fetchError) throw fetchError
-
-    marketsList.value = data as Market[] || []
-    totalItems.value = count || 0
-    totalPages.value = Math.ceil(totalItems.value / pageSize)
-  } catch (err: any) {
-    error.value = err.message || 'Terjadi kesalahan saat memuat data'
-    console.error('Error fetching markets:', err)
-  } finally {
-    loading.value = false
+  interface Category {
+    id?: string
+    name: string
+    value?: string
   }
-}
 
-// SSR-friendly data fetch on first load
-await useAsyncData('markets', fetchMarkets)
+  // Supabase client
+  const { supabase } = useSupabase()
 
-// Gunakan watchEffect untuk reaktivitas yang lebih efisien
-watchEffect(() => {
-  fetchMarkets()
-})
+  // Data utama
+  const marketsList = ref<Market[]>([])
+  const error = ref<string | null>(null)
+  const loading = ref(true)
 
-// Computed untuk status
-const isLoading = computed(() => loading.value)
-const hasError = computed(() => !!error.value)
-const hasData = computed(() => marketsList.value.length > 0)
-const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
+  // Filter & pagination
+  const currentCategory = ref('all')
+  const currentPage = ref(1)
+  const pageSize = 12
+  const totalPages = ref(1)
+  const totalItems = ref(0)
+  const categories = ref<Category[]>([])
 
-// Handler untuk category change
-const handleCategoryChange = (category: string) => {
-  // Reset ke halaman 1 saat kategori berubah
-  currentCategory.value = category
-  currentPage.value = 1
-}
+  // Ambil kategori dari tabel 'category-market'
+  const { data: categoriesData } = await useAsyncData('market-categories', async () => {
+    try {
+      const { data, error: catError } = await supabase
+        .from('category_markets')
+        .select('name')
+        .order('name', { ascending: true })
 
-// Handler untuk pagination change
-const handlePageChange = (page: number) => {
-  currentPage.value = page
-}
+      if (catError) throw catError
+      
+      return data as Category[]
+    } catch (err) {
+      console.error('Error fetching categories:', err)
+      return []
+    }
+  })
+
+  // Set categories setelah data dimuat
+  if (categoriesData.value) {
+    categories.value = categoriesData.value.map(cat => ({
+      name: cat.name,
+      value: cat.name
+    }))
+  }
+
+  // Fungsi fetch data yang dioptimasi
+  const fetchMarkets = async () => {
+    loading.value = true
+    error.value = null
+
+    try {
+      // Build query dengan method chaining yang lebih efisien
+      const baseQuery = supabase
+        .from('markets')
+        .select('*', { count: 'exact' })
+        .is('deleted_at', null)
+        .is('archived_at', null)
+        .eq('status', 'Approved')
+
+      // Apply category filter jika bukan 'all'
+      const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'
+        ? baseQuery.eq('category', currentCategory.value)
+        : baseQuery
+
+      // Apply pagination dan ordering
+      const { data, error: fetchError, count } = await query
+        .order('created_at', { ascending: false })
+        .range(
+          (currentPage.value - 1) * pageSize,
+          currentPage.value * pageSize - 1
+        )
+
+      if (fetchError) throw fetchError
+
+      marketsList.value = data as Market[] || []
+      totalItems.value = count || 0
+      totalPages.value = Math.ceil(totalItems.value / pageSize)
+    } catch (err: any) {
+      error.value = err.message || 'Terjadi kesalahan saat memuat data'
+      console.error('Error fetching markets:', err)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // SSR-friendly data fetch on first load
+  await useAsyncData('markets', fetchMarkets)
+
+  // Gunakan watchEffect untuk reaktivitas yang lebih efisien
+  watchEffect(() => {
+    fetchMarkets()
+  })
+
+  // Computed untuk status
+  const isLoading = computed(() => loading.value)
+  const hasError = computed(() => !!error.value)
+  const hasData = computed(() => marketsList.value.length > 0)
+  const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
+
+  // Handler untuk category change
+  const handleCategoryChange = (category: string) => {
+    // Reset ke halaman 1 saat kategori berubah
+    currentCategory.value = category
+    currentPage.value = 1
+  }
+
+  // Handler untuk pagination change
+  const handlePageChange = (page: number) => {
+    currentPage.value = page
+  }
 </script>
 
 <template>
-  <div class="markets-page container mx-auto px-4 py-14">
+  <div class="markets-page container mx-auto px-4 py-12">
     <!-- Pasar Section Header -->
     <div class="mx-auto mb-6 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
-        <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-        </svg>
+        <UIcon name="i-lucide-shopping-bag" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Marketplace Petani Terpercaya</span>
       </div>
       

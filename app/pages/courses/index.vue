@@ -199,7 +199,7 @@ const handlePageChange = (page: number) => {
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Pengembangan Kemampuan Pertanian</span>
       </div>
       
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent py-2">
         Pengumuman Course & Pelatihan
       </h2>
       

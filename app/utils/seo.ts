@@ -17,6 +17,7 @@ export interface SEOMetaOptions {
     ogType?: OgType
     canonicalUrl?: string
     author?: string
+    publisher?: string
     robots?: string
     locale?: string
 }
@@ -34,6 +35,7 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
         ogType = 'website',
         canonicalUrl,
         author = siteMeta.author,
+        publisher = siteMeta.publisher,
         robots = 'index, follow',
         locale = 'id_ID',
     } = options
@@ -69,6 +71,7 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
         description: fullDescription,
         keywords: combinedKeywords.join(', '),
         author,
+        publisher,
         robots,
         charset: 'utf-8',
         viewport: 'width=device-width, initial-scale=1',
@@ -97,80 +100,80 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
 export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting') => {
     const pageMetaConfig: Record<string, SEOMetaOptions> = {
         home: {
-            title: 'Juru Tani Reborn | Solusi Pertanian Modern & Digital',
-            description: 'Platform inovatif dari Politeknik Pembangunan Pertanian Yogyakarta Magelang yang mendukung petani lokal dengan teknologi digital untuk pertanian berkelanjutan di Indonesia.',
+            title: 'Juru Tani | Solusi Pertanian Digital',
+            description: 'Platform pertanian digital dari Polbangtan Yogyakarta-Magelang untuk mendukung petani lokal menuju era pertanian modern.',
             keywords: ['juru tani', 'pertanian digital', 'inovasi pertanian', 'polbangtan yogyakarta', 'petani indonesia', 'teknologi pertanian', 'penyuluhan digital'],
             ogType: 'website',
         },
         news: {
-            title: 'Berita Terbaru',
-            description: 'Baca berita pertanian terkini dari Juru Tani. Inovasi, kegiatan petani, dan informasi dari Politeknik Pembangunan Pertanian (Polbangtan) Yogyakarta Magelang.',
+            title: 'Berita Pertanian Terkini',
+            description: 'Berita pertanian terkini dan inovasi dari Polbangtan Yogyakarta-Magelang untuk petani Indonesia.',
             keywords: ['berita pertanian', 'berita tani', 'inovasi pertanian terbaru', 'kabar tani', 'berita agribisnis'],
             ogType: 'website',
         },
         courses: {
-            title: 'Kursus dan Pelatihan',
-            description: 'Temukan kursus dan pelatihan terbaru untuk meningkatkan keterampilan pertanian Anda. Belajar dari para ahli dan praktisi pertanian bersama Juru Tani.',
+            title: 'Kursus Pertanian Online',
+            description: 'Kursus dan pelatihan pertanian dari para ahli untuk meningkatkan keterampilan dan keahlian Anda.',
             keywords: ['kursus pertanian', 'pelatihan pertanian', 'belajar pertanian', 'course pertanian', 'edukasi petani', 'pelatihan digital'],
             ogType: 'website',
         },
         discussions: {
-            title: 'Forum Diskusi',
-            description: 'Bergabung dengan komunitas petani di forum diskusi Juru Tani. Tanya jawab, berbagi pengalaman, dan dapatkan solusi untuk tantangan pertanian Anda.',
+            title: 'Forum Diskusi Pertanian',
+            description: 'Forum diskusi komunitas petani untuk tanya jawab, berbagi pengalaman, dan solusi pertanian.',
             keywords: ['forum diskusi pertanian', 'diskusi tani', 'komunitas petani', 'tanya jawab pertanian', 'forum petani', 'forum agribisnis'],
             ogType: 'website',
         },
         educations: {
-            title: 'Edukasi dan Artikel',
-            description: 'Kumpulan materi edukasi dan panduan pertanian praktis dari Juru Tani. Temukan artikel, tutorial, dan tips terbaru untuk membantu kegiatan pertanian Anda.',
+            title: 'Edukasi & Artikel Pertanian',
+            description: 'Materi edukasi dan artikel pertanian praktis dengan tutorial dan tips berguna untuk petani.',
             keywords: ['edukasi pertanian', 'artikel pertanian', 'panduan pertanian', 'tutorial pertanian', 'tips bertani', 'materi edukasi pertanian'],
             ogType: 'website',
         },
         markets: {
-            title: 'Pasar Tani',
-            description: 'Platform marketplace pertanian Juru Tani untuk jual beli produk pertanian secara langsung. Temukan supplier pupuk, bibit, dan produk pertanian lainnya.',
+            title: 'Pasar Tani Online',
+            description: 'Marketplace pertanian untuk jual beli produk, pupuk, bibit, dan perlengkapan pertanian online.',
             keywords: ['pasar tani', 'marketplace pertanian', 'jual beli pertanian', 'toko online pertanian', 'supplier pertanian', 'produk pertanian'],
             ogType: 'website',
         },
         tools: {
-            title: 'Alat Pertanian',
-            description: 'Temukan rekomendasi alat pertanian, cara pemakaian, dan tips perawatan untuk petani modern. Gunakan kalkulator dan tools berguna untuk pertanian Anda.',
+            title: 'Tools & Kalkulator Pertanian',
+            description: 'Rekomendasi alat pertanian, tips perawatan, kalkulator, dan tools berguna untuk petani modern.',
             keywords: ['alat pertanian', 'tools pertanian', 'kalkulator pertanian', 'alat bantu tani', 'peralatan pertanian', 'aplikasi pertanian'],
             ogType: 'website',
         },
         about: {
-            title: 'Tentang Kami',
-            description: 'Mengenal Juru Tani Reborn, inovasi digital dari Politeknik Pembangunan Pertanian Yogyakarta Magelang untuk memajukan pertanian Indonesia menuju era digital.',
+            title: 'Tentang Juru Tani',
+            description: 'Juru Tani Reborn: inovasi digital Polbangtan untuk mengembangkan pertanian Indonesia menuju era digital.',
             keywords: ['tentang juru tani', 'visi misi juru tani', 'polbangtan yogyakarta', 'polbangtan magelang', 'tentang pertanian digital'],
             ogType: 'website',
         },
         contact: {
             title: 'Hubungi Kami',
-            description: 'Hubungi tim Juru Tani untuk informasi lebih lanjut atau pertanyaan seputar platform pertanian digital kami. Kami siap membantu komunitas pertanian Indonesia.',
+            description: 'Hubungi tim Juru Tani untuk informasi atau pertanyaan tentang platform pertanian digital kami.',
             keywords: ['hubungi juru tani', 'kontak juru tani', 'layanan pelanggan', 'customer service', 'dukungan juru tani'],
             ogType: 'website',
         },
         help: {
-            title: 'Bantuan dan FAQ',
-            description: 'Temukan jawaban atas pertanyaan umum tentang Juru Tani. Panduan lengkap dan bantuan teknis untuk menggunakan platform dengan optimal.',
+            title: 'Bantuan & FAQ',
+            description: 'FAQ dan panduan lengkap untuk menggunakan platform Juru Tani secara optimal dengan bantuan teknis.',
             keywords: ['faq juru tani', 'bantuan juru tani', 'pertanyaan umum', 'cara menggunakan', 'panduan pengguna', 'tips juru tani'],
             ogType: 'website',
         },
         terms: {
-            title: 'Syarat dan Ketentuan',
+            title: 'Syarat & Ketentuan',
             description: 'Baca syarat dan ketentuan penggunaan platform Juru Tani. Perjanjian pengguna dan kebijakan layanan untuk semua pengguna.',
             keywords: ['syarat ketentuan', 'terms of service', 'kebijakan juru tani', 'perjanjian pengguna'],
             ogType: 'website',
         },
         privacy: {
             title: 'Kebijakan Privasi',
-            description: 'Pelajari bagaimana Juru Tani melindungi data pribadi Anda. Kebijakan privasi lengkap dan komitmen kami terhadap keamanan data pengguna.',
+            description: 'Kebijakan privasi Juru Tani: komitmen kami melindungi data pribadi dan keamanan pengguna platform.',
             keywords: ['kebijakan privasi', 'privacy policy', 'keamanan data', 'perlindungan data pribadi'],
             ogType: 'website',
         },
         security: {
             title: 'Keamanan Akun',
-            description: 'Kelola keamanan akun Juru Tani Anda dengan mudah. Fitur keamanan lengkap untuk melindungi data pribadi dan transaksi Anda.',
+            description: 'Kelola keamanan akun Juru Tani dengan fitur keamanan lengkap untuk melindungi data pribadi.',
             keywords: ['keamanan akun', 'keamanan data', 'proteksi akun', 'keamanan login', 'verifikasi identitas'],
             ogType: 'website',
         },
@@ -183,13 +186,13 @@ export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussi
         },
         history: {
             title: 'Riwayat Aktivitas',
-            description: 'Lihat riwayat lengkap aktivitas Anda di Juru Tani. Pantau transaksi, diskusi, dan interaksi Anda di platform.',
+            description: 'Lihat riwayat lengkap aktivitas, transaksi, diskusi, dan interaksi Anda di platform Juru Tani.',
             keywords: ['riwayat aktivitas', 'riwayat transaksi', 'history', 'log aktivitas'],
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
         setting: {
-            title: 'Pengaturan',
+            title: 'Pengaturan Akun',
             description: 'Atur preferensi dan pengaturan akun Anda di Juru Tani. Kustomisasi pengalaman pengguna sesuai kebutuhan.',
             keywords: ['pengaturan akun', 'preferences', 'settings', 'konfigurasi'],
             ogType: 'website',
@@ -227,6 +230,7 @@ export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discuss
         description: seoMeta.description,
         keywords: seoMeta.keywords,
         author: seoMeta.author,
+        publisher: seoMeta.publisher,
         robots: seoMeta.robots,
         ogTitle: seoMeta.ogTitle,
         ogDescription: seoMeta.ogDescription,
@@ -294,6 +298,7 @@ export const useSeoDetail = (options: {
         description: fullDescription,
         keywords: combinedKeywords.join(', '),
         author: siteMeta.author,
+        publisher: siteMeta.publisher,
         robots: 'index, follow',
         ogTitle: fullTitle,
         ogDescription: fullDescription,

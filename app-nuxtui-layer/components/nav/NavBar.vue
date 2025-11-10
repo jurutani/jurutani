@@ -48,9 +48,9 @@ onUnmounted(() => {
   >
     <div class="flex h-full items-center justify-between navbar-grid pt-4 lg:pb-4 rounded-2xl">
       <div style="grid-area: logo" class="flex justify-center items-center">
-         <ULink data-pg-name="Logo" class="flex items-center sm:flex-row" to="/">
-            <img src="/jurutani.png" alt="Logo" class="h-10" >
-          </ULink>
+         <NuxtLink data-pg-name="Logo" class="flex items-center sm:flex-row" to="/">
+            <NuxtImg src="/jurutani.png" alt="Logo" class="h-10" />
+          </NuxtLink>
       </div>
       
       <div

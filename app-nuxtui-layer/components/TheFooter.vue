@@ -78,7 +78,7 @@
               </div>
               <div class="flex items-center">
                 <UIcon name="i-mdi-phone" class="text-green-600 dark:text-green-400 mr-2" />
-                <p class="text-sm">+62 815-7552-5260</p>
+                <p class="text-sm">+62 856-6900-0010</p>
               </div>
               <div class="flex items-center">
                 <UIcon name="i-mdi-email" class="text-green-600 dark:text-green-400 mr-2" />
@@ -98,87 +98,93 @@
         <h4 class="text-center font-medium mb-6">Temukan Kami</h4>
         <div class="flex flex-wrap justify-center gap-4">
           <!-- WhatsApp -->
-          <a 
-            href="https://api.whatsapp.com/send/?phone=6281575525260&text=Halo%2C+saya+ingin+bertanya...&type=phone_number&app_absent=0" 
+            <NuxtLink
+            to="https://api.whatsapp.com/send/?phone=625669000010&text=Halo%2C+saya+ingin+bertanya...&type=phone_number&app_absent=0"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="WhatsApp"
             class="social-icon-container"
-          >
+            >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
               <UIcon name="i-mdi-whatsapp" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
-          </a>
-          
-          <!-- TikTok -->
-          <a 
-            href="https://www.tiktok.com/@juru_tani" 
+            </NuxtLink>
+            
+            <!-- TikTok -->
+            <NuxtLink
+            to="https://www.tiktok.com/@juru_tani"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="TikTok"
             class="social-icon-container"
-          >
+            >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
               <UIcon name="i-ic-baseline-tiktok" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
-          </a>
-          
-          <!-- Email/Gmail -->
-          <a 
-            href="mailto:si.jurutani@gmail.com" 
+            </NuxtLink>
+            
+            <!-- Email/Gmail -->
+            <NuxtLink
+            to="mailto:si.jurutani@gmail.com"
             aria-label="Email"
             class="social-icon-container"
-          >
+            rel="noopener noreferrer"
+            >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
               <UIcon name="i-mdi-gmail" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
-          </a>
-          
-          <!-- Instagram -->
-          <a 
-            href="https://www.instagram.com/jurutani_" 
+            </NuxtLink>
+            
+            <!-- Instagram -->
+            <NuxtLink
+            to="https://www.instagram.com/jurutani_"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="Instagram"
             class="social-icon-container"
-          >
+            >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
               <UIcon name="i-mdi-instagram" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
-          </a>
-          
-          <!-- YouTube -->
-          <a 
-            href="https://www.youtube.com/@Juru_Tani" 
+            </NuxtLink>
+            
+            <!-- YouTube -->
+            <NuxtLink
+            to="https://www.youtube.com/@Juru_Tani"
             target="_blank"
+            rel="noopener noreferrer"
             aria-label="YouTube"
             class="social-icon-container"
-          >
+            >
             <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
               <UIcon name="i-mdi-youtube" class="text-2xl text-green-600 dark:text-green-400" />
             </div>
-          </a>
-        </div>
-      </div>
-      
-      <!-- Bottom Divider & Copyright -->
-      <div class="pt-6 border-t border-green-200/30 dark:border-green-700/30">
-        <div class="flex flex-col md:flex-row justify-between items-center text-sm text-green-700/70 dark:text-green-300/70">
-          <p>© {{ new Date().getFullYear() }} Juru Tani. Semua Hak Dilindungi.</p>
-          <div class="flex space-x-4 mt-3 md:mt-0">
+            </NuxtLink>
+          </div>
+          </div>
+          
+          <!-- Bottom Divider & Copyright -->
+          <div class="pt-6 border-t border-green-200/30 dark:border-green-700/30">
+          <div class="flex flex-col md:flex-row justify-between items-center text-sm text-green-700/70 dark:text-green-300/70">
+            <p>© {{ new Date().getFullYear() }} Juru Tani. Semua Hak Dilindungi.</p>
+            <div class="flex space-x-4 mt-3 md:mt-0">
             <NuxtLink to="/privacy-policy" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">Kebijakan Privasi</NuxtLink>
             <NuxtLink to="/terms" class="hover:text-green-600 dark:hover:text-green-400 transition-colors">Syarat & Ketentuan</NuxtLink>
+            </div>
           </div>
-        </div>
-        
-        <!-- Powered by section -->
-        <div class="mt-6 pt-4 border-t border-green-200/20 dark:border-green-700/20 text-center">
-          <p class="text-xs text-green-600/60 dark:text-green-400/60">
+          
+          <!-- Powered by section -->
+          <div class="mt-6 pt-4 border-t border-green-200/20 dark:border-green-700/20 text-center">
+            <p class="text-xs text-green-600/60 dark:text-green-400/60">
             Powered by 
-            <a 
-              href="https://kairav-portfolio.vercel.app/" 
+            <NuxtLink
+              to="https://kairav-portfolio.vercel.app/"
               target="_blank"
+              rel="noopener noreferrer"
               class="font-medium hover:text-green-600 dark:hover:text-green-400 transition-colors underline decoration-dotted"
             >
               Politeknik Pembangunan Pertanian Yogyakarta Magelang
-            </a>
+            </NuxtLink>
           </p>
         </div>
       </div>

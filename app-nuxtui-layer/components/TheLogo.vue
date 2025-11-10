@@ -3,8 +3,8 @@
   const { title } = siteMeta
 </script>
 <template>
-  <ULink data-pg-name="Logo" class="flex items-center sm:flex-row" to="/">
-    <img src="/LOGO02.png" alt="Logo" class="h-10" >
-  </ULink>
+  <NuxtLink data-pg-name="Logo" class="flex items-center sm:flex-row" to="/">
+    <NuxtImg src="/LOGO02.png" alt="Logo" class="h-10" />
+  </NuxtLink>
 </template>
 <style scoped></style>

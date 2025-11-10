@@ -436,13 +436,13 @@ watch(() => meeting.value, (newVal) => {
               Link Course
             </h2>
             <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-              <a 
-                :href="meeting.link" 
-                target="_blank" 
+              <NuxtLink
+                :to="meeting.link"
+                target="_blank"
                 class="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium break-all flex-1 bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border border-green-200 dark:border-green-700 hover:border-green-300 dark:hover:border-green-600 transition-colors shadow-sm"
               >
                 {{ meeting.link }}
-              </a>
+              </NuxtLink>
               <UButton
                 color="green"
                 variant="solid"

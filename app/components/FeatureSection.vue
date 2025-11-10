@@ -56,9 +56,7 @@ const features = [
        <div class="mx-auto mb-6 max-w-4xl text-center">
           <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
             <!-- Ikon Obeng -->
-            <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21.25 2.75l-3.5 3.5-1.5-1.5-3 3 3 3 3-3-1.5-1.5 3.5-3.5-1-1zm-6 7l-11 11H2v-2.25L13 7.75l2.25 2.25z" />
-            </svg>
+            <UIcon name="i-lucide-pencil" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Fitur Terbaru</span>
           </div>
 

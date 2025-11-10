@@ -46,22 +46,34 @@ const availableDistricts = computed(() => {
   }));
   
   // Sort by province first, then by district name
-  return districtOptions.sort((a, b) => {
+  const sortedOptions = districtOptions.sort((a, b) => {
     if (a.province !== b.province) {
       return a.province.localeCompare(b.province);
     }
     return a.value.localeCompare(b.value);
   });
+  
+  // Add "All districts" option at the beginning
+  return [
+    { value: '', label: 'Semua Kabupaten/Kota', province: '' },
+    ...sortedOptions
+  ];
 });
 
 const filteredInstructors = computed(() => {
+  // Return empty array while loading
+  if (loading.value || !instructors.value) {
+    return [];
+  }
+  
   return instructors.value.filter(instructor => {
-    // District filter - only filter by district
+    // District filter - only filter by district if selectedDistrict is not empty
     const matchesDistrict = !selectedDistrict.value || instructor.district === selectedDistrict.value;
     
-    // Search filter
+    // Search filter - safely check if full_name exists
+    const fullName = instructor.profiles?.full_name || '';
     const matchesSearch = !searchQuery.value || 
-      instructor.profiles?.full_name?.toLowerCase().includes(searchQuery.value.toLowerCase());
+      fullName.toLowerCase().includes(searchQuery.value.toLowerCase());
     
     return matchesDistrict && matchesSearch;
   });
@@ -268,7 +280,6 @@ useHead({
                   :options="availableDistricts"
                   option-attribute="label"
                   value-attribute="value"
-                  placeholder="Semua Kabupaten/Kota"
                   class="w-full"
                 />
               </div>

@@ -66,12 +66,15 @@ onMounted(() => {
             </div>
             <div class="ml-3">
               <p class="text-red-800 dark:text-red-200 font-medium">Terjadi kesalahan saat memuat profil pengguna</p>
-              <button 
-                class="mt-2 bg-red-100 dark:bg-red-900/50 hover:bg-red-200 dark:hover:bg-red-900/70 text-red-800 dark:text-red-200 px-3 py-1 rounded text-sm transition-colors duration-200 font-medium"
+              <UButton
+                color="red"
+                variant="ghost"
+                size="sm"
+                class="mt-2"
                 @click="fetchUserData"
               >
                 Coba lagi
-              </button>
+              </UButton>
             </div>
           </div>
         </div>
@@ -86,12 +89,12 @@ onMounted(() => {
               <!-- Profile Image -->
               <div class="relative mb-4 md:mb-0 md:mr-6">
                 <div class="w-32 h-32 rounded-full overflow-hidden bg-white dark:bg-gray-800 p-1 shadow-lg dark:shadow-black/50">
-                  <img 
+                  <NuxtImg 
                     :src="userData.avatar_url || 'profile.png'" 
                     :alt="userData.full_name || 'User'"
                     class="w-full h-full object-cover rounded-full"
                     @error="handleImageError"
-                  >
+                  />
                 </div>
                 <!-- Role Badge -->
                 <div class="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full px-3 py-1 shadow-md dark:shadow-black/50 transition-all duration-200">
@@ -177,16 +180,16 @@ onMounted(() => {
                   <div>
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Website</p>
                     <div v-if="userData.website">
-                      <a 
+                      <NuxtLink
                         v-if="isValidUrl(userData.website)"
-                        :href="userData.website" 
-                        target="_blank" 
+                        :to="userData.website"
+                        target="_blank"
                         rel="noopener noreferrer"
                         class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 hover:underline break-words inline-flex items-center transition-colors duration-200"
                       >
                         {{ userData.website }}
                         <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 ml-1" />
-                      </a>
+                      </NuxtLink>
                       <span v-else class="text-gray-800 dark:text-gray-200 break-words">{{ userData.website }}</span>
                     </div>
                     <p v-else class="text-gray-800 dark:text-gray-200">-</p>
@@ -211,13 +214,15 @@ onMounted(() => {
 
             <!-- Action Buttons -->
             <div class="flex justify-center pt-6 border-t border-gray-200 dark:border-gray-700 transition-colors duration-200">
-              <button 
-                class="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl dark:shadow-green-900/50"
+              <UButton
+                color="green"
+                variant="solid"
+                size="lg"
+                icon="i-lucide-pencil"
                 @click="toggleEditMode"
               >
-                <UIcon name="i-heroicons-pencil-square" class="w-5 h-5 mr-2 inline" />
                 Edit Profil
-              </button>
+              </UButton>
             </div>
           </div>
         </div>

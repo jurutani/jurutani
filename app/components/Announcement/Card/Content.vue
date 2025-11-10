@@ -233,7 +233,7 @@ const organizationDisplay = computed(() => {
       <!-- Action Button -->
       <div class="mt-auto flex gap-2">
         <!-- Detail Button -->
-        <router-link
+        <NuxtLink
           :to="`/courses/${announcement.id}`"
           class="flex-1 group/button relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-sm font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25"
         >
@@ -242,7 +242,7 @@ const organizationDisplay = computed(() => {
             <span class="mr-2">Lihat Detail</span>
             <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover/button:translate-x-1" />
           </div>
-        </router-link>
+        </NuxtLink>
 
         <!-- External Link Button (if link exists) -->
         <a 

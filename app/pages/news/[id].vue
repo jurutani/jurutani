@@ -229,16 +229,17 @@ watch(() => news.value, (newVal) => {
       <div class="shadow-sm">
         <div class="container mx-auto px-4 py-4">
           <div class="flex items-center justify-between">
-            <button 
-              class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+            <UButton
+              color="green"
+              variant="ghost"
+              icon="i-lucide-arrow-left"
               @click="goBack"
             >
-              <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
-              <span class="font-medium">Kembali ke Berita</span>
-            </button>
+              Kembali ke Berita
+            </UButton>
             
             <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-              <UIcon name="i-heroicons-newspaper" class="w-5 h-5" />
+              <UIcon name="i-lucide-newspaper" class="w-5 h-5" />
               <span class="font-semibold">Juru Tani News</span>
             </div>
           </div>
@@ -408,9 +409,7 @@ watch(() => news.value, (newVal) => {
               class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
             >
               <span>Lihat Semua Berita</span>
-              <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              <UIcon name="i-lucide-arrow-right" class="w-4 h-4 transition-transform" />
             </NuxtLink>
           </div>
         </div>

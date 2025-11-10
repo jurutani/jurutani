@@ -415,7 +415,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               color="white"
               variant="outline"
               :ui="{ 
-                base: 'rounded-lg p-2 w-full', 
+                base: 'rounded-lg p-2', 
                 color: {
                   white: {
                     solid: 'bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600'

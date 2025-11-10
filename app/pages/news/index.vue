@@ -1,137 +1,137 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
-import { useSupabase } from '~/composables/useSupabase'
-import { CreateButton } from '#components'
-import { useAsyncData } from '#app'
+  import { ref, computed, watchEffect } from 'vue'
+  import { useSupabase } from '~/composables/useSupabase'
+  import { CreateButton } from '#components'
+  import { useAsyncData } from '#app'
 
-definePageMeta({
-  layout: 'default',
-})
+  definePageMeta({
+    layout: 'default',
+  })
 
-// SEO Optimization
-useSeoOptimized('news')
+  // SEO Optimization
+  useSeoOptimized('news')
 
-// Types
-interface News {
-  id: string
-  category: string
-  status_news: string
-  created_at: string
-  title?: string
-  content?: string
-}
-
-interface Category {
-  id?: string
-  name: string
-  value?: string
-}
-
-// Supabase client
-const { supabase } = useSupabase()
-
-// Data utama
-const newsList = ref<News[]>([])
-const error = ref<string | null>(null)
-const loading = ref(true)
-
-// Filter & pagination
-const currentCategory = ref('all')
-const currentPage = ref(1)
-const pageSize = 9
-const totalPages = ref(1)
-const totalItems = ref(0)
-const categories = ref<Category[]>([])
-
-// Ambil kategori dari tabel 'category_news'
-const { data: categoriesData } = await useAsyncData('news-categories', async () => {
-  try {
-    const { data, error: catError } = await supabase
-      .from('category_news')
-      .select('name')
-      .order('name', { ascending: true })
-
-    if (catError) throw catError
-    
-    return data as Category[]
-  } catch (err) {
-    console.error('Error fetching news categories:', err)
-    return []
+  // Types
+  interface News {
+    id: string
+    category: string
+    status_news: string
+    created_at: string
+    title?: string
+    content?: string
   }
-})
 
-// Set categories setelah data dimuat
-if (categoriesData.value) {
-  categories.value = categoriesData.value.map(cat => ({
-    name: cat.name,
-    value: cat.name
-  }))
-}
-
-// Fungsi fetch data yang dioptimasi
-const fetchNews = async () => {
-  loading.value = true
-  error.value = null
-
-  try {
-    // Build query dengan method chaining yang lebih efisien
-    const baseQuery = supabase
-      .from('news')
-      .select('*', { count: 'exact' })
-      .eq('status_news', 'approved')
-      .is('deleted_at', null)
-
-    // Apply category filter jika bukan 'all'
-    const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'
-      ? baseQuery.eq('category', currentCategory.value)
-      : baseQuery
-
-    // Apply pagination dan ordering
-    const { data, error: fetchError, count } = await query
-      .order('created_at', { ascending: false })
-      .range(
-        (currentPage.value - 1) * pageSize,
-        currentPage.value * pageSize - 1
-      )
-
-    if (fetchError) throw fetchError
-
-    newsList.value = data as News[] || []
-    totalItems.value = count || 0
-    totalPages.value = Math.ceil(totalItems.value / pageSize)
-  } catch (err: any) {
-    error.value = err.message || 'Terjadi kesalahan saat memuat berita'
-    console.error('Error fetching news:', err)
-  } finally {
-    loading.value = false
+  interface Category {
+    id?: string
+    name: string
+    value?: string
   }
-}
 
-// SSR-friendly data fetch on first load
-await useAsyncData('news', fetchNews)
+  // Supabase client
+  const { supabase } = useSupabase()
 
-// Gunakan watchEffect untuk reaktivitas yang lebih efisien
-watchEffect(() => {
-  fetchNews()
-})
+  // Data utama
+  const newsList = ref<News[]>([])
+  const error = ref<string | null>(null)
+  const loading = ref(true)
 
-// Computed untuk status
-const isLoading = computed(() => loading.value)
-const hasError = computed(() => !!error.value)
-const hasData = computed(() => newsList.value.length > 0)
-const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
+  // Filter & pagination
+  const currentCategory = ref('all')
+  const currentPage = ref(1)
+  const pageSize = 9
+  const totalPages = ref(1)
+  const totalItems = ref(0)
+  const categories = ref<Category[]>([])
 
-// Handler untuk category change
-const handleCategoryChange = (category: string) => {
-  // Reset ke halaman 1 saat kategori berubah
-  currentCategory.value = category
-  currentPage.value = 1
-}
+  // Ambil kategori dari tabel 'category_news'
+  const { data: categoriesData } = await useAsyncData('news-categories', async () => {
+    try {
+      const { data, error: catError } = await supabase
+        .from('category_news')
+        .select('name')
+        .order('name', { ascending: true })
 
-// Handler untuk pagination change
-const handlePageChange = (page: number) => {
-  currentPage.value = page
-}
+      if (catError) throw catError
+      
+      return data as Category[]
+    } catch (err) {
+      console.error('Error fetching news categories:', err)
+      return []
+    }
+  })
+
+  // Set categories setelah data dimuat
+  if (categoriesData.value) {
+    categories.value = categoriesData.value.map(cat => ({
+      name: cat.name,
+      value: cat.name
+    }))
+  }
+
+  // Fungsi fetch data yang dioptimasi
+  const fetchNews = async () => {
+    loading.value = true
+    error.value = null
+
+    try {
+      // Build query dengan method chaining yang lebih efisien
+      const baseQuery = supabase
+        .from('news')
+        .select('*', { count: 'exact' })
+        .eq('status_news', 'approved')
+        .is('deleted_at', null)
+
+      // Apply category filter jika bukan 'all'
+      const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'
+        ? baseQuery.eq('category', currentCategory.value)
+        : baseQuery
+
+      // Apply pagination dan ordering
+      const { data, error: fetchError, count } = await query
+        .order('created_at', { ascending: false })
+        .range(
+          (currentPage.value - 1) * pageSize,
+          currentPage.value * pageSize - 1
+        )
+
+      if (fetchError) throw fetchError
+
+      newsList.value = data as News[] || []
+      totalItems.value = count || 0
+      totalPages.value = Math.ceil(totalItems.value / pageSize)
+    } catch (err: any) {
+      error.value = err.message || 'Terjadi kesalahan saat memuat berita'
+      console.error('Error fetching news:', err)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // SSR-friendly data fetch on first load
+  await useAsyncData('news', fetchNews)
+
+  // Gunakan watchEffect untuk reaktivitas yang lebih efisien
+  watchEffect(() => {
+    fetchNews()
+  })
+
+  // Computed untuk status
+  const isLoading = computed(() => loading.value)
+  const hasError = computed(() => !!error.value)
+  const hasData = computed(() => newsList.value.length > 0)
+  const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
+
+  // Handler untuk category change
+  const handleCategoryChange = (category: string) => {
+    // Reset ke halaman 1 saat kategori berubah
+    currentCategory.value = category
+    currentPage.value = 1
+  }
+
+  // Handler untuk pagination change
+  const handlePageChange = (page: number) => {
+    currentPage.value = page
+  }
 </script>
 
 <template>

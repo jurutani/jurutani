@@ -108,7 +108,8 @@ const downloadFile = (file) => {
 
 const viewDetails = () => {
   // Navigate to course details page
-  window.location.href = `/educations/${props.course.id}`;
+  // gunakan navigateTo (Nuxt)
+  navigateTo(`/educations/${props.course.id}`)
 };
 
 onMounted(async () => {

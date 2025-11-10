@@ -480,38 +480,38 @@ watch(() => product.value, (newVal) => {
                   Tersedia di Marketplace
                 </h2>
                 <div class="flex flex-wrap gap-3">
-                  <a 
-                    v-if="hasShopeeLink" 
-                    :href="product.links!.shopee_link" 
-                    target="_blank" 
+                  <NuxtLink
+                    v-if="hasShopeeLink"
+                    :to="product.links?.shopee_link"
+                    target="_blank"
                     rel="noopener noreferrer"
                     class="inline-flex items-center px-4 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-500 transition-all transform hover:scale-105 shadow-sm font-medium"
                   >
                     <UIcon name="i-lucide-shopping-bag" class="w-4 h-4 mr-2" />
                     Shopee
-                  </a>
-                  
-                  <a 
-                    v-if="hasTokopediaLink" 
-                    :href="product.links!.tokopedia_link" 
-                    target="_blank" 
+                  </NuxtLink>
+
+                  <NuxtLink
+                    v-if="hasTokopediaLink"
+                    :to="product.links?.tokopedia_link"
+                    target="_blank"
                     rel="noopener noreferrer"
                     class="inline-flex items-center px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-all transform hover:scale-105 shadow-sm font-medium"
                   >
                     <UIcon name="i-lucide-store" class="w-4 h-4 mr-2" />
                     Tokopedia
-                  </a>
-                  
-                  <a 
-                    v-if="hasTiktokLink" 
-                    :href="product.links!.tiktok_link" 
-                    target="_blank" 
+                  </NuxtLink>
+
+                  <NuxtLink
+                    v-if="hasTiktokLink"
+                    :to="product.links?.tiktok_link"
+                    target="_blank"
                     rel="noopener noreferrer"
                     class="inline-flex items-center px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 transition-all transform hover:scale-105 shadow-sm font-medium"
                   >
                     <UIcon name="i-lucide-music" class="w-4 h-4 mr-2" />
                     TikTok Shop
-                  </a>
+                  </NuxtLink>
                 </div>
               </div>
               

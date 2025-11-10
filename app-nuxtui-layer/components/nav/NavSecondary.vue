@@ -73,10 +73,17 @@ const handleLogout = async () => {
   const result = await logout()
   if (result.success) {
     toastStore.success('Berhasil logout')
-    window.location.href = '/'
+    // clear local user state
+    user.value = null
+    currentUserId.value = null
+
+    // navigate home and force a full reload to refresh session/UI
+    await navigateTo('/')
+    window.location.reload()
   } else {
     toastStore.error('Gagal logout')
-    console.error('Logout failed:', result.error);}
+    console.error('Logout failed:', result.error);
+  }
 }
 </script>
 

@@ -20,19 +20,16 @@ const selectCategory = (category) => {
 <template>
   <div class="markets-filter">
     <div class="flex flex-wrap gap-2 justify-center">
-      <button
+      <UButton
         v-for="category in categories"
         :key="category"
-        :class="[
-          'px-4 py-2 rounded-full text-sm font-medium transition-colors',
-          currentCategory === category
-            ? 'bg-green-600 text-white'
-            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-        ]"
+        :color="currentCategory === category ? 'green' : 'gray'"
+        :variant="currentCategory === category ? 'solid' : 'soft'"
+        class="rounded-full text-sm font-medium"
         @click="selectCategory(category)"
       >
         {{ category === 'all' ? 'Semua Produk' : category }}
-      </button>
+      </UButton>
     </div>
   </div>
 </template>

@@ -286,12 +286,12 @@ const formatWebsiteUrl = (url: string) => {
       
       <div class="flex items-center">
         <div class="w-24 h-24 rounded-full overflow-hidden mr-4 bg-gray-100 dark:bg-gray-800 flex-shrink-0">
-          <img 
+          <NuxtImg 
             :src="currentAvatar" 
             alt="Avatar Preview"
             class="w-full h-full object-cover"
             @error="handleImageError"
-          >
+          />
         </div>
         
         <div class="flex flex-col">
@@ -303,20 +303,26 @@ const formatWebsiteUrl = (url: string) => {
             @change="handleImageSelect"
           >
           <div class="flex space-x-2">
-            <label 
-              for="avatar" 
-              class="cursor-pointer bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 px-3 py-2 rounded hover:bg-blue-200 dark:hover:bg-blue-900 transition-colors"
+            <UButton
+              color="blue"
+              variant="soft"
+              size="sm"
+              as="label"
+              for="avatar"
+              class="cursor-pointer"
             >
               Pilih Gambar
-            </label>
-            <button 
-              v-if="imagePreview" 
-              type="button" 
-              class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-3 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            </UButton>
+            <UButton
+              v-if="imagePreview"
+              color="gray"
+              variant="soft"
+              size="sm"
+              type="button"
               @click="resetImage"
             >
               Batal
-            </button>
+            </UButton>
           </div>
           <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
             Format: JPG, PNG, GIF. Maks. 2MB
@@ -443,25 +449,25 @@ const formatWebsiteUrl = (url: string) => {
 
     <!-- Buttons -->
     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors">
-      <button
+      <UButton
         type="button"
-        class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        color="gray"
+        variant="soft"
         :disabled="loading"
         @click="handleCancel"
       >
         Batal
-      </button>
-      <button
+      </UButton>
+      <UButton
         type="submit"
-        class="px-6 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 transition-colors disabled:opacity-50"
+        color="blue"
+        variant="solid"
+        :loading="loading"
         :disabled="loading || !isFormValid"
+        icon="i-lucide-save"
       >
-        <span v-if="loading" class="flex items-center">
-          <UIcon name="i-heroicons-arrow-path" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" />
-          Menyimpan...
-        </span>
-        <span v-else>Simpan Perubahan</span>
-      </button>
+        Simpan Perubahan
+      </UButton>
     </div>
   </form>
 </template>

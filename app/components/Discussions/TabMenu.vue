@@ -1,18 +1,15 @@
 <template>
     <div class="flex gap-2 overflow-x-auto">
-      <button
+      <UButton
         v-for="tab in tabs"
         :key="tab"
-        :class="[
-          'px-4 py-2 rounded-full whitespace-nowrap',
-          modelValue === tab
-            ? 'bg-green-600 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-green-100'
-        ]"
+        :variant="modelValue === tab ? 'solid' : 'outline'"
+        size="sm"
+        class="rounded-full whitespace-nowrap px-4 py-2"
         @click="() => emit('update:modelValue', tab)"
       >
         {{ tab }}
-      </button>
+      </UButton>
     </div>
   </template>
   
