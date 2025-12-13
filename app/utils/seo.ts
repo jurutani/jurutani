@@ -97,7 +97,7 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
  * Generate SEO meta dengan keyword yang sudah dioptimasi per halaman
  * Membuat struktur yang konsisten dan SEO-friendly
  */
-export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'statistics') => {
+export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting') => {
     const pageMetaConfig: Record<string, SEOMetaOptions> = {
         home: {
             title: 'Juru Tani | Solusi Pertanian Digital',
@@ -198,13 +198,6 @@ export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussi
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
-        statistics: {
-            title: 'Statistik Pengunjung',
-            description: 'Lihat statistik pengunjung dan analytics real-time dari Google Analytics untuk situs Juru Tani.',
-            keywords: ['statistik pengunjung', 'analytics', 'traffic', 'pengunjung website', 'google analytics'],
-            ogType: 'website',
-            robots: 'noindex, follow', // Private page
-        },
     }
 
     return generateSeoMeta(pageMetaConfig[pageType] || pageMetaConfig.home)
@@ -228,7 +221,7 @@ export const getOgImageUrl = (customImage?: string) => {
  * Hook untuk mengoptimalkan SEO meta di halaman
  * Usage: const seoMeta = useSeoOptimized('news')
  */
-export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'statistics') => {
+export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting') => {
     const seoMeta = getPageSeoMeta(pageType)
 
     // Auto-apply useSeoMeta
