@@ -71,7 +71,7 @@ const { data: categoriesData } = await useAsyncData('course-categories', async (
     
     return data as Category[]
   } catch (err) {
-    // console.error('Error fetching course categories:', err)
+    console.error('Error fetching course categories:', err)
     return []
   }
 })

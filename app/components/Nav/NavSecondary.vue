@@ -29,7 +29,7 @@ const fetchCurrentUser = async () => {
       .single()
 
     if (profileError || !profileData) {
-      // console.error('Error fetching profile:', profileError)
+      console.error('Error fetching profile:', profileError)
       user.value = {
         id: userData.id,
         email: userData.email,
@@ -49,7 +49,7 @@ const fetchCurrentUser = async () => {
     
     currentUserId.value = userData.id
   } catch (err) {
-    // console.error('Error fetching current user:', err)
+    console.error('Error fetching current user:', err)
     user.value = null
   } finally {
     isLoading.value = false
@@ -59,7 +59,7 @@ const fetchCurrentUser = async () => {
 // Handle image error
 const handleImageError = (event: Event) => {
   const target = event.target as HTMLImageElement
-  // console.error('Profile image failed to load:', target.src)
+  console.error('Profile image failed to load:', target.src)
   target.src = '/profile.png'
 }
 
@@ -90,7 +90,7 @@ const handleLogout = async () => {
     window.location.reload()
   } else {
     toastStore.error('Gagal logout')
-    // console.error('Logout failed:', result.error)
+    console.error('Logout failed:', result.error)
   }
 }
 </script>

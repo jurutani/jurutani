@@ -51,7 +51,7 @@ export function useContentDetail<T = any>(options: ContentDetailOptions) {
             const { data, error: fetchError } = await query.single()
 
             if (fetchError) {
-                // console.error(`Error fetching ${options.tableName}:`, fetchError)
+                console.error(`Error fetching ${options.tableName}:`, fetchError)
                 error.value = 'Gagal memuat data'
                 return
             }
@@ -68,7 +68,7 @@ export function useContentDetail<T = any>(options: ContentDetailOptions) {
                 await fetchSimilarItems((data as any)[options.categoryField])
             }
         } catch (err) {
-            // console.error(`Unexpected error fetching ${options.tableName}:`, err)
+            console.error(`Unexpected error fetching ${options.tableName}:`, err)
             error.value = 'Terjadi kesalahan yang tidak terduga'
         } finally {
             loading.value = false
@@ -99,13 +99,13 @@ export function useContentDetail<T = any>(options: ContentDetailOptions) {
             const { data, error: fetchError } = await query
 
             if (fetchError) {
-                // console.error(`Error fetching similar ${options.tableName}:`, fetchError)
+                console.error(`Error fetching similar ${options.tableName}:`, fetchError)
                 return
             }
 
             similarItems.value = (data as T[]) || []
         } catch (err) {
-            // console.error(`Unexpected error fetching similar ${options.tableName}:`, err)
+            console.error(`Unexpected error fetching similar ${options.tableName}:`, err)
         } finally {
             loadingSimilar.value = false
         }

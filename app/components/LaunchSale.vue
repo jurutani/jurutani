@@ -34,7 +34,7 @@ const getImageUrl = (imagePath: string): string => {
     
     return data.publicUrl
   } catch (err) {
-    // console.error('Error getting image URL:', err)
+    console.error('Error getting image URL:', err)
     return '/placeholder.png'
   }
 }
@@ -63,7 +63,7 @@ const fetchBanner = async () => {
 
     banner.value = data || null
   } catch (err: any) {
-    // console.error('Error fetching banner:', err)
+    console.error('Error fetching banner:', err)
     error.value = err.message || 'Gagal memuat banner'
   } finally {
     loading.value = false
@@ -73,7 +73,7 @@ const fetchBanner = async () => {
 // Handle image load error
 const handleImageError = (event: Event) => {
   const target = event.target as HTMLImageElement
-  // console.error('Failed to load banner image:', target.src)
+  console.error('Failed to load banner image:', target.src)
   target.src = '/placeholder.png'
 }
 

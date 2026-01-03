@@ -53,7 +53,7 @@ const youtubeVideoId = computed(() => {
       return url.pathname.slice(1)
     }
   } catch (e) {
-    // console.error('Invalid YouTube URL:', e)
+    console.error('Invalid YouTube URL:', e)
   }
   
   return null

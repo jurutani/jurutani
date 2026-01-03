@@ -373,7 +373,7 @@ export const useChat = () => {
         .not('image_url', 'is', null)
 
       if (messagesQueryError) {
-        // console.warn('Failed to fetch messages with images:', messagesQueryError)
+        console.warn('Failed to fetch messages with images:', messagesQueryError)
       }
 
       // Use database transaction-like approach by deleting in correct order
@@ -410,11 +410,11 @@ export const useChat = () => {
                   .remove([filePath])
 
                 if (storageError) {
-                  // console.warn(`Failed to delete image ${filePath}:`, storageError)
+                  console.warn(`Failed to delete image ${filePath}:`, storageError)
                 }
               }
             } catch (imgError) {
-              // console.warn('Failed to delete image:', imgError)
+              console.warn('Failed to delete image:', imgError)
               // Don't throw - storage cleanup failures shouldn't fail the whole operation
             }
           })
@@ -423,7 +423,7 @@ export const useChat = () => {
         Promise.allSettled(imageCleanupPromises).then((results) => {
           const failures = results.filter(result => result.status === 'rejected')
           if (failures.length > 0) {
-            // console.warn(`Failed to delete ${failures.length} images from storage`)
+            console.warn(`Failed to delete ${failures.length} images from storage`)
           }
         })
       }
@@ -441,7 +441,7 @@ export const useChat = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to delete conversation'
       error.value = errorMessage
-      // console.error('Delete conversation error:', err)
+      console.error('Delete conversation error:', err)
       throw new Error(errorMessage)
     } finally {
       loading.value = false
@@ -474,7 +474,7 @@ export const useChat = () => {
             await supabase.storage.from('chat-images').remove([filePath])
           }
         } catch (imgError) {
-          // console.error('Failed to delete image:', imgError)
+          console.error('Failed to delete image:', imgError)
         }
       }
 
@@ -489,8 +489,7 @@ export const useChat = () => {
       // Remove from local state
       messages.value = messages.value.filter(m => m.id !== messageId)
 
-      Tambahan: log ke console kalau berhasil
-      // console.log(`Message with ID ${messageId} successfully deleted.`)
+      console.log(`Message with ID ${messageId} successfully deleted.`)
 
       return true
     } catch (err) {
@@ -526,7 +525,7 @@ export const useChat = () => {
               await supabase.storage.from('chat-images').remove([filePath])
             }
           } catch (imgError) {
-            // console.error('Failed to delete image:', imgError)
+            console.error('Failed to delete image:', imgError)
           }
         }
       }
@@ -575,7 +574,7 @@ export const useChat = () => {
         .neq('sender_id', currentUser.id)
         .eq('is_read', false)
     } catch (err) {
-      // console.error('Failed to mark messages as read:', err)
+      console.error('Failed to mark messages as read:', err)
     }
   }
 

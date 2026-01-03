@@ -93,7 +93,7 @@ const getMarketImageUrl = (attachments) => {
 
     return '/product.png';
   } catch (error) {
-    // console.error('Error parsing attachments JSON:', error);
+    console.error('Error parsing attachments JSON:', error);
     return '/product.png';
   }
 };
@@ -115,7 +115,7 @@ const fetchMarketData = async () => {
       .range(from, to);
     
     if (marketError) {
-      // console.error('Error fetching markets:', marketError);
+      console.error('Error fetching markets:', marketError);
       error.value = marketError;
       toastStore.error('Gagal memuat data pasar.');
     } else {
@@ -134,7 +134,7 @@ const fetchMarketData = async () => {
     }
     
   } catch (err) {
-    // console.error('Exception fetching market data:', err);
+    console.error('Exception fetching market data:', err);
     error.value = err;
     toastStore.error('Terjadi kesalahan saat memuat data pasar.');
   } finally {

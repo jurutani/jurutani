@@ -24,7 +24,7 @@ export function useSocialShare() {
             await navigator.clipboard.writeText(text)
             return true
         } catch (err) {
-            // console.error('Failed to copy:', err)
+            console.error('Failed to copy:', err)
             return false
         }
     }
@@ -112,7 +112,7 @@ export function useSocialShare() {
         try {
             await platform.action(options)
         } catch (err) {
-            // console.error('Share error:', err)
+            console.error('Share error:', err)
             toastStore.error('Gagal membagikan konten. Silakan coba lagi')
         } finally {
             isSharing.value = false
@@ -129,7 +129,7 @@ export function useSocialShare() {
                     url: options.url
                 })
             } catch (err) {
-                // console.error('Native share error:', err)
+                console.error('Native share error:', err)
             }
         }
     }

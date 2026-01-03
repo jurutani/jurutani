@@ -54,7 +54,7 @@ async function getStats() {
   const yesterday = yesterdayDate()
   const firstDayOfMonth = getFirstDayOfMonth()
   const firstDayOfYear = getFirstDayOfYear()
-  // console.log('Fetching stats for dates:', { today, yesterday, firstDayOfMonth, firstDayOfYear })
+  console.log('Fetching stats for dates:', { today, yesterday, firstDayOfMonth, firstDayOfYear })
 
   const [
     { data: todayData },

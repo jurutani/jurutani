@@ -52,10 +52,10 @@ export const useHeroData = () => {
             carouselItems.value = (data as HeroData[]) || []
             isInitialized.value = true
 
-            // console.log('Hero data fetched successfully:', carouselItems.value.length, 'items')
+            console.log('Hero data fetched successfully:', carouselItems.value.length, 'items')
         } catch (err: any) {
             error.value = err.message || 'Terjadi kesalahan saat memuat data hero'
-            // console.error('Error fetching hero data:', err)
+            console.error('Error fetching hero data:', err)
         } finally {
             loading.value = false
         }

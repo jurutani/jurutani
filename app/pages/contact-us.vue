@@ -56,7 +56,7 @@ useSeoOptimized('contact')
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-green-950 dark:to-gray-900 pt-20 lg:pt-32">
+  <div class="min-h-screen  pt-20 lg:pt-32">
     <!-- Hero section -->
     <div class="relative overflow-hidden bg-gradient-to-r from-green-700 to-green-600 dark:from-green-800 dark:to-green-700">
       <div class="absolute inset-0 opacity-20">

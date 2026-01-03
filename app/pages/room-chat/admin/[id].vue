@@ -88,7 +88,7 @@ const sendMessage = async () => {
     await nextTick()
     if (messagesContainer.value) scrollToBottom(messagesContainer.value)
   } catch (error) {
-    // console.error('Gagal mengirim pesan:', error)
+    console.error('Gagal mengirim pesan:', error)
     toastStore.error('Gagal mengirim pesan, Silakan coba lagi nanti')
   }
 }
@@ -135,7 +135,7 @@ const sendImageMessageChat = async () => {
     
     toastStore.success('Gambar berhasil dikirim')
   } catch (error) {
-    // console.error('Gagal mengirim gambar:', error)
+    console.error('Gagal mengirim gambar:', error)
     toastStore.error('Gagal mengirim gambar, Silakan coba lagi nanti')
   }
 }
@@ -167,7 +167,7 @@ const handleDeleteMessage = async () => {
     await deleteMessage(messageToDelete.value)
     toastStore.success('Pesan berhasil dihapus')
   } catch (error) {
-    // console.error('Gagal menghapus pesan:', error)
+    console.error('Gagal menghapus pesan:', error)
     toastStore.error('Gagal menghapus pesan')
   } finally {
     showDeleteConfirm.value = false
@@ -190,7 +190,7 @@ const handleClearConversation = async () => {
     await clearConversationMessages(conversationId.value)
     toastStore.success('Semua pesan berhasil dihapus')
   } catch (error) {
-    // console.error('Gagal menghapus semua pesan:', error)
+    console.error('Gagal menghapus semua pesan:', error)
     toastStore.error('Gagal menghapus semua pesan')
   } finally {
     showClearConfirm.value = false
@@ -242,7 +242,7 @@ onMounted(async () => {
       await getUserConversations()
     }
   } catch (error) {
-    // console.error('Gagal memuat data chat:', error)
+    console.error('Gagal memuat data chat:', error)
     if (conversationId.value) router.push('/room-chat')
   }
 })

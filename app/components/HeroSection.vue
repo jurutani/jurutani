@@ -26,11 +26,11 @@ onMounted(async () => {
   if (!process.client) return
   
   try {
-    // console.log('Fetching hero data...')
+    console.log('Fetching hero data...')
     await fetchHeroData()
-    // console.log('Hero data loaded:', carouselItems.value.length, 'items')
+    console.log('Hero data loaded:', carouselItems.value.length, 'items')
   } catch (err) {
-    // console.error('Failed to fetch hero data:', err)
+    console.error('Failed to fetch hero data:', err)
   }
 })
 </script>

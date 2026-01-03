@@ -26,7 +26,7 @@ export const useChatSearch = () => {
 
       return data || []
     } catch (error) {
-      // console.error('Error searching users:', error)
+      console.error('Error searching users:', error)
       return []
     }
   }

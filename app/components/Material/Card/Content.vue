@@ -49,7 +49,7 @@ const parseFiles = (filesData: any): any[] => {
     
     return []
   } catch (error) {
-    // console.error('Error parsing files:', error)
+    console.error('Error parsing files:', error)
     return []
   }
 }

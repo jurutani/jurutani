@@ -68,7 +68,7 @@ const { data: categoriesData } = await useAsyncData('video-categories', async ()
     
     return data as Category[]
   } catch (err) {
-    // console.error('Error fetching video categories:', err)
+    console.error('Error fetching video categories:', err)
     return []
   }
 })

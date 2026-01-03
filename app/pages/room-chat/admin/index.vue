@@ -55,7 +55,7 @@ const startChatWithAdmin = async () => {
     
     router.push(`/room-chat/${conversation.id}`)
   } catch (error) {
-    // console.error('Failed to start chat with admin:', error)
+    console.error('Failed to start chat with admin:', error)
     toastStore.error('Gagal membuat chat dengan admin')
   }
 }
@@ -73,7 +73,7 @@ const handleDeleteConversation = async (conversationId: string) => {
     await getUserConversations()
     checkAdminConversation()
   } catch (error) {
-    // console.error('Failed to delete conversation:', error)
+    console.error('Failed to delete conversation:', error)
     toastStore.error('Gagal menghapus percakapan')
   } finally {
     deletingConversationId.value = null
@@ -110,7 +110,7 @@ const getAdminUser = async () => {
     if (error) throw error
     adminUser.value = data
   } catch (error) {
-    // console.error('Failed to get admin user:', error)
+    console.error('Failed to get admin user:', error)
   }
 }
 
@@ -124,7 +124,7 @@ onMounted(async () => {
     ])
     checkAdminConversation()
   } catch (error) {
-    // console.error('Failed to load data:', error)
+    console.error('Failed to load data:', error)
     toastStore.error('Gagal memuat data')
   }
 })

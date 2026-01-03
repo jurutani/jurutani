@@ -44,7 +44,7 @@ const youtubeThumbnail = computed(() => {
       return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
     }
   } catch (e) {
-    // console.error('Invalid YouTube URL:', e)
+    console.error('Invalid YouTube URL:', e)
   }
   
   return null

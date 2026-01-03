@@ -185,7 +185,7 @@ const getCurrentUser = async () => {
     currentUser.value = user
     return user
   } catch (error) {
-    // console.error('Error getting current user:', error)
+    console.error('Error getting current user:', error)
     return null
   }
 }
@@ -292,7 +292,7 @@ const handleChangeEmail = async () => {
       confirmEmail.value = ''
     }
   } catch (error) {
-    // console.error('Email update error:', error)
+    console.error('Email update error:', error)
     emailError.value = 'Terjadi kesalahan sistem. Silakan coba lagi.'
     toastStore.error('Terjadi kesalahan sistem. Silakan coba lagi.')
   } finally {
@@ -339,7 +339,7 @@ const handleResetPassword = async () => {
       resetEmail.value = ''
     }
   } catch (error) {
-    // console.error('Reset password error:', error)
+    console.error('Reset password error:', error)
     resetEmailError.value = 'Terjadi kesalahan sistem. Silakan coba lagi.'
     toastStore.error('Terjadi kesalahan sistem. Silakan coba lagi.')
   } finally {

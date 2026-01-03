@@ -28,7 +28,7 @@ defineProps<Props>()
         :class="[currentSlide === index ? 'scale-100' : 'scale-110']"
         loading="lazy"
         @error="(e: any) => {
-          // console.error('Image load error:', e)
+          console.error('Image load error:', e)
           e.target.style.display = 'none'
         }"
       />

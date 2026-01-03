@@ -48,7 +48,7 @@ const { data: categoriesData } = await useAsyncData('market-categories', async (
     
     return data as Category[]
   } catch (err) {
-    // console.error('Error fetching categories:', err)
+    console.error('Error fetching categories:', err)
     return []
   }
 })
@@ -95,7 +95,7 @@ const fetchMarkets = async () => {
     totalPages.value = Math.ceil(totalItems.value / pageSize)
   } catch (err: any) {
     error.value = err.message || 'Terjadi kesalahan saat memuat data'
-    // console.error('Error fetching markets:', err)
+    console.error('Error fetching markets:', err)
   } finally {
     loading.value = false
   }

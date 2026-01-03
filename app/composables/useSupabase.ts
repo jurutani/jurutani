@@ -119,7 +119,7 @@ export const useSupabase = () => {
         return { success: false, error: errorMsg }
       }
 
-      // console.log('Starting registration process...')
+      console.log('Starting registration process...')
 
       const { data, error: authError } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
@@ -133,10 +133,10 @@ export const useSupabase = () => {
         }
       })
 
-      // console.log('Registration response:', { data, authError })
+      console.log('Registration response:', { data, authError })
 
       if (authError) {
-        // console.error('Registration auth error:', authError)
+        console.error('Registration auth error:', authError)
 
         // Handle specific error messages
         let errorMessage = authError.message
@@ -167,11 +167,11 @@ export const useSupabase = () => {
         return { success: false, error: errorMsg }
       }
 
-      // console.log('User created successfully:', data.user.id)
+      console.log('User created successfully:', data.user.id)
 
       // Jika signup berhasil tapi user belum confirmed (butuh email verification)
       if (data.user && !data.user.email_confirmed_at) {
-        // console.log('User needs email confirmation')
+        console.log('User needs email confirmation')
         return {
           success: true,
           data,
@@ -181,14 +181,14 @@ export const useSupabase = () => {
       }
 
       // Jika langsung confirmed (misalnya di development)
-      // console.log('User registered and confirmed')
+      console.log('User registered and confirmed')
       user.value = data.user
       session.value = data.session
 
       return { success: true, data }
 
     } catch (err: any) {
-      // console.error('Registration error:', err)
+      console.error('Registration error:', err)
 
       let errorMessage = err.message || 'Terjadi kesalahan saat mendaftar'
 
@@ -325,13 +325,13 @@ export const useSupabase = () => {
         .single()
 
       if (error) {
-        // console.error('Error fetching user profile:', error)
+        console.error('Error fetching user profile:', error)
         return { success: false, error: error.message }
       }
 
       return { success: true, data }
     } catch (err: any) {
-      // console.error('Error in getUserProfile:', err)
+      console.error('Error in getUserProfile:', err)
       return { success: false, error: err.message }
     }
   }
@@ -347,13 +347,13 @@ export const useSupabase = () => {
         .single()
 
       if (error) {
-        // console.error('Error updating user profile:', error)
+        console.error('Error updating user profile:', error)
         return { success: false, error: error.message }
       }
 
       return { success: true, data }
     } catch (err: any) {
-      // console.error('Error in updateUserProfile:', err)
+      console.error('Error in updateUserProfile:', err)
       return { success: false, error: err.message }
     }
   }

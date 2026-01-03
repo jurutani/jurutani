@@ -131,7 +131,7 @@ const sendMessageToGemini = async (message) => {
     const data = await response.json()
     return data.candidates[0].content.parts[0].text
   } catch (error) {
-    // console.error('Error:', error)
+    console.error('Error:', error)
     return 'Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi atau hubungi admin sistem.'
   }
 }

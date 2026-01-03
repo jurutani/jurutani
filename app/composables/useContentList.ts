@@ -114,7 +114,7 @@ export function useContentList<T = any>(options: ContentListOptions) {
             totalPages.value = Math.ceil(totalItems.value / pageSize)
         } catch (err: any) {
             error.value = err.message || 'Terjadi kesalahan saat memuat data'
-            // console.error(`Error fetching ${options.tableName}:`, err)
+            console.error(`Error fetching ${options.tableName}:`, err)
         } finally {
             loading.value = false
         }
