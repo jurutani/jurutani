@@ -97,7 +97,7 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
  * Generate SEO meta dengan keyword yang sudah dioptimasi per halaman
  * Membuat struktur yang konsisten dan SEO-friendly
  */
-export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting') => {
+export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos') => {
     const pageMetaConfig: Record<string, SEOMetaOptions> = {
         home: {
             title: 'Juru Tani | Solusi Pertanian Digital',
@@ -198,6 +198,12 @@ export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussi
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
+        videos: {
+            title: 'Video Juru Tani',
+            description: 'Video Juru Tani: belajar pertanian dengan video tutorial interaktif dan materi pembelajaran lengkap.',
+            keywords: ['video juru tani', 'pertanian digital', 'video tutorial', 'materi pembelajaran', 'belajar pertanian'],
+            ogType: 'website',
+        },
     }
 
     return generateSeoMeta(pageMetaConfig[pageType] || pageMetaConfig.home)
@@ -221,7 +227,7 @@ export const getOgImageUrl = (customImage?: string) => {
  * Hook untuk mengoptimalkan SEO meta di halaman
  * Usage: const seoMeta = useSeoOptimized('news')
  */
-export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting') => {
+export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos') => {
     const seoMeta = getPageSeoMeta(pageType)
 
     // Auto-apply useSeoMeta

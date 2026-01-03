@@ -43,7 +43,7 @@ const { data: CATEGORY } = await useAsyncData('category_news', async () => {
     
     return data as Category[]
   } catch (err) {
-    console.error('Error fetching categories:', err)
+    // console.error('Error fetching categories:', err)
     return []
   }
 })
@@ -256,7 +256,7 @@ const handleSubmit = async (): Promise<void> => {
     emit('close')
 
   } catch (error: any) {
-    console.error('Error saving news:', error)
+    // console.error('Error saving news:', error)
     toastStore.error(`Gagal menyimpan berita: ${error.message}`)
   } finally {
     isSubmitting.value = false

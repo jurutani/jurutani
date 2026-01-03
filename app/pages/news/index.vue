@@ -1,143 +1,116 @@
 <script setup lang="ts">
-  import { ref, computed, watchEffect } from 'vue'
-  import { useSupabase } from '~/composables/useSupabase'
-  import { CreateButton } from '#components'
-  import { useAsyncData } from '#app'
+import { ref, onMounted } from 'vue'
+import { useContentList } from '~/composables/useContentList'
+import { useAsyncData } from '#app'
+import { useSupabase } from '~/composables/useSupabase'
 
-  definePageMeta({
-    layout: 'default',
-  })
+definePageMeta({
+  layout: 'default',
+})
 
-  // SEO Optimization
-  useSeoOptimized('news')
+// SEO Optimization
+useSeoOptimized('news')
 
-  // Types
-  interface News {
-    id: string
-    category: string
-    status_news: string
-    created_at: string
-    title?: string
-    content?: string
+// Types
+interface News {
+  id: string
+  slug: string
+  category: string
+  status_news: string
+  created_at: string
+  title?: string
+  content?: string
+  image_url?: string
+  author?: string
+}
+
+interface Category {
+  id?: string
+  name: string
+  value?: string
+}
+
+const { supabase } = useSupabase()
+
+// Use content list composable
+const {
+  items: newsList,
+  loading,
+  error,
+  currentPage,
+  totalPages,
+  totalItems,
+  filters,
+  isLoading,
+  hasError,
+  hasData,
+  showPagination,
+  sortOptions,
+  currentSort,
+  fetchItems,
+  handleCategoryChange,
+  handleSearchChange,
+  handleSortChange,
+  handlePageChange
+} = useContentList<News>({
+  tableName: 'news',
+  pageSize: 9,
+  statusField: 'status_news',
+  statusValue: 'approved',
+  categoryField: 'category',
+  defaultSort: {
+    column: 'created_at',
+    ascending: false
   }
+})
 
-  interface Category {
-    id?: string
-    name: string
-    value?: string
+// Categories
+const categories = ref<Category[]>([])
+
+// Fetch categories
+const { data: categoriesData } = await useAsyncData('news-categories', async () => {
+  try {
+    const { data, error: catError } = await supabase
+      .from('category_news')
+      .select('name')
+      .order('name', { ascending: true })
+
+    if (catError) throw catError
+    
+    return data as Category[]
+  } catch (err) {
+    console.error('Error fetching news categories:', err)
+    return []
   }
+})
 
-  // Supabase client
-  const { supabase } = useSupabase()
+// Set categories
+if (categoriesData.value) {
+  categories.value = categoriesData.value.map(cat => ({
+    name: cat.name,
+    value: cat.name
+  }))
+}
 
-  // Data utama
-  const newsList = ref<News[]>([])
-  const error = ref<string | null>(null)
-  const loading = ref(true)
+// Bento grid pattern - determines which cards should be large
+const getBentoVariant = (index: number): 'default' | 'large' | 'wide' | 'tall' => {
+  // Pattern: large card every 7 items, wide card every 5 items
+  if (index % 7 === 0) return 'large'
+  if (index % 5 === 0) return 'wide'
+  if (index % 11 === 0) return 'tall'
+  return 'default'
+}
 
-  // Filter & pagination
-  const currentCategory = ref('all')
-  const currentPage = ref(1)
-  const pageSize = 9
-  const totalPages = ref(1)
-  const totalItems = ref(0)
-  const categories = ref<Category[]>([])
-
-  // Ambil kategori dari tabel 'category_news'
-  const { data: categoriesData } = await useAsyncData('news-categories', async () => {
-    try {
-      const { data, error: catError } = await supabase
-        .from('category_news')
-        .select('name')
-        .order('name', { ascending: true })
-
-      if (catError) throw catError
-      
-      return data as Category[]
-    } catch (err) {
-      console.error('Error fetching news categories:', err)
-      return []
-    }
-  })
-
-  // Set categories setelah data dimuat
-  if (categoriesData.value) {
-    categories.value = categoriesData.value.map(cat => ({
-      name: cat.name,
-      value: cat.name
-    }))
-  }
-
-  // Fungsi fetch data yang dioptimasi
-  const fetchNews = async () => {
-    loading.value = true
-    error.value = null
-
-    try {
-      // Build query dengan method chaining yang lebih efisien
-      const baseQuery = supabase
-        .from('news')
-        .select('*', { count: 'exact' })
-        .eq('status_news', 'approved')
-        .is('deleted_at', null)
-
-      // Apply category filter jika bukan 'all'
-      const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'
-        ? baseQuery.eq('category', currentCategory.value)
-        : baseQuery
-
-      // Apply pagination dan ordering
-      const { data, error: fetchError, count } = await query
-        .order('created_at', { ascending: false })
-        .range(
-          (currentPage.value - 1) * pageSize,
-          currentPage.value * pageSize - 1
-        )
-
-      if (fetchError) throw fetchError
-
-      newsList.value = data as News[] || []
-      totalItems.value = count || 0
-      totalPages.value = Math.ceil(totalItems.value / pageSize)
-    } catch (err: any) {
-      error.value = err.message || 'Terjadi kesalahan saat memuat berita'
-      console.error('Error fetching news:', err)
-    } finally {
-      loading.value = false
-    }
-  }
-
-  // SSR-friendly data fetch on first load
-  await useAsyncData('news', fetchNews)
-
-  // Gunakan watchEffect untuk reaktivitas yang lebih efisien
-  watchEffect(() => {
-    fetchNews()
-  })
-
-  // Computed untuk status
-  const isLoading = computed(() => loading.value)
-  const hasError = computed(() => !!error.value)
-  const hasData = computed(() => newsList.value.length > 0)
-  const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
-
-  // Handler untuk category change
-  const handleCategoryChange = (category: string) => {
-    // Reset ke halaman 1 saat kategori berubah
-    currentCategory.value = category
-    currentPage.value = 1
-  }
-
-  // Handler untuk pagination change
-  const handlePageChange = (page: number) => {
-    currentPage.value = page
-  }
+// Initial fetch
+onMounted(() => {
+  fetchItems()
+})
 </script>
 
 <template>
   <div class="news-page container mx-auto px-4 py-12">
     <!-- News Section Header -->
-    <div class="mx-auto mb-6 max-w-4xl text-center">
+    <div class="mx-auto mb-8 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
         <UIcon name="i-heroicons-newspaper" class="w-5 h-5 text-green-600 dark:text-green-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Berita Terupdate Jurutani</span>
@@ -147,35 +120,64 @@
         Berita Tani Juru Tani
       </h2>
       
-      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto mb-8">
         Dapatkan informasi terkini seputar dunia pertanian, teknologi, dan inovasi dengan
         <span class="font-semibold text-emerald-600 dark:text-emerald-400">berita terpercaya</span>,
         <span class="font-semibold text-teal-600 dark:text-teal-400">update teknologi</span>, dan
         <span class="font-semibold text-cyan-600 dark:text-cyan-400">prestasi petani</span> yang menginspirasi.
-      </p> 
+      </p>
+      
+      <!-- Category Filter -->
+      <AppCategoryFilter 
+        :categories="categories" 
+        :current-category="filters.category"
+        :show-all-option="true"
+        all-option-text="Semua"
+        all-option-value="all"
+        @update:category="handleCategoryChange"
+      />
     </div>
     
-    <!-- Category Filter -->
-    <AppCategoryFilter 
-      :categories="categories" 
-      :current-category="currentCategory"
-      :show-all-option="true"
-      all-option-text="Semua"
-      all-option-value="all"
-      @update:category="handleCategoryChange"
-    />
+    <!-- Filter & Sort Bar -->
+    <div class="flex flex-col gap-4 mb-8">
+      
+      <!-- Search Bar - Full width on all screens -->
+      <AppSearchBar 
+        v-model="filters.search"
+        placeholder="Cari berita, artikel, atau topik pertanian..."
+        @search="handleSearchChange"
+      />
+      
+      <!-- Sort and Results Row -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <!-- Sort Dropdown -->
+        <AppSortDropdown 
+          :sort-options="sortOptions"
+          :current-sort="filters.sort"
+          @update:sort="handleSortChange"
+        />
+        
+        <!-- Results Count -->
+        <div v-if="!isLoading && hasData" class="text-sm text-gray-600 dark:text-gray-400">
+          Menampilkan <span class="font-semibold text-green-600 dark:text-green-400">{{ newsList.length }}</span> dari <span class="font-semibold">{{ totalItems }}</span> berita
+        </div>
+      </div>
+    </div>
     
-    <!-- News Content -->
+    <!-- News Content with Bento Grid -->
     <div class="mt-8">
       <LoadingData v-if="isLoading" />      
       <ErrorData v-else-if="hasError" :error="error" />
       <NotFoundData v-else-if="!hasData" />
       
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Bento Grid Layout -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-auto">
         <NewsCardContent 
-          v-for="news in newsList" 
+          v-for="(news, index) in newsList" 
           :key="news.id" 
-          :news="news" 
+          :news="news"
+          :variant="getBentoVariant(index)"
+          :index="index"
         />
       </div>
     </div>
@@ -186,7 +188,7 @@
       :current-page="currentPage" 
       :total-pages="totalPages"
       :total-items="totalItems"
-      :page-size="pageSize"
+      :page-size="9"
       :show-page-info="true"
       :show-first-last="true"
       @update:page="handlePageChange"

@@ -44,7 +44,7 @@ const { data: CATEGORY } = await useAsyncData('category_markets', async () => {
     
     return data as Category[]
   } catch (err) {
-    console.error('Error fetching categories:', err)
+    // console.error('Error fetching categories:', err)
     return []
   }
 })
@@ -248,7 +248,7 @@ const handleSubmit = async (): Promise<void> => {
     emit('close')
 
   } catch (error: any) {
-    console.error('Error saving market item:', error)
+    // console.error('Error saving market item:', error)
     toastStore.error(`Gagal menyimpan produk: ${error.message}`)
   } finally {
     isSubmitting.value = false

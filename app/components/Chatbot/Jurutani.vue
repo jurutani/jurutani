@@ -21,9 +21,8 @@ const messages = ref([
 
 // API Configuration
 const GEMINI_API_KEY = 'AIzaSyDkLlBPmVfFQUOq5Cb4RWF7TM2zUDIH6Kk'
-// const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}`
-
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`
+// const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}`
 // Methods
 const openChat = () => {
   if (!hasSeenSplash.value) {
@@ -132,7 +131,7 @@ const sendMessageToGemini = async (message) => {
     const data = await response.json()
     return data.candidates[0].content.parts[0].text
   } catch (error) {
-    console.error('Error:', error)
+    // console.error('Error:', error)
     return 'Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi atau hubungi admin sistem.'
   }
 }

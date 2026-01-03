@@ -1,10 +1,4 @@
-import { fileURLToPath, URL } from 'node:url'
-import { resolve } from 'pathe'
-import { addComponent } from 'nuxt/kit'
-import presetIcons from '@unocss/preset-icons'
-import { bundledLanguages } from 'shiki'
-import ogImage from 'nuxt-og-image'
-
+// https://nuxt.com/docs/api/configuration/nuxt-config
 import siteMeta from './app/site'
 const {
   title,
@@ -18,19 +12,12 @@ const {
 } = siteMeta
 
 export default defineNuxtConfig({
-  extends: [
-    './app-nuxtui-layer',
-  ],
   runtimeConfig: {
     public: {
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:3000',
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseKey: process.env.SUPABASE_KEY,
     },
-  },
-
-  future: {
-    compatibilityVersion: 4,
   },
 
   experimental: {
@@ -44,7 +31,6 @@ export default defineNuxtConfig({
       ignore: [
         '/room-chat',
         '/markets',
-        /^\/__og-image__\//,
       ]
     }
   },
@@ -58,27 +44,19 @@ export default defineNuxtConfig({
     },
   },
 
-
   modules: [
-    '@pinegrow/nuxt-module',
-    '@unocss/nuxt',
-    '@nuxt/content',
     '@vueuse/nuxt',
     '@pinia/nuxt',
     '@nuxt/image',
     '@vee-validate/nuxt',
-    '@nuxtjs/seo',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots',
+    'nuxt-og-image',
+    'nuxt-schema-org',
     '@nuxtjs/critters',
     '@nuxt/icon',
     '@nuxt/eslint',
     '@nuxt/ui',
-    function () {
-      addComponent({
-        name: 'UIcon',
-        filePath: '@/components/BaseIcon.vue',
-        priority: 100,
-      })
-    },
   ],
 
   colorMode: {
@@ -91,14 +69,6 @@ export default defineNuxtConfig({
   critters: {
     config: {
       preload: 'swap',
-    },
-  },
-
-  icon: {
-    componentName: 'NuxtIcon',
-    cdn: true,
-    serverBundle: {
-      collections: ['heroicons', 'ic', 'logos', 'ri', 'mdi', 'ph'],
     },
   },
 
@@ -150,39 +120,11 @@ export default defineNuxtConfig({
     },
   },
 
-  content: {
-    sources: {
-      content: {
-        driver: 'fs',
-        base: resolve(__dirname, 'app/content'),
-      },
-    },
-    markdown: {
-      anchorLinks: false,
-      rehypePlugins: [
-        [
-          'rehype-external-links',
-          {
-            target: '_blank',
-            rel: ['noopener'],
-            test: (node: any) => /^https?:\/\//.test(node.properties.href),
-          },
-        ],
-      ],
-    },
-    highlight: {
-      //@ts-ignore
-      langs: Object.keys(bundledLanguages),
-      theme: 'dracula-soft',
-    },
-  },
-
   pinia: {
   },
 
   imports: {
   },
-
 
   sourcemap: {
     client: false,
@@ -223,19 +165,6 @@ export default defineNuxtConfig({
     strictNuxtContentPaths: true,
   },
 
-  ogImage: {
-    provider: 'satori',
-    static: false,
-    fonts: [
-      {
-        name: 'Inter',
-        weight: 400,
-        style: 'normal',
-        src: 'https://rsms.me/inter/font-files/Inter-Regular.woff2',
-      }
-    ]
-  },
-
   linkChecker: {
     enabled: false,
     excludeLinks: ['https://twitter.com/vuedesigner'],
@@ -245,27 +174,12 @@ export default defineNuxtConfig({
     },
   },
 
-  unocss: {
-    safelist: ['i-mdi-home', 'i-mdi-account', 'iconify'],
-    presets: [
-      presetIcons({
-        prefix: 'i-',
-      }),
-    ],
-  },
-
   eslint: {
   },
 
-  pinegrow: {
-    liveDesigner: {
-      iconPreferredCase: 'unocss',
-      tailwindcss: {
-        configPath: 'tailwind.config.ts',
-        cssPath: '@/assets/css/tailwind.css',
-        restartOnThemeUpdate: true,
-      },
-    },
-  },
   compatibilityDate: '2025-01-14',
+
+  devtools: {
+    enabled: true,
+  },
 })

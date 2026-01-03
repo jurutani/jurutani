@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { onMounted, computed, watch, ref } from 'vue'
+import { useContentDetail } from '~/composables/useContentDetail'
 import { useSupabase } from '~/composables/useSupabase'
-import { useRoute, useRouter } from 'vue-router'
 
 definePageMeta({
   layout: 'default',
 })
 
-// Types
 interface Market {
   id: string | number
+  slug: string
   name: string
   description?: string
   price: number
@@ -34,25 +34,35 @@ interface Market {
     name?: string
     avatar_url?: string
   }
-  deleted_at?: string
-  archived_at?: string
 }
 
-// Composables
-const route = useRoute()
-const router = useRouter()
 const { supabase } = useSupabase()
 
-// State
-const marketId = route.params.id as string
-const product = ref<Market | null>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
-const currentImageIndex = ref(0)
-const similarMarkets = ref<Market[]>([])
-const loadingSimilar = ref(false)
+// Use content detail composable
+const {
+  item: product,
+  loading,
+  error,
+  similarItems: similarMarkets,
+  loadingSimilar,
+  slug,
+  isLoading,
+  hasError,
+  hasData,
+  fetchItem,
+  goBack
+} = useContentDetail<Market>({
+  tableName: 'markets',
+  statusField: 'status',
+  statusValue: 'Approved',
+  categoryField: 'category',
+  similarLimit: 4
+})
 
-// Format price as Indonesian currency
+// State
+const currentImageIndex = ref(0)
+
+// Format price
 const formattedPrice = computed(() => {
   if (!product.value?.price) return 'Harga tidak tersedia'
   
@@ -63,7 +73,7 @@ const formattedPrice = computed(() => {
   }).format(product.value.price)
 })
 
-// Get images array from attachments with proper Supabase bucket access
+// Get images array from attachments
 const images = computed(() => {
   if (!product.value?.attachments || product.value.attachments.trim() === '') {
     return ['/product.png']
@@ -109,7 +119,7 @@ const images = computed(() => {
   }
 })
 
-// Category badge class with improved styling
+// Category badge class
 const categoryClass = computed(() => {
   if (!product.value?.category) return ''
   
@@ -136,7 +146,7 @@ const hasTiktokLink = computed(() => product.value?.links?.tiktok_link)
 const whatsappLink = computed(() => {
   if (!product.value?.contact_seller) return '#'
   const phone = product.value.contact_seller.replace(/\D/g, '')
-  const message = 'Saya ingin menanyakan produk anda'
+  const message = `Saya tertarik dengan produk: ${product.value.name}`
   const encodedMessage = encodeURIComponent(message)
   return `https://api.whatsapp.com/send/?phone=${phone}&text=${encodedMessage}&type=phone_number&app_absent=0`
 })
@@ -151,86 +161,6 @@ const formatDate = (dateString: string): string => {
     month: 'long',
     day: 'numeric'
   }).format(date)
-}
-
-// Format category
-const formatCategory = (category?: string): string => {
-  if (!category) return 'Lainnya'
-  return category.charAt(0).toUpperCase() + category.slice(1)
-}
-
-// Fetch product by ID
-const fetchProduct = async (): Promise<void> => {
-  loading.value = true
-  error.value = null
-  
-  try {
-    const { data, error: fetchError } = await supabase
-      .from('markets')
-      .select(`
-        *,
-        profiles (
-          *
-        )
-      `)
-      .eq('id', marketId)
-      .is('deleted_at', null)
-      .is('archived_at', null)
-      .eq('status', 'Approved')
-      .single()
-    
-    if (fetchError) {
-      console.error('[Supabase Fetch Error]', fetchError)
-      error.value = fetchError.message || 'Gagal memuat produk'
-      return
-    }
-    
-    if (!data) {
-      error.value = 'Produk tidak ditemukan'
-      return
-    }
-    
-    product.value = data
-    
-    // Fetch similar markets after main product is loaded
-    await fetchSimilarMarkets(data.category)
-  } catch (err) {
-    console.error('[FetchProduct Error]', err)
-    error.value = err instanceof Error ? err.message : 'Terjadi kesalahan yang tidak terduga'
-  } finally {
-    loading.value = false
-  }
-}
-
-// Fetch similar markets by category
-const fetchSimilarMarkets = async (category?: string): Promise<void> => {
-  if (!category) return
-  
-  loadingSimilar.value = true
-  
-  try {
-    const { data, error: fetchError } = await supabase
-      .from('markets')
-      .select('*')
-      .eq('category', category)
-      .eq('status', 'Approved')
-      .is('deleted_at', null)
-      .is('archived_at', null)
-      .neq('id', marketId)
-      .order('created_at', { ascending: false })
-      .limit(4)
-
-    if (fetchError) {
-      console.error('Error fetching similar markets:', fetchError)
-      return
-    }
-
-    similarMarkets.value = data || []
-  } catch (err) {
-    console.error('Unexpected error fetching similar markets:', err)
-  } finally {
-    loadingSimilar.value = false
-  }
 }
 
 // Navigate through images
@@ -250,9 +180,9 @@ const prevImage = (): void => {
   }
 }
 
-// Go back to markets page
-const goBack = (): void => {
-  router.push('/markets')
+// Go back
+const handleGoBack = (): void => {
+  goBack('/markets')
 }
 
 // Open WhatsApp
@@ -262,8 +192,9 @@ const openWhatsApp = (): void => {
   }
 }
 
+// SEO
 const seoTitle = computed(() => product.value ? `${product.value.name}` : 'Memuat Produk...')
-const seoDescription = computed(() => product.value ? (product.value.description || `${product.value.name} - Harga Rp${product.value.price?.toLocaleString('id-ID') || 'Nego'}`) : 'Produk pertanian dari Juru Tani.')
+const seoDescription = computed(() => product.value ? (product.value.description || `${product.value.name} - Harga ${formattedPrice.value}`) : 'Produk pertanian dari Juru Tani.')
 const seoImage = computed(() => images.value[0] || '/product.png')
 const seoKeywords = computed(() => product.value ? [
   'marketplace pertanian',
@@ -272,9 +203,17 @@ const seoKeywords = computed(() => product.value ? [
   'supplier pertanian'
 ] : [])
 
-// Initial fetch
+// Share URL
+const shareUrl = computed(() => {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/markets/${slug.value}`
+  }
+  return `https://jurutani.com/markets/${slug.value}`
+})
+
+// Lifecycle
 onMounted(() => {
-  fetchProduct()
+  fetchItem()
 })
 
 // Update SEO after product is loaded
@@ -285,7 +224,7 @@ watch(() => product.value, (newVal) => {
       description: seoDescription.value,
       keywords: seoKeywords.value,
       image: seoImage.value,
-      url: `https://jurutani.com/markets/${marketId}`,
+      url: shareUrl.value,
       type: 'website'
     })
   }
@@ -293,56 +232,61 @@ watch(() => product.value, (newVal) => {
 </script>
 
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen py-6">
     <div class="container mx-auto px-4 py-8 max-w-7xl">
       <!-- Header -->
-      <div class="shadow-sm ">
-        <div class="container mx-auto px-4 py-4">
-          <div class="flex items-center justify-between">
-            <button 
-              class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
-              @click="goBack"
-            >
-              <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
-              <span class="font-medium">Kembali ke Pasar Tani</span>
-            </button>
-            
-            <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-              <UIcon name="i-heroicons-shopping-bag" class="w-5 h-5" />
-              <span class="font-semibold">Pasar Tani</span>
-            </div>
+      <div class="mb-8">
+        <div class="flex items-center justify-between">
+          <UButton
+            color="green"
+            variant="ghost"
+            icon="i-lucide-arrow-left"
+            @click="handleGoBack"
+          >
+            Kembali ke Pasar Tani
+          </UButton>
+          
+          <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
+            <UIcon name="i-heroicons-shopping-bag" class="w-5 h-5" />
+            <span class="font-semibold">Pasar Tani</span>
           </div>
         </div>
       </div>
+      
       <!-- Loading State -->
-      <LoadingData v-if="loading" />
+      <LoadingData v-if="isLoading" />
       
       <!-- Error State -->
-      <ErrorData v-else-if="error" :error="error" />
+      <ErrorData v-else-if="hasError" :error="error" />
       
       <!-- Product Details -->
-      <article v-else-if="product" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+      <article v-else-if="hasData" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
-          <div class="relative bg-gray-50 dark:bg-gray-700 p-6">
-            <div class="relative rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm h-96 lg:h-[500px]">
+          <!-- Left Column - Image Gallery (Full Cover) -->
+          <div class="relative bg-gray-900 dark:bg-gray-950 overflow-hidden">
+            <!-- Main Image Container - Full Cover -->
+            <div class="relative h-96 lg:h-full min-h-[500px] overflow-hidden">
               <img 
                 :src="images[currentImageIndex]" 
                 :alt="product.name" 
-                class="w-full h-full object-contain"
+                class="w-full h-full object-cover"
                 @error="(e: any) => e.target.src = '/product.png'"
-              >
+              />
+              
+              <!-- Gradient Overlay for better readability -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
               
               <!-- Image Navigation Buttons -->
               <div v-if="images.length > 1" class="absolute inset-0 flex justify-between items-center pointer-events-none">
                 <button 
-                  class="pointer-events-auto bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full p-3 m-4 transition-all focus:outline-none shadow-lg backdrop-blur-sm" 
+                  class="pointer-events-auto bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full p-3 m-4 transition-all focus:outline-none shadow-lg backdrop-blur-sm hover:scale-110" 
                   @click="prevImage"
                 >
                   <UIcon name="i-lucide-chevron-left" class="w-5 h-5" />
                 </button>
                 
                 <button 
-                  class="pointer-events-auto bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full p-3 m-4 transition-all focus:outline-none shadow-lg backdrop-blur-sm" 
+                  class="pointer-events-auto bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full p-3 m-4 transition-all focus:outline-none shadow-lg backdrop-blur-sm hover:scale-110" 
                   @click="nextImage"
                 >
                   <UIcon name="i-lucide-chevron-right" class="w-5 h-5" />
@@ -350,7 +294,7 @@ watch(() => product.value, (newVal) => {
               </div>
               
               <!-- Category badge -->
-              <div class="absolute top-4 right-4">
+              <div class="absolute top-4 left-4">
                 <span :class="categoryClass">
                   {{ product.category }}
                 </span>
@@ -358,27 +302,29 @@ watch(() => product.value, (newVal) => {
               
               <!-- Image counter -->
               <div v-if="images.length > 1" class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                <div class="bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+                <div class="bg-black/70 text-white px-4 py-2 rounded-full text-sm backdrop-blur-sm font-medium">
                   {{ currentImageIndex + 1 }} / {{ images.length }}
                 </div>
               </div>
             </div>
             
-            <!-- Thumbnail Images -->
-            <div v-if="images.length > 1" class="mt-4 flex space-x-3 overflow-x-auto pb-2">
-              <button 
-                v-for="(img, index) in images" 
-                :key="index" 
-                :class="[
-                  'flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all',
-                  currentImageIndex === index 
-                    ? 'border-emerald-500 dark:border-emerald-400 shadow-md ring-2 ring-emerald-200 dark:ring-emerald-800' 
-                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                ]" 
-                @click="currentImageIndex = index"
-              >
-                <img :src="img" :alt="`Thumbnail ${index + 1}`" class="w-full h-full object-cover" @error="(e: any) => e.target.src = '/product.png'">
-              </button>
+            <!-- Thumbnail Images - Positioned at bottom -->
+            <div v-if="images.length > 1" class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+              <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+                <button 
+                  v-for="(img, index) in images" 
+                  :key="index" 
+                  :class="[
+                    'flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all',
+                    currentImageIndex === index 
+                      ? 'border-emerald-400 shadow-lg ring-2 ring-emerald-300 scale-110' 
+                      : 'border-white/50 hover:border-white/80 opacity-70 hover:opacity-100'
+                  ]" 
+                  @click="currentImageIndex = index"
+                >
+                  <img :src="img" :alt="`Thumbnail ${index + 1}`" class="w-full h-full object-cover" @error="(e: any) => e.target.src = '/product.png'">
+                </button>
+              </div>
             </div>
           </div>
           
@@ -394,6 +340,17 @@ watch(() => product.value, (newVal) => {
                 <div class="flex items-baseline mb-4">
                   <span class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{{ formattedPrice }}</span>
                   <span v-if="product.price_range" class="text-sm text-gray-500 dark:text-gray-400 ml-3">{{ product.price_range }}</span>
+                </div>
+
+                <!-- Share Button -->
+                <div class="flex items-center gap-3">
+                  <AppShareButton
+                    :title="product.name"
+                    :description="product.description || `${product.name} - ${formattedPrice}`"
+                    :url="shareUrl"
+                    button-text="Bagikan Produk"
+                    button-variant="outline"
+                  />
                 </div>
               </div>
               
@@ -459,7 +416,7 @@ watch(() => product.value, (newVal) => {
                       :alt="product.profiles?.name || product.seller || 'Penjual'" 
                       class="w-full h-full object-cover"
                       @error="(e: any) => e.target.src = '/profile.png'"
-                    >
+                    />
                   </div>
                   <div class="flex-1">
                     <h3 class="font-semibold text-gray-900 dark:text-white">
@@ -521,7 +478,7 @@ watch(() => product.value, (newVal) => {
                   @click="openWhatsApp"
                   class="inline-flex items-center justify-center w-full px-6 py-4 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 transition-all transform hover:scale-105 text-lg font-semibold shadow-lg hover:shadow-xl"
                 >
-                  <UIcon name="i-mdi-whatsapp" class="text-2x mx-4" />
+                  <UIcon name="i-mdi-whatsapp" class="text-2xl mx-4" />
                   Hubungi Penjual
                 </button>
               </div>
@@ -531,7 +488,7 @@ watch(() => product.value, (newVal) => {
       </article>
 
       <!-- Similar Products Section -->
-      <section v-if="product" class="mt-12">
+      <section v-if="hasData" class="mt-12">
         <div class="mb-8">
           <div class="flex items-center gap-3 mb-2">
             <div class="flex items-center gap-2">
@@ -542,7 +499,7 @@ watch(() => product.value, (newVal) => {
             </div>
           </div>
           <p class="text-gray-600 dark:text-gray-400">
-            Kategori: <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ formatCategory(product.category) }}</span>
+            Kategori: <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ product.category }}</span>
           </p>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Berikut adalah produk serupa dari kategori yang sama. Kami menampilkan pilihan terbaik untuk membantu Anda menemukan produk yang sesuai dengan kebutuhan.
@@ -559,6 +516,7 @@ watch(() => product.value, (newVal) => {
               v-for="item in similarMarkets"
               :key="item.id"
               :product="(item as any)"
+              variant="default"
             />
           </div>
 
@@ -582,47 +540,32 @@ watch(() => product.value, (newVal) => {
 </template>
 
 <style scoped>
-/* Custom scrollbar for thumbnail images */
+/* Hide scrollbar for thumbnail images */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar for other overflow areas */
 .overflow-x-auto::-webkit-scrollbar {
-  height: 8px;
+  height: 6px;
 }
 
 .overflow-x-auto::-webkit-scrollbar-track {
-  background-color: rgb(243, 244, 246);
-  border-radius: 10px;
-}
-
-.dark .overflow-x-auto::-webkit-scrollbar-track {
-  background-color: rgb(55, 65, 81);
-  border-radius: 10px;
+  background-color: transparent;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  background-color: rgb(209, 213, 219);
-  border-radius: 10px;
-}
-
-.dark .overflow-x-auto::-webkit-scrollbar-thumb {
-  background-color: rgb(75, 85, 99);
+  background-color: rgba(255, 255, 255, 0.3);
   border-radius: 10px;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(156, 163, 175);
-}
-
-.dark .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(107, 114, 128);
-}
-
-/* Image fade in effect */
-img {
-  transition: opacity 0.3s duration;
-}
-
-/* Button press animation */
-button:active,
-a:active {
-  transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 </style>
+```

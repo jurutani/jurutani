@@ -26,7 +26,7 @@ export const useChatSearch = () => {
 
       return data || []
     } catch (error) {
-      console.error('Error searching users:', error)
+      // console.error('Error searching users:', error)
       return []
     }
   }
@@ -39,8 +39,8 @@ export const useChatSearch = () => {
     const searchTerm = query.toLowerCase().trim()
 
     return conversations.filter(conversation => {
-      const partner = conversation.participant1_id === currentUserId 
-        ? conversation.participant1 
+      const partner = conversation.participant1_id === currentUserId
+        ? conversation.participant1
         : conversation.participant2
 
       const partnerName = partner?.full_name?.toLowerCase() || ''
@@ -57,7 +57,7 @@ export const useChatSearch = () => {
 
     const searchTerm = query.toLowerCase().trim()
 
-    return messages.filter(message => 
+    return messages.filter(message =>
       message.content.toLowerCase().includes(searchTerm)
     )
   }

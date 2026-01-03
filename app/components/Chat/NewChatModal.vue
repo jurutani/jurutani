@@ -43,7 +43,7 @@ const searchUsers = async () => {
     const results = await searchUsersUtil(userSearchQuery.value, currentUser?.id)
     searchResults.value = results || []
   } catch (error) {
-    console.error('Failed to search users:', error)
+    // console.error('Failed to search users:', error)
     searchResults.value = []
   } finally {
     searchingUsers.value = false

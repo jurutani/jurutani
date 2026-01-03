@@ -78,7 +78,7 @@ const startChat = async (userId: string) => {
     
     router.push(`/room-chat/${conversation.id}`)
   } catch (error) {
-    console.error('Failed to start chat:', error)
+    // console.error('Failed to start chat:', error)
     toastStore.error('Gagal membuat chat baru')
   }
 }
@@ -103,7 +103,7 @@ const handleDeleteConversation = async (conversationId: string) => {
     // Refresh conversations list
     await getUserConversations()
   } catch (error) {
-    console.error('Failed to delete conversation:', error)
+    // console.error('Failed to delete conversation:', error)
     toastStore.error('Gagal menghapus percakapan')
   } finally {
     deletingConversationId.value = null
@@ -121,7 +121,7 @@ const searchUsers = async (query: string) => {
     searchingUsers.value = true
     searchResults.value = await searchUsersUtil(query.trim())
   } catch (error) {
-    console.error('Failed to search users:', error)
+    // console.error('Failed to search users:', error)
     toastStore.error('Gagal mencari pengguna')
     searchResults.value = []
   } finally {
@@ -140,7 +140,7 @@ onMounted(async () => {
     currentUser.value = await getCurrentUser()
     await getUserConversations()
   } catch (error) {
-    console.error('Failed to load conversations:', error)
+    // console.error('Failed to load conversations:', error)
     toastStore.error('Gagal memuat conversation')
   }
 })

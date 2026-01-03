@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { onMounted, computed, watch } from 'vue'
+import { useContentDetail } from '~/composables/useContentDetail'
 import { useSupabase } from '~/composables/useSupabase'
 
 definePageMeta({
   layout: 'default',
 })
 
-// Types
 interface CourseItem {
   id: string
+  slug: string
   title: string
   description?: string
   category?: string
   duration?: string
   instructor?: string
   image_url?: string
-  files?: any // Can be string or array, we'll parse it
+  files?: any
   link_drive?: string
   link_youtube?: string
   user_id?: string
@@ -29,27 +29,35 @@ interface ParsedFile {
   url: string
 }
 
-// Composables
-const route = useRoute()
-const router = useRouter()
 const { supabase } = useSupabase()
 
-// State
-const courseId = route.params.id as string
-const course = ref<CourseItem | null>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
+// Use content detail composable
+const {
+  item: course,
+  loading,
+  error,
+  similarItems: relatedCourses,
+  loadingSimilar,
+  slug,
+  isLoading,
+  hasError,
+  hasData,
+  fetchItem,
+  goBack
+} = useContentDetail<CourseItem>({
+  tableName: 'courses',
+  categoryField: 'category',
+  similarLimit: 4
+})
 
 // Helper function to parse files
 const parseFiles = (filesData: any): ParsedFile[] => {
   if (!filesData) return []
   
   try {
-    // If it's already an array, return it
     if (Array.isArray(filesData)) {
       return filesData.map((item, index) => {
         if (typeof item === 'string') {
-          // Extract filename from URL
           const urlParts = item.split('/')
           const filename = urlParts[urlParts.length - 1]
           const cleanFilename = filename.split('_').slice(1).join('_') || `Document ${index + 1}`
@@ -63,22 +71,16 @@ const parseFiles = (filesData: any): ParsedFile[] => {
       })
     }
     
-    // If it's a string, try to parse it
     if (typeof filesData === 'string') {
-      // Handle double-encoded JSON string
       let parsed = JSON.parse(filesData)
       
-      // If it's still a string after first parse, parse again
       if (typeof parsed === 'string') {
         parsed = JSON.parse(parsed)
       }
       
-      // Ensure it's an array
       if (Array.isArray(parsed)) {
-        // Convert URLs to file objects if they're just strings
         return parsed.map((item, index) => {
           if (typeof item === 'string') {
-            // Extract filename from URL
             const urlParts = item.split('/')
             const filename = urlParts[urlParts.length - 1]
             const cleanFilename = filename.split('_').slice(1).join('_') || `Document ${index + 1}`
@@ -104,15 +106,13 @@ const parseFiles = (filesData: any): ParsedFile[] => {
 const imageUrl = computed(() => {
   if (!course.value?.image_url) return null
   
-  // Check if it's already a full URL
   if (course.value.image_url.startsWith('http')) {
     return course.value.image_url
   }
   
-  // Get public URL from Supabase storage with correct bucket structure
   const { data } = supabase.storage
-    .from('courses')
-    .getPublicUrl(`images/${course.value.id}/${course.value.image_url}`)
+    .from('course-images')
+    .getPublicUrl(course.value.image_url)
   
   return data.publicUrl
 })
@@ -122,58 +122,40 @@ const parsedFiles = computed((): ParsedFile[] => {
   return parseFiles(course.value.files)
 })
 
-const hasFiles = computed(() => {
-  return parsedFiles.value && parsedFiles.value.length > 0
+const hasFiles = computed(() => parsedFiles.value && parsedFiles.value.length > 0)
+const hasLinks = computed(() => course.value?.link_drive || course.value?.link_youtube)
+const hasResources = computed(() => hasFiles.value || hasLinks.value)
+
+// Extract YouTube video ID
+const youtubeVideoId = computed(() => {
+  if (!course.value?.link_youtube) return null
+  
+  try {
+    const url = new URL(course.value.link_youtube)
+    if (url.hostname.includes('youtube.com')) {
+      return url.searchParams.get('v')
+    } else if (url.hostname.includes('youtu.be')) {
+      return url.pathname.slice(1)
+    }
+  } catch (e) {
+    console.error('Invalid YouTube URL:', e)
+  }
+  
+  return null
 })
 
-const hasLinks = computed(() => {
-  return course.value?.link_drive || course.value?.link_youtube
-})
-
-const hasResources = computed(() => {
-  return hasFiles.value || hasLinks.value
+const youtubeEmbedUrl = computed(() => {
+  if (!youtubeVideoId.value) return null
+  return `https://www.youtube.com/embed/${youtubeVideoId.value}?rel=0&modestbranding=1`
 })
 
 // Methods
-const fetchCourseDetail = async (): Promise<void> => {
-  loading.value = true
-  error.value = null
-
-  try {
-    const { data, error: fetchError } = await supabase
-      .from('courses')
-      .select('*')
-      .eq('id', courseId)
-      .single()
-
-    if (fetchError) {
-      console.error('Error fetching course:', fetchError)
-      error.value = 'Gagal memuat Materi'
-      return
-    }
-
-    if (!data) {
-      error.value = 'Materi tidak ditemukan'
-      return
-    }
-
-    course.value = data
-  } catch (err) {
-    console.error('Unexpected error:', err)
-    error.value = 'Terjadi kesalahan yang tidak terduga'
-  } finally {
-    loading.value = false
-  }
-}
-
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString)
   return new Intl.DateTimeFormat('id-ID', {
     day: 'numeric',
     month: 'long', 
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+    year: 'numeric'
   }).format(date)
 }
 
@@ -182,17 +164,15 @@ const formatCategory = (category?: string): string => {
   return category.charAt(0).toUpperCase() + category.slice(1)
 }
 
-const goBack = (): void => {
-  router.push('/educations')
+const handleGoBack = (): void => {
+  goBack('/educations')
 }
 
 const downloadFile = (file: ParsedFile): void => {
   if (file.url) {
-    // Check if it's already a full URL
     if (file.url.startsWith('http')) {
       window.open(file.url, '_blank', 'noopener,noreferrer')
     } else {
-      // Get public URL from Supabase storage with correct bucket structure
       const { data } = supabase.storage
         .from('courses')
         .getPublicUrl(`files/${course.value?.id}/${file.url}`)
@@ -210,12 +190,7 @@ const openDriveLink = (): void => {
   }
 }
 
-const openYouTubeLink = (): void => {
-  if (course.value?.link_youtube) {
-    window.open(course.value.link_youtube, '_blank', 'noopener,noreferrer')
-  }
-}
-
+// SEO
 const seoTitle = computed(() => course.value ? `${course.value.title}` : 'Memuat Materi...')
 const seoDescription = computed(() => course.value ? (course.value.description || `Pelajari ${course.value.title} - Materi edukasi pertanian dari Juru Tani`) : 'Materi edukasi pertanian dari Juru Tani.')
 const seoImage = computed(() => imageUrl.value || '/jurutani.png')
@@ -226,12 +201,20 @@ const seoKeywords = computed(() => course.value ? [
   'panduan pertanian'
 ] : [])
 
-// Lifecycle
-onMounted(() => {
-  fetchCourseDetail()
+// Share URL
+const shareUrl = computed(() => {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/educations/${slug.value}`
+  }
+  return `https://jurutani.com/educations/${slug.value}`
 })
 
-// Update SEO after course is loaded
+// Lifecycle
+onMounted(() => {
+  fetchItem()
+})
+
+// Update SEO
 watch(() => course.value, (newVal) => {
   if (newVal) {
     useSeoDetail({
@@ -239,7 +222,7 @@ watch(() => course.value, (newVal) => {
       description: seoDescription.value,
       keywords: seoKeywords.value,
       image: seoImage.value,
-      url: `https://jurutani.com/educations/${courseId}`,
+      url: shareUrl.value,
       type: 'article'
     })
   }
@@ -247,18 +230,19 @@ watch(() => course.value, (newVal) => {
 </script>
 
 <template>
-  <div class="min-h-screen py-14">
-    <div class="container mx-auto px-4 py-8 max-w-6xl">
-       <div class="shadow-sm">
-      <div class="container mx-auto px-4 py-4">
+  <div class="min-h-screen py-6">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <!-- Header -->
+      <div class="mb-8">
         <div class="flex items-center justify-between">
-          <button 
-            class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
-            @click="goBack"
+          <UButton
+            color="green"
+            variant="ghost"
+            icon="i-lucide-arrow-left"
+            @click="handleGoBack"
           >
-            <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
-            <span class="font-medium">Kembali</span>
-          </button>
+            Kembali ke Edukasi
+          </UButton>
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
             <UIcon name="i-heroicons-academic-cap" class="w-5 h-5" />
@@ -266,117 +250,114 @@ watch(() => course.value, (newVal) => {
           </div>
         </div>
       </div>
-    </div>
+      
       <!-- Loading State -->
-      <div v-if="loading" class="flex flex-col items-center justify-center py-20">
-        <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent" />
-        <p class="text-gray-600 dark:text-gray-400 mt-4">Memuat Materi...</p>
-      </div>
-
+      <LoadingData v-if="isLoading" />
+      
       <!-- Error State -->
-      <div v-else-if="error" class="text-center py-20">
-        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8 max-w-md mx-auto">
-          <UIcon name="i-heroicons-exclamation-triangle" class="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h3 class="text-lg font-semibold text-red-700 dark:text-red-400 mb-2">Oops! Terjadi Kesalahan</h3>
-          <p class="text-red-600 dark:text-red-300 mb-4">{{ error }}</p>
-          <UButton color="red" variant="outline" @click="goBack">
-            Kembali ke Daftar Materi
-          </UButton>
-        </div>
-      </div>
-
+      <ErrorData v-else-if="hasError" :error="error" />
+      
       <!-- Course Detail Content -->
-      <div v-else-if="course" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main Content -->
-        <div class="lg:col-span-2">
-          <!-- Course Header -->
-          <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
-            <!-- Hero Image -->
-            <div class="relative h-64 md:h-80 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
-              <img
-                v-if="imageUrl"
-                :src="imageUrl"
-                :alt="course.title"
-                class="w-full h-full object-cover"
-                @error="console.log('Image failed to load:', imageUrl)"
-              >
-              <div v-else class="flex items-center justify-center h-full">
-                <div class="text-center text-green-600 dark:text-green-400">
-                  <UIcon name="i-heroicons-photo" class="w-16 h-16 mx-auto mb-2 opacity-50" />
-                  <p class="text-sm opacity-75">Tidak ada gambar</p>
-                </div>
-              </div>
-
-              <!-- Badges -->
-              <div class="absolute top-4 right-4 flex flex-col gap-2">
-                <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full shadow-sm">
-                  <UIcon name="i-heroicons-light-bulb" class="w-3 h-3" />
-                  {{ formatCategory(course.category) }}
-                </span>
-                
-                <span v-if="course.duration" class="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-full shadow-sm">
-                  <UIcon name="i-heroicons-clock" class="w-3 h-3" />
-                  {{ course.duration }}
-                </span>
-              </div>
+      <article v-else-if="hasData" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Hero Image -->
+        <div class="relative h-64 md:h-80 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
+          <img
+            v-if="imageUrl"
+            :src="imageUrl"
+            :alt="course.title"
+            class="w-full h-full object-cover"
+          />
+          <div v-else class="flex items-center justify-center h-full">
+            <div class="text-center text-green-600 dark:text-green-400">
+              <UIcon name="i-heroicons-book-open" class="w-16 h-16 mx-auto mb-2 opacity-50" />
+              <p class="text-sm opacity-75">Tidak ada gambar</p>
             </div>
+          </div>
 
-            <!-- Content -->
-            <div class="p-6 md:p-8">
-              <!-- Title -->
-              <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                {{ course.title }}
-              </h1>
-
-              <!-- Meta Information -->
-              <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
-                <div v-if="course.instructor" class="flex items-center gap-1">
-                  <UIcon name="i-heroicons-user" class="w-4 h-4" />
-                  <span>{{ course.instructor }}</span>
-                </div>
-                
-                <div class="flex items-center gap-1">
-                  <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
-                  <span>{{ formatDate(course.created_at) }}</span>
-                </div>
-                
-                <div v-if="course.updated_at && course.updated_at !== course.created_at" class="flex items-center gap-1">
-                  <UIcon name="i-heroicons-pencil-square" class="w-4 h-4" />
-                  <span>Diperbarui {{ formatDate(course.updated_at) }}</span>
-                </div>
-              </div>
-
-              <!-- Description -->
-              <div class="mb-8">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Deskripsi Materi</h2>
-                
-                <div v-if="course.description" class="prose prose-lg max-w-none prose-green prose-headings:text-gray-900 prose-p:text-gray-700 dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300">
-                  <div class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
-                    {{ course.description }}
-                  </div>
-                </div>
-                
-                <div v-else class="text-center py-8">
-                  <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <UIcon name="i-heroicons-document-text" class="w-8 h-8 text-gray-400 dark:text-gray-500" />
-                  </div>
-                  <p class="text-gray-500 dark:text-gray-400 font-medium">Deskripsi belum tersedia</p>
-                  <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Segera hadir dengan konten pembelajaran terbaik</p>
-                </div>
-              </div>
-            </div>
-          </article>
+          <!-- Category Badge -->
+          <div class="absolute top-4 right-4">
+            <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full shadow-sm">
+              <UIcon name="i-heroicons-tag" class="w-3 h-3" />
+              {{ formatCategory(course.category) }}
+            </span>
+          </div>
         </div>
 
-        <!-- Sidebar - Resources -->
-        <div class="lg:col-span-1">
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sticky top-8">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+        <!-- Content -->
+        <div class="p-6 md:p-8">
+          <!-- Title -->
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
+            {{ course.title }}
+          </h1>
+
+          <!-- Meta Information -->
+          <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+            <div v-if="course.instructor" class="flex items-center gap-1">
+              <UIcon name="i-heroicons-user" class="w-4 h-4" />
+              <span>{{ course.instructor }}</span>
+            </div>
+            
+            <div class="flex items-center gap-1">
+              <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
+              <span>{{ formatDate(course.created_at) }}</span>
+            </div>
+
+            <div v-if="course.duration" class="flex items-center gap-1">
+              <UIcon name="i-heroicons-clock" class="w-4 h-4" />
+              <span>{{ course.duration }}</span>
+            </div>
+            
+            <!-- Share Button -->
+            <div class="ml-auto">
+              <AppShareButton
+                :title="course.title"
+                :description="course.description || `Pelajari ${course.title}`"
+                :url="shareUrl"
+                button-text="Bagikan"
+                button-variant="outline"
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div 
+            v-if="course.description"
+            class="prose prose-lg max-w-none prose-green prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-green-600 hover:prose-a:text-green-700 dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300 dark:prose-a:text-green-400 mb-8"
+            v-html="course.description"
+          />
+          
+          <div v-else class="text-center py-8 mb-8">
+            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+              <UIcon name="i-heroicons-document-text" class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+            </div>
+            <p class="text-gray-500 dark:text-gray-400 font-medium">Deskripsi belum tersedia</p>
+          </div>
+
+          <!-- Video Player -->
+          <div v-if="youtubeEmbedUrl" class="mb-8">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <UIcon name="i-heroicons-play-circle" class="w-5 h-5 text-green-600" />
+              Video Pembelajaran
+            </h3>
+            <div class="relative aspect-video bg-gray-900 rounded-xl overflow-hidden">
+              <iframe
+                :src="youtubeEmbedUrl"
+                class="absolute inset-0 w-full h-full"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              />
+            </div>
+          </div>
+
+          <!-- Resources Section -->
+          <div v-if="hasResources" class="mt-8 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <UIcon name="i-heroicons-folder-open" class="w-5 h-5 text-green-600" />
               Sumber Pembelajaran
             </h3>
             
-            <div v-if="hasResources" class="space-y-6">
+            <div class="space-y-6">
               <!-- Files Section -->
               <div v-if="hasFiles">
                 <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
@@ -390,14 +371,14 @@ watch(() => course.value, (newVal) => {
                   <button
                     v-for="(file, index) in parsedFiles"
                     :key="index"
-                    class="flex items-center justify-between w-full p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 hover:from-green-50 hover:to-green-100 dark:hover:from-green-900/30 dark:hover:to-green-800/30 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-green-300 rounded-lg transition-all duration-300 group"
+                    class="flex items-center justify-between w-full p-4 bg-white dark:bg-gray-700/50 hover:bg-green-50 dark:hover:bg-green-900/20 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-green-300 rounded-lg transition-all duration-300 group border border-gray-200 dark:border-gray-600"
                     @click="downloadFile(file)"
                   >
                     <div class="flex items-center">
                       <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
                         <UIcon name="i-heroicons-arrow-down-tray" class="w-5 h-5 text-green-800 dark:text-green-400" />
                       </div>
-                      <span class="font-medium text-left">{{ file.name || `Dokumen ${index + 1}` }}</span>
+                      <span class="font-medium text-left text-sm">{{ file.name || `Dokumen ${index + 1}` }}</span>
                     </div>
                     <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
@@ -417,38 +398,16 @@ watch(() => course.value, (newVal) => {
                   <!-- Google Drive Link -->
                   <button
                     v-if="course.link_drive"
-                    class="flex items-center justify-between w-full p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-800/40 dark:hover:to-emerald-800/40 text-green-700 dark:text-green-300 rounded-lg transition-all duration-300 group"
+                    class="flex items-center justify-between w-full p-4 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-800/30 text-green-700 dark:text-green-300 rounded-lg transition-all duration-300 group border border-green-200 dark:border-green-800"
                     @click="openDriveLink"
                   >
                     <div class="flex items-center">
                       <div class="w-10 h-10 bg-green-100 dark:bg-green-800 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-5 h-5 text-green-800 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 01-6.033-6.032 6.033 6.033 0 016.033-6.032c1.498 0 2.866.549 3.921 1.453l2.814-2.814A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748L12.545 10.239z"/>
-                        </svg>
+                        <UIcon name="i-heroicons-folder" class="w-5 h-5 text-green-800 dark:text-green-400" />
                       </div>
                       <div class="text-left">
-                        <p class="font-semibold">Google Drive</p>
-                        <p class="text-sm opacity-75">Akses file dan gambar teknis</p>
-                      </div>
-                    </div>
-                    <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </button>
-
-                  <!-- YouTube Link -->
-                  <button
-                    v-if="course.link_youtube"
-                    class="flex items-center justify-between w-full p-4 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/30 dark:to-pink-900/30 hover:from-red-100 hover:to-pink-100 dark:hover:from-red-800/40 dark:hover:to-pink-800/40 text-red-700 dark:text-red-300 rounded-lg transition-all duration-300 group"
-                    @click="openYouTubeLink"
-                  >
-                    <div class="flex items-center">
-                      <div class="w-10 h-10 bg-red-100 dark:bg-red-800 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-5 h-5 text-red-800 dark:text-red-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                        </svg>
-                      </div>
-                      <div class="text-left">
-                        <p class="font-semibold">YouTube</p>
-                        <p class="text-sm opacity-75">Video pembelajaran & tutorial</p>
+                        <p class="font-semibold text-sm">Google Drive</p>
+                        <p class="text-xs opacity-75">Akses file tambahan</p>
                       </div>
                     </div>
                     <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -456,18 +415,45 @@ watch(() => course.value, (newVal) => {
                 </div>
               </div>
             </div>
-
-            <!-- No Resources Message -->
-            <div v-else class="text-center py-8">
-              <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <UIcon name="i-heroicons-folder" class="w-8 h-8 text-gray-400 dark:text-gray-500" />
-              </div>
-              <p class="text-gray-500 dark:text-gray-400 font-medium">Materi sedang dipersiapkan</p>
-              <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Segera hadir dengan konten pembelajaran terbaik</p>
-            </div>
           </div>
         </div>
-      </div>
+      </article>
+
+      <!-- Similar Materials Section -->
+      <section v-if="hasData && relatedCourses.length > 0" class="mt-12">
+        <div class="mb-8">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Materi Serupa
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400">
+            Kategori: <span class="font-semibold text-green-600 dark:text-green-400">{{ formatCategory(course.category) }}</span>
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <LoadingData v-if="loadingSimilar" />
+
+        <!-- Similar Materials Grid -->
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <MaterialCardContent 
+            v-for="item in relatedCourses"
+            :key="item.id"
+            :course="item"
+            variant="default"
+          />
+        </div>
+
+        <!-- View All Button -->
+        <div class="mt-8 flex justify-center">
+          <NuxtLink
+            to="/educations"
+            class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
+          >
+            <span>Lihat Semua Materi</span>
+            <UIcon name="i-lucide-arrow-right" class="w-4 h-4 transition-transform" />
+          </NuxtLink>
+        </div>
+      </section>
     </div>
   </div>
 </template>

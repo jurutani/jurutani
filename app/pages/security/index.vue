@@ -298,7 +298,7 @@ const handleChangePassword = async () => {
       // }, 2000)
     }
   } catch (error) {
-    console.error('Password update error:', error)
+    // console.error('Password update error:', error)
     toastStore.error('Terjadi kesalahan sistem. Silakan coba lagi.')
   } finally {
     loading.value = false

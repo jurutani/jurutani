@@ -6,9 +6,14 @@ definePageMeta({
 // SEO Optimization
 useSeoOptimized('educations')
 </script>
+
 <template>
-  <div class="announcement-page container mx-auto py-12">
+  <div class="educations-page container mx-auto px-4 py-12">
+
+    <!-- Video Section -->
     <DiscussionsVideoSection />
+
+    <!-- Material Section -->
     <DiscussionsMaterialSection />
   </div>
 </template>

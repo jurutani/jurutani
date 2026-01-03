@@ -93,7 +93,7 @@ const getMarketImageUrl = (attachments) => {
 
     return '/product.png';
   } catch (error) {
-    console.error('Error parsing attachments JSON:', error);
+    // console.error('Error parsing attachments JSON:', error);
     return '/product.png';
   }
 };
@@ -132,7 +132,7 @@ const fetchHistoryData = async () => {
       .order('created_at', { ascending: false });
     
     if (newsError) {
-      console.error('Error fetching news:', newsError);
+      // console.error('Error fetching news:', newsError);
     } else if (newsData && newsData.length > 0) {
       const formattedNews = newsData.map(item => ({
         ...item,
@@ -154,7 +154,7 @@ const fetchHistoryData = async () => {
       .order('created_at', { ascending: false });
     
     if (marketsError) {
-      console.error('Error fetching markets:', marketsError);
+      // console.error('Error fetching markets:', marketsError);
     } else if (marketsData && marketsData.length > 0) {
       const formattedMarkets = marketsData.map(item => ({
         ...item,
@@ -175,7 +175,7 @@ const fetchHistoryData = async () => {
     historyItems.value = combinedData.slice(from, to + 1) || [];
     
   } catch (err) {
-    console.error('Exception fetching history data:', err);
+    // console.error('Exception fetching history data:', err);
     error.value = err;
     toastStore.error('Terjadi kesalahan saat memuat riwayat aktivitas.');
   } finally {

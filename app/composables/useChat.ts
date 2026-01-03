@@ -68,7 +68,7 @@ export const useChat = () => {
       img.onload = () => {
         // Calculate new dimensions
         let { width, height } = img
-        
+
         if (width > height) {
           if (width > maxWidth) {
             height = (height * maxWidth) / width
@@ -86,7 +86,7 @@ export const useChat = () => {
 
         // Draw and compress
         ctx.drawImage(img, 0, 0, width, height)
-        
+
         canvas.toBlob(
           (blob) => {
             if (blob) {
@@ -113,7 +113,7 @@ export const useChat = () => {
     try {
       uploadingImage.value = true
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser) throw new Error('User not authenticated')
 
       // Compress image before upload
@@ -121,7 +121,7 @@ export const useChat = () => {
 
       const fileExt = compressedFile.name.split('.').pop()
       const fileName = `${currentUser.id}/${Date.now()}.${fileExt}`
-      
+
       const { data, error: uploadError } = await supabase.storage
         .from('chat-images')
         .upload(fileName, compressedFile)
@@ -145,7 +145,7 @@ export const useChat = () => {
   const sendImageMessage = async (conversationId: string, imageFile: File, caption?: string) => {
     try {
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser) throw new Error('User not authenticated')
 
       // Upload image first
@@ -190,7 +190,7 @@ export const useChat = () => {
     try {
       loading.value = true
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser) throw new Error('User not authenticated')
 
       // Cek apakah conversation sudah ada
@@ -244,7 +244,7 @@ export const useChat = () => {
     try {
       loading.value = true
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser) throw new Error('User not authenticated')
 
       const { data, error: fetchError } = await supabase
@@ -298,7 +298,7 @@ export const useChat = () => {
   const sendMessage = async (conversationId: string, content: string, imageFile?: File) => {
     try {
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser) throw new Error('User not authenticated')
 
       let imageUrl = null
@@ -342,117 +342,117 @@ export const useChat = () => {
 
   // Delete conversation (enhanced with image cleanup)
   const deleteConversation = async (conversationId: string) => {
-  try {
-    loading.value = true
-    const currentUser = await getCurrentUser()
-    
-    if (!currentUser) throw new Error('User not authenticated')
+    try {
+      loading.value = true
+      const currentUser = await getCurrentUser()
 
-    // Verify user has permission to delete this conversation
-    const { data: conversation, error: conversationCheckError } = await supabase
-      .from('conversations')
-      .select('participant1_id, participant2_id')
-      .eq('id', conversationId)
-      .single()
+      if (!currentUser) throw new Error('User not authenticated')
 
-    if (conversationCheckError) throw conversationCheckError
-    if (!conversation) throw new Error('Conversation not found')
+      // Verify user has permission to delete this conversation
+      const { data: conversation, error: conversationCheckError } = await supabase
+        .from('conversations')
+        .select('participant1_id, participant2_id')
+        .eq('id', conversationId)
+        .single()
 
-    const isParticipant = conversation.participant1_id === currentUser.id || 
-                         conversation.participant2_id === currentUser.id
-    
-    if (!isParticipant) {
-      throw new Error('You do not have permission to delete this conversation')
-    }
+      if (conversationCheckError) throw conversationCheckError
+      if (!conversation) throw new Error('Conversation not found')
 
-    // Get all messages with images for cleanup
-    const { data: messagesWithImages, error: messagesQueryError } = await supabase
-      .from('messages')
-      .select('image_url')
-      .eq('conversation_id', conversationId)
-      .not('image_url', 'is', null)
+      const isParticipant = conversation.participant1_id === currentUser.id ||
+        conversation.participant2_id === currentUser.id
 
-    if (messagesQueryError) {
-      console.warn('Failed to fetch messages with images:', messagesQueryError)
-    }
+      if (!isParticipant) {
+        throw new Error('You do not have permission to delete this conversation')
+      }
 
-    // Use database transaction-like approach by deleting in correct order
-    // First delete messages (child records)
-    const { error: messagesError } = await supabase
-      .from('messages')
-      .delete()
-      .eq('conversation_id', conversationId)
+      // Get all messages with images for cleanup
+      const { data: messagesWithImages, error: messagesQueryError } = await supabase
+        .from('messages')
+        .select('image_url')
+        .eq('conversation_id', conversationId)
+        .not('image_url', 'is', null)
 
-    if (messagesError) throw messagesError
+      if (messagesQueryError) {
+        // console.warn('Failed to fetch messages with images:', messagesQueryError)
+      }
 
-    // Then delete the conversation (parent record)
-    const { error: conversationError } = await supabase
-      .from('conversations')
-      .delete()
-      .eq('id', conversationId)
-      .or(`participant1_id.eq.${currentUser.id},participant2_id.eq.${currentUser.id}`)
+      // Use database transaction-like approach by deleting in correct order
+      // First delete messages (child records)
+      const { error: messagesError } = await supabase
+        .from('messages')
+        .delete()
+        .eq('conversation_id', conversationId)
 
-    if (conversationError) throw conversationError
+      if (messagesError) throw messagesError
 
-    // Clean up images from storage (do this after DB operations succeed)
-    if (messagesWithImages && messagesWithImages.length > 0) {
-      const imageCleanupPromises = messagesWithImages
-        .map(msg => msg.image_url)
-        .filter(Boolean)
-        .map(async (imageUrl) => {
-          try {
-            // Extract file path from public URL
-            const urlParts = imageUrl.split('/chat-images/')
-            if (urlParts.length > 1) {
-              const filePath = urlParts[1].split('?')[0] // Remove query parameters if any
-              const { error: storageError } = await supabase.storage
-                .from('chat-images')
-                .remove([filePath])
-              
-              if (storageError) {
-                console.warn(`Failed to delete image ${filePath}:`, storageError)
+      // Then delete the conversation (parent record)
+      const { error: conversationError } = await supabase
+        .from('conversations')
+        .delete()
+        .eq('id', conversationId)
+        .or(`participant1_id.eq.${currentUser.id},participant2_id.eq.${currentUser.id}`)
+
+      if (conversationError) throw conversationError
+
+      // Clean up images from storage (do this after DB operations succeed)
+      if (messagesWithImages && messagesWithImages.length > 0) {
+        const imageCleanupPromises = messagesWithImages
+          .map(msg => msg.image_url)
+          .filter(Boolean)
+          .map(async (imageUrl) => {
+            try {
+              // Extract file path from public URL
+              const urlParts = imageUrl.split('/chat-images/')
+              if (urlParts.length > 1) {
+                const filePath = urlParts[1].split('?')[0] // Remove query parameters if any
+                const { error: storageError } = await supabase.storage
+                  .from('chat-images')
+                  .remove([filePath])
+
+                if (storageError) {
+                  // console.warn(`Failed to delete image ${filePath}:`, storageError)
+                }
               }
+            } catch (imgError) {
+              // console.warn('Failed to delete image:', imgError)
+              // Don't throw - storage cleanup failures shouldn't fail the whole operation
             }
-          } catch (imgError) {
-            console.warn('Failed to delete image:', imgError)
-            // Don't throw - storage cleanup failures shouldn't fail the whole operation
+          })
+
+        // Run all image deletions in parallel, but don't wait for them to complete
+        Promise.allSettled(imageCleanupPromises).then((results) => {
+          const failures = results.filter(result => result.status === 'rejected')
+          if (failures.length > 0) {
+            // console.warn(`Failed to delete ${failures.length} images from storage`)
           }
         })
+      }
 
-      // Run all image deletions in parallel, but don't wait for them to complete
-      Promise.allSettled(imageCleanupPromises).then((results) => {
-        const failures = results.filter(result => result.status === 'rejected')
-        if (failures.length > 0) {
-          console.warn(`Failed to delete ${failures.length} images from storage`)
-        }
-      })
+      // Update local state
+      conversations.value = conversations.value.filter(c => c.id !== conversationId)
+
+      // Clear current conversation if it was the deleted one
+      if (currentConversation.value?.id === conversationId) {
+        currentConversation.value = null
+        messages.value = []
+      }
+
+      return true
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete conversation'
+      error.value = errorMessage
+      // console.error('Delete conversation error:', err)
+      throw new Error(errorMessage)
+    } finally {
+      loading.value = false
     }
-
-    // Update local state
-    conversations.value = conversations.value.filter(c => c.id !== conversationId)
-    
-    // Clear current conversation if it was the deleted one
-    if (currentConversation.value?.id === conversationId) {
-      currentConversation.value = null
-      messages.value = []
-    }
-
-    return true
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'Failed to delete conversation'
-    error.value = errorMessage
-    console.error('Delete conversation error:', err)
-    throw new Error(errorMessage)
-  } finally {
-    loading.value = false
   }
-}
 
   // Delete single message (enhanced with image cleanup)
   const deleteMessage = async (messageId: string) => {
     try {
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser) throw new Error('User not authenticated')
 
       // First get the message to check if it has an image
@@ -474,7 +474,7 @@ export const useChat = () => {
             await supabase.storage.from('chat-images').remove([filePath])
           }
         } catch (imgError) {
-          console.error('Failed to delete image:', imgError)
+          // console.error('Failed to delete image:', imgError)
         }
       }
 
@@ -489,8 +489,8 @@ export const useChat = () => {
       // Remove from local state
       messages.value = messages.value.filter(m => m.id !== messageId)
 
-      // Tambahan: log ke console kalau berhasil
-      console.log(`Message with ID ${messageId} successfully deleted.`)
+      Tambahan: log ke console kalau berhasil
+      // console.log(`Message with ID ${messageId} successfully deleted.`)
 
       return true
     } catch (err) {
@@ -505,7 +505,7 @@ export const useChat = () => {
     try {
       loading.value = true
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser) throw new Error('User not authenticated')
 
       // Get all messages with images to delete from storage
@@ -526,7 +526,7 @@ export const useChat = () => {
               await supabase.storage.from('chat-images').remove([filePath])
             }
           } catch (imgError) {
-            console.error('Failed to delete image:', imgError)
+            // console.error('Failed to delete image:', imgError)
           }
         }
       }
@@ -565,7 +565,7 @@ export const useChat = () => {
   const markAsRead = async (conversationId: string) => {
     try {
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser) return
 
       await supabase
@@ -575,7 +575,7 @@ export const useChat = () => {
         .neq('sender_id', currentUser.id)
         .eq('is_read', false)
     } catch (err) {
-      console.error('Failed to mark messages as read:', err)
+      // console.error('Failed to mark messages as read:', err)
     }
   }
 
@@ -642,17 +642,17 @@ export const useChat = () => {
     if (!currentUser) return null
 
     const conv = currentConversation.value
-    return conv.participant1_id === currentUser.id 
-      ? conv.participant2 
+    return conv.participant1_id === currentUser.id
+      ? conv.participant2
       : conv.participant1
   }
 
   // Get unread message count for a conversation
   const getUnreadCount = computed(() => {
     return (conversationId: string) => {
-      return messages.value.filter(m => 
-        m.conversation_id === conversationId && 
-        !m.is_read && 
+      return messages.value.filter(m =>
+        m.conversation_id === conversationId &&
+        !m.is_read &&
         m.sender_id !== getCurrentUser()?.id
       ).length
     }
@@ -662,7 +662,7 @@ export const useChat = () => {
   const isValidImageFile = (file: File): boolean => {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
     const maxSize = 10 * 1024 * 1024 // 10MB
-    
+
     return allowedTypes.includes(file.type) && file.size <= maxSize
   }
 

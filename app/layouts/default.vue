@@ -1,5 +1,4 @@
 <script setup lang="ts">
-useOgImage()
 </script>
 
 <template>
@@ -25,7 +24,7 @@ useOgImage()
       <main>
         <slot />
       </main>
-      <TheFooter />
+      <FootFooter />
     </div>
   </div>
 </template>

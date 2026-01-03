@@ -38,12 +38,24 @@ export default {
   navs: {
     primary: [
       { title: 'Beranda', to: '/', icon: 'i-lucide-home' },
-      { title: 'Layanan', to: '/discussions', icon: 'i-lucide-headset' }, // ikon layanan / kolaborasi
+      {
+        title: 'Layanan',
+        icon: 'i-lucide-headset',
+        children: [
+          { title: 'Diskusi', to: '/discussions', icon: 'i-lucide-messages-square' },
+          { title: 'Marketplace', to: '/markets', icon: 'i-lucide-shopping-bag' }
+        ]
+      },
       { title: 'Berita', to: '/news', icon: 'i-lucide-newspaper' },
-      { title: 'Marketplace', to: '/markets', icon: 'i-lucide-shopping-bag' },
-      { title: 'Edukasi', to: '/educations', icon: 'i-lucide-graduation-cap' },
-      { title: 'Course', to: '/courses', icon: 'i-lucide-book-open' },
-      { title: 'Alat', to: '/tools', icon: 'i-lucide-wrench' },
+      {
+        title: 'Edukasi',
+        icon: 'i-lucide-graduation-cap',
+        children: [
+          { title: 'Materi', to: '/educations', icon: 'i-lucide-book' },
+          { title: 'Course', to: '/courses', icon: 'i-lucide-book-open' },
+          { title: 'Alat', to: '/tools', icon: 'i-lucide-wrench' }
+        ]
+      }
     ],
     secondary: [
       { title: 'Profil', to: '/profile', icon: 'i-lucide-user' },

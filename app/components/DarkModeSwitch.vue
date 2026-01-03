@@ -1,33 +1,40 @@
 <script setup lang="ts">
-  import { isDark, toggleDark } from '@/composables/dark'
+import { isDark, toggleDark } from '@/composables/dark'
+
+const isMounted = ref(false)
+
+onMounted(() => {
+  isMounted.value = true
+})
 </script>
 
 <template>
-  <div>
-    <UButton
-      variant="ghost"
-      class="!rounded-xl text-green-700 dark:text-green-300 hover:bg-green-100/50 dark:hover:bg-green-700/30 transition-all"
-      aria-label="Toggle theme"
-      size="sm"
-      @click="toggleDark()"
-    >
-      <transition name="slide" mode="out-in">
-        <UIcon
-          v-if="isDark"
-          name="i-material-symbols-dark-mode-outline"
-          class="text-2xl"
-        />
-        <UIcon
-          v-else
-          name="i-material-symbols-light-mode-outline"
-          class="text-2xl"
-        />
-      </transition>
-    </UButton>
-  </div>
+  <UButton
+    variant="ghost"
+    size="sm"
+    aria-label="Toggle theme"
+    class="!rounded-xl text-green-700 dark:text-green-300
+           hover:bg-green-100/50 dark:hover:bg-green-700/30
+           transition-all"
+    @click="toggleDark()"
+  >
+    <transition name="slide" mode="out-in">
+      <UIcon
+        v-if="isMounted && isDark"
+        name="i-lucide-moon"
+        class="text-2xl"
+      />
+      <UIcon
+        v-else-if="isMounted"
+        name="i-lucide-sun"
+        class="text-2xl"
+      />
+      <div v-else class="text-2xl w-6 h-6" />
+    </transition>
+  </UButton>
 </template>
 
-<style scoped lang="postcss">
+<style scoped>
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.15s ease;

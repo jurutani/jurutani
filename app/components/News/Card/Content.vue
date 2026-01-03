@@ -1,156 +1,222 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
 
 const { supabase } = useSupabase()
 
 interface News {
-  id: number;
-  title: string;
-  content: string;
-  image_url?: string;
-  category: string;
-  created_at: string;
-  author?: string;
+  id: number
+  slug: string
+  title: string
+  content: string
+  image_url?: string
+  category: string
+  created_at: string
+  author?: string
 }
 
-const props = defineProps<{
-  news: News;
-}>();
+interface Props {
+  news: News
+  variant?: 'default' | 'large' | 'wide' | 'tall'
+  index?: number
+}
 
-const imageError = ref(false);
-const imageLoading = ref(true);
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'default',
+  index: 0
+})
+
+const imageError = ref(false)
+const imageLoading = ref(true)
 
 // Computed for Supabase image URL
 const imageUrl = computed(() => {
   if (!props.news?.image_url) return null
   
-  // Check if it's already a full URL
   if (props.news.image_url.startsWith('http')) {
     return props.news.image_url
   }
   
-  // Get public URL from Supabase storage
   const { data } = supabase.storage
     .from('news-images')
     .getPublicUrl(props.news.image_url)
   
   return data.publicUrl
-});
+})
 
 const formattedDate = computed(() => {
-  const date = new Date(props.news.created_at);
+  const date = new Date(props.news.created_at)
   return new Intl.DateTimeFormat('id-ID', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
-  }).format(date);
-});
+  }).format(date)
+})
 
 const formattedCategory = computed(() => {
-  return props.news.category.charAt(0).toUpperCase() + props.news.category.slice(1);
-});
+  return props.news.category.charAt(0).toUpperCase() + props.news.category.slice(1)
+})
 
 const excerpt = computed(() => {
-  const stripHtml = props.news.content.replace(/<[^>]*>?/gm, '');
-  return stripHtml.length > 120 ? stripHtml.substring(0, 120) + '...' : stripHtml;
-});
+  const stripHtml = props.news.content.replace(/<[^>]*>?/gm, '')
+  const maxLength = props.variant === 'large' ? 180 : 100
+  return stripHtml.length > maxLength ? stripHtml.substring(0, maxLength) + '...' : stripHtml
+})
 
 const handleImageError = () => {
-  imageError.value = true;
-  imageLoading.value = false;
-};
+  imageError.value = true
+  imageLoading.value = false
+}
 
 const handleImageLoad = () => {
-  imageLoading.value = false;
-  imageError.value = false;
-};
+  imageLoading.value = false
+  imageError.value = false
+}
 
 const getCategoryColor = (category: string) => {
   const colors = {
     teknologi: 'bg-emerald-600',
-    pertanian: 'bg-green-600', 
+    pertanian: 'bg-green-600',
     bisnis: 'bg-lime-600',
     pendidikan: 'bg-teal-600',
     kesehatan: 'bg-green-700',
     tips: 'bg-emerald-500',
     panduan: 'bg-lime-500',
     default: 'bg-green-500'
-  };
-  return colors[category.toLowerCase()] || colors.default;
-};
+  }
+  return colors[category.toLowerCase()] || colors.default
+}
+
+// Bento grid variants
+const cardClasses = computed(() => {
+  const base = 'group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl cursor-pointer'
+  
+  const variants = {
+    default: 'col-span-1 row-span-1 min-h-[400px]',
+    large: 'col-span-1 md:col-span-2 row-span-1 md:row-span-2 min-h-[400px] md:min-h-[600px]',
+    wide: 'col-span-1 md:col-span-2 row-span-1 min-h-[400px]',
+    tall: 'col-span-1 row-span-1 md:row-span-2 min-h-[400px] md:min-h-[600px]'
+  }
+  
+  return `${base} ${variants[props.variant]}`
+})
+
+const contentClasses = computed(() => {
+  if (props.variant === 'large') {
+    return 'p-8 md:p-10'
+  }
+  return 'p-6 md:p-8'
+})
 </script>
 
 <template>
-  <article class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-green-100 dark:border-gray-700 hover:border-green-200 dark:hover:border-gray-600 flex flex-col h-full">
-    <!-- Image Container -->
-    <div class="relative h-52 bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-700 dark:to-gray-800 overflow-hidden">
+  <NuxtLink
+    :to="`/news/${news.slug}`"
+    :class="cardClasses"
+  >
+    <!-- Background Image with Gradient Overlay -->
+    <div class="absolute inset-0">
       <!-- Loading State -->
-      <div v-if="imageLoading && imageUrl && !imageError" class="absolute inset-0 flex items-center justify-center">
-        <div class="animate-spin rounded-full h-8 w-8 border-2 border-green-200 border-t-green-600"/>
+      <div 
+        v-if="imageLoading && imageUrl && !imageError" 
+        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900"
+      >
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600" />
       </div>
       
-      <!-- Image -->
+      <!-- Background Image -->
       <img
         v-if="imageUrl && !imageError"
         :src="imageUrl"
         :alt="news.title"
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         loading="lazy"
         @error="handleImageError"
         @load="handleImageLoad"
-      >
+      />
       
-      <!-- Fallback when no image or error -->
-      <div v-else class="flex flex-col items-center justify-center h-full text-green-400 dark:text-gray-500">
-        <UIcon name="i-lucide-heart" class="w-12 h-12 mb-2" />
-        <span class="text-sm font-medium">🌱 Juru Tani</span>
+      <!-- Fallback Background -->
+      <div 
+        v-else 
+        class="w-full h-full bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center"
+      >
+        <div class="text-center text-green-400 dark:text-gray-600">
+          <UIcon name="i-heroicons-newspaper" class="w-20 h-20 mb-3 opacity-50" />
+          <p class="text-sm font-medium opacity-75">Juru Tani</p>
+        </div>
       </div>
       
+      <!-- Gradient Overlay - Enhanced with multiple layers -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-500" />
+      
+      <!-- Additional gradient for better text readability -->
+      <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 via-transparent to-emerald-900/20 group-hover:from-green-900/30 group-hover:to-emerald-900/30 transition-all duration-500" />
+    </div>
+    
+    <!-- Content Overlay -->
+    <div :class="['relative h-full flex flex-col justify-end', contentClasses]">
       <!-- Category Badge -->
-      <div class="absolute top-3 left-3">
-        <span :class="`${getCategoryColor(news.category)} text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm`">
+      <div class="absolute top-4 left-4 md:top-6 md:left-6">
+        <span 
+          :class="[
+            getCategoryColor(news.category),
+            'inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl'
+          ]"
+        >
+          <UIcon name="i-heroicons-tag" class="w-3 h-3" />
           {{ formattedCategory }}
         </span>
       </div>
-    </div>
-
-    <!-- Content -->
-    <div class="p-6 flex flex-col flex-grow">
-      <!-- Title -->
-      <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200">
-        {{ news.title }}
-      </h3>
       
-      <!-- Excerpt -->
-      <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
-        {{ excerpt }}
-      </p>
-
-      <!-- Meta Info -->
-      <div class="flex items-center justify-between mb-4 text-xs text-gray-500 dark:text-gray-400">
-        <div class="flex items-center space-x-2">
-          <UIcon name="i-lucide-user" class="w-4 h-4 text-green-500" />
-          <span class="font-medium">{{ news.author || 'Admin Juru Tani' }}</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <UIcon name="i-lucide-calendar" class="w-4 h-4 text-green-500" />
-          <span>{{ formattedDate }}</span>
-        </div>
-      </div>
-
-      <!-- Read More Button -->
-      <div class="flex justify-end">
-        <NuxtLink
-          :to="`/news/${news.id}`"
-          class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
+      <!-- Main Content -->
+      <div class="space-y-3 md:space-y-4 transform transition-transform duration-500 group-hover:translate-y-[-8px]">
+        <!-- Title -->
+        <h3 
+          :class="[
+            'font-bold text-white leading-tight line-clamp-2 transition-all duration-300',
+            variant === 'large' ? 'text-2xl md:text-4xl' : 'text-xl md:text-2xl'
+          ]"
         >
-          <span>Baca Selengkapnya</span>
-          <UIcon name="i-lucide-arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-        </NuxtLink>
+          {{ news.title }}
+        </h3>
+        
+        <!-- Excerpt - Show more on large variant -->
+        <p 
+          v-if="variant === 'large' || variant === 'wide'"
+          :class="[
+            'text-gray-200 leading-relaxed transition-all duration-300',
+            variant === 'large' ? 'text-base md:text-lg line-clamp-3' : 'text-sm md:text-base line-clamp-2'
+          ]"
+        >
+          {{ excerpt }}
+        </p>
+        
+        <!-- Meta Info -->
+        <div class="flex items-center gap-4 text-xs md:text-sm text-gray-300">
+          <div class="flex items-center gap-2">
+            <UIcon name="i-heroicons-user" class="w-4 h-4 text-green-400" />
+            <span class="font-medium">{{ news.author || 'Admin Juru Tani' }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <UIcon name="i-heroicons-calendar" class="w-4 h-4 text-green-400" />
+            <span>{{ formattedDate }}</span>
+          </div>
+        </div>
+        
+        <!-- Read More Button -->
+        <div class="flex items-center gap-2 text-white font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <span class="text-sm md:text-base">Baca Selengkapnya</span>
+          <UIcon 
+            name="i-heroicons-arrow-right" 
+            class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" 
+          />
+        </div>
       </div>
+      
+      <!-- Animated Border on Hover -->
+      <div class="absolute inset-0 border-2 border-transparent group-hover:border-green-400/50 rounded-2xl transition-all duration-500 pointer-events-none" />
     </div>
-  </article>
+  </NuxtLink>
 </template>
 
 <style scoped>
@@ -166,5 +232,15 @@ const getCategoryColor = (category: string) => {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Smooth animation for image scale */
+@keyframes imageScale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 </style>

@@ -1,165 +1,135 @@
 <script setup lang="ts">
-  import { ref, computed, watchEffect } from 'vue'
-  import { useSupabase } from '~/composables/useSupabase'
-  import { CreateButton } from '#components'
-  import { useAsyncData } from '#app'
+import { ref, onMounted } from 'vue'
+import { useContentList } from '~/composables/useContentList'
+import { useAsyncData } from '#app'
+import { useSupabase } from '~/composables/useSupabase'
 
-  definePageMeta({
-    layout: 'default',
-  })
+definePageMeta({
+  layout: 'default',
+})
 
-  // SEO Optimization
-  useSeoOptimized('markets')
+// SEO Optimization
+useSeoOptimized('markets')
 
-  // Types
-  interface Market {
-    id: string
-    name: string
-    description?: string
-    price: number
-    price_range?: string
-    category: string
-    location?: string
-    weight?: string
-    size?: string
-    stock?: string | number
-    status: string
-    created_at: string
-    attachments?: string
-    seller?: string
-    contact_seller?: string
-    links?: {
-      shopee_link?: string
-      tokopedia_link?: string
-      tiktok_link?: string
-    }
-    profiles?: {
-      full_name?: string
-      name?: string
-      avatar_url?: string
-    }
-    deleted_at?: string
-    archived_at?: string
+// Types
+interface Market {
+  id: string
+  slug: string
+  name: string
+  description?: string
+  price: number
+  price_range?: string
+  category: string
+  location?: string
+  weight?: string
+  size?: string
+  stock?: string | number
+  status: string
+  created_at: string
+  attachments?: string
+  seller?: string
+  contact_seller?: string
+  links?: {
+    shopee_link?: string
+    tokopedia_link?: string
+    tiktok_link?: string
   }
-
-  interface Category {
-    id?: string
-    name: string
-    value?: string
+  profiles?: {
+    full_name?: string
+    name?: string
+    avatar_url?: string
   }
+  deleted_at?: string
+  archived_at?: string
+}
 
-  // Supabase client
-  const { supabase } = useSupabase()
+interface Category {
+  id?: string
+  name: string
+  value?: string
+}
 
-  // Data utama
-  const marketsList = ref<Market[]>([])
-  const error = ref<string | null>(null)
-  const loading = ref(true)
+const { supabase } = useSupabase()
 
-  // Filter & pagination
-  const currentCategory = ref('all')
-  const currentPage = ref(1)
-  const pageSize = 12
-  const totalPages = ref(1)
-  const totalItems = ref(0)
-  const categories = ref<Category[]>([])
-
-  // Ambil kategori dari tabel 'category-market'
-  const { data: categoriesData } = await useAsyncData('market-categories', async () => {
-    try {
-      const { data, error: catError } = await supabase
-        .from('category_markets')
-        .select('name')
-        .order('name', { ascending: true })
-
-      if (catError) throw catError
-      
-      return data as Category[]
-    } catch (err) {
-      console.error('Error fetching categories:', err)
-      return []
-    }
-  })
-
-  // Set categories setelah data dimuat
-  if (categoriesData.value) {
-    categories.value = categoriesData.value.map(cat => ({
-      name: cat.name,
-      value: cat.name
-    }))
+// Use content list composable
+const {
+  items: marketsList,
+  loading,
+  error,
+  currentPage,
+  totalPages,
+  totalItems,
+  filters,
+  isLoading,
+  hasError,
+  hasData,
+  showPagination,
+  sortOptions,
+  currentSort,
+  fetchItems,
+  handleCategoryChange,
+  handleSearchChange,
+  handleSortChange,
+  handlePageChange
+} = useContentList<Market>({
+  tableName: 'markets',
+  pageSize: 12,
+  statusField: 'status',
+  statusValue: 'Approved',
+  categoryField: 'category',
+  defaultSort: {
+    column: 'created_at',
+    ascending: false
   }
+})
 
-  // Fungsi fetch data yang dioptimasi
-  const fetchMarkets = async () => {
-    loading.value = true
-    error.value = null
+// Categories
+const categories = ref<Category[]>([])
 
-    try {
-      // Build query dengan method chaining yang lebih efisien
-      const baseQuery = supabase
-        .from('markets')
-        .select('*', { count: 'exact' })
-        .is('deleted_at', null)
-        .is('archived_at', null)
-        .eq('status', 'Approved')
+// Fetch categories
+const { data: categoriesData } = await useAsyncData('market-categories', async () => {
+  try {
+    const { data, error: catError } = await supabase
+      .from('category_markets')
+      .select('name')
+      .order('name', { ascending: true })
 
-      // Apply category filter jika bukan 'all'
-      const query = currentCategory.value !== 'all' && currentCategory.value !== 'semua'
-        ? baseQuery.eq('category', currentCategory.value)
-        : baseQuery
-
-      // Apply pagination dan ordering
-      const { data, error: fetchError, count } = await query
-        .order('created_at', { ascending: false })
-        .range(
-          (currentPage.value - 1) * pageSize,
-          currentPage.value * pageSize - 1
-        )
-
-      if (fetchError) throw fetchError
-
-      marketsList.value = data as Market[] || []
-      totalItems.value = count || 0
-      totalPages.value = Math.ceil(totalItems.value / pageSize)
-    } catch (err: any) {
-      error.value = err.message || 'Terjadi kesalahan saat memuat data'
-      console.error('Error fetching markets:', err)
-    } finally {
-      loading.value = false
-    }
+    if (catError) throw catError
+    
+    return data as Category[]
+  } catch (err) {
+    console.error('Error fetching categories:', err)
+    return []
   }
+})
 
-  // SSR-friendly data fetch on first load
-  await useAsyncData('markets', fetchMarkets)
+// Set categories
+if (categoriesData.value) {
+  categories.value = categoriesData.value.map(cat => ({
+    name: cat.name,
+    value: cat.name
+  }))
+}
 
-  // Gunakan watchEffect untuk reaktivitas yang lebih efisien
-  watchEffect(() => {
-    fetchMarkets()
-  })
+// Bento grid pattern - determines which cards should be large
+const getBentoVariant = (index: number): 'default' | 'large' | 'wide' | 'tall' => {
+  // Pattern: large card every 8 items, wide card every 6 items
+  if (index % 8 === 0) return 'large'
+  if (index % 6 === 0) return 'wide'
+  if (index % 13 === 0) return 'tall'
+  return 'default'
+}
 
-  // Computed untuk status
-  const isLoading = computed(() => loading.value)
-  const hasError = computed(() => !!error.value)
-  const hasData = computed(() => marketsList.value.length > 0)
-  const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
-
-  // Handler untuk category change
-  const handleCategoryChange = (category: string) => {
-    // Reset ke halaman 1 saat kategori berubah
-    currentCategory.value = category
-    currentPage.value = 1
-  }
-
-  // Handler untuk pagination change
-  const handlePageChange = (page: number) => {
-    currentPage.value = page
-  }
+// Initial fetch
+onMounted(() => {
+  fetchItems()
+})
 </script>
 
 <template>
   <div class="markets-page container mx-auto px-4 py-12">
-    <!-- Pasar Section Header -->
-    <div class="mx-auto mb-6 max-w-4xl text-center">
+    <!-- Markets Section Header -->
+    <div class="mx-auto mb-8 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
         <UIcon name="i-lucide-shopping-bag" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Marketplace Petani Terpercaya</span>
@@ -169,35 +139,64 @@
         Pasar Tani JuruTani
       </h2>
       
-      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto mb-8">
         Jelajahi marketplace produk lokal dengan pilihan lengkap 
         <span class="font-semibold text-emerald-600 dark:text-emerald-400">hasil pertanian segar</span>, 
         <span class="font-semibold text-teal-600 dark:text-teal-400">produk peternakan berkualitas</span>, dan 
         <span class="font-semibold text-cyan-600 dark:text-cyan-400">olahan artisan</span> langsung dari petani dan produsen terpercaya.
       </p>
+      
+      <!-- Category Filter -->
+      <AppCategoryFilter 
+        :categories="categories" 
+        :current-category="filters.category"
+        :show-all-option="true"
+        all-option-text="Semua"
+        all-option-value="all"
+        @update:category="handleCategoryChange"
+      />
     </div>
     
-    <!-- Category Filter -->
-    <AppCategoryFilter 
-      :categories="categories" 
-      :current-category="currentCategory"
-      :show-all-option="true"
-      all-option-text="Semua"
-      all-option-value="all"
-      @update:category="handleCategoryChange"
-    />
+    <!-- Filter & Sort Bar -->
+    <div class="flex flex-col gap-4 mb-8">
+      
+      <!-- Search Bar - Full width on all screens -->
+      <AppSearchBar 
+        v-model="filters.search"
+        placeholder="Cari produk, kategori, atau penjual..."
+        @search="handleSearchChange"
+      />
+      
+      <!-- Sort and Results Row -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <!-- Sort Dropdown -->
+        <AppSortDropdown 
+          :sort-options="sortOptions"
+          :current-sort="filters.sort"
+          @update:sort="handleSortChange"
+        />
+        
+        <!-- Results Count -->
+        <div v-if="!isLoading && hasData" class="text-sm text-gray-600 dark:text-gray-400">
+          Menampilkan <span class="font-semibold text-green-600 dark:text-green-400">{{ marketsList.length }}</span> dari <span class="font-semibold">{{ totalItems }}</span> produk
+        </div>
+      </div>
+    </div>
     
-    <!-- Markets Content -->
+    <!-- Markets Content with Bento Grid -->
     <div class="mt-8">
       <LoadingData v-if="isLoading" />      
       <ErrorData v-else-if="hasError" :error="error" />
       <NotFoundData v-else-if="!hasData" />
       
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+      <!-- Bento Grid Layout -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-auto">
         <MarketsCardContent 
-          v-for="product in marketsList" 
+          v-for="(product, index) in marketsList" 
           :key="product.id" 
-          :product="product" 
+          :product="product"
+          :variant="getBentoVariant(index)"
+          :index="index"
         />
       </div>
     </div>
@@ -208,7 +207,7 @@
       :current-page="currentPage" 
       :total-pages="totalPages"
       :total-items="totalItems"
-      :page-size="pageSize"
+      :page-size="12"
       :show-page-info="true"
       :show-first-last="true"
       @update:page="handlePageChange"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { onMounted, computed, watch } from 'vue'
+import { useContentDetail } from '~/composables/useContentDetail'
 import { useSupabase } from '~/composables/useSupabase'
 
 definePageMeta({
@@ -9,6 +9,7 @@ definePageMeta({
 
 interface NewsItem {
   id: string | number
+  slug: string
   title: string
   sub_title?: string
   content: string
@@ -24,29 +25,37 @@ interface NewsItem {
   published_at?: string
 }
 
-// Composables
-const route = useRoute()
-const router = useRouter()
 const { supabase } = useSupabase()
 
-// State
-const newsId = route.params.id as string
-const news = ref<NewsItem | null>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
-const similarNews = ref<NewsItem[]>([])
-const loadingSimilar = ref(false)
+// Use content detail composable
+const {
+  item: news,
+  loading,
+  error,
+  similarItems: similarNews,
+  loadingSimilar,
+  slug,
+  isLoading,
+  hasError,
+  hasData,
+  fetchItem,
+  goBack
+} = useContentDetail<NewsItem>({
+  tableName: 'news',
+  statusField: 'status_news',
+  statusValue: 'approved',
+  categoryField: 'category',
+  similarLimit: 4
+})
 
 // Computed
 const imageUrl = computed(() => {
   if (!news.value?.image_url) return null
   
-  // Check if it's already a full URL
   if (news.value.image_url.startsWith('http')) {
     return news.value.image_url
   }
   
-  // Get public URL from Supabase storage
   const { data } = supabase.storage
     .from('news-images')
     .getPublicUrl(news.value.image_url)
@@ -57,12 +66,10 @@ const imageUrl = computed(() => {
 const attachmentUrl = computed(() => {
   if (!news.value?.attachment_url) return null
   
-  // Check if it's already a full URL
   if (news.value.attachment_url.startsWith('http')) {
     return news.value.attachment_url
   }
   
-  // Get public URL from Supabase storage
   const { data } = supabase.storage
     .from('news-attachments')
     .getPublicUrl(news.value.attachment_url)
@@ -85,6 +92,7 @@ const attachmentFileType = computed(() => {
 const similarNewsFormatted = computed(() => {
   return similarNews.value.map(item => ({
     id: item.id,
+    slug: item.slug,
     title: item.title,
     content: item.content,
     image_url: item.image_url,
@@ -95,70 +103,6 @@ const similarNewsFormatted = computed(() => {
 })
 
 // Methods
-const fetchNewsDetail = async (): Promise<void> => {
-  loading.value = true
-  error.value = null
-
-  try {
-    const { data, error: fetchError } = await supabase
-      .from('news')
-      .select('*')
-      .eq('id', newsId)
-      .eq('status_news', 'approved')
-      .single()
-
-    if (fetchError) {
-      console.error('Error fetching news:', fetchError)
-      error.value = 'Gagal memuat berita'
-      return
-    }
-
-    if (!data) {
-      error.value = 'Berita tidak ditemukan'
-      return
-    }
-
-    news.value = data
-    
-    // Fetch similar news after main news is loaded
-    await fetchSimilarNews(data.category)
-  } catch (err) {
-    console.error('Unexpected error:', err)
-    error.value = 'Terjadi kesalahan yang tidak terduga'
-  } finally {
-    loading.value = false
-  }
-}
-
-const fetchSimilarNews = async (category?: string): Promise<void> => {
-  if (!category) return
-  
-  loadingSimilar.value = true
-  
-  try {
-    const { data, error: fetchError } = await supabase
-      .from('news')
-      .select('*')
-      .eq('category', category)
-      .eq('status_news', 'approved')
-      .neq('id', newsId)
-      .order('published_at', { ascending: false })
-      .order('created_at', { ascending: false })
-      .limit(4)
-
-    if (fetchError) {
-      console.error('Error fetching similar news:', fetchError)
-      return
-    }
-
-    similarNews.value = data || []
-  } catch (err) {
-    console.error('Unexpected error fetching similar news:', err)
-  } finally {
-    loadingSimilar.value = false
-  }
-}
-
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString)
   return new Intl.DateTimeFormat('id-ID', {
@@ -175,8 +119,8 @@ const formatCategory = (category?: string): string => {
   return category.charAt(0).toUpperCase() + category.slice(1)
 }
 
-const goBack = (): void => {
-  router.push('/news')
+const handleGoBack = (): void => {
+  goBack('/news')
 }
 
 const openAttachment = (): void => {
@@ -191,6 +135,7 @@ const openLink = (): void => {
   }
 }
 
+// SEO
 const seoTitle = computed(() => news.value ? `${news.value.title}` : 'Memuat Berita...')
 const seoDescription = computed(() => news.value ? (news.value.sub_title || (news.value.content ? news.value.content.slice(0, 160) : '')) : 'Berita terkini seputar pertanian dari Juru Tani.')
 const seoImage = computed(() => imageUrl.value || '/jurutani.png')
@@ -201,9 +146,17 @@ const seoKeywords = computed(() => news.value ? [
   'kabar tani'
 ] : [])
 
+// Share URL
+const shareUrl = computed(() => {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/news/${slug.value}`
+  }
+  return `https://jurutani.com/news/${slug.value}`
+})
+
 // Lifecycle
 onMounted(() => {
-  fetchNewsDetail()
+  fetchItem()
 })
 
 // Update SEO after news is loaded
@@ -214,7 +167,7 @@ watch(() => news.value, (newVal) => {
       description: seoDescription.value,
       keywords: seoKeywords.value,
       image: seoImage.value,
-      url: `https://jurutani.com/news/${newsId}`,
+      url: shareUrl.value,
       type: 'article'
     })
   }
@@ -233,7 +186,7 @@ watch(() => news.value, (newVal) => {
               color="green"
               variant="ghost"
               icon="i-lucide-arrow-left"
-              @click="goBack"
+              @click="handleGoBack"
             >
               Kembali ke Berita
             </UButton>
@@ -245,26 +198,27 @@ watch(() => news.value, (newVal) => {
           </div>
         </div>
       </div>
+      
       <!-- Loading State -->
-      <div v-if="loading" class="flex flex-col items-center justify-center py-20">
+      <div v-if="isLoading" class="flex flex-col items-center justify-center py-20">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent" />
         <p class="text-gray-600 dark:text-gray-400 mt-4">Memuat berita...</p>
       </div>
       
       <!-- Error State -->
-      <div v-else-if="error" class="text-center py-20">
+      <div v-else-if="hasError" class="text-center py-20">
         <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8 max-w-md mx-auto">
           <UIcon name="i-heroicons-exclamation-triangle" class="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h3 class="text-lg font-semibold text-red-700 dark:text-red-400 mb-2">Oops! Terjadi Kesalahan</h3>
           <p class="text-red-600 dark:text-red-300 mb-4">{{ error }}</p>
-          <UButton color="red" variant="outline" @click="goBack">
+          <UButton color="red" variant="outline" @click="handleGoBack">
             Kembali ke Daftar Berita
           </UButton>
         </div>
       </div>
 
       <!-- News Content -->
-      <article v-else-if="news" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <article v-else-if="hasData" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <!-- Hero Image -->
         <div class="relative h-64 md:h-80 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
           <img
@@ -273,7 +227,7 @@ watch(() => news.value, (newVal) => {
             :alt="news.title"
             class="w-full h-full object-cover"
             @error="console.log('Image failed to load:', imageUrl)"
-          >
+          />
           <div v-else class="flex items-center justify-center h-full">
             <div class="text-center text-green-600 dark:text-green-400">
               <UIcon name="i-heroicons-photo" class="w-16 h-16 mx-auto mb-2 opacity-50" />
@@ -303,7 +257,7 @@ watch(() => news.value, (newVal) => {
           </h2>
 
           <!-- Meta Information -->
-          <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+          <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center gap-1">
               <UIcon name="i-heroicons-user" class="w-4 h-4" />
               <span>{{ news.author || 'Tim JuruTani' }}</span>
@@ -317,6 +271,17 @@ watch(() => news.value, (newVal) => {
             <div v-if="news.updated_at && news.updated_at !== news.created_at" class="flex items-center gap-1">
               <UIcon name="i-heroicons-pencil-square" class="w-4 h-4" />
               <span>Diperbarui {{ formatDate(news.updated_at) }}</span>
+            </div>
+            
+            <!-- Share Button -->
+            <div class="ml-auto">
+              <AppShareButton
+                :title="news.title"
+                :description="news.sub_title || news.content.substring(0, 160)"
+                :url="shareUrl"
+                button-text="Bagikan"
+                button-variant="outline"
+              />
             </div>
           </div>
 
@@ -375,7 +340,7 @@ watch(() => news.value, (newVal) => {
       </article>
 
       <!-- Similar News Section -->
-      <section v-if="news" class="mt-12">
+      <section v-if="hasData" class="mt-12">
         <div class="container mx-auto px-4 mb-8">
           <div class="flex items-center gap-3">
             <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
@@ -399,6 +364,7 @@ watch(() => news.value, (newVal) => {
               v-for="item in similarNewsFormatted"
               :key="item.id"
               :news="item"
+              variant="default"
             />
           </div>
 
@@ -415,7 +381,6 @@ watch(() => news.value, (newVal) => {
         </div>
 
       
-
         <!-- No Similar News -->
         <NotFoundData v-else />
       </section>

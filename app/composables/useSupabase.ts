@@ -136,7 +136,7 @@ export const useSupabase = () => {
       // console.log('Registration response:', { data, authError })
 
       if (authError) {
-        console.error('Registration auth error:', authError)
+        // console.error('Registration auth error:', authError)
 
         // Handle specific error messages
         let errorMessage = authError.message
@@ -188,7 +188,7 @@ export const useSupabase = () => {
       return { success: true, data }
 
     } catch (err: any) {
-      console.error('Registration error:', err)
+      // console.error('Registration error:', err)
 
       let errorMessage = err.message || 'Terjadi kesalahan saat mendaftar'
 
@@ -325,13 +325,13 @@ export const useSupabase = () => {
         .single()
 
       if (error) {
-        console.error('Error fetching user profile:', error)
+        // console.error('Error fetching user profile:', error)
         return { success: false, error: error.message }
       }
 
       return { success: true, data }
     } catch (err: any) {
-      console.error('Error in getUserProfile:', err)
+      // console.error('Error in getUserProfile:', err)
       return { success: false, error: err.message }
     }
   }
@@ -347,13 +347,13 @@ export const useSupabase = () => {
         .single()
 
       if (error) {
-        console.error('Error updating user profile:', error)
+        // console.error('Error updating user profile:', error)
         return { success: false, error: error.message }
       }
 
       return { success: true, data }
     } catch (err: any) {
-      console.error('Error in updateUserProfile:', err)
+      // console.error('Error in updateUserProfile:', err)
       return { success: false, error: err.message }
     }
   }

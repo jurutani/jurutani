@@ -7,44 +7,6 @@
     "html": {
       "elements": [
         {
-          "name": "BaseIcon",
-          "attributes": [
-            {
-              "name": "name",
-              "customType": "icon",
-              "placeholder": "i-line-md-iconify1"
-            },
-            {
-              "name": "width",
-              "customType": "select",
-              "default": "24px",
-              "options": [
-                "12px",
-                "16px",
-                "20px",
-                "24px",
-                "28px",
-                "32px",
-                "36px"
-              ]
-            },
-            {
-              "name": "height",
-              "customType": "select",
-              "default": "24px",
-              "options": [
-                "12px",
-                "16px",
-                "20px",
-                "24px",
-                "28px",
-                "32px",
-                "36px"
-              ]
-            }
-          ]
-        },
-        {
           "name": "BaseButtonDemo",
           "description": "Note, this is not a real component in this project, added here just to show an example of how it is defined in web-types.",
           "attributes": [
@@ -56,19 +18,34 @@
               "name": "size",
               "customType": "select",
               "default": "sm",
-              "options": ["2xs", "xs", "sm", "md", "lg", "xl"]
+              "options": [
+                "2xs",
+                "xs",
+                "sm",
+                "md",
+                "lg",
+                "xl"
+              ]
             },
             {
               "name": "variant",
               "customType": "select",
               "default": "solid",
-              "options": ["solid", "outline", "soft", "ghost", "link"]
+              "options": [
+                "solid",
+                "outline",
+                "soft",
+                "ghost",
+                "link"
+              ]
             },
             {
               "name": "target",
               "customType": "select",
               "default": "",
-              "options": ["_blank"]
+              "options": [
+                "_blank"
+              ]
             }
           ],
           "slots": [

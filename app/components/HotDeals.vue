@@ -48,7 +48,7 @@ const { data: categoriesData } = await useAsyncData('market-categories', async (
     
     return data as Category[]
   } catch (err) {
-    console.error('Error fetching categories:', err)
+    // console.error('Error fetching categories:', err)
     return []
   }
 })
@@ -95,14 +95,17 @@ const fetchMarkets = async () => {
     totalPages.value = Math.ceil(totalItems.value / pageSize)
   } catch (err: any) {
     error.value = err.message || 'Terjadi kesalahan saat memuat data'
-    console.error('Error fetching markets:', err)
+    // console.error('Error fetching markets:', err)
   } finally {
     loading.value = false
   }
 }
 
 // SSR-friendly data fetch on first load
-await useAsyncData('markets', fetchMarkets)
+await useAsyncData('markets', async () => {
+  await fetchMarkets()
+  return true
+})
 
 // Gunakan watchEffect untuk reaktivitas yang lebih efisien
 watchEffect(() => {
@@ -129,7 +132,7 @@ const handlePageChange = (page: number) => {
 </script>
 
 <template>
-  <div class="markets-page container mx-auto px-4 py-12">
+  <div class="markets-page container max-w-6xl mx-auto px-4 py-12">
     <!-- Pasar Section Header -->
     <div class="mx-auto mb-6 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
