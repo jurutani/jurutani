@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { USelectMenu } from '#components';
 import { ref, onMounted, computed, watch } from 'vue';
 import { useSupabase } from '~/composables/useSupabase';
 
 const { supabase } = useSupabase();
-const colorMode = useColorMode();
 
 interface Instructor {
   id: number;
@@ -176,7 +176,7 @@ useHead({
         <div class="flex items-center gap-4">
           <UButton
             to="/discussions"
-            color="green"
+            color="success"
             variant="ghost"
             icon="i-lucide-arrow-left"
             size="lg"
@@ -228,12 +228,12 @@ useHead({
           <UAlert
             title="Terjadi Kesalahan"
             description="Gagal memuat data penyuluh. Silakan coba lagi."
-            color="red"
+            color="error"
             icon="i-lucide-alert-circle"
             class="mb-4 max-w-md"
           />
           <UButton
-            color="green"
+            color="success"
             @click="fetchInstructors"
             icon="i-lucide-refresh-cw"
           >
@@ -275,9 +275,9 @@ useHead({
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Pilih Kabupaten/Kota</h2>
               </div>
               <div>
-                <USelect
-                  v-model="selectedDistrict"
-                  :options="availableDistricts"
+                <USelectMenu
+                  :v-model="selectedDistrict"
+                  :items="availableDistricts"
                   option-attribute="label"
                   value-attribute="value"
                   class="w-full"
@@ -296,7 +296,7 @@ useHead({
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Penyuluh
                 <span v-if="selectedDistrict" class="text-green-600"> di {{ selectedDistrict }}</span>
-                <UBadge color="green" variant="soft" class="ml-2">
+                <UBadge color="success" variant="soft" class="ml-2">
                   {{ filteredInstructors.length }}
                 </UBadge>
               </h2>
@@ -342,7 +342,7 @@ useHead({
                     <!-- Button -->
                     <UButton
                       :to="`/discussions/instructor/${instructor.id}`"
-                      color="green"
+                      color="success"
                       size="md"
                       class="w-full"
                       icon="i-lucide-message-circle"

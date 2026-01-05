@@ -36,19 +36,14 @@ const handleShare = (platform: any) => {
       <template #default="{ open }">
         <UButton
           :variant="buttonVariant === 'outline' ? 'outline' : buttonVariant === 'minimal' ? 'ghost' : 'solid'"
-          color="green"
+          color="success"
           icon="i-heroicons-share"
-          :class="{
-            'bg-green-600 hover:bg-green-700 text-white': buttonVariant === 'default',
-            'border-2 border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20': buttonVariant === 'outline',
-            'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20': buttonVariant === 'minimal'
-          }"
         >
           {{ buttonText }}
         </UButton>
       </template>
 
-      <template #panel>
+      <template #content>
         <div class="p-4 w-72">
           <div class="mb-3">
             <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
@@ -60,10 +55,10 @@ const handleShare = (platform: any) => {
           </div>
           
           <div class="grid grid-cols-2 gap-2">
-            <button
+            <UButton
               v-for="platform in platforms"
               :key="platform.name"
-              type="button"
+              variant="ghost"
               :class="[
                 platform.color,
                 'flex items-center gap-2 px-4 py-3 rounded-lg text-white font-medium transition-all duration-200 transform hover:scale-105 hover:shadow-lg'
@@ -72,7 +67,7 @@ const handleShare = (platform: any) => {
             >
               <UIcon :name="platform.icon" class="w-5 h-5" />
               <span class="text-sm">{{ platform.name }}</span>
-            </button>
+          </UButton>
           </div>
         </div>
       </template>

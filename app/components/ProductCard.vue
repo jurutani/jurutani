@@ -30,7 +30,7 @@ import type { Product } from '~~/types/store'
         <div class="absolute bottom-0 left-0 right-0 flex justify-center gap-3 p-4 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
           <UButton 
             icon="i-lucide-send" 
-            color="green"
+            color="success"
             variant="solid"
             class="action-btn rounded-full"
             aria-label="WhatsApp"
@@ -81,6 +81,7 @@ import type { Product } from '~~/types/store'
   
 
   <style scoped>
+    @reference "tailwindcss";
   .product-card {
     @apply w-full h-full flex flex-col transition-all;
   }

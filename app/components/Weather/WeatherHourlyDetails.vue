@@ -59,6 +59,7 @@ const props = defineProps<{
 </template>
 
 <style scoped>
+  @reference "tailwindcss";
 /* Main Container - Glassmorphism */
 .glass-card-container {
   @apply relative overflow-hidden rounded-3xl p-6;

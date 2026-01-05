@@ -1,138 +1,152 @@
 <script setup lang="ts">
 /**
  * FaqAccordion - Enhanced FAQ Accordion Component
- * With search, filter, and smooth animations
+ * Modern accordion with smooth animations and glassmorphism
  */
 
 import type { FaqItem } from '~/data/types'
 
 interface Props {
   items: FaqItem[]
-  searchable?: boolean
   defaultOpen?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  searchable: false,
   defaultOpen: false
 })
 
-const searchQuery = ref('')
-const openItems = ref<Set<number>>(new Set())
-
-// Initialize default open state
-if (props.defaultOpen && props.items.length > 0) {
-  openItems.value.add(0)
-}
-
-const filteredItems = computed(() => {
-  if (!props.searchable || !searchQuery.value.trim()) {
-    return props.items
-  }
-  
-  const query = searchQuery.value.toLowerCase()
-  return props.items.filter(item => 
-    item.question.toLowerCase().includes(query) || 
-    item.answer.toLowerCase().includes(query)
-  )
-})
+const openItems = ref<number[]>(props.defaultOpen ? [0] : [])
 
 const toggleItem = (index: number) => {
-  if (openItems.value.has(index)) {
-    openItems.value.delete(index)
+  const itemIndex = openItems.value.indexOf(index)
+  if (itemIndex > -1) {
+    openItems.value.splice(itemIndex, 1)
   } else {
-    openItems.value.add(index)
+    openItems.value.push(index)
   }
 }
 
-const isOpen = (index: number) => openItems.value.has(index)
+const isOpen = (index: number) => openItems.value.includes(index)
 </script>
 
 <template>
-  <div>
-    <!-- Search Bar -->
-    <div v-if="searchable" class="mb-6">
-      <div class="relative">
-        <UIcon 
-          name="i-lucide-search" 
-          class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-        />
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Cari pertanyaan..."
-          class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all"
-        />
-      </div>
-      
-      <!-- Results count -->
-      <p 
-        v-if="searchQuery"
-        class="mt-2 text-sm text-gray-600 dark:text-gray-400"
-      >
-        Ditemukan {{ filteredItems.length }} pertanyaan
-      </p>
-    </div>
-
-    <!-- Accordion Items -->
-    <div 
-      v-if="filteredItems.length > 0"
-      class="space-y-3"
+  <div class="w-full space-y-3">
+    <div
+      v-for="(item, index) in items"
+      :key="index"
+      class="group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700/50 transition-all duration-300 hover:shadow-lg hover:border-green-300 dark:hover:border-green-700"
     >
-      <div
-        v-for="(item, index) in filteredItems"
-        :key="index"
-        class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-md"
+      <!-- Gradient Overlay on Hover -->
+      <div class="absolute inset-0 bg-gradient-to-r from-green-50/0 via-emerald-50/0 to-green-50/0 dark:from-green-900/0 dark:via-emerald-900/0 dark:to-green-900/0 group-hover:from-green-50/30 group-hover:via-emerald-50/20 group-hover:to-green-50/30 dark:group-hover:from-green-900/10 dark:group-hover:via-emerald-900/5 dark:group-hover:to-green-900/10 transition-all duration-300 pointer-events-none" />
+      
+      <!-- Question Button -->
+      <button
+        class="w-full px-6 py-5 text-left flex items-start gap-4 relative z-10 transition-all duration-200"
+        @click="toggleItem(index)"
       >
-        <!-- Question Button -->
-        <button
-          @click="toggleItem(index)"
-          class="w-full px-6 py-4 flex items-center justify-between gap-4 text-left transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-750"
-          :aria-expanded="isOpen(index)"
+        <!-- Icon Indicator -->
+        <div 
+          class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300"
+          :class="isOpen(index) 
+            ? 'bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rotate-90' 
+            : 'bg-gray-100 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400'"
         >
-          <span class="font-medium text-lg text-gray-800 dark:text-white flex-1">
-            {{ item.question }}
-          </span>
           <UIcon 
-            :name="isOpen(index) ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-            class="text-green-600 dark:text-green-400 text-xl transition-transform duration-300 flex-shrink-0"
-            :class="{ 'rotate-180': isOpen(index) }"
+            name="i-heroicons-chevron-right" 
+            class="w-5 h-5 transition-transform duration-300"
           />
-        </button>
+        </div>
 
-        <!-- Answer Content -->
-        <transition
-          enter-active-class="transition-all duration-300 ease-out"
-          enter-from-class="opacity-0 max-h-0"
-          enter-to-class="opacity-100 max-h-96"
-          leave-active-class="transition-all duration-200 ease-in"
-          leave-from-class="opacity-100 max-h-96"
-          leave-to-class="opacity-0 max-h-0"
-        >
-          <div 
-            v-show="isOpen(index)"
-            class="overflow-hidden"
+        <!-- Question Text -->
+        <div class="flex-1 min-w-0">
+          <h3 
+            class="text-base md:text-lg font-semibold transition-colors duration-200"
+            :class="isOpen(index) 
+              ? 'text-green-700 dark:text-green-400' 
+              : 'text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400'"
           >
-            <div class="px-6 pb-4 text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-100 dark:border-gray-700 pt-4">
-              {{ item.answer }}
+            {{ item.question }}
+          </h3>
+        </div>
+
+        <!-- Badge for New/Popular (optional) -->
+        <div 
+          v-if="index === 0"
+          class="flex-shrink-0 px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/30 text-xs font-medium text-green-700 dark:text-green-400"
+        >
+          Popular
+        </div>
+      </button>
+
+      <!-- Answer Content with Smooth Transition -->
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 max-h-0"
+        enter-to-class="opacity-100 max-h-[500px]"
+        leave-active-class="transition-all duration-300 ease-in"
+        leave-from-class="opacity-100 max-h-[500px]"
+        leave-to-class="opacity-0 max-h-0"
+      >
+        <div 
+          v-if="isOpen(index)"
+          class="overflow-hidden"
+        >
+          <div class="px-6 pb-6 pl-[4.5rem] relative z-10">
+            <!-- Decorative Line -->
+            <div class="absolute left-9 top-0 bottom-6 w-0.5 bg-gradient-to-b from-green-300 to-transparent dark:from-green-700 dark:to-transparent" />
+            
+            <!-- Answer Text -->
+            <div class="prose prose-sm md:prose-base dark:prose-invert max-w-none">
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed m-0">
+                {{ item.answer }}
+              </p>
+            </div>
+
+            <!-- Helpful Feedback (Optional) -->
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700/50 flex items-center gap-3">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Apakah ini membantu?</span>
+              <div class="flex gap-2">
+                <button 
+                  class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-900/30 hover:text-green-700 dark:hover:text-green-400"
+                >
+                  <UIcon name="i-heroicons-hand-thumb-up" class="w-4 h-4" />
+                </button>
+                <button 
+                  class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-700 dark:hover:text-red-400"
+                >
+                  <UIcon name="i-heroicons-hand-thumb-down" class="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
-        </transition>
-      </div>
+        </div>
+      </Transition>
     </div>
 
-    <!-- No results message -->
+    <!-- Empty State -->
     <div 
-      v-else
-      class="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-xl"
+      v-if="items.length === 0"
+      class="text-center py-16 px-6"
     >
-      <UIcon name="i-lucide-search-x" class="text-5xl text-gray-400 mb-4 mx-auto" />
-      <p class="text-gray-600 dark:text-gray-400">
-        Tidak ada pertanyaan yang cocok dengan pencarian Anda.
-      </p>
+      <slot name="empty">
+        <div class="max-w-md mx-auto">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+            <UIcon name="i-heroicons-question-mark-circle" class="w-8 h-8 text-gray-400" />
+          </div>
+          <p class="text-gray-600 dark:text-gray-400 text-lg font-medium mb-2">
+            Tidak ada pertanyaan ditemukan
+          </p>
+          <p class="text-gray-500 dark:text-gray-500 text-sm">
+            Coba ubah filter atau kata kunci pencarian Anda
+          </p>
+        </div>
+      </slot>
     </div>
-
-    <!-- Slot for additional content -->
-    <slot />
   </div>
 </template>
+
+<style scoped>
+.prose p {
+  margin: 0;
+}
+</style>

@@ -1,9 +1,8 @@
-import { useSupabase } from '~/composables/useSupabase';
-
-const { supabase } = useSupabase();
-
 // composables/useChatSearch.ts
+import type { Conversation, Message, UserSearchResult } from '~/types/chat'
+
 export const useChatSearch = () => {
+  const { supabase } = useSupabase();
   const searchUsers = async (query: string, excludeUserId?: string) => {
     try {
       if (!query || query.trim().length < 2) {

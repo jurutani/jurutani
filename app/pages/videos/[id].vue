@@ -2,23 +2,11 @@
 import { onMounted, computed, watch, ref } from 'vue'
 import { useContentDetail } from '~/composables/useContentDetail'
 import { useSupabase } from '~/composables/useSupabase'
+import type { Video } from '~/types'
 
 definePageMeta({
   layout: 'default',
 })
-
-interface Video {
-  id: string
-  slug?: string
-  title: string
-  description?: string
-  category?: string
-  url?: string
-  thumbnail?: string
-  created_at: string
-  updated_at?: string
-  duration?: string
-}
 
 const { supabase } = useSupabase()
 
@@ -43,10 +31,10 @@ const {
 
 // Extract YouTube video ID
 const youtubeVideoId = computed(() => {
-  if (!video.value?.url) return null
+  if (!video.value?.link_yt) return null
   
   try {
-    const url = new URL(video.value.url)
+    const url = new URL(video.value.link_yt)
     if (url.hostname.includes('youtube.com')) {
       return url.searchParams.get('v')
     } else if (url.hostname.includes('youtu.be')) {
@@ -80,7 +68,7 @@ const formatCategory = (category?: string): string => {
 }
 
 const handleGoBack = (): void => {
-  goBack('/educations')
+  goBack('/videos')
 }
 
 // SEO
@@ -130,7 +118,7 @@ watch(() => video.value, (newVal) => {
       <div class="mb-8">
         <div class="flex items-center justify-between">
           <UButton
-            color="red"
+            color="success"
             variant="ghost"
             icon="i-lucide-arrow-left"
             @click="handleGoBack"
@@ -138,7 +126,7 @@ watch(() => video.value, (newVal) => {
             Kembali ke Edukasi
           </UButton>
           
-          <div class="flex items-center gap-2 text-red-700 dark:text-red-400">
+          <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
             <UIcon name="i-heroicons-video-camera" class="w-5 h-5" />
             <span class="font-semibold">Video Edukasi</span>
           </div>
@@ -175,7 +163,7 @@ watch(() => video.value, (newVal) => {
               <!-- Title & Meta -->
               <div class="mb-6">
                 <div class="flex flex-wrap items-center gap-2 mb-4">
-                  <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-sm font-medium rounded-full">
+                  <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-medium rounded-full">
                     <UIcon name="i-heroicons-video-camera" class="w-3 h-3" />
                     {{ formatCategory(video.category) }}
                   </span>
@@ -213,7 +201,7 @@ watch(() => video.value, (newVal) => {
               <!-- Description -->
               <div v-if="video.description">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <UIcon name="i-heroicons-document-text" class="w-5 h-5 text-red-600" />
+                  <UIcon name="i-heroicons-document-text" class="w-5 h-5 text-green-600" />
                   Deskripsi Video
                 </h2>
                 
@@ -228,7 +216,7 @@ watch(() => video.value, (newVal) => {
           <div class="lg:col-span-1">
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 sticky top-8">
               <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                <UIcon name="i-heroicons-play-circle" class="w-5 h-5 text-red-600" />
+                <UIcon name="i-heroicons-play-circle" class="w-5 h-5 text-green-600" />
                 Video Terkait
               </h3>
               
@@ -259,7 +247,7 @@ watch(() => video.value, (newVal) => {
                     
                     <!-- Play Overlay -->
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                      <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
+                      <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
                         <UIcon name="i-heroicons-play" class="w-5 h-5 text-white ml-0.5" />
                       </div>
                     </div>
@@ -271,7 +259,7 @@ watch(() => video.value, (newVal) => {
                   </div>
 
                   <!-- Title -->
-                  <h4 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                  <h4 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
                     {{ item.title }}
                   </h4>
                 </NuxtLink>
@@ -288,12 +276,10 @@ watch(() => video.value, (newVal) => {
 
         <!-- More Related Videos Section (Bottom) -->
         <section v-if="relatedVideos.length > 3" class="mt-12">
-          <div class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-              <UIcon name="i-heroicons-play-circle" class="w-6 h-6 text-red-600" />
+            <div class="mb-8 flex items-center gap-2 text-green-700 dark:text-green-400">
+            <UIcon name="i-heroicons-video-camera" class="w-5 h-5" />
               Lebih Banyak Video {{ formatCategory(video.category) }}
-            </h2>
-          </div>
+            </div>
 
           <!-- Videos Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

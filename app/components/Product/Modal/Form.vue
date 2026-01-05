@@ -1,38 +1,25 @@
 <script setup lang="ts">
-import type { UUID } from 'crypto';
-import { ref, computed, onMounted } from 'vue'
+import { z } from 'zod'
+import type { FormSubmitEvent } from '#ui/types'
 import { toastStore } from '~/composables/useJuruTaniToast'
 import { useSupabase } from '~/composables/useSupabase'
 import { useProfile } from '~/composables/useProfile'
+// import { useFileUpload } from '~/composables/useFileUpload' // Removed, auto-imported as useAppFileUpload
 
 const { supabase } = useSupabase()
 const { userData, fetchUserData } = useProfile()
+const { uploadFile } = useAppFileUpload()
 
 // Types
 interface Category {
-  name: string;
+  name: string
 }
 
-interface FormState {
-  name: string;
-  description: string;
-  price: string | number;
-  price_range: string;
-  shopee_link: string;
-  tiktok_link: string;
-  tokopedia_link: string;
-  category: string;
-  seller: string;
-  contact_seller: string;
-  imageFile?: File;
-}
+// Constants
+const STORAGE_BUCKET = 'markets-attachments'
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
 
-// Emits
-const emit = defineEmits<{
-  close: []
-}>()
-
-// Ambil kategori dari tabel 'category-markets'
+// Fetch categories
 const { data: CATEGORY } = await useAsyncData('category_markets', async () => {
   try {
     const { data, error: catError } = await supabase
@@ -49,8 +36,8 @@ const { data: CATEGORY } = await useAsyncData('category_markets', async () => {
   }
 })
 
-// Transform categories for USelect component
-const categoryOptions = computed(() => {
+// Transform categories for USelect
+const categoryItems = computed(() => {
   if (!CATEGORY.value) return []
   
   return CATEGORY.value.map(cat => ({
@@ -59,23 +46,50 @@ const categoryOptions = computed(() => {
   }))
 })
 
-// Reactive State
-const form = ref<FormState>({
+// Emits
+const emit = defineEmits<{
+  close: []
+}>()
+
+// Zod Schema
+const schema = z.object({
+  name: z.string().min(1, 'Nama produk wajib diisi'),
+  description: z.string().min(1, 'Deskripsi produk wajib diisi'),
+  category: z.string().min(1, 'Kategori wajib dipilih'),
+  price: z.string().optional(),
+  price_range: z.string().optional(),
+  shopee_link: z.string().url('Format link Shopee tidak valid').optional().or(z.literal('')),
+  tiktok_link: z.string().url('Format link TikTok tidak valid').optional().or(z.literal('')),
+  tokopedia_link: z.string().url('Format link Tokopedia tidak valid').optional().or(z.literal('')),
+  seller: z.string().min(1, 'Nama toko wajib diisi'),
+  contact_seller: z.string().min(1, 'Kontak seller wajib diisi'),
+  imageFile: z.instanceof(File).optional()
+    .refine((file) => !file || file.size <= MAX_IMAGE_SIZE, {
+      message: 'Ukuran gambar maksimal 5MB'
+    })
+    .refine((file) => !file || file.type.startsWith('image/'), {
+      message: 'File harus berupa gambar'
+    })
+})
+
+type Schema = z.output<typeof schema>
+
+// Form State
+const state = reactive<Partial<Schema>>({
   name: '',
   description: '',
+  category: '',
   price: '',
   price_range: '',
   shopee_link: '',
   tiktok_link: '',
   tokopedia_link: '',
-  category: '',
   seller: '',
-  contact_seller: ''
+  contact_seller: '',
+  imageFile: undefined
 })
 
-const errors = ref<Record<string, string>>({})
 const isSubmitting = ref(false)
-const imagePreview = ref<string | null>(null)
 
 // Check user authentication
 const checkUserAuth = (): boolean => {
@@ -88,104 +102,10 @@ const checkUserAuth = (): boolean => {
   return true
 }
 
-// Validation
-const validateForm = (): boolean => {
-  errors.value = {}
-
-  const validationRules = [
-    {
-      condition: !form.value.name.trim(),
-      field: 'name',
-      message: 'Nama produk wajib diisi'
-    },
-    {
-      condition: !form.value.description.trim(),
-      field: 'description',
-      message: 'Deskripsi produk wajib diisi'
-    },
-    {
-      condition: !form.value.category,
-      field: 'category',
-      message: 'Kategori wajib dipilih'
-    },
-    {
-      condition: !form.value.seller.trim(),
-      field: 'seller',
-      message: 'Nama toko wajib diisi'
-    },
-    {
-      condition: !form.value.contact_seller.trim(),
-      field: 'contact_seller',
-      message: 'Kontak seller wajib diisi'
-    },
-    {
-      condition: form.value.shopee_link && !isValidUrl(form.value.shopee_link),
-      field: 'shopee_link',
-      message: 'Format link Shopee tidak valid'
-    },
-    {
-      condition: form.value.tiktok_link && !isValidUrl(form.value.tiktok_link),
-      field: 'tiktok_link',
-      message: 'Format link TikTok tidak valid'
-    },
-    {
-      condition: form.value.tokopedia_link && !isValidUrl(form.value.tokopedia_link),
-      field: 'tokopedia_link',
-      message: 'Format link Tokopedia tidak valid'
-    }
-  ]
-
-  validationRules.forEach(rule => {
-    if (rule.condition) {
-      errors.value[rule.field] = rule.message
-    }
-  })
-
-  return Object.keys(errors.value).length === 0
-}
-
-const isValidUrl = (url: string): boolean => {
-  if (!url) return true
-  try {
-    new URL(url)
-    return true
-  } catch {
-    return false
-  }
-}
-
-// File Handlers
-const handleImageUpload = (event: Event): void => {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (!file) return
-
-  // Validate file type
-  if (!file.type.startsWith('image/')) {
-    toastStore.error('File harus berupa gambar')
-    return
-  }
-
-  // Validate file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    toastStore.error('Ukuran gambar maksimal 5MB')
-    return
-  }
-
-  form.value.imageFile = file
-
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    imagePreview.value = e.target?.result as string
-  }
-  reader.readAsDataURL(file)
-}
-
 // Form Submission
-const handleSubmit = async (): Promise<void> => {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Check authentication first
   if (!checkUserAuth()) return
-
-  if (!validateForm()) return
 
   isSubmitting.value = true
 
@@ -194,45 +114,39 @@ const handleSubmit = async (): Promise<void> => {
     let attachmentsData = {}
 
     // Upload image if file selected
-    if (form.value.imageFile) {
-      const timestamp = Date.now()
-      const cleanFileName = form.value.imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-      const imagePath = `markets/${marketId}/${timestamp}_${cleanFileName}`
-      
-      const { error } = await supabase.storage
-        .from('markets-attachments')
-        .upload(imagePath, form.value.imageFile, {
-          cacheControl: '3600',
-          upsert: true
-        })
-      
-      if (error) throw error
+    if (event.data.imageFile) {
+      const result = await uploadFile(event.data.imageFile, {
+        bucket: STORAGE_BUCKET,
+        folder: 'markets',
+        maxSizeMB: 5,
+        allowedTypes: ['image/*']
+      })
       
       attachmentsData = {
-        url_image: imagePath
+        url_image: result.path
       }
     }
 
     // Prepare links JSONB data
     const linksData = {
-      shopee_link: form.value.shopee_link.trim() || null,
-      tiktok_link: form.value.tiktok_link.trim() || null,
-      tokopedia_link: form.value.tokopedia_link.trim() || null
+      shopee_link: event.data.shopee_link?.trim() || null,
+      tiktok_link: event.data.tiktok_link?.trim() || null,
+      tokopedia_link: event.data.tokopedia_link?.trim() || null
     }
 
     // Prepare payload for insert
     const payload = {
       id: marketId,
-      name: form.value.name.trim(),
-      description: form.value.description.trim(),
-      price: form.value.price ? Number(form.value.price) : null,
-      price_range: form.value.price_range.trim() || null,
+      name: event.data.name.trim(),
+      description: event.data.description.trim(),
+      price: event.data.price ? Number(event.data.price) : null,
+      price_range: event.data.price_range?.trim() || null,
       attachments: Object.keys(attachmentsData).length > 0 ? attachmentsData : null,
       links: linksData,
-      category: form.value.category,
-      seller: form.value.seller.trim(),
-      contact_seller: form.value.contact_seller.trim(),
-      user_id: userData.value.id, // Use profile ID from useProfile
+      category: event.data.category,
+      seller: event.data.seller.trim(),
+      contact_seller: event.data.contact_seller.trim(),
+      user_id: userData.value.id,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
@@ -266,234 +180,163 @@ onMounted(async () => {
 </script>
 
 <template>
-  <UCard class="bg-white dark:bg-gray-800">
-    <template #header>
-      <div class="flex items-center gap-2">
-        <UIcon
-          name="i-heroicons-shopping-bag"
-          class="text-green-600 dark:text-green-400 text-xl"
-        />
-        <h2 class="text-xl font-bold text-green-700 dark:text-green-400 my-auto flex items-center h-full">
-          Tambah Produk Baru
-        </h2>
-      </div>
+  <UModal
+    :close="{ onClick: () => emit('close') }"
+    title="Tambah Produk Baru"
+    description="Isi formulir di bawah untuk menambahkan produk baru"
+  >
+    <template #body>
+      <UForm id="product-form" :schema="schema" :state="state" class="space-y-5" @submit="onSubmit">
+        <!-- Nama Produk -->
+        <UFormField label="Nama Produk" name="name" required>
+          <UInput
+            v-model="state.name"
+            placeholder="Masukkan nama produk"
+            size="lg"
+            icon="i-heroicons-tag"
+          />
+        </UFormField>
+
+        <!-- Deskripsi Produk -->
+        <UFormField label="Deskripsi Produk" name="description" required>
+          <UTextarea
+            v-model="state.description"
+            placeholder="Masukkan deskripsi produk"
+            :rows="5"
+            size="lg"
+            autoresize
+          />
+        </UFormField>
+
+        <!-- Kategori -->
+        <UFormField label="Kategori" name="category" required>
+          <USelect
+            v-model="state.category"
+            :items="categoryItems"
+            placeholder="Pilih kategori"
+            size="lg"
+            icon="i-heroicons-tag"
+          />
+        </UFormField>
+
+        <!-- Harga dan Rentang Harga -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <UFormField label="Harga (Rp)" name="price">
+            <UInput
+              v-model="state.price"
+              type="number"
+              placeholder="Masukkan harga produk"
+              size="lg"
+            >
+              <template #leading>
+                <span class="text-gray-500 font-medium">Rp</span>
+              </template>
+            </UInput>
+          </UFormField>
+
+          <UFormField label="Rentang Harga" name="price_range">
+            <UInput
+              v-model="state.price_range"
+              placeholder="Contoh: 50.000 - 75.000"
+              size="lg"
+            />
+          </UFormField>
+        </div>
+
+        <!-- Image Upload -->
+        <UFormField 
+          label="Gambar Produk" 
+          name="imageFile"
+          description="Format: JPG, PNG, GIF. Maksimal 5MB"
+        >
+          <UFileUpload
+            v-model="state.imageFile"
+            accept="image/*"
+            class="min-h-48"
+          />
+        </UFormField>
+
+        <!-- Links -->
+        <UFormField label="Link Marketplace">
+          <div class="space-y-3">
+            <!-- Shopee Link -->
+            <UFormField label="Shopee" name="shopee_link">
+              <UInput
+                v-model="state.shopee_link"
+                placeholder="https://shopee.co.id/product..."
+                size="lg"
+                icon="i-heroicons-link"
+              />
+            </UFormField>
+            
+            <!-- TikTok Link -->
+            <UFormField label="TikTok Shop" name="tiktok_link">
+              <UInput
+                v-model="state.tiktok_link"
+                placeholder="https://tiktok.com/shop/product..."
+                size="lg"
+                icon="i-heroicons-link"
+              />
+            </UFormField>
+            
+            <!-- Tokopedia Link -->
+            <UFormField label="Tokopedia" name="tokopedia_link">
+              <UInput
+                v-model="state.tokopedia_link"
+                placeholder="https://tokopedia.com/product..."
+                size="lg"
+                icon="i-heroicons-link"
+              />
+            </UFormField>
+          </div>
+        </UFormField>
+
+        <!-- Seller Info -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <UFormField label="Nama Toko/Seller" name="seller" required>
+            <UInput
+              v-model="state.seller"
+              placeholder="Masukkan nama toko"
+              size="lg"
+              icon="i-heroicons-building-storefront"
+            />
+          </UFormField>
+
+          <UFormField label="Kontak Seller (WhatsApp)" name="contact_seller" required>
+            <UInput
+              v-model="state.contact_seller"
+              placeholder="Contoh: 08123456789"
+              size="lg"
+              icon="i-heroicons-phone"
+            />
+          </UFormField>
+        </div>
+      </UForm>
     </template>
 
-    <form class="space-y-4" @submit.prevent="handleSubmit">
-      <!-- Nama Produk -->
-      <UFormGroup label="Nama Produk" required>
-        <UInput
-          v-model="form.name"
-          placeholder="Masukkan nama produk"
-          :error="!!errors.name"
-          color="green"
-          size="md"
-        >
-          <template #trailing>
-            <UIcon name="i-heroicons-tag" class="text-gray-400" />
-          </template>
-        </UInput>
-        <template #hint>
-          <p v-if="errors.name" class="text-red-500 text-sm">{{ errors.name }}</p>
-        </template>
-      </UFormGroup>
-
-      <!-- Deskripsi Produk -->
-      <UFormGroup label="Deskripsi Produk" required>
-        <UTextarea
-          v-model="form.description"
-          placeholder="Masukkan deskripsi produk"
-          :error="!!errors.description"
-          :rows="3"
-          color="green"
-          class="resize-y"
-        >
-          <template #trailing>
-            <UIcon name="i-heroicons-document-text" class="text-gray-400" />
-          </template>
-        </UTextarea>
-        <template #hint>
-          <p v-if="errors.description" class="text-red-500 text-sm">{{ errors.description }}</p>
-        </template>
-      </UFormGroup>
-
-      <!-- Kategori -->
-       <UFormGroup label="Kategori">
-        <USelect
-          v-model="form.category"
-          :options="categoryOptions"
-          option-attribute="label"
-          value-attribute="value"
-          placeholder="Pilih kategori"
-          color="green"
-        >
-          <template #leading>
-            <UIcon name="i-heroicons-tag" class="text-gray-400" />
-          </template>
-        </USelect>
-      </UFormGroup>
-
-      <!-- Harga dan Rentang Harga -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <UFormGroup label="Harga (Rp)">
-          <UInput
-            v-model="form.price"
-            type="number"
-            placeholder="Masukkan harga produk"
-            color="green"
-          >
-            <template #leading>
-              <span class="text-gray-500">Rp</span>
-            </template>
-          </UInput>
-        </UFormGroup>
-
-        <UFormGroup label="Rentang Harga">
-          <UInput
-            v-model="form.price_range"
-            placeholder="Contoh: 50.000 - 75.000"
-            color="green"
-          />
-        </UFormGroup>
-      </div>
-
-      <!-- Image Upload -->
-      <UFormGroup label="Gambar Produk">
-        <input
-          type="file"
-          accept="image/*"
-          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-          @change="handleImageUpload"
-        >
-
-        <!-- Image Preview -->
-        <div v-if="imagePreview" class="mt-3">
-          <img 
-            :src="imagePreview" 
-            alt="Preview gambar" 
-            class="h-40 w-auto object-cover rounded-md border"
-          >
-        </div>
-        
-        <template #hint>
-          <p class="text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal 5MB</p>
-        </template>
-      </UFormGroup>
-
-      <!-- Links -->
-      <UFormGroup label="Link Marketplace">
-        <div class="space-y-3">
-          <!-- Shopee Link -->
-          <div class="flex items-center gap-2">
-            <span class="w-28 text-sm font-medium">Shopee:</span>
-            <UInput
-              v-model="form.shopee_link"
-              placeholder="https://shopee.co.id/product..."
-              :error="!!errors.shopee_link"
-              color="green"
-              class="flex-1"
-            >
-              <template #leading>
-                <UIcon name="i-heroicons-link" class="text-gray-400" />
-              </template>
-            </UInput>
-          </div>
-          
-          <!-- TikTok Link -->
-          <div class="flex items-center gap-2">
-            <span class="w-28 text-sm font-medium">TikTok Shop:</span>
-            <UInput
-              v-model="form.tiktok_link"
-              placeholder="https://tiktok.com/shop/product..."
-              :error="!!errors.tiktok_link"
-              color="green"
-              class="flex-1"
-            >
-              <template #leading>
-                <UIcon name="i-heroicons-link" class="text-gray-400" />
-              </template>
-            </UInput>
-          </div>
-          
-          <!-- Tokopedia Link -->
-          <div class="flex items-center gap-2">
-            <span class="w-28 text-sm font-medium">Tokopedia:</span>
-            <UInput
-              v-model="form.tokopedia_link"
-              placeholder="https://tokopedia.com/product..."
-              :error="!!errors.tokopedia_link"
-              color="green"
-              class="flex-1"
-            >
-              <template #leading>
-                <UIcon name="i-heroicons-link" class="text-gray-400" />
-              </template>
-            </UInput>
-          </div>
-        </div>
-        <template #hint>
-          <div class="space-y-1">
-            <p v-if="errors.shopee_link" class="text-red-500 text-sm">{{ errors.shopee_link }}</p>
-            <p v-if="errors.tiktok_link" class="text-red-500 text-sm">{{ errors.tiktok_link }}</p>
-            <p v-if="errors.tokopedia_link" class="text-red-500 text-sm">{{ errors.tokopedia_link }}</p>
-          </div>
-        </template>
-      </UFormGroup>
-
-      <!-- Seller Info -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <UFormGroup label="Nama Toko/Seller" required>
-          <UInput
-            v-model="form.seller"
-            placeholder="Masukkan nama toko"
-            :error="!!errors.seller"
-            color="green"
-          >
-            <template #leading>
-              <UIcon name="i-heroicons-home" class="text-gray-400" />
-            </template>
-          </UInput>
-          <template #hint>
-            <p v-if="errors.seller" class="text-red-500 text-sm">{{ errors.seller }}</p>
-          </template>
-        </UFormGroup>
-
-        <UFormGroup label="Kontak Seller (WhatsApp)" required>
-          <UInput
-            v-model="form.contact_seller"
-            placeholder="Contoh: 08123456789"
-            :error="!!errors.contact_seller"
-            color="green"
-          >
-            <template #leading>
-              <UIcon name="i-heroicons-phone" class="text-gray-400" />
-            </template>
-          </UInput>
-          <template #hint>
-            <p v-if="errors.contact_seller" class="text-red-500 text-sm">{{ errors.contact_seller }}</p>
-          </template>
-        </UFormGroup>
-      </div>
-    </form>
-
     <template #footer>
-      <div class="flex justify-end space-x-3">
+      <div class="flex justify-end gap-3">
         <UButton
-          color="gray"
+          color="neutral"
           variant="outline"
+          size="lg"
           :disabled="isSubmitting"
           @click="handleCancel"
         >
+          <UIcon name="i-heroicons-x-mark" class="mr-1" />
           Batal
         </UButton>
         <UButton
-          color="green"
+          type="submit"
+          color="success"
+          size="lg"
           :loading="isSubmitting"
-          @click="handleSubmit"
+          form="product-form"
         >
+          <UIcon name="i-heroicons-check" class="mr-1" />
           Simpan Produk
         </UButton>
       </div>
     </template>
-  </UCard>
+  </UModal>
 </template>

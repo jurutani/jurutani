@@ -238,7 +238,7 @@ watch(() => product.value, (newVal) => {
       <div class="mb-8">
         <div class="flex items-center justify-between">
           <UButton
-            color="green"
+            color="success"
             variant="ghost"
             icon="i-lucide-arrow-left"
             @click="handleGoBack"

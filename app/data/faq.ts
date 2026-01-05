@@ -1,4 +1,5 @@
-import type { FaqCategory, FaqData } from './types'
+
+import type { FaqCategory, FaqData, IconCard } from './types'
 
 /**
  * FAQ Data - Help & Support
@@ -17,139 +18,166 @@ export const faqData: FaqData = {
     general: [
         {
             question: 'Apa itu Juru Tani?',
-            answer: 'Juru Tani adalah platform komprehensif yang dirancang untuk mendukung petani dengan saran pertanian ahli, solusi teknologi, koneksi pasar, dan sumber daya edukatif. Misi kami adalah memberdayakan komunitas pertanian melalui praktik berkelanjutan dan metode pertanian inovatif.'
+            answer: 'Juru Tani adalah platform ekosistem pertanian digital yang dirancang untuk memberdayakan petani Indonesia. Kami menyediakan solusi menyeluruh mulai dari pendampingan budidaya, diagnosa penyakit tanaman berbasis AI, akses ke ahli pertanian, hingga marketplace untuk menjual hasil panen dengan harga terbaik. Misi kami adalah memodernisasi pertanian melalui teknologi yang mudah digunakan.'
         },
         {
-            question: 'Bagaimana Juru Tani dapat membantu usaha pertanian saya?',
-            answer: 'Juru Tani menyediakan panduan pengelolaan tanaman yang dipersonalisasi, menghubungkan Anda dengan pembeli hasil pertanian, menyediakan akses ke pakar pertanian, informasi cuaca dan pasar, serta membagikan praktik terbaik untuk pertanian berkelanjutan. Layanan kami dirancang untuk meningkatkan produktivitas dan keuntungan sambil mempromosikan pendekatan ramah lingkungan.'
+            question: 'Siapa saja yang bisa menggunakan Juru Tani?',
+            answer: 'Juru Tani dirancang untuk semua pelaku dalam ekosistem pertanian: Petani (baik skala kecil maupun besar), Penyuluh Pertanian, Ahli Agronomi, Pembeli Hasil Panen (Tengkulak, Retail, Industri), serta Penjual Sarana Produksi Pertanian. Platform kami juga terbuka bagi masyarakat umum yang ingin belajar bercocok tanam.'
+        },
+        {
+            question: 'Bagaimana Juru Tani dapat meningkatkan keuntungan saya?',
+            answer: 'Kami membantu meningkatkan keuntungan melalui tiga cara utama: 1) Peningkatan Produktivitas: Rekomendasi pemupukan dan pengendalian hama yang tepat mengurangi kerugian panen. 2) Efisiensi Biaya: Menghindari penggunaan input pertanian yang berlebihan. 3) Akses Pasar: Menghubungkan Anda langsung dengan pembeli untuk mendapatkan harga yang lebih adil tanpa rantai pasok yang panjang.'
         },
         {
             question: 'Apakah Juru Tani tersedia di seluruh Indonesia?',
-            answer: 'Saat ini, Juru Tani beroperasi di wilayah pertanian utama di Indonesia, termasuk Jawa, Sumatera, Kalimantan, Sulawesi, dan Bali. Kami terus memperluas cakupan kami untuk menjangkau lebih banyak komunitas petani. Hubungi tim kami untuk mengecek ketersediaan di lokasi Anda.'
+            answer: 'Ya, aplikasi Juru Tani dapat diunduh dan digunakan di seluruh Indonesia. Namun, fitur-fitur tertentu seperti marketplace lokal atau pengiriman fisik mungkin memiliki ketersediaan yang berbeda tergantung pada jaringan logistik di wilayah Anda. Layanan konsultasi digital dan fitur edukasi tersedia penuh secara nasional.'
         },
         {
-            question: 'Apa yang membedakan Juru Tani dari layanan pertanian lainnya?',
-            answer: 'Juru Tani menggabungkan kearifan lokal pertanian tradisional dengan teknologi modern dan wawasan berbasis data. Platform kami menawarkan dukungan menyeluruh termasuk perencanaan tanaman, manajemen hama, optimalisasi panen, dan akses pasar — semua dalam satu ekosistem terintegrasi. Kami juga fokus pada pembangunan komunitas, menghubungkan petani untuk berbagi pengetahuan dan sumber daya.'
+            question: 'Apakah layanan Juru Tani gratis?',
+            answer: 'Sebagian besar fitur inti Juru Tani seperti Forum Komunitas, Ensiklopedia Tani, Diagnosa Penyakit Dasar, dan info harga pasar tersedia secara GRATIS. Kami juga menawarkan layanan Premium untuk fitur lanjutan seperti Konsultasi Prioritas dengan Pakar, Analisis Tanah Mendalam, dan fitur Manajemen Pertanian tingkat lanjut.'
         }
     ],
     account: [
         {
-            question: 'Bagaimana cara membuat akun Juru Tani?',
-            answer: 'Untuk membuat akun, unduh aplikasi Juru Tani dari Google Play Store atau Apple App Store, atau kunjungi situs web kami. Klik "Daftar", isi informasi dasar Anda termasuk nama, kontak, dan lokasi. Verifikasi nomor telepon atau email Anda, lalu lengkapi profil pertanian untuk mendapatkan rekomendasi yang dipersonalisasi.'
+            question: 'Bagaimana cara mendaftar akun Juru Tani?',
+            answer: 'Anda dapat mendaftar melalui aplikasi mobile (Android/iOS) atau website kami. Cukup klik tombol "Daftar", lalu pilih metode pendaftaran menggunakan Nomor Telepon, Email, atau Akun Google. Lengkapi profil Anda dengan jenis tanaman yang Anda budidayakan agar kami dapat memberikan rekomendasi yang relevan.'
         },
         {
-            question: 'Apakah ada biaya untuk menggunakan layanan Juru Tani?',
-            answer: 'Juru Tani menyediakan layanan gratis dan berbayar. Fitur dasar seperti pembaruan cuaca, akses forum komunitas, dan tips pertanian umum tersedia secara gratis. Layanan premium seperti rencana pengelolaan tanaman personal, konsultasi prioritas dengan ahli, dan analisis pasar lanjutan memerlukan langganan. Kunjungi halaman harga kami untuk informasi lebih lanjut.'
+            question: 'Apa syarat untuk mendaftar sebagai Ahli/Pakar?',
+            answer: 'Untuk menjaga kualitas konsultasi, Pakar/Ahli harus melalui proses verifikasi. Anda perlu melampirkan sertifikat keahlian, ijazah pendidikan terkait (Pertanian/Biologi/dsb), atau bukti pengalaman kerja sebagai penyuluh. Tim kami akan memverifikasi dokumen Anda dalam 2-3 hari kerja sebelum akun Pakar Anda aktif.'
         },
         {
-            question: 'Bagaimana cara mereset kata sandi saya?',
-            answer: 'Jika Anda lupa kata sandi, klik "Lupa Kata Sandi" di layar login. Masukkan email atau nomor telepon yang terdaftar, dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi Anda. Ikuti petunjuk dalam email atau SMS. Demi keamanan, tautan hanya berlaku selama 24 jam.'
+            question: 'Saya lupa kata sandi, apa yang harus dilakukan?',
+            answer: 'Jangan khawatir. Di halaman login, klik "Lupa Kata Sandi". Masukkan email atau nomor telepon yang terdaftar. Kami akan mengirimkan kode OTP atau tautan reset kata sandi kepada Anda. Ikuti instruksi tersebut untuk membuat kata sandi baru. Pastikan Anda tidak membagikan kode OTP kepada siapapun.'
         },
         {
-            question: 'Apakah saya bisa memiliki beberapa lokasi pertanian dalam satu akun?',
-            answer: 'Ya, Anda dapat mengelola beberapa lokasi pertanian dalam satu akun Juru Tani. Di pengaturan profil Anda, buka bagian "Manajemen Pertanian" dan pilih "Tambah Pertanian Baru" untuk mendaftarkan lokasi tambahan. Setiap lokasi dapat memiliki rencana tanaman, informasi tanah, dan jadwal pengelolaan masing-masing.'
+            question: 'Bagaimana cara mengubah profil pertanian saya?',
+            answer: 'Masuk ke menu "Profil", lalu pilih "Data Lahan". Di sana Anda bisa mengubah jenis komoditas, luas lahan, lokasi, dan metode tanam. Memperbarui data ini sangat penting agar fitur rekomendasi pemupukan dan prediksi cuaca bekerja akurat sesuai lokasi lahan Anda.'
+        },
+        {
+            question: 'Apakah data saya aman?',
+            answer: 'Keamanan data adalah prioritas kami. Kami menggunakan enkripsi standar industri untuk melindungi data pribadi Anda. Kami tidak akan menjual data pribadi Anda ke pihak ketiga. Anda memiliki kendali penuh atas data yang Anda bagikan di forum publik.'
         }
     ],
     farming: [
         {
-            question: 'Bagaimana Juru Tani membantu dalam mengidentifikasi penyakit tanaman?',
-            answer: 'Aplikasi seluler kami memungkinkan Anda mengambil foto tanaman yang terkena penyakit dan mengunggahnya ke sistem identifikasi penyakit berbasis AI. Sistem ini menganalisis gejala visual dan memberikan diagnosis kemungkinan penyakit serta rekomendasi pengobatan. Untuk kasus kompleks, pakar pertanian kami akan meninjau dan memberikan saran personal dalam waktu 24 jam.'
+            question: 'Seberapa akurat fitur diagnosa penyakit tanaman?',
+            answer: 'Fitur diagnosa AI kami memiliki tingkat akurasi di atas 90% untuk penyakit-penyakit umum pada komoditas utama (Padi, Jagung, Cabai, Tomat, dsb). Namun, AI hanyalah alat bantu. Untuk kasus yang kompleks atau meragukan, kami sangat menyarankan menggunakan fitur "Tanya Pakar" untuk mendapatkan verifikasi langsung dari ahli pertanian manusia.'
         },
         {
-            question: 'Apakah Juru Tani menyediakan layanan analisis tanah?',
-            answer: 'Ya, Juru Tani bekerja sama dengan laboratorium pertanian bersertifikat untuk menyediakan layanan pengujian tanah. Anda dapat memesan kit pengujian melalui platform kami, mengumpulkan sampel sesuai panduan, dan mengirimkannya ke laboratorium mitra terdekat. Hasil akan dikirim secara digital dalam 7–10 hari, lengkap dengan rekomendasi perbaikan tanah dan pemilihan tanaman.'
+            question: 'Apakah saya bisa berkonsultasi tentang hidroponik?',
+            answer: 'Tentu saja! Juru Tani memiliki kategori khusus untuk pertanian modern termasuk Hidroponik, Aquaponik, dan Urban Farming. Kami memiliki komunitas aktif dan pakar yang spesialis di bidang teknologi pertanian modern ini.'
         },
         {
-            question: 'Informasi cuaca seperti apa yang disediakan Juru Tani?',
-            answer: 'Platform kami menyediakan prakiraan cuaca hiper-lokal termasuk suhu, kelembapan, prediksi curah hujan, dan peringatan cuaca ekstrem sesuai lokasi pertanian Anda. Kami juga menyediakan prospek iklim musiman dan data cuaca historis untuk membantu perencanaan jangka panjang. Pengguna premium akan menerima notifikasi khusus sesuai kebutuhan tanaman mereka.'
+            question: 'Bagaimana cara mendapatkan rekomendasi pemupukan?',
+            answer: 'Gunakan fitur "Kalkulator Pupuk" di menu Peralatan. Masukkan jenis tanaman, usia tanaman, dan luas lahan Anda. Jika Anda memiliki data analisis tanah terbaru, masukkan juga untuk hasil yang lebih presisi. Sistem akan menghitung kebutuhan NPK dan memberikan rekomendasi takaran pupuk yang efisien.'
         },
         {
-            question: 'Bagaimana cara mengakses konsultasi dengan ahli pertanian?',
-            answer: 'Pengguna dapat mengakses konsultasi melalui fitur chat dalam aplikasi, menjadwalkan video call, atau memposting pertanyaan di forum komunitas. Pakar pertanian kami tersedia untuk menjawab pertanyaan tentang manajemen tanaman, kesehatan tanah, pengendalian hama, strategi irigasi, dan topik pertanian lainnya. Pengguna premium mendapatkan akses prioritas dan waktu respons lebih cepat.'
+            question: 'Informasi cuaca diambil dari mana?',
+            answer: 'Data cuaca Juru Tani terintegrasi dengan data satelit global dan BMKG lokal untuk memberikan prakiraan cuaca tingkat kecamatan. Kami menyediakan info curah hujan, suhu, kelembapan, dan kecepatan angin yang diperbarui setiap jam untuk membantu Anda merencanakan waktu penyemprotan atau pemupukan.'
+        },
+        {
+            question: 'Apa itu Kalender Tanam?',
+            answer: 'Kalender Tanam adalah fitur yang membantu Anda merencanakan jadwal budidaya dari awal hingga panen. Berdasarkan jenis tanaman dan tanggal mulai, sistem akan membuatkan jadwal otomatis untuk penyemaian, pemindahan tanam, pemupukan berkala, hingga estimasi waktu panen, lengkap dengan pengingat notifikasi.'
         }
     ],
     marketplace: [
         {
-            question: 'Bagaimana cara menjual hasil panen di marketplace Juru Tani?',
-            answer: 'Marketplace Juru Tani menghubungkan petani langsung dengan pembeli termasuk pengecer, pengolah, dan konsumen. Petani dapat mencantumkan hasil panen mereka, perkiraan waktu panen, kuantitas, dan harga. Pembeli yang tertarik dapat melakukan pemesanan, dan platform kami menangani keamanan transaksi, pemrosesan pembayaran, dan koordinasi pengiriman untuk memastikan pengalaman yang lancar.'
+            question: 'Bagaimana cara mulai berjualan hasil panen?',
+            answer: 'Masuk ke menu "Marketplace", pilih "Jual Hasil Panen". Unggah foto produk yang jelas, deskripsikan kualitas (Grade A/B/C), varietas, dan kuantitas ketersediaan. Tentukan harga (bisa per kg atau borongan) dan lokasi pengambilan. Penawaran Anda akan terlihat oleh ribuan pembeli potensial di platform kami.'
         },
         {
-            question: 'Bagaimana Juru Tani membantu petani mendapatkan harga yang adil?',
-            answer: 'Kami menyediakan informasi harga pasar secara real-time agar petani dapat menentukan harga secara tepat. Platform kami menghilangkan banyak perantara sehingga petani dapat memperoleh nilai lebih besar. Kami juga memfasilitasi penjualan kolektif bagi petani kecil untuk meningkatkan daya tawar, dan sistem sertifikasi kualitas kami membantu petani mendapatkan harga premium untuk hasil berkualitas tinggi.'
+            question: 'Apakah Juru Tani memotong komisi penjualan?',
+            answer: 'Untuk akun Basic, kami menerapkan biaya admin yang sangat kecil (sekitar 1-2%) untuk setiap transaksi yang berhasil guna pemeliharaan sistem. Untuk akun Mitra Prioritas, biaya layanan mungkin berbeda namun dengan keuntungan promosi produk yang lebih gencar.'
         },
         {
-            question: 'Jenis input pertanian apa saja yang tersedia di marketplace?',
-            answer: 'Marketplace kami menyediakan berbagai input pertanian seperti benih berkualitas, pupuk organik dan konvensional, produk pengendalian hama, peralatan pertanian kecil, perlengkapan irigasi, dan bahan kemasan. Semua produk telah diverifikasi kualitas dan sesuai standar pertanian. Tersedia juga opsi pembelian grosir bagi kelompok tani untuk mendapatkan diskon volume.'
+            question: 'Bagaimana sistem pembayarannya?',
+            answer: 'Juru Tani menggunakan sistem Rekening Bersama (Escrow) untuk keamanan transaksi. Pembeli mentransfer uang ke rekening resmi Juru Tani. Dana akan diteruskan ke Petani setelah Pembeli mengonfirmasi penerimaan barang sesuai pesanan. Ini melindungi kedua belah pihak dari penipuan.'
         },
         {
-            question: 'Bagaimana sistem pembayaran dan pengiriman bekerja?',
-            answer: 'Platform kami menyediakan gateway pembayaran aman yang mendukung berbagai metode termasuk transfer bank, e-wallet, dan pembayaran saat pengiriman untuk transaksi yang memenuhi syarat. Kami bermitra dengan penyedia logistik terpercaya untuk memastikan pengiriman tepat waktu. Sistem pelacakan real-time memungkinkan pembeli dan penjual memantau status pengiriman.'
+            question: 'Siapa yang menanggung ongkos kirim?',
+            answer: 'Ongkos kirim biasanya ditanggung oleh Pembeli, kecuali ada kesepakatan lain (misalnya "Harga Termasuk Ongkir"). Platform kami terintegrasi dengan beberapa logistik kargo untuk pengiriman jumlah besar, atau Anda bisa memilih opsi "Ambil di Lokasi" untuk pembeli lokal.'
+        },
+        {
+            question: 'Bisakah saya membeli bibit dan pupuk di sini?',
+            answer: 'Ya, Marketplace Juru Tani juga menyediakan sarana produksi pertanian (saprotan). Kami bermitra dengan produsen dan distributor resmi untuk menjamin keaslian benih, pupuk, dan pestisida yang dijual di platform kami. Hati-hati dengan produk palsu, belilah dari toko bercentang Official atau Terverifikasi.'
         }
     ],
     technical: [
         {
-            question: 'Perangkat apa saja yang kompatibel dengan Juru Tani?',
-            answer: 'Aplikasi seluler Juru Tani tersedia untuk perangkat Android (versi 7.0 ke atas) dan iOS (versi 12.0 ke atas). Platform web kami dapat diakses melalui semua browser modern seperti Chrome, Safari, Firefox, dan Edge. Untuk performa terbaik, kami sarankan menggunakan versi terbaru dari sistem operasi dan browser Anda.'
+            question: 'Aplikasi sering tertutup sendiri (force close), solusinya?',
+            answer: 'Hal ini biasanya disebabkan oleh memori HP yang penuh atau cache aplikasi yang menumpuk. Coba langkah berikut: 1) Hapus Cache aplikasi Juru Tani di pengaturan HP. 2) Pastikan ruang penyimpanan internal masih cukup. 3) Update aplikasi ke versi terbaru di Play Store. Jika masih bermasalah, hubungi CS kami.'
         },
         {
-            question: 'Apakah Juru Tani bisa digunakan secara offline?',
-            answer: 'Aplikasi seluler Juru Tani memiliki fitur offline untuk kebutuhan penting. Anda dapat mengakses panduan tanaman yang tersimpan, laporan pasar yang telah diunduh, dan menginput data pertanian secara offline. Saat perangkat kembali online, aplikasi akan menyinkronkan data secara otomatis dan memperbarui informasi terbaru.'
+            question: 'Bagaimana menghubungkan sensor IoT ke aplikasi?',
+            answer: 'Masuk ke menu "Smart Farming", pilih "Tambah Perangkat". Pastikan Bluetooth dan GPS HP Anda menyala. Nyalakan perangkat sensor Anda hingga lampu indikator berkedip. Ikuti petunjuk pairing di layar. Pastikan perangkat sensor Anda kompatibel dengan ekosistem Juru Tani.'
         },
         {
-            question: 'Bagaimana Juru Tani melindungi data pribadi saya?',
-            answer: 'Kami menerapkan enkripsi setara perbankan dan protokol keamanan untuk melindungi data Anda. Informasi pribadi dan pertanian Anda tidak akan dibagikan ke pihak ketiga tanpa persetujuan Anda. Kami menggunakan pusat data yang aman, audit keamanan rutin, dan mengikuti standar perlindungan data internasional. Anda dapat meninjau dan mengatur pengaturan privasi kapan saja di akun Anda.'
+            question: 'Mengapa saya tidak menerima notifikasi?',
+            answer: 'Periksa pengaturan notifikasi di HP Anda, pastikan izin notifikasi untuk Juru Tani sudah diaktifkan. Juga cek pengaturan di dalam aplikasi pada menu Profil > Pengaturan Notifikasi, pastikan jenis notifikasi yang Anda inginkan (misal: Pengingat Jadwal, Chat, Info Harga) sudah dalam posisi ON.'
         },
         {
-            question: 'Bagaimana cara mendapatkan dukungan teknis?',
-            answer: 'Untuk dukungan teknis, Anda dapat menghubungi tim kami melalui chat dalam aplikasi, email di support@jurutani.id, atau telepon di +62-XXX-XXXX-XXXX (jam kerja: Senin-Jumat, 09:00-17:00 WIB). Kami juga memiliki pusat bantuan komprehensif dengan artikel, video tutorial, dan panduan pemecahan masalah untuk masalah umum.'
+            question: 'Apakah aplikasi bisa berjalan tanpa internet (Offline)?',
+            answer: 'Mode Offline terbatas tersedia untuk fitur-fitur dasar seperti melihat Panduan yang sudah diunduh atau Kalender Tanam. Namun, untuk fitur diagnosa AI, Marketplace, Cuaca, dan Forum Diskusi, Anda memerlukan koneksi internet yang stabil.'
+        },
+        {
+            question: 'Bagaimana cara melaporkan bug atau error?',
+            answer: 'Jika menemukan error, Anda bisa menggunakan fitur "Lapor Masalah" di menu Bantuan. Sertakan screenshot masalahnya dan deskripsi singkat tentang apa yang Anda lakukan sebelum error terjadi. Laporan Anda sangat berharga bagi tim pengembang kami untuk perbaikan.'
         }
     ]
 }
 
-export const quickHelpCategories = [
+export const quickHelpCards: IconCard[] = [
     {
-        icon: 'i-lucide-info',
-        title: 'Panduan Memulai',
-        description: 'Pelajari cara menggunakan platform Juru Tani untuk pertama kali',
-        link: '#faq-categories'
+        title: 'Panduan Pengguna',
+        description: 'Pelajari dasar-dasar penggunaan aplikasi Juru Tani dari pendaftaran hingga fitur utama.',
+        icon: 'i-lucide-book-open',
+        link: '#faq-categories',
+        color: 'emerald'
     },
     {
-        icon: 'i-lucide-message-circle',
-        title: 'Konsultasi Pertanian',
-        description: 'Hubungi ahli pertanian kami untuk saran profesional',
-        link: '/contact-us'
+        title: 'Video Tutorial',
+        description: 'Tonton demonstrasi visual cara memanfaatkan fitur canggih Juru Tani untuk lahan Anda.',
+        icon: 'i-lucide-video',
+        link: '/videos',
+        color: 'blue'
     },
     {
-        icon: 'i-lucide-shopping-cart',
-        title: 'Marketplace',
-        description: 'Jual beli produk pertanian dengan mudah dan aman',
-        link: '/markets'
+        title: 'Tanya Komunitas',
+        description: 'Bergabung dengan ribuan petani lain untuk bertukar pikiran dan solusi permasalahan lapangan.',
+        icon: 'i-lucide-users',
+        link: '/discussions',
+        color: 'green'
     },
     {
+        title: 'Layanan Pelanggan',
+        description: 'Butuh bantuan mendesak? Tim support kami siap membantu Anda 24/7.',
         icon: 'i-lucide-headset',
-        title: 'Dukungan Teknis',
-        description: 'Dapatkan bantuan untuk masalah teknis atau akun',
-        link: '/contact-us'
+        link: '/contact-us',
+        color: 'emerald'
     }
 ]
 
-export const supportResources = [
+export const supportResources: IconCard[] = [
     {
-        icon: 'i-lucide-book-open',
         title: 'Pusat Pengetahuan',
-        description: 'Akses artikel mendalam, panduan, dan tutorial untuk memaksimalkan penggunaan Juru Tani',
-        link: '/educations'
+        description: 'Akses perpustakaan artikel teknik budidaya, jurnal ilmiah, dan panduan hama penyakit terlengkap.',
+        icon: 'i-lucide-library',
+        link: '/educations',
+        color: 'blue'
     },
     {
-        icon: 'i-lucide-video',
-        title: 'Tutorial Video',
-        description: 'Tonton video tutorial langkah demi langkah untuk berbagai fitur platform',
-        link: '/videos'
+        title: 'Pelatihan & Sertifikasi',
+        description: 'Ikuti kursus online untuk meningkatkan skill bertani Anda dan dapatkan sertifikat dari mitra kami.',
+        icon: 'i-lucide-graduation-cap',
+        link: '/courses',
+        color: 'green'
     },
     {
-        icon: 'i-lucide-users',
-        title: 'Forum Komunitas',
-        description: 'Bergabunglah dengan komunitas petani untuk berbagi pengalaman dan tips',
-        link: '/discussions'
+        title: 'Event & Webinar',
+        description: 'Jangan lewatkan jadwal temu tani online dan webinar bersama pakar nasional.',
+        icon: 'i-lucide-calendar',
+        link: '/events',
+        color: 'emerald'
     }
 ]

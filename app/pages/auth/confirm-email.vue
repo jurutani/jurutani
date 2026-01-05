@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { toastStore } from '~/composables/useJuruTaniToast'
-import { useSupabase } from '~/composables/useSupabase'
+import { useAuth } from '~/composables/useAuth'
 
 // Definisikan layout
 definePageMeta({
@@ -14,8 +14,8 @@ definePageMeta({
 const route = useRoute()
 const email = ref(route.query.email as string || '')
 
-// Composable Supabase untuk resend confirmation
-const { resendConfirmation, loading } = useSupabase()
+// Composable Auth untuk resend confirmation
+const { resendConfirmation, loading } = useAuth()
 
 // State untuk countdown timer resend
 const canResend = ref(false)
@@ -129,7 +129,7 @@ onMounted(() => {
             
             <UButton
               v-if="canResend"
-              color="green"
+              color="success"
               variant="outline"
               :loading="loading"
               :disabled="loading"
@@ -171,7 +171,7 @@ onMounted(() => {
       
       <!-- Footer -->
       <div class="text-center text-sm text-gray-400 mt-6">
-        <p>&copy; 2025 Juru Tani. Teknologi untuk pertanian Indonesia.</p>
+        <p>&copy; 2026 Juru Tani. Teknologi untuk pertanian Indonesia.</p>
       </div>
     </div>
   </div>

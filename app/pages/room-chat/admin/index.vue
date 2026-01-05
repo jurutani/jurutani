@@ -1,8 +1,10 @@
-<!-- pages/admin-chat/index.vue -->
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { toastStore } from '~/composables/useJuruTaniToast'
+import { useSupabase } from '~/composables/useSupabase'
+
+const { supabase } = useSupabase()
 
 // Composables
 const router = useRouter()
@@ -45,12 +47,15 @@ const openChat = (conversationId: string) => {
 
 const startChatWithAdmin = async () => {
   try {
-    const conversation = await getOrCreateConversation(ADMIN_ID)
+    const conversation = await getOrCreateConversation(ADMIN_ID) as any
+    if (!conversation) {
+      throw new Error('Failed to create conversation with admin')
+    }
     
     toast.add({
       title: 'Berhasil',
       description: 'Chat dengan admin telah dibuat',
-      color: 'green'
+      color: 'success'
     })
     
     router.push(`/room-chat/${conversation.id}`)
@@ -146,40 +151,24 @@ useHead({
 <template>
   <div class="flex flex-col h-screen max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-xl dark:shadow-2xl">
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b border-green-200 dark:border-green-800 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800 sticky top-0 z-10">
-      <div class="flex items-center gap-3">
-        <NuxtLink 
-          to="/discussions" 
-          class="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 hover:bg-green-100 transition-colors"
-          aria-label="Kembali ke Diskusi"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-        </NuxtLink>        
-        <div>
-          <h1 class="text-2xl font-bold text-green-800 dark:text-green-300">Chat Admin</h1>
-          <p class="text-sm text-green-600 dark:text-green-400">Hubungi admin JuruTani</p>
-        </div>
-      </div>
-      
-      <!-- Chat with Admin Button -->
-      <UButton
-        v-if="!hasAdminConversation"
-        icon="i-heroicons-chat-bubble-left-right"
-        color="green"
-        :loading="loading"
-        @click="startChatWithAdmin"
-      >
-        Chat dengan Admin
-      </UButton>
-    </div>
+    <ChatRoomHeader
+      title="Chat Admin"
+      subtitle="Hubungi admin JuruTani"
+      back-to="/discussions"
+      back-label="Kembali ke Diskusi"
+      :show-action-button="!hasAdminConversation"
+      action-button-label="Chat dengan Admin"
+      action-button-icon="i-heroicons-chat-bubble-left-right"
+      action-button-color="success"
+      :action-button-loading="loading"
+      @action="startChatWithAdmin"
+    />
 
     <!-- Loading State -->
     <ChatLoadingState v-if="loading" />
 
     <!-- Content -->
-    <div v-else class="flex-1 overflow-y-auto bg-gradient-to-br from-white to-green-25 dark:from-gray-900 dark:to-gray-900">
+    <div v-else class="flex-1 overflow-y-auto bg-gradient-to-br from-white to-green-50 dark:from-gray-900 dark:to-gray-900">
       <!-- Admin Info Card (if no conversation exists) -->
       <div v-if="!hasAdminConversation && adminUser" class="p-6">
         <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-green-100 dark:border-gray-700 p-6">
@@ -198,7 +187,7 @@ useHead({
               <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {{ adminUser.full_name }}
               </h3>
-              <UBadge color="green" variant="soft">
+              <UBadge color="success" variant="soft">
                 Admin
               </UBadge>
             </div>
@@ -210,7 +199,7 @@ useHead({
           
           <UButton
             icon="i-heroicons-chat-bubble-left-right"
-            color="green"
+            color="success"
             block
             :loading="loading"
             @click="startChatWithAdmin"
@@ -242,7 +231,7 @@ useHead({
         v-if="!loading && !adminUser"
         class="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400"
       >
-        <UIcon name="i-heroicons-headset" class="w-10 h-10 mb-4 text-blue-500" />
+        <UIcon name="i-heroicons-user-circle" class="w-10 h-10 mb-4 text-blue-500" />
         <p class="text-lg font-semibold">Ada pertanyaan lebih lanjut?</p>
         <p class="text-sm text-center mt-2">
           Silakan hubungi tim support kami untuk bantuan

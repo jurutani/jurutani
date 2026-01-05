@@ -1,37 +1,45 @@
 <script setup lang="ts">
-import { isDark, toggleDark } from '@/composables/dark'
+const colorMode = useColorMode()
 
-const isMounted = ref(false)
+const modes = ['system', 'light', 'dark'] as const
 
-onMounted(() => {
-  isMounted.value = true
+const nextMode = () => {
+  const index = modes.indexOf(colorMode.preference as any)
+  colorMode.preference = modes[(index + 1) % modes.length]
+}
+
+const isDark = computed(() => colorMode.value === 'dark')
+
+const icon = computed(() => {
+  if (colorMode.preference === 'system') return 'i-lucide-monitor'
+  return isDark.value ? 'i-lucide-moon' : 'i-lucide-sun'
 })
 </script>
 
 <template>
-  <UButton
-    variant="ghost"
-    size="sm"
-    aria-label="Toggle theme"
-    class="!rounded-xl text-green-700 dark:text-green-300
-           hover:bg-green-100/50 dark:hover:bg-green-700/30
-           transition-all"
-    @click="toggleDark()"
-  >
-    <transition name="slide" mode="out-in">
-      <UIcon
-        v-if="isMounted && isDark"
-        name="i-lucide-moon"
-        class="text-2xl"
-      />
-      <UIcon
-        v-else-if="isMounted"
-        name="i-lucide-sun"
-        class="text-2xl"
-      />
-      <div v-else class="text-2xl w-6 h-6" />
-    </transition>
-  </UButton>
+  <ClientOnly>
+    <UButton
+      variant="ghost"
+      size="sm"
+      class="!rounded-xl
+             text-green-700 dark:text-green-300
+             hover:bg-green-100/50 dark:hover:bg-green-700/30
+             transition-all"
+      @click="nextMode"
+    >
+      <Transition name="slide" mode="out-in">
+        <UIcon
+          :key="colorMode.preference"
+          :name="icon"
+          class="text-2xl"
+        />
+      </Transition>
+    </UButton>
+
+    <template #fallback>
+      <div class="size-8" />
+    </template>
+  </ClientOnly>
 </template>
 
 <style scoped>

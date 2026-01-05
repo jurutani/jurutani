@@ -6,6 +6,7 @@ const { supabase } = useSupabase()
 
 interface Video {
   id: string
+  slug: string
   title: string
   description: string
   link_yt: string
@@ -26,7 +27,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // State management
-const showPlayer = ref(false)
 const imageError = ref(false)
 const imageLoading = ref(true)
 
@@ -128,36 +128,30 @@ const contentClasses = computed(() => {
   return 'p-6 md:p-8'
 })
 
-// Player interaction
-const togglePlayer = () => {
-  if (isValidVideo.value) {
-    showPlayer.value = !showPlayer.value
-  }
-}
-
-const handleCardClick = () => {
-  togglePlayer()
+// Navigation
+const viewDetails = () => {
+  navigateTo(`/videos/${props.video.slug}`)
 }
 </script>
 
 <template>
   <div
     :class="cardClasses"
-    @click="handleCardClick"
+    @click="viewDetails"
   >
     <!-- Background Image/Thumbnail with Gradient Overlay -->
     <div class="absolute inset-0">
       <!-- Loading State -->
       <div 
         v-if="imageLoading && thumbnailUrl && !imageError" 
-        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900"
+        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-50 to-pink-100 dark:from-gray-800 dark:to-gray-900"
       >
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600" />
       </div>
       
       <!-- Thumbnail Image -->
       <img
-        v-if="thumbnailUrl && !imageError && !showPlayer"
+        v-if="thumbnailUrl && !imageError"
         :src="thumbnailUrl"
         :alt="video.title"
         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -166,33 +160,10 @@ const handleCardClick = () => {
         @load="handleImageLoad"
       />
       
-      <!-- Video Player (on hover/click) -->
-      <div 
-        v-if="showPlayer && isValidVideo"
-        class="absolute inset-0 z-20 bg-black"
-        @click.stop
-      >
-        <iframe
-          :src="embedUrl"
-          class="w-full h-full"
-          frameborder="0"
-          allowfullscreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          title="YouTube video player"
-        />
-        <!-- Close button -->
-        <button
-          class="absolute top-4 right-4 z-30 bg-black/80 hover:bg-black text-white rounded-full p-2 transition-all duration-200"
-          @click.stop="showPlayer = false"
-        >
-          <UIcon name="i-heroicons-x-mark" class="w-6 h-6" />
-        </button>
-      </div>
-      
       <!-- Fallback Background -->
       <div 
         v-if="!thumbnailUrl || imageError" 
-        class="w-full h-full bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center"
+        class="w-full h-full bg-gradient-to-br from-green-100 via-pink-100 to-orange-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center"
       >
         <div class="text-center text-green-400 dark:text-gray-600">
           <UIcon name="i-heroicons-video-camera" class="w-20 h-20 mb-3 opacity-50" />
@@ -200,41 +171,26 @@ const handleCardClick = () => {
         </div>
       </div>
       
-      <!-- Gradient Overlay - Enhanced with multiple layers -->
-      <div 
-        v-if="!showPlayer"
-        class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-500" 
-      />
-      
-      <!-- Additional gradient for better text readability -->
-      <div 
-        v-if="!showPlayer"
-        class="absolute inset-0 bg-gradient-to-br from-green-900/20 via-transparent to-emerald-900/20 group-hover:from-green-900/30 group-hover:to-emerald-900/30 transition-all duration-500" 
-      />
-      
-      <!-- Play Icon Overlay (shows when not playing) -->
-      <div 
-        v-if="!showPlayer && isValidVideo"
-        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-      >
-        <div class="bg-green-600/90 backdrop-blur-sm rounded-full p-6 transform group-hover:scale-110 transition-transform duration-300 shadow-2xl">
-          <UIcon name="i-heroicons-play-solid" class="w-12 h-12 text-white" />
+      <!-- Play Button Overlay -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div class="w-16 h-16 md:w-20 md:h-20 bg-green-600/90 hover:bg-green-600 rounded-full flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 shadow-2xl">
+          <UIcon name="i-heroicons-play" class="w-8 h-8 md:w-10 md:h-10 text-white ml-1" />
         </div>
       </div>
+      
+      <!-- Gradient Overlay - Enhanced with multiple layers -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-500" />
+      
+      <!-- Additional gradient for better text readability -->
+      <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 via-transparent to-green-900/20 group-hover:from-green-900/30 group-hover:to-green-900/30 transition-all duration-500" />
     </div>
     
     <!-- Content Overlay -->
-    <div 
-      v-if="!showPlayer"
-      :class="['relative h-full flex flex-col justify-end', contentClasses]"
-    >
+    <div :class="['relative h-full flex flex-col justify-end', contentClasses]">
       <!-- Category Badge -->
       <div class="absolute top-4 left-4 md:top-6 md:left-6">
         <span 
-          :class="[
-            getCategoryColor(video.category),
-            'inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl'
-          ]"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
         >
           <UIcon name="i-heroicons-video-camera" class="w-3 h-3" />
           {{ formattedCategory }}
@@ -272,15 +228,16 @@ const handleCardClick = () => {
           </div>
           <div v-if="isValidVideo" class="flex items-center gap-2">
             <UIcon name="i-heroicons-play-circle" class="w-4 h-4 text-green-400" />
-            <span class="font-medium">Tonton Video</span>
+            <span class="font-medium">Video</span>
           </div>
         </div>
         
         <!-- Watch Video Button -->
         <div class="flex items-center gap-2 text-white font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-          <span class="text-sm md:text-base">Putar Video</span>
+          <UIcon name="i-heroicons-play-circle" class="w-5 h-5" />
+          <span class="text-sm md:text-base">Tonton Video</span>
           <UIcon 
-            name="i-heroicons-play" 
+            name="i-heroicons-arrow-right" 
             class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" 
           />
         </div>

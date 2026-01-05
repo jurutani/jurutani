@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useContentList } from '~/composables/useContentList'
 import { useAsyncData } from '#app'
 import { useSupabase } from '~/composables/useSupabase'
+import type { News, Category } from '~/types'
 
 definePageMeta({
   layout: 'default',
@@ -10,25 +11,6 @@ definePageMeta({
 
 // SEO Optimization
 useSeoOptimized('news')
-
-// Types
-interface News {
-  id: string
-  slug: string
-  category: string
-  status_news: string
-  created_at: string
-  title?: string
-  content?: string
-  image_url?: string
-  author?: string
-}
-
-interface Category {
-  id?: string
-  name: string
-  value?: string
-}
 
 const { supabase } = useSupabase()
 

@@ -1,9 +1,5 @@
 <!-- pages/auth/register.vue -->
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { toastStore } from '~/composables/useJuruTaniToast'
-import { useSupabase } from '~/composables/useSupabase'
-
 // SEO Optimization
 useSeoAuth('register')
 
@@ -13,8 +9,9 @@ definePageMeta({
   middleware: ['guest']
 })
 
-// Composable Supabase
-const { register, loginWithSocialProvider, error } = useSupabase()
+// Composable Auth
+const toastStore = usejuruTaniToast()
+const { register, loginWithSocialProvider, error } = useAuth()
 
 // State form
 const form = ref({
@@ -219,7 +216,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         </div>
         
         <div class="text-sm">
-          &copy; 2025 Juru Tani. Teknologi untuk pertanian Indonesia.
+          &copy; 2026 Juru Tani. Teknologi untuk pertanian Indonesia.
         </div>
       </div>
     </div>
@@ -238,38 +235,32 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         
         <UCard class="shadow-sm border-green-100 dark:border-green-700">
           <form @submit.prevent="handleRegister">
-            <UFormGroup label="Email" name="email">
+            <UFormField label="Email" name="email">
               <div class="relative">
                 <UInput
-                  v-model="form.email"
-                  type="email"
-                  placeholder="nama@example.com"
-                  size="lg"
-                  :disabled="isLoading"
-                  :ui="{
-                    base: 'relative block w-full rounded-lg pr-12',
-                    input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-                  }"
-                />
+                v-model="form.email"
+                type="email"
+                placeholder="nama@example.com"
+                size="lg"
+                :disabled="isLoading"
+                class="w-full"
+              />
                 <div class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none">
                   <UIcon name="i-ph-envelope" class="w-5 h-5" />
                 </div>
               </div>
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Kata Sandi" name="password" class="mt-4">
+            <UFormField label="Kata Sandi" name="password" class="mt-4">
               <div class="relative">
                 <UInput
-                  v-model="form.password"
-                  :type="showPassword ? 'text' : 'password'"
-                  placeholder="Minimal 8 karakter"
-                  size="lg"
-                  :disabled="isLoading"
-                  :ui="{
-                    base: 'relative block w-full rounded-lg pr-12',
-                    input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500'
-                  }"
-                />
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="Minimal 8 karakter"
+                size="lg"
+                :disabled="isLoading"
+                class="w-full"
+              />
                 <button
                   type="button"
                   class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:text-gray-600 dark:focus:text-gray-300 transition-colors duration-200"
@@ -303,22 +294,18 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                   />
                 </div>
               </div>
-            </UFormGroup>
+            </UFormField>
 
-            <UFormGroup label="Konfirmasi Kata Sandi" name="confirmPassword" class="mt-4">
+            <UFormField label="Konfirmasi Kata Sandi" name="confirmPassword" class="mt-4">
               <div class="relative">
                 <UInput
-                  v-model="form.confirmPassword"
-                  :type="showConfirmPassword ? 'text' : 'password'"
-                  placeholder="Masukkan kembali kata sandi"
-                  size="lg"
-                  :disabled="isLoading"
-                  :ui="{
-                    base: 'relative block w-full rounded-lg pr-12',
-                    input: 'placeholder:text-gray-400 focus:ring-2 focus:ring-green-500',
-                    ring: passwordsMatch === false ? 'ring-2 ring-red-500' : ''
-                  }"
-                />
+                v-model="form.confirmPassword"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                placeholder="Masukkan kembali kata sandi"
+                size="lg"
+                :disabled="isLoading"
+                class="w-full"
+              />
                 <button
                   type="button"
                   class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:text-gray-600 dark:focus:text-gray-300 transition-colors duration-200"
@@ -343,19 +330,15 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                   {{ passwordsMatch ? 'Kata sandi cocok' : 'Kata sandi tidak cocok' }}
                 </span>
               </div>
-            </UFormGroup>
+            </UFormField>
 
             <div class="mt-4">
               <UCheckbox 
-                v-model="form.agreeTerms" 
-                name="agreeTerms" 
-                color="green"
-                :disabled="isLoading"
-                :ui="{ 
-                  wrapper: 'items-start',
-                  label: 'text-sm text-gray-600 dark:text-gray-300'
-                }"
-              >
+              v-model="form.agreeTerms" 
+              name="agreeTerms"
+              :disabled="isLoading"
+              class="text-sm"
+            >
                 <template #label>
                   <span>
                     Saya menyetujui 
@@ -381,20 +364,13 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
 
             <div class="mt-6">
               <UButton
-                type="submit"
-                block
-                color="green"
-                :loading="isLoading"
-                :disabled="isLoading || !form.agreeTerms || passwordsMatch === false"
-                :ui="{
-                  base: 'rounded-lg p-4 font-medium text-base',
-                  color: {
-                    green: {
-                      solid: 'bg-green-600 hover:bg-green-700 focus:ring-green-300 text-white disabled:opacity-50 disabled:cursor-not-allowed'
-                    }
-                  }
-                }"
-              >
+              type="submit"
+              block
+              color="primary"
+              :loading="isLoading"
+              :disabled="isLoading || !form.agreeTerms || passwordsMatch === false"
+              class="bg-green-600 hover:bg-green-700 text-white font-medium"
+            >
                 <template #leading>
                   <UIcon v-if="!isLoading" name="i-ph-user-plus" class="w-5 h-5" />
                 </template>
@@ -412,20 +388,12 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
 
           <div class="grid grid-cols-1 place-items-center gap-3">
             <UButton
-              color="white"
-              variant="outline"
-              :ui="{ 
-                base: 'rounded-lg p-2', 
-                color: {
-                  white: {
-                    solid: 'bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600'
-                  }
-                }
-              }"
-              :disabled="isLoading"
-              :loading="isLoading"
-              @click="handleSocialLogin('google')"
-            >
+            variant="outline"
+            :disabled="isLoading"
+            :loading="isLoading"
+            class="bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
+            @click="handleSocialLogin('google')"
+          >
               <UIcon v-if="!isLoading" name="i-logos-google-icon" class="mr-2 h-5 w-5" />
               Daftar dengan Google
             </UButton>

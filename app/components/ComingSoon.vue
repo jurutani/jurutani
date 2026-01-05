@@ -15,7 +15,7 @@
     <UButton
       label="Back to Home"
       to="/"
-      color="green"
+      color="success"
       variant="solid"
       size="lg"
       class="mt-4"

@@ -1,37 +1,30 @@
 <script setup lang="ts">
-import type { UUID } from 'crypto'
-import { ref, computed, onMounted } from 'vue'
+import { z } from 'zod'
+import type { FormSubmitEvent } from '#ui/types'
 import { toastStore } from '~/composables/useJuruTaniToast'
 import { useSupabase } from '~/composables/useSupabase'
 import { useProfile } from '~/composables/useProfile'
+// import { useFileUpload } from '~/composables/useFileUpload' // Removed, auto-imported as useAppFileUpload
 
 const { supabase } = useSupabase()
 const { userData, fetchUserData } = useProfile()
+const { uploadFile } = useAppFileUpload()
 
 // Types
 interface Category {
   name: string
 }
 
-interface FormState {
-  title: string
-  sub_title: string
-  content: string
-  category: string
-  status_news: string
-  link: string
-  publishDate: string
-  imageFile?: File
-  attachmentFile?: File
-}
-
-// Emits
-const emit = defineEmits<{
-  close: []
-}>()
-
 // Constants
-// Ambil kategori dari tabel 'category-news'
+const STORAGE_BUCKETS = {
+  images: 'news-images',
+  attachments: 'news-attachments'
+} as const
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
+const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024 // 10MB
+
+// Fetch categories
 const { data: CATEGORY } = await useAsyncData('category_news', async () => {
   try {
     const { data, error: catError } = await supabase
@@ -48,8 +41,8 @@ const { data: CATEGORY } = await useAsyncData('category_news', async () => {
   }
 })
 
-// Transform categories for USelect component
-const categoryOptions = computed(() => {
+// Transform categories for USelect
+const categoryItems = computed(() => {
   if (!CATEGORY.value) return []
   
   return CATEGORY.value.map(cat => ({
@@ -58,31 +51,45 @@ const categoryOptions = computed(() => {
   }))
 })
 
-const STORAGE_BUCKETS = {
-  images: 'news-images',
-  attachments: 'news-attachments'
-} as const
+// Emits
+const emit = defineEmits<{
+  close: []
+}>()
 
-// Reactive State
-const form = ref<FormState>({
+// Zod Schema
+const schema = z.object({
+  title: z.string().min(1, 'Judul berita wajib diisi'),
+  sub_title: z.string().optional(),
+  content: z.string().min(1, 'Konten berita wajib diisi'),
+  category: z.string().optional(),
+  link: z.string().url('Format link tidak valid').optional().or(z.literal('')),
+  imageFile: z.instanceof(File).optional()
+    .refine((file) => !file || file.size <= MAX_IMAGE_SIZE, {
+      message: 'Ukuran gambar maksimal 5MB'
+    })
+    .refine((file) => !file || file.type.startsWith('image/'), {
+      message: 'File harus berupa gambar'
+    }),
+  attachmentFile: z.instanceof(File).optional()
+    .refine((file) => !file || file.size <= MAX_ATTACHMENT_SIZE, {
+      message: 'Ukuran file maksimal 10MB'
+    })
+})
+
+type Schema = z.output<typeof schema>
+
+// Form State
+const state = reactive<Partial<Schema>>({
   title: '',
   sub_title: '',
   content: '',
   category: '',
-  status_news: 'pending',
   link: '',
-  publishDate: ''
+  imageFile: undefined,
+  attachmentFile: undefined
 })
 
-const errors = ref<Record<string, string>>({})
 const isSubmitting = ref(false)
-const imagePreview = ref<string | null>(null)
-
-// Computed
-const currentAttachmentName = computed(() => {
-  if (form.value.attachmentFile) return form.value.attachmentFile.name
-  return ''
-})
 
 // Check user authentication
 const checkUserAuth = (): boolean => {
@@ -95,111 +102,10 @@ const checkUserAuth = (): boolean => {
   return true
 }
 
-// Validation
-const validateForm = (): boolean => {
-  errors.value = {}
-
-  const validationRules = [
-    {
-      condition: !form.value.title.trim(),
-      field: 'title',
-      message: 'Judul berita wajib diisi'
-    },
-    {
-      condition: !form.value.content.trim(),
-      field: 'content',
-      message: 'Konten berita wajib diisi'
-    },
-    {
-      condition: form.value.link && !isValidUrl(form.value.link),
-      field: 'link',
-      message: 'Format link tidak valid'
-    }
-  ]
-
-  validationRules.forEach(rule => {
-    if (rule.condition) {
-      errors.value[rule.field] = rule.message
-    }
-  })
-
-  return Object.keys(errors.value).length === 0
-}
-
-const isValidUrl = (url: string): boolean => {
-  if (!url) return true
-  try {
-    new URL(url)
-    return true
-  } catch {
-    return false
-  }
-}
-
-// File Upload Utilities
-const uploadFile = async (bucket: string, path: string, file: File): Promise<string> => {
-  const { error } = await supabase.storage
-    .from(bucket)
-    .upload(path, file, {
-      cacheControl: '3600',
-      upsert: true
-    })
-  
-  if (error) throw error
-  return path
-}
-
-const generateFilePath = (id: string, fileName: string, folder: string): string => {
-  const timestamp = Date.now()
-  const cleanFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_')
-  return `${folder}/${id}/${timestamp}_${cleanFileName}`
-}
-
-// File Handlers
-const handleImageUpload = (event: Event): void => {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (!file) return
-
-  // Validate file type
-  if (!file.type.startsWith('image/')) {
-    toastStore.error('File harus berupa gambar')
-    return
-  }
-
-  // Validate file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    toastStore.error('Ukuran gambar maksimal 5MB')
-    return
-  }
-
-  form.value.imageFile = file
-
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    imagePreview.value = e.target?.result as string
-  }
-  reader.readAsDataURL(file)
-}
-
-const handleAttachmentUpload = (event: Event): void => {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (!file) return
-
-  // Validate file size (max 10MB)
-  if (file.size > 10 * 1024 * 1024) {
-    toastStore.error('Ukuran file maksimal 10MB')
-    return
-  }
-
-  form.value.attachmentFile = file
-}
-
 // Form Submission
-const handleSubmit = async (): Promise<void> => {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Check authentication first
   if (!checkUserAuth()) return
-
-  if (!validateForm()) return
 
   isSubmitting.value = true
 
@@ -209,38 +115,40 @@ const handleSubmit = async (): Promise<void> => {
     let attachmentUrl = ''
 
     // Upload image if file selected
-    if (form.value.imageFile) {
-      const imagePath = generateFilePath(
-        newsId, 
-        form.value.imageFile.name, 
-        'images'
-      )
-      imageUrl = await uploadFile(STORAGE_BUCKETS.images, imagePath, form.value.imageFile)
+    if (event.data.imageFile) {
+      const result = await uploadFile(event.data.imageFile, {
+        bucket: STORAGE_BUCKETS.images,
+        folder: 'images',
+        maxSizeMB: 5,
+        allowedTypes: ['image/*']
+      })
+      imageUrl = result.path
     }
 
     // Upload attachment if file selected
-    if (form.value.attachmentFile) {
-      const attachmentPath = generateFilePath(
-        newsId, 
-        form.value.attachmentFile.name, 
-        'attachments'
-      )
-      attachmentUrl = await uploadFile(STORAGE_BUCKETS.attachments, attachmentPath, form.value.attachmentFile)
+    if (event.data.attachmentFile) {
+      const result = await uploadFile(event.data.attachmentFile, {
+        bucket: STORAGE_BUCKETS.attachments,
+        folder: 'attachments',
+        maxSizeMB: 10,
+        allowedTypes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+      })
+      attachmentUrl = result.path
     }
 
     // Prepare payload for insert
     const payload = {
       id: newsId,
-      title: form.value.title.trim(),
-      sub_title: form.value.sub_title.trim() || null,
-      content: form.value.content.trim(),
-      category: form.value.category || null,
-      status_news: form.value.status_news,
-      link: form.value.link.trim() || null,
+      title: event.data.title.trim(),
+      sub_title: event.data.sub_title?.trim() || null,
+      content: event.data.content.trim(),
+      category: event.data.category || null,
+      status_news: 'pending',
+      link: event.data.link?.trim() || null,
       image_url: imageUrl || null,
       attachment_url: attachmentUrl || null,
-      user_id: userData.value.id, // Use profile ID from useProfile
-      published_at: form.value.publishDate || null,
+      user_id: userData.value.id,
+      published_at: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
@@ -274,159 +182,117 @@ onMounted(async () => {
 </script>
 
 <template>
-  <UCard class="bg-white dark:bg-gray-800">
-    <template #header>
-      <div class="flex items-center gap-2">
-        <UIcon
-          name="i-heroicons-newspaper"
-          class="text-green-600 dark:text-green-400 text-xl"
-        />
-        <h2 class="text-xl font-bold text-green-700 dark:text-green-400 my-auto flex items-center h-full">
-          Tambah Berita Baru
-        </h2>
-      </div>
+  <UModal
+    :close="{ onClick: () => emit('close') }"
+    title="Tambah Berita Baru"
+    description="Isi formulir di bawah untuk menambahkan berita baru"
+  >
+    <template #body>
+      <UForm id="news-form" :schema="schema" :state="state" class="space-y-5" @submit="onSubmit">
+        <!-- Title -->
+        <UFormField label="Judul Berita" name="title" required>
+          <UInput
+            v-model="state.title"
+            placeholder="Masukkan judul berita"
+            size="lg"
+            icon="i-heroicons-chat-bubble-bottom-center-text"
+          />
+        </UFormField>
+    
+        <!-- Subtitle -->
+        <UFormField label="Sub Judul" name="sub_title">
+          <UInput
+            v-model="state.sub_title"
+            placeholder="Masukkan sub judul berita (opsional)"
+            size="lg"
+          />
+        </UFormField>
+    
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Category -->
+          <UFormField label="Kategori" name="category">
+            <USelect
+              v-model="state.category"
+              :items="categoryItems"
+              placeholder="Pilih kategori"
+              size="lg"
+              icon="i-heroicons-tag"
+            />
+          </UFormField>
+
+          <!-- Link -->
+          <UFormField label="Link Referensi" name="link">
+            <UInput
+              v-model="state.link"
+              placeholder="https://contoh.com/artikel (opsional)"
+              size="lg"
+              icon="i-heroicons-link"
+            />
+          </UFormField>
+        </div>
+    
+        <!-- Content -->
+        <UFormField label="Konten Berita" name="content" required>
+          <UTextarea
+            v-model="state.content"
+            placeholder="Masukkan konten berita"
+            :rows="6"
+            size="lg"
+            autoresize
+          />
+        </UFormField>
+    
+        <!-- Image Upload -->
+        <UFormField 
+          label="Gambar Berita" 
+          name="imageFile"
+          description="Format: JPG, PNG, GIF. Maksimal 5MB"
+        >
+          <UFileUpload
+            v-model="state.imageFile"
+            accept="image/*"
+            class="min-h-48"
+          />
+        </UFormField>
+    
+        <!-- Attachment Upload -->
+        <UFormField 
+          label="Lampiran" 
+          name="attachmentFile"
+          description="Format: PDF, DOC, DOCX. Maksimal 10MB"
+        >
+          <UFileUpload
+            v-model="state.attachmentFile"
+            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            class="min-h-32"
+          />
+        </UFormField>
+      </UForm>
     </template>
 
-    <form class="space-y-4" @submit.prevent="handleSubmit">
-      <!-- Title -->
-      <UFormGroup label="Judul Berita" required>
-        <UInput
-          v-model="form.title"
-          placeholder="Masukkan judul berita"
-          :error="!!errors.title"
-          color="green"
-          size="md"
-        >
-          <template #trailing>
-            <UIcon name="i-heroicons-chat-bubble-bottom-center-text" class="text-gray-400" />
-          </template>
-        </UInput>
-        <template #hint>
-          <p v-if="errors.title" class="text-red-500 text-sm">{{ errors.title }}</p>
-        </template>
-      </UFormGroup>
-
-      <!-- Subtitle -->
-      <UFormGroup label="Sub Judul">
-        <UInput
-          v-model="form.sub_title"
-          placeholder="Masukkan sub judul berita (opsional)"
-          color="green"
-        />
-      </UFormGroup>
-
-      <!-- Category -->
-      <UFormGroup label="Kategori">
-        <USelect
-          v-model="form.category"
-          :options="categoryOptions"
-          option-attribute="label"
-          value-attribute="value"
-          placeholder="Pilih kategori"
-          color="green"
-        >
-          <template #leading>
-            <UIcon name="i-heroicons-tag" class="text-gray-400" />
-          </template>
-        </USelect>
-      </UFormGroup>
-
-      <!-- Content -->
-      <UFormGroup label="Konten Berita" required>
-        <UTextarea
-          v-model="form.content"
-          placeholder="Masukkan konten berita"
-          :error="!!errors.content"
-          :rows="4"
-          color="green"
-          class="resize-y"
-        >
-          <template #trailing>
-            <UIcon name="i-heroicons-document-text" class="text-gray-400" />
-          </template>
-        </UTextarea>
-        <template #hint>
-          <p v-if="errors.content" class="text-red-500 text-sm">{{ errors.content }}</p>
-        </template>
-      </UFormGroup>
-
-      <!-- Link -->
-      <UFormGroup label="Link Referensi">
-        <UInput
-          v-model="form.link"
-          placeholder="https://contoh.com/artikel (opsional)"
-          :error="!!errors.link"
-          color="green"
-        >
-          <template #trailing>
-            <UIcon name="i-heroicons-link" class="text-gray-400" />
-          </template>
-        </UInput>
-        <template #hint>
-          <p v-if="errors.link" class="text-red-500 text-sm">{{ errors.link }}</p>
-        </template>
-      </UFormGroup>
-
-      <!-- Image Upload -->
-      <UFormGroup label="Gambar Berita">
-        <input
-          type="file"
-          accept="image/*"
-          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-          @change="handleImageUpload"
-        >
-        
-        <!-- Image Preview -->
-        <div v-if="imagePreview" class="mt-3">
-          <img 
-            :src="imagePreview" 
-            alt="Preview gambar" 
-            class="h-40 w-auto object-cover rounded-md border"
-          >
-        </div>
-        
-        <template #hint>
-          <p class="text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal 5MB</p>
-        </template>
-      </UFormGroup>
-
-      <!-- Attachment Upload -->
-      <UFormGroup label="Lampiran">
-        <input
-          type="file"
-          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-          @change="handleAttachmentUpload"
-        >
-        
-        <template #hint>
-          <div class="flex flex-col gap-1">
-            <p v-if="currentAttachmentName" class="text-sm text-gray-600 dark:text-gray-400">
-              File: {{ currentAttachmentName }}
-            </p>
-            <p class="text-xs text-gray-500">Maksimal 10MB</p>
-          </div>
-        </template>
-      </UFormGroup>
-    </form>
-
     <template #footer>
-      <div class="flex justify-end space-x-3">
+      <div class="flex justify-end gap-3">
         <UButton
-          color="gray"
+          color="neutral"
           variant="outline"
+          size="lg"
           :disabled="isSubmitting"
           @click="handleCancel"
         >
+          <UIcon name="i-heroicons-x-mark" class="mr-1" />
           Batal
         </UButton>
         <UButton
-          color="green"
+          type="submit"
+          color="success"
+          size="lg"
           :loading="isSubmitting"
-          @click="handleSubmit"
+          form="news-form"
         >
+          <UIcon name="i-heroicons-check" class="mr-1" />
           Simpan Berita
         </UButton>
       </div>
     </template>
-  </UCard>
+  </UModal>
 </template>

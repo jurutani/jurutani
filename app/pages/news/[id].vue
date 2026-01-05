@@ -2,28 +2,11 @@
 import { onMounted, computed, watch } from 'vue'
 import { useContentDetail } from '~/composables/useContentDetail'
 import { useSupabase } from '~/composables/useSupabase'
+import type { NewsItem } from '~/types'
 
 definePageMeta({
   layout: 'default',
 })
-
-interface NewsItem {
-  id: string | number
-  slug: string
-  title: string
-  sub_title?: string
-  content: string
-  category?: string
-  status_news: string
-  link?: string
-  image_url?: string
-  attachment_url?: string
-  author?: string
-  user_id?: string
-  created_at: string
-  updated_at: string
-  published_at?: string
-}
 
 const { supabase } = useSupabase()
 
@@ -177,13 +160,13 @@ watch(() => news.value, (newVal) => {
 <template>
   <div class="min-h-screen py-6">
     
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="container mx-auto px-4 py-8">
       <!-- Header -->
       <div class="shadow-sm">
         <div class="container mx-auto px-4 py-4">
           <div class="flex items-center justify-between">
             <UButton
-              color="green"
+              color="success"
               variant="ghost"
               icon="i-lucide-arrow-left"
               @click="handleGoBack"
@@ -211,7 +194,7 @@ watch(() => news.value, (newVal) => {
           <UIcon name="i-heroicons-exclamation-triangle" class="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h3 class="text-lg font-semibold text-red-700 dark:text-red-400 mb-2">Oops! Terjadi Kesalahan</h3>
           <p class="text-red-600 dark:text-red-300 mb-4">{{ error }}</p>
-          <UButton color="red" variant="outline" @click="handleGoBack">
+          <UButton color="error" variant="outline" @click="handleGoBack">
             Kembali ke Daftar Berita
           </UButton>
         </div>
@@ -296,7 +279,7 @@ watch(() => news.value, (newVal) => {
             <!-- External Link -->
             <UButton
               v-if="news.link"
-              color="green"
+              color="success"
               variant="outline"
               icon="i-heroicons-link"
               class="flex-1 sm:flex-none"

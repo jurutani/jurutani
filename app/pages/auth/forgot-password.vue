@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { toastStore } from '~/composables/useJuruTaniToast'
-import { useSupabase } from '~/composables/useSupabase'
-
 // SEO Optimization
 useSeoAuth('forgot-password')
 
@@ -12,7 +8,8 @@ definePageMeta({
   middleware: ['guest']
 })
 
-const { resetPassword } = useSupabase()
+const toastStore = usejuruTaniToast()
+const { resetPassword } = useAuth()
 
 // State form
 const email = ref('')

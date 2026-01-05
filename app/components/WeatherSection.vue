@@ -291,6 +291,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@reference "tailwindcss";
 /* Glass Tab Container */
 .glass-tab-container {
   @apply relative overflow-hidden rounded-2xl p-1.5;

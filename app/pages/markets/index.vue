@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useContentList } from '~/composables/useContentList'
 import { useAsyncData } from '#app'
 import { useSupabase } from '~/composables/useSupabase'
+import type { Market, Category } from '~/types'
 
 definePageMeta({
   layout: 'default',
@@ -10,44 +11,6 @@ definePageMeta({
 
 // SEO Optimization
 useSeoOptimized('markets')
-
-// Types
-interface Market {
-  id: string
-  slug: string
-  name: string
-  description?: string
-  price: number
-  price_range?: string
-  category: string
-  location?: string
-  weight?: string
-  size?: string
-  stock?: string | number
-  status: string
-  created_at: string
-  attachments?: string
-  seller?: string
-  contact_seller?: string
-  links?: {
-    shopee_link?: string
-    tokopedia_link?: string
-    tiktok_link?: string
-  }
-  profiles?: {
-    full_name?: string
-    name?: string
-    avatar_url?: string
-  }
-  deleted_at?: string
-  archived_at?: string
-}
-
-interface Category {
-  id?: string
-  name: string
-  value?: string
-}
 
 const { supabase } = useSupabase()
 

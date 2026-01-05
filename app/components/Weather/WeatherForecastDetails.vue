@@ -180,6 +180,7 @@ const getWeatherIconClass = (weatherMain: string) => {
 </template>
 
 <style scoped>
+  @reference "tailwindcss";
 /* Main Container */
 .glass-card-container {
   @apply relative overflow-hidden rounded-3xl p-6;

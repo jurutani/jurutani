@@ -1,60 +1,10 @@
 <script setup lang="ts">
-interface MenuItem {
-  label: string
-  path: string
-}
-
-interface ContactItem {
-  icon: string
-  text: string | string[]
-}
-
-interface SocialMedia {
-  name: string
-  icon: string
-  url: string
-  ariaLabel: string
-}
-
-/* =========================
-   DATA LAIN (TIDAK DIUBAH)
-========================= */
-
-const menuLinks: MenuItem[][] = [
-  [
-    { label: 'Beranda', path: '/' },
-    { label: 'Tentang Kami', path: '/about-us' },
-    { label: 'Berita', path: '/news' }
-  ],
-  [
-    { label: 'Produk', path: '/markets' },
-    { label: 'Komunitas', path: '/discussions/group' },
-    { label: 'Kontak', path: '/contact-us' }
-  ]
-]
-
-const contactInfo: ContactItem[] = [
-  {
-    icon: 'i-mdi-map-marker',
-    text: ['Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo,', 'Kota Yogyakarta, Daerah Istimewa Yogyakarta 55161']
-  },
-  { icon: 'i-mdi-phone', text: '+62 856-6900-0010' },
-  { icon: 'i-mdi-email', text: 'si.jurutani@gmail.com' },
-  { icon: 'i-mdi-clock-outline', text: 'Senin - Jumat: 08.00 - 16.00 WIB' }
-]
-
-const socialMedia: SocialMedia[] = [
-  { name: 'WhatsApp', icon: 'i-mdi-whatsapp', url: 'https://api.whatsapp.com/send/?phone=625669000010', ariaLabel: 'WhatsApp' },
-  { name: 'TikTok', icon: 'i-ic-baseline-tiktok', url: 'https://www.tiktok.com/@juru_tani', ariaLabel: 'TikTok' },
-  { name: 'Email', icon: 'i-mdi-gmail', url: 'mailto:si.jurutani@gmail.com', ariaLabel: 'Email' },
-  { name: 'Instagram', icon: 'i-mdi-instagram', url: 'https://www.instagram.com/jurutani_', ariaLabel: 'Instagram' },
-  { name: 'YouTube', icon: 'i-mdi-youtube', url: 'https://www.youtube.com/@Juru_Tani', ariaLabel: 'YouTube' }
-]
-
-const footerLinks = [
-  { label: 'Kebijakan Privasi', path: '/privacy-policy' },
-  { label: 'Syarat & Ketentuan', path: '/terms' }
-]
+import { 
+  footerMenuLinks as menuLinks, 
+  footerContactInfo as contactInfo, 
+  footerSocialMedia as socialMedia, 
+  footerBottomLinks as footerLinks 
+} from '@/data/menu'
 
 const currentYear = new Date().getFullYear()
 </script>
@@ -145,9 +95,11 @@ const currentYear = new Date().getFullYear()
             :aria-label="social.ariaLabel"
             class="social-icon-container"
           >
-            <div class="social-icon bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800">
-              <UIcon :name="social.icon" class="text-2xl text-green-600 dark:text-green-400" />
-            </div>
+            <UBadge 
+              class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 border border-white/20 dark:border-green-800/30 shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <UIcon :name="social.icon" class="text-green-600 dark:text-green-400" />
+            </UBadge>
           </NuxtLink>
         </div>
       </div>
@@ -173,7 +125,7 @@ const currentYear = new Date().getFullYear()
           <p class="text-xs text-green-600/60 dark:text-green-400/60">
             Powered by 
             <NuxtLink
-              to="https://kairav-portfolio.vercel.app/"
+              to="https://polbangtanyoma.ac.id/"
               target="_blank"
               rel="noopener noreferrer"
               class="font-medium hover:text-green-600 dark:hover:text-green-400 transition-colors underline decoration-dotted"
@@ -201,7 +153,11 @@ const currentYear = new Date().getFullYear()
 }
 
 .menu-link:hover {
-  color: theme('colors.green.600');
+  color: #16a34a;
+}
+
+.dark .menu-link:hover {
+  color: #4ade80;
 }
 
 /* Social media icons */

@@ -1,9 +1,11 @@
 import { ref } from 'vue';
 import { useSupabase } from './useSupabase';
 import { toastStore } from './useJuruTaniToast';
+import { useUserBadge } from './useUserBadge';
 
 export function useProfile() {
   const { supabase } = useSupabase();
+  const { getBadgeName } = useUserBadge();
 
   const userData = ref<any>(null);
   const loading = ref(true);
@@ -60,13 +62,7 @@ export function useProfile() {
   };
 
   const formatRole = (role?: string) => {
-    const roleLabels: Record<string, string> = {
-      admin: 'Administrator',
-      expert: 'Ahli Pertanian',
-      farmer: 'Petani',
-      user: 'Pengguna'
-    };
-    return roleLabels[role ?? ''] || role || 'Pengguna';
+    return getBadgeName(role)
   };
 
   const updateUserProfile = async (updatedProfile: Record<string, any>) => {

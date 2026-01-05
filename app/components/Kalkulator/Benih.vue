@@ -77,6 +77,7 @@ const totalKebutuhanBenih = computed<number>(() => {
 </template>
 
 <style scoped>
+@reference "tailwindcss";
 .text-primary {
   @apply text-green-700 dark:text-green-300;
 }

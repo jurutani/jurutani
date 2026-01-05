@@ -1,48 +1,12 @@
 // composables/useChat.ts
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useSupabase } from '~/composables/useSupabase';
+import type { Message, Conversation, ChatState, ImageUploadOptions } from '~/types/chat'
+import { CHAT_CONSTANTS } from '~/types/chat'
 
-const { supabase } = useSupabase();
-
-export interface Message {
-  id: string
-  conversation_id: string
-  sender_id: string
-  content: string
-  image_url?: string
-  created_at: string
-  is_read: boolean
-  sender?: {
-    id: string
-    full_name: string
-    avatar_url?: string
-    role?: string
-  }
-}
-
-export interface Conversation {
-  id: string
-  participant1_id: string
-  participant2_id: string
-  last_message?: string
-  last_message_at?: string
-  created_at: string
-  updated_at: string
-  participant1?: {
-    id: string
-    full_name: string
-    avatar_url?: string
-    role?: string
-  }
-  participant2?: {
-    id: string
-    full_name: string
-    avatar_url?: string
-    role?: string
-  }
-}
+export type { Message, Conversation } from '~/types/chat'
 
 export const useChat = () => {
+  const { supabase } = useSupabase();
   const messages = ref<Message[]>([])
   const conversations = ref<Conversation[]>([])
   const currentConversation = ref<Conversation | null>(null)

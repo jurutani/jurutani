@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-
 // Props error otomatis dikirim oleh Nuxt saat ada error
 const props = defineProps<{
   error: {
@@ -11,8 +8,6 @@ const props = defineProps<{
     stack?: string
   }
 }>()
-
-const router = useRouter()
 
 // Default values untuk error
 const statusCode = computed(() => props.error?.statusCode ?? 500)
@@ -64,7 +59,8 @@ const errorDescription = computed(() => {
 })
 
 // Aksi tombol
-const goHome = () => navigateTo('/')
+const handleClearError = () => clearError({ redirect: '/' })
+const handleReload = () => window.location.reload()
 
 </script>
 
@@ -94,13 +90,24 @@ const goHome = () => navigateTo('/')
       </div>
 
       <!-- Action Buttons -->
-      <div class="mt-8 flex flex-col items-center gap-3">
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
         <UButton
-          @click="goHome"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200"
+          @click="handleClearError"
+          size="lg"
+          color="primary"
+          icon="i-lucide-home"
         >
-          <UIcon name="i-lucide-home" class="w-5 h-5" />
           Kembali ke Beranda
+        </UButton>
+        
+        <UButton
+          @click="handleReload"
+          size="lg"
+          color="neutral"
+          variant="outline"
+          icon="i-lucide-refresh-cw"
+        >
+          Muat Ulang Halaman
         </UButton>
       </div>
     </div>

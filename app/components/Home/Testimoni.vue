@@ -101,8 +101,8 @@ const testimonials = [...testimonialsBase, ...testimonialsBase, ...testimonialsB
             <UIcon 
               v-for="star in testimonial.rating" 
               :key="star"
-              name="i-fa-solid-star"
-              class="w-4 h-4 text-yellow-400"
+              name="i-lucide-star"
+              class="w-4 h-4 text-yellow-400 fill-yellow-400"
             />
           </div>
 

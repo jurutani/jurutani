@@ -26,7 +26,7 @@ defineProps<Props>()
     <div class="flex justify-center">
       <UButton
         @click="onRetry"
-        color="red"
+        color="error"
         size="md"
         class="px-6"
       >

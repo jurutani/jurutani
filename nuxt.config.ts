@@ -22,6 +22,13 @@ export default defineNuxtConfig({
 
   experimental: {
     componentIslands: true,
+    viewTransition: true,
+    headNext: true,
+  },
+
+  icon: {
+    size: '24px',
+    collections: ['mdi', 'fa', 'fa-brands'],
   },
 
   nitro: {
@@ -60,7 +67,9 @@ export default defineNuxtConfig({
   ],
 
   colorMode: {
-    preference: 'light',
+    preference: 'system',
+    fallback: 'light',
+    classSuffix: '',
   },
 
   ui: {
@@ -78,9 +87,7 @@ export default defineNuxtConfig({
 
   postcss: {
     plugins: {
-      'tailwindcss/nesting': {},
-      tailwindcss: {},
-      autoprefixer: {},
+      '@tailwindcss/postcss': {},
     },
   },
 
@@ -126,6 +133,18 @@ export default defineNuxtConfig({
   imports: {
   },
 
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'supabase': ['@supabase/supabase-js'],
+          },
+        },
+      },
+    },
+  },
+
   sourcemap: {
     client: false,
     server: false,
@@ -165,19 +184,10 @@ export default defineNuxtConfig({
     strictNuxtContentPaths: true,
   },
 
-  linkChecker: {
-    enabled: false,
-    excludeLinks: ['https://twitter.com/vuedesigner'],
-    report: {
-      html: true,
-      markdown: true,
-    },
-  },
-
   eslint: {
   },
 
-  compatibilityDate: '2025-01-14',
+  compatibilityDate: '2026-01-14',
 
   devtools: {
     enabled: true,

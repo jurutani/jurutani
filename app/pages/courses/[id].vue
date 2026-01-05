@@ -314,7 +314,7 @@ watch(() => meeting.value, (newVal) => {
           </div>
           <h3 class="text-xl font-bold text-red-700 dark:text-red-400 mb-2">Oops! Terjadi Kesalahan</h3>
           <p class="text-red-600 dark:text-red-300 mb-6">{{ error }}</p>
-          <UButton color="red" variant="solid" size="lg" @click="goBack">
+          <UButton color="error" variant="solid" size="lg" @click="goBack">
             Kembali ke Daftar Course
           </UButton>
         </div>
@@ -444,7 +444,7 @@ watch(() => meeting.value, (newVal) => {
                 {{ meeting.link }}
               </NuxtLink>
               <UButton
-                color="green"
+                color="success"
                 variant="solid"
                 icon="i-heroicons-arrow-top-right-on-square"
                 size="xl"

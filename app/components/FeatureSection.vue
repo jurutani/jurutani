@@ -5,7 +5,7 @@ const features = [
     id: 1,
     title: 'Konsultasi Pertanian',
     description: 'Konsultasi langsung dengan pakar pertanian berpengalaman untuk hasil panen terbaik',
-    icon: 'i-fa-solid-comments',
+    icon: 'i-lucide-message-circle',
     image: '/feature/consult.JPG',
     url: '/discussions',
     color: 'green'
@@ -17,13 +17,13 @@ const features = [
     image: '/feature/cuaca.JPG',
     color: 'blue',
     url: '/tools',
-    icon: 'i-fa-solid-sun'
+    icon: 'i-lucide-sun'
   },
   {
     id: 3,
     title: 'Marketplace Hasil Tani',
     description: 'Jual hasil pertanian Anda langsung ke konsumen tanpa perantara',
-    icon: 'i-fa-solid-store',
+    icon: 'i-lucide-store',
     image: '/feature/markets.JPG',
     url: '/markets',
     color: 'orange'
@@ -32,7 +32,7 @@ const features = [
     id: 4,
     title: 'Kursus & Pelatihan',
     description: 'Tingkatkan pengetahuan dan keterampilan bertani melalui kursus online dan offline',
-    icon: 'i-fa-solid-graduation-cap',
+    icon: 'i-lucide-graduation-cap',
     image: '/feature/training.JPG',
     url: '/courses',
     color: 'yellow'
@@ -41,7 +41,7 @@ const features = [
     id: 5,
     title: 'Komunitas Petani',
     description: 'Bergabung dengan komunitas petani untuk berbagi pengalaman dan pengetahuan',
-    icon: 'i-fa-solid-users',
+    icon: 'i-lucide-users',
     image: '/feature/comunity.JPG',
     url: '/discussions/group',
     color: 'indigo'
@@ -115,7 +115,7 @@ const features = [
                 class="flex items-center gap-2 text-white font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-sm md:text-base"
               >
                 <span>Pelajari Lebih Lanjut</span>
-                <UIcon name="i-fa-solid-arrow-right" class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
+                <UIcon name="i-lucide-arrow-right" class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
               </NuxtLink>
             </div>
             <!-- Animated Border on Hover -->

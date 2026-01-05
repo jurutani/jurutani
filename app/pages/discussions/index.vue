@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
+import { discussionServices, discussionStatsFallback } from '~/data/discussion'
 
 definePageMeta({
   layout: 'default',
@@ -10,16 +11,6 @@ definePageMeta({
 useSeoOptimized('discussions')
 
 const { supabase } = useSupabase()
-
-interface DiscussionService {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  icon: string;
-  image: string;
-  route: string;
-}
 
 const profilesCount = ref(0)
 const instructorsCount = ref(0)
@@ -32,59 +23,7 @@ const instructorsDisplayCount = ref(0)
 const expertsDisplayCount = ref(0)
 const statsVisible = ref(false)
 
-const services = ref<DiscussionService[]>([
-  {
-    id: 'instructor',
-    title: 'Bicara dengan Penyuluh',
-    subtitle: 'Konsultasi Langsung',
-    description: 'Dapatkan panduan praktis dari penyuluh pertanian berpengalaman untuk mengatasi masalah budidaya, hama penyakit, dan teknik bertani modern.',
-    icon: 'i-lucide-user-plus',
-    image: '/services/penyuluhjurutani.JPG',
-    route: '/discussions/instructor'
-  },
-  {
-    id: 'expert',
-    title: 'Tanya ke Pakar',
-    subtitle: 'Konsultasi Ahli',
-    description: 'Konsultasi mendalam dengan ahli pertanian bersertifikat untuk analisis ilmiah, diagnosa penyakit tanaman, dan rekomendasi teknologi terbaru.',
-    icon: 'i-lucide-user-check',
-    image: '/services/pakarjurutani.JPG',
-    route: '/discussions/expert'
-  },
-  {
-    id: 'community',
-    title: 'Forum Komunitas',
-    subtitle: 'Berbagi Pengalaman',
-    description: 'Bergabung dengan komunitas petani dari seluruh Indonesia untuk berbagi tips sukses, pengalaman lapangan, dan inovasi pertanian.',
-    icon: 'i-lucide-users',
-    image: '/services/komunitasjurutani.JPG',
-    route: '/discussions/group'
-  },
-  {
-    id: 'chat',
-    title: 'Room Chat Tematik',
-    subtitle: 'Diskusi Real-time',
-    description: 'Diskusi langsung dalam room chat khusus berdasarkan komoditas seperti padi, sayuran, buah-buahan, dan peternakan untuk solusi cepat.',
-    icon: 'i-lucide-message-circle',
-    image: '/services/chatjurutani.JPG',
-    route: '/room-chat'
-  },
-  {
-    id: 'chat-admin',
-    title: 'Support Center',
-    subtitle: 'Bantuan Langsung',
-    description: 'Hubungi tim support Juru Tani untuk bantuan teknis aplikasi, keluhan layanan, atau pertanyaan umum dengan respon prioritas.',
-    icon: 'i-lucide-headset',
-    image: '/services/admin.JPG',
-    route: '/room-chat/admin'
-  }
-])
-
-const fallbackData = {
-  profiles: 500,
-  instructors: 400,
-  experts: 200
-}
+const services = ref(discussionServices)
 
 let observer: IntersectionObserver | null = null
 const statsRef = ref<HTMLElement>()
@@ -116,9 +55,9 @@ const startAnimations = () => {
   
   statsVisible.value = true
   
-  const profilesTarget = profilesCount.value > 0 ? profilesCount.value : fallbackData.profiles
-  const instructorsTarget = instructorsCount.value > 0 ? instructorsCount.value : fallbackData.instructors
-  const expertsTarget = expertsCount.value > 0 ? expertsCount.value : fallbackData.experts
+  const profilesTarget = profilesCount.value > 0 ? profilesCount.value : discussionStatsFallback.profiles
+  const instructorsTarget = instructorsCount.value > 0 ? instructorsCount.value : discussionStatsFallback.instructors
+  const expertsTarget = expertsCount.value > 0 ? expertsCount.value : discussionStatsFallback.experts
   
   setTimeout(() => animateCounter(0, profilesTarget, profilesDisplayCount), 100)
   setTimeout(() => animateCounter(0, instructorsTarget, instructorsDisplayCount), 200)
@@ -158,6 +97,13 @@ const fetchCounts = async () => {
   } finally {
     loading.value = false
   }
+}
+
+// Bento grid variant logic
+const getBentoVariant = (index: number) => {
+  if (index === 0) return 'large'
+  if (index === 3) return 'wide'
+  return 'default'
 }
 
 onMounted(() => {
@@ -208,55 +154,18 @@ onBeforeUnmount(() => {
       </p> 
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
-      <div 
-        v-for="service in services" 
+    <!-- Bento Grid Services -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto mb-16 auto-rows-auto">
+      <DiscussionsServiceCard 
+        v-for="(service, index) in services" 
         :key="service.id" 
-        class="group relative overflow-hidden rounded-2xl aspect-[4/5] cursor-pointer"
-      >
-        <div class="absolute inset-0">
-          <img 
-            :src="service.image" 
-            :alt="service.title" 
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          >
-          <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all duration-300"/>
-        </div>
-        
-        <div class="absolute inset-0 p-6 flex flex-col justify-between text-white">
-          <div class="flex items-start justify-between">
-            <div class="bg-white bg-opacity-20 backdrop-blur-sm p-3 rounded-xl">
-              <UIcon :name="service.icon" class="w-6 h-6 text-white" />
-            </div>
-            <div class="bg-white bg-opacity-20 backdrop-blur-sm px-3 py-1 rounded-full">
-              <span class="text-xs font-medium">{{ service.subtitle }}</span>
-            </div>
-          </div>
-          
-          <div class="space-y-4">
-            <div>
-              <h3 class="text-xl font-bold mb-2">{{ service.title }}</h3>
-              <p class="text-sm text-gray-100 opacity-90 leading-relaxed">
-                {{ service.description }}
-              </p>
-            </div>
-            
-            <div class="transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-              <NuxtLink
-                :to="service.route"
-                class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
-              >
-                <span>Mulai Diskusi</span>
-                <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </NuxtLink>
-            </div>
-          </div>
-        </div>
-      </div>
+        :service="service"
+        :variant="getBentoVariant(index)"
+        :index="index"
+      />
     </div>
 
+    <!-- Statistics Section -->
     <div class="mx-auto max-w-6xl">
       <div class="rounded-3xl bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 border border-green-200 dark:border-green-700 p-8">
         <div class="text-center mb-8">
@@ -350,10 +259,6 @@ onBeforeUnmount(() => {
   background-clip: text;
 }
 
-.aspect-\[4\/5\] {
-  aspect-ratio: 4/5;
-}
-
 @keyframes slideInUp {
   to {
     opacity: 1;
@@ -378,39 +283,5 @@ onBeforeUnmount(() => {
 
 .backdrop-blur-sm {
   backdrop-filter: blur(4px);
-}
-
-@media (max-width: 1024px) {
-  .lg\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .md\:grid-cols-2 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-  
-  .aspect-\[4\/5\] {
-    aspect-ratio: 3/4;
-  }
-}
-
-@media (max-width: 640px) {
-  .p-6 {
-    padding: 1.25rem;
-  }
-  
-  .gap-6 {
-    gap: 1rem;
-  }
-  
-  .text-xl {
-    font-size: 1.125rem;
-  }
-  
-  .aspect-\[4\/5\] {
-    aspect-ratio: 1/1;
-  }
 }
 </style>

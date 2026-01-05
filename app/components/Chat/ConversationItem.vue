@@ -29,39 +29,10 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['openChat', 'deleteConversation'])
 
+const { getBadgeColor, getBadgeName } = useUserBadge()
+
 const showDeleteConfirm = ref(false)
 const isHovered = ref(false)
-
-// JuruTani specific role handling
-const getRoleBadgeColor = (role: string) => {
-  switch (role) {
-    case 'pakar':
-    case 'expert':
-      return 'emerald'
-    case 'penyuluh':
-    case 'instructor':
-      return 'blue'
-    case 'admin':
-      return 'purple'
-    default:
-      return 'gray'
-  }
-}
-
-const getRoleDisplayName = (role: string) => {
-  switch (role) {
-    case 'pakar':
-    case 'expert':
-      return 'Ahli JuruTani'
-    case 'penyuluh':
-    case 'instructor':
-      return 'Penyuluh JuruTani'
-    case 'admin':
-      return 'Admin'
-    default:
-      return role
-  }
-}
 
 const handleDeleteClick = (e: Event) => {
   e.stopPropagation()
@@ -98,10 +69,7 @@ const cancelDelete = () => {
         size="xl"
         class="ring-3 ring-green-100 dark:ring-green-800 
                group-hover:ring-green-200 dark:group-hover:ring-green-700 
-               transition-all duration-200"
-        :ui="{ 
-          background: 'bg-green-100 dark:bg-green-800' 
-        }"
+               transition-all duration-200 bg-green-100 dark:bg-green-800"
       >
         <template #fallback>
           <span class="text-green-700 dark:text-green-300 font-semibold text-lg">
@@ -133,12 +101,12 @@ const cancelDelete = () => {
           
           <!-- Role Badge for JuruTani experts, now below the name -->
           <UBadge
-            :color="getRoleBadgeColor(partner?.role || '')"
+            :color="getBadgeColor(partner?.role)"
             variant="solid"
             size="sm"
             class="mt-1"
           >
-            {{ getRoleDisplayName(partner?.role || '') }}
+            {{ getBadgeName(partner?.role) }}
           </UBadge>
           
           <p
@@ -156,7 +124,7 @@ const cancelDelete = () => {
           <!-- Unread Badge -->
           <UBadge 
             v-if="conversation.unread_count && conversation.unread_count > 0"
-            color="green"
+            color="success"
             variant="solid"
             size="sm"
             class="flex-shrink-0 shadow-sm animate-pulse"
@@ -181,7 +149,7 @@ const cancelDelete = () => {
       <UButton
         v-if="isHovered && !isDeleting"
         icon="i-heroicons-trash"
-        color="red"
+        color="error"
         variant="ghost"
         size="sm"
         class="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -222,20 +190,20 @@ const cancelDelete = () => {
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <UModal v-model="showDeleteConfirm">
-      <UCard>
-        <template #header>
-          <div class="flex items-center gap-3">
-            <UIcon 
-              name="i-heroicons-exclamation-triangle" 
-              class="w-6 h-6 text-red-500"
-            />
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              Hapus Percakapan
-            </h3>
-          </div>
-        </template>
+    <UModal v-model:open="showDeleteConfirm">
+      <template #header>
+        <div class="flex items-center gap-3">
+          <UIcon 
+            name="i-heroicons-exclamation-triangle" 
+            class="w-6 h-6 text-red-500"
+          />
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Hapus Percakapan
+          </h3>
+        </div>
+      </template>
 
+      <template #body>
         <div class="space-y-4">
           <p class="text-gray-600 dark:text-gray-300">
             Apakah Anda yakin ingin menghapus percakapan dengan 
@@ -257,27 +225,27 @@ const cancelDelete = () => {
             </div>
           </div>
         </div>
+      </template>
 
-        <template #footer>
-          <div class="flex justify-end gap-3">
-            <UButton
-              color="gray"
-              variant="ghost"
-              @click="cancelDelete"
-            >
-              Batal
-            </UButton>
-            <UButton
-              color="red"
-              icon="i-heroicons-trash"
-              :loading="isDeleting"
-              @click="confirmDelete"
-            >
-              Hapus Percakapan
-            </UButton>
-          </div>
-        </template>
-      </UCard>
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <UButton
+            color="neutral"
+            variant="ghost"
+            @click="cancelDelete"
+          >
+            Batal
+          </UButton>
+          <UButton
+            color="error"
+            icon="i-heroicons-trash"
+            :loading="isDeleting"
+            @click="confirmDelete"
+          >
+            Hapus Percakapan
+          </UButton>
+        </div>
+      </template>
     </UModal>
   </div>
 </template>

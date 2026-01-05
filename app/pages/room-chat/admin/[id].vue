@@ -4,6 +4,7 @@ import { toastStore } from '~/composables/useJuruTaniToast'
 import { useChat } from '~/composables/useChat'
 import { useChatUtils } from '~/composables/useChatUtils'
 import { useChatSearch } from '~/composables/useChatSearch'
+import { useUserBadge } from '~/composables/useUserBadge'
 
 const router = useRouter()
 const route = useRoute()
@@ -42,6 +43,7 @@ const {
 } = useChatUtils()
 
 const { searchConversations, searchUsers: searchUsersUtil } = useChatSearch()
+const { getBadgeColor, getBadgeName } = useUserBadge()
 
 // Reactive States
 const searchQuery = ref('')
@@ -205,6 +207,10 @@ const goBack = () => {
   router.push('/room-chat')
 }
 
+const handleImageClick = (imageUrl: string) => {
+  window.open(imageUrl, '_blank')
+}
+
 // Watch messages for auto-scroll
 watch(messages, async () => {
   await nextTick()
@@ -310,15 +316,15 @@ onUnmounted(() => {
               class="w-4 h-4 text-gray-400 dark:text-gray-500"
             />
             <UBadge 
-              color="green" 
+              :color="getBadgeColor(partnerInfo?.role)" 
               variant="solid" 
               size="xs"
-            >{{ partnerInfo?.role }}</UBadge>
+            >{{ getBadgeName(partnerInfo?.role) }}</UBadge>
           </div>
           <!-- Clear Conversation Button -->
           <UButton
             icon="i-heroicons-trash"
-            color="red"
+            color="error"
             variant="ghost"
             size="sm"
             :disabled="messages.length === 0"
@@ -345,7 +351,7 @@ onUnmounted(() => {
         <div v-for="(messagesGroup, date) in groupedMessages" :key="date" class="space-y-3">
           <!-- Date Separator -->
           <div class="flex justify-center">
-            <UBadge variant="soft" color="gray" size="sm" class="dark:bg-gray-700 dark:text-gray-300">
+            <UBadge variant="soft" color="neutral" size="sm" class="dark:bg-gray-700 dark:text-gray-300">
               {{ date }}
             </UBadge>
           </div>
@@ -382,10 +388,7 @@ onUnmounted(() => {
                   :src="message.image_url" 
                   :alt="message.content || 'Gambar'"
                   class="max-w-full h-auto rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                  @click="() => {
-                    // Open image in new tab or modal
-                    window.open(message.image_url, '_blank')
-                  }"
+                  @click="handleImageClick(message.image_url)"
                 >
               </div>
               
@@ -409,18 +412,20 @@ onUnmounted(() => {
       </div>
 
       <!-- Image Preview Modal -->
-      <UModal v-model="showImagePreview">
-        <UCard :ui="{ header: { base: 'flex items-center justify-between' } }">
-          <template #header>
+      <UModal v-model:open="showImagePreview">
+        <template #header>
+          <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold">Preview Gambar</h3>
             <UButton
-              color="gray"
+              color="neutral"
               variant="ghost"
               icon="i-heroicons-x-mark-20-solid"
               @click="cancelImagePreview"
             />
-          </template>
+          </div>
+        </template>
 
+        <template #body>
           <div class="space-y-4">
             <!-- Image Preview -->
             <div v-if="imagePreview" class="flex justify-center">
@@ -437,86 +442,91 @@ onUnmounted(() => {
               placeholder="Tambahkan keterangan (opsional)..."
               :rows="3"
             />
-
-            <!-- Action Buttons -->
-            <div class="flex justify-end gap-2">
-              <UButton
-                color="gray"
-                variant="ghost"
-                :disabled="uploadingImage"
-                @click="cancelImagePreview"
-              >
-                Batal
-              </UButton>
-              <UButton
-                :loading="uploadingImage"
-                :disabled="!selectedImage"
-                @click="sendImageMessageChat"
-              >
-                Kirim Gambar
-              </UButton>
-            </div>
           </div>
-        </UCard>
+        </template>
+
+        <template #footer>
+          <div class="flex justify-end gap-2">
+            <UButton
+              color="neutral"
+              variant="ghost"
+              :disabled="uploadingImage"
+              @click="cancelImagePreview"
+            >
+              Batal
+            </UButton>
+            <UButton
+              :loading="uploadingImage"
+              :disabled="!selectedImage"
+              @click="sendImageMessageChat"
+            >
+              Kirim Gambar
+            </UButton>
+          </div>
+        </template>
       </UModal>
 
       <!-- Delete Message Confirmation -->
-      <UModal v-model="showDeleteConfirm">
-        <UCard>
-          <template #header>
-            <h3 class="text-lg font-semibold">Hapus Pesan</h3>
-          </template>
+      <UModal v-model:open="showDeleteConfirm">
+        <template #header>
+          <h3 class="text-lg font-semibold">Hapus Pesan</h3>
+        </template>
 
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+        <template #body>
+          <p class="text-gray-600 dark:text-gray-400">
             Apakah Anda yakin ingin menghapus pesan ini? Tindakan ini tidak dapat dibatalkan.
           </p>
+        </template>
 
+        <template #footer>
           <div class="flex justify-end gap-2">
             <UButton
-              color="gray"
+              color="neutral"
               variant="ghost"
               @click="cancelDeleteMessage"
             >
               Batal
             </UButton>
             <UButton
-              color="red"
+              color="error"
               @click="handleDeleteMessage"
             >
               Hapus
             </UButton>
           </div>
-        </UCard>
+        </template>
       </UModal>
 
       <!-- Clear Conversation Confirmation -->
-      <UModal v-model="showClearConfirm">
-        <UCard>
-          <template #header>
-            <h3 class="text-lg font-semibold">Hapus Semua Pesan</h3>
-          </template>
+      <UModal v-model:open="showClearConfirm">
+        <template #header>
+          <h3 class="text-lg font-semibold">Hapus Semua Pesan</h3>
+        </template>
 
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+        <template #body>
+          <p class="text-gray-600 dark:text-gray-400">
             Apakah Anda yakin ingin menghapus semua pesan dalam percakapan ini? Tindakan ini tidak dapat dibatalkan.
           </p>
+        </template>
 
+        <template #footer>
           <div class="flex justify-end gap-2">
             <UButton
-              color="gray"
+              color="neutral"
               variant="ghost"
               @click="cancelClearConversation"
             >
               Batal
             </UButton>
             <UButton
-              color="red"
+              color="error"
               :loading="loading"
               @click="handleClearConversation"
             >
               Hapus Semua
             </UButton>
           </div>
-        </UCard>
+        </template>
       </UModal>
 
       <!-- Message Input -->
@@ -534,7 +544,7 @@ onUnmounted(() => {
           <!-- Image upload button -->
           <UButton
             icon="i-heroicons-photo"
-            color="gray"
+            color="neutral"
             variant="ghost"
             size="lg"
             :disabled="uploadingImage"
@@ -557,7 +567,7 @@ onUnmounted(() => {
             :loading="loading"
             icon="i-heroicons-paper-airplane"
             size="lg"
-            color="green"
+            color="success"
             @click="sendMessage"
           >
             Kirim

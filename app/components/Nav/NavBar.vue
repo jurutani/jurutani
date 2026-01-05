@@ -1,87 +1,98 @@
 <script setup lang="ts">
-const { isMobileMenuOpen, closeMobileMenu } = useMobileMenu()
+import { useMobileMenu } from '~/composables/useMobileMenu'
+import { useNavbarScroll } from '~/composables/useNavbarScroll'
+
+// Composables
+const { isOpen: isMobileMenuOpen, toggle: toggleMobileMenu, handleKeydown, menuRef } = useMobileMenu()
 const { isScrolled } = useNavbarScroll()
 
-// Close mobile menu when clicking outside
-const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  const mobileMenu = document.querySelector('.mobile-menu-content')
-  const hamburger = document.querySelector('[data-navbar-hamburger]')
-  
-  if (isMobileMenuOpen.value && mobileMenu && hamburger) {
-    if (!mobileMenu.contains(target) && !hamburger.contains(target)) {
-      closeMobileMenu()
-    }
-  }
-}
-
+// Lifecycle hooks
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('keydown', handleKeydown)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('keydown', handleKeydown)
 })
+
+// Computed navbar classes
+const navbarClasses = computed(() => ({
+  'bg-white/90 dark:bg-green-950/90 backdrop-blur-xl shadow-lg border-b border-green-200/50 dark:border-green-700/50': isScrolled.value,
+  'bg-transparent': !isScrolled.value,
+}))
 </script>
 
 <template>
   <nav 
-    class="container max-w-6xl mx-auto px-4 transition-all duration-300 rounded-2xl overflow-visible"
-    :class="{
-      'fixed top-0 left-0 right-0 z-50': true,
-      'bg-white/80 dark:bg-emerald-900/80 backdrop-blur-2xl shadow-lg border border-white/20 dark:border-emerald-700/30': isScrolled,
-      'bg-transparent': !isScrolled
-    }"
+    class="fixed top-0 left-0 right-0 z-[60] transition-all duration-300"
+    :class="navbarClasses"
     role="navigation"
     aria-label="Main navigation"
   >
-    <div class="flex h-full items-center justify-between navbar-grid py-2 lg:pb-4 rounded-2xl overflow-visible">
-      <!-- Logo -->
-      <div style="grid-area: logo" class="flex justify-center items-center">
-        <NavLogo />
-      </div>
-      
-      <!-- Hamburger (Mobile) -->
-      <div
-        data-navbar-hamburger
-        style="grid-area: hamburger"
-        class="xl:hidden flex items-center justify-center"
-      >
-        <NavHamburger />
-      </div>
-      
-      <!-- Primary Navigation (Desktop) -->
-      <div
-        style="grid-area: primary-nav"
-        class="hidden xl:flex max-w-6xl justify-center items-center"
-      >
-        <NavPrimary class="w-full" />
-      </div>
-      
-      <!-- Profile Actions + Avatar (Desktop) -->
-      <div class="flex space-x-1 items-center justify-center" style="grid-area: profile">
-        <NavProfileActions class="!hidden sm:!flex" />
-        <NavSecondary />
+    <div class="container max-w-7xl mx-auto px-4 py-3">
+      <div class="flex items-center justify-between gap-4">
+        <!-- Left: Menu Toggle + Logo -->
+        <div class="flex items-center gap-3">
+          <div 
+            class="flex flex-nowrap items-center justify-center gap-2 p-2 rounded-xl bg-white/50 dark:bg-green-900/50 backdrop-blur-sm border border-green-100/50 dark:border-green-700/50 shadow-sm transition-all duration-300 hover:shadow-md xl:hidden"
+            role="toolbar"
+            aria-label="hamburger menu"
+            
+          >
+          <UButton
+            :icon="isMobileMenuOpen ? 'i-heroicons-x-mark-20-solid' : 'i-heroicons-bars-3-20-solid'"
+            variant="ghost"
+            size="sm"
+            :aria-label="isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'"
+            :aria-expanded="isMobileMenuOpen"
+            @click="toggleMobileMenu"
+          />
+          </div>
+          <NavLogo />
+        </div>
+        
+        <!-- Center: Desktop Primary Navigation -->
+        <div class="hidden xl:flex flex-1 justify-center max-w-3xl">
+          <NavPrimary />
+        </div>
+        
+        <!-- Right: Profile Actions + Secondary Menu -->
+        <div class="flex items-center gap-2">
+          <NavProfileActions class="hidden sm:flex" />
+          <NavSecondary />
+        </div>
       </div>
     </div>
   </nav>
 
-  <!-- Mobile Menu Bottom Sheet -->
+  <!-- Mobile Menu Overlay -->
   <Transition name="slide-up">
     <div 
       v-if="isMobileMenuOpen"
-      class="fixed bottom-0 left-0 right-0 z-50 xl:hidden"
+      class="fixed inset-0 z-50 xl:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Mobile navigation menu"
     >
+      <!-- Backdrop -->
       <div 
-        class="absolute inset-0 bg-black/20 backdrop-blur-sm"
-        @click="closeMobileMenu"
+        class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        @click="toggleMobileMenu"
       />
-      <div class="mobile-menu-content relative bg-white/95 dark:bg-emerald-900/95 backdrop-blur-xl rounded-t-3xl shadow-2xl max-h-[80vh] overflow-y-auto border-t border-white/30 dark:border-emerald-700/30">
+      
+      <!-- Menu Panel -->
+      <div 
+        ref="menuRef"
+        class="absolute bottom-0 left-0 right-0 bg-white dark:bg-green-950 rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto"
+      >
+        <!-- Drag Handle -->
         <div class="flex justify-center pt-3 pb-2">
-          <div class="w-12 h-1.5 bg-gray-300/70 dark:bg-emerald-600/70 rounded-full"/>
+          <div class="w-12 h-1.5 bg-gray-300 dark:bg-green-700 rounded-full" />
         </div>
-        <div class="p-4">
-          <NavPrimary />
+        
+        <!-- Menu Content -->
+        <div class="p-4 pb-8">
+          <NavPrimary @navigate="toggleMobileMenu" />
         </div>
       </div>
     </div>
@@ -89,63 +100,29 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.navbar-grid {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  grid-template-rows: auto;
-  grid-template-areas: 'hamburger logo profile';
-  gap: 20px;
-  align-items: center;
-}
-
-@media (min-width: 640px) {
-  .navbar-grid {
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto;
-    grid-template-areas: 'hamburger logo profile';
-    align-items: center;
-  }
-}
-
-@media (min-width: 768px) {
-  .navbar-grid {
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto;
-    grid-template-areas: 'hamburger logo profile';
-    align-items: center;
-  }
-}
-
-@media (min-width: 1280px) {
-  .navbar-grid {
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto;
-    grid-template-areas: 'logo primary-nav profile';
-    grid-column-gap: 32px;
-    align-items: center;
-  }
-}
-
-/* Animasi untuk Transition */
+/* Slide-up animation */
 .slide-up-enter-active,
 .slide-up-leave-active {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.slide-up-enter-from,
-.slide-up-leave-to {
+.slide-up-enter-active > div:last-child,
+.slide-up-leave-active > div:last-child {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up-enter-from > div:last-child,
+.slide-up-leave-to > div:last-child {
   transform: translateY(100%);
+}
+
+.slide-up-enter-from > div:first-child,
+.slide-up-leave-to > div:first-child {
   opacity: 0;
 }
 
-.slide-up-enter-to,
-.slide-up-leave-from {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-/* Smooth scroll padding for fixed navbar */
+/* Scroll padding for fixed navbar */
 :global(html) {
-  scroll-padding-top: 80px;
+  scroll-padding-top: 100px;
 }
 </style>

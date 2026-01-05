@@ -1,19 +1,8 @@
 import { ref } from 'vue'
 import { toastStore } from './useJuruTaniToast'
+import type { ShareOptions, SharePlatform } from '~/types/social'
 
-export interface ShareOptions {
-    title: string
-    description?: string
-    url: string
-    hashtags?: string[]
-}
-
-export interface SharePlatform {
-    name: string
-    icon: string
-    color: string
-    action: (options: ShareOptions) => void
-}
+export type { ShareOptions, SharePlatform }
 
 export function useSocialShare() {
     const isSharing = ref(false)

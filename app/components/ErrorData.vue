@@ -23,7 +23,7 @@ const handleRetry = () => {
 <template>
   <UAlert
     icon="i-heroicons-exclamation-triangle"
-    color="red"
+    color="error"
     variant="soft"
     title="Oops! Ada masalah di kebun 🌧️"
     :description="message"
@@ -32,7 +32,7 @@ const handleRetry = () => {
       <UButton 
         v-if="showRetry"
         @click="handleRetry"
-        color="green" 
+        color="success" 
         variant="outline" 
         size="xs"
         icon="i-heroicons-arrow-path"

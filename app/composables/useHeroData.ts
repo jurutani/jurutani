@@ -1,17 +1,7 @@
 import { useSupabase } from './useSupabase';
+import type { HeroData } from '~/types/hero'
 
-export interface HeroData {
-    id: string
-    caption: string
-    title: string
-    description: string
-    button_text: string
-    button_link: string
-    image_url?: string
-    status: string
-    created_at: string
-    deleted_at?: string
-}
+export type { HeroData }
 
 export const useHeroData = () => {
     const { supabase } = useSupabase();

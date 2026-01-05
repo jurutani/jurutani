@@ -1,495 +1,195 @@
 <script setup lang="ts">
+import type { DropdownMenuItem } from '@nuxt/ui'
+
 const { navsPrimary } = useNavMenu()
-const { isMobileMenuOpen, closeMobileMenu } = useMobileMenu()
-const { openDropdown, toggleDropdown, closeDropdown, isDropdownOpen } = useNavDropdown()
 const route = useRoute()
 
-// Close dropdown when route changes
-watch(() => route.path, () => {
-  closeDropdown()
-  closeMobileMenu()
-})
+// Emit untuk close mobile menu setelah navigate
+const emit = defineEmits<{
+  navigate: []
+}>()
 
-// Handle click on nav item
-const handleNavClick = (nav: any) => {
-  if (nav.to) {
-    closeMobileMenu()
-    closeDropdown()
-  }
+// Check if route is active
+const isActive = (path: string) => {
+  return route.path === path || route.path.startsWith(`${path}/`)
 }
 
-// Dropdown hover delay management
-let closeTimeout: NodeJS.Timeout | null = null
-
-const handleDropdownEnter = (navTitle: string) => {
-  // Clear any pending close timeout
-  if (closeTimeout) {
-    clearTimeout(closeTimeout)
-    closeTimeout = null
-  }
-  // Open dropdown immediately
-  toggleDropdown(navTitle)
+// Handle navigation
+const handleNavigate = () => {
+  emit('navigate')
 }
 
-const handleDropdownLeave = () => {
-  // Add delay before closing to allow mouse movement to dropdown
-  closeTimeout = setTimeout(() => {
-    closeDropdown()
-  }, 200) // 200ms delay
+// Convert nav children to dropdown items
+const getDropdownItems = (children: any[]): DropdownMenuItem[][] => {
+  return [
+    children.map(child => ({
+      label: child.title,
+      icon: child.icon,
+      to: child.to,
+      class: isActive(child.to!) ? 'bg-green-100 dark:bg-green-900 font-semibold text-green-700 dark:text-green-300' : '',
+    }))
+  ]
 }
-
-const handleDropdownContentEnter = () => {
-  // Cancel close when mouse enters dropdown content
-  if (closeTimeout) {
-    clearTimeout(closeTimeout)
-    closeTimeout = null
-  }
-}
-
-const handleDropdownContentLeave = () => {
-  // Close immediately when leaving dropdown content
-  closeDropdown()
-}
-
-// Click handler for toggle
-const handleDropdownClick = (navTitle: string) => {
-  toggleDropdown(navTitle)
-}
-
-// Click outside to close dropdown
-const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  const dropdowns = document.querySelectorAll('[data-dropdown-container]')
-  
-  let isClickInside = false
-  dropdowns.forEach(dropdown => {
-    if (dropdown.contains(target)) {
-      isClickInside = true
-    }
-  })
-  
-  if (!isClickInside) {
-    closeDropdown()
-  }
-}
-
-// Cleanup on unmount
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
-
-onUnmounted(() => {
-  if (closeTimeout) {
-    clearTimeout(closeTimeout)
-  }
-  document.removeEventListener('click', handleClickOutside)
-})
 </script>
 
 <template>
-  <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 px-4 rounded-xl backdrop-blur-sm">
-    
-    <!-- Mobile Layout: Logo + Menu -->
-    <div class="w-full sm:hidden flex flex-col items-center bg-gradient-to-r from-green-50 via-green-25 to-green-50 dark:from-green-950 dark:via-green-900 dark:to-green-950 rounded-xl p-4">
-      <NavLogo class="mb-4 justify-center" />
+  <div class="w-full">
+    <!-- Mobile Layout: Grid with Logo -->
+    <div class="xl:hidden flex flex-col items-center bg-gradient-to-r from-green-50 via-green-25 to-green-50 dark:from-green-950 dark:via-green-900 dark:to-green-950 rounded-xl p-4">
+      <NavLogo class="mb-4" />
 
-      <!-- Mobile Bottom Sheet Menu Layout with scroll -->
-      <div class="w-full max-w-sm mx-auto">
-        <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-green-400/50 scrollbar-track-transparent">
-          <div class="grid grid-cols-3 gap-3 min-w-fit">
-            <template v-for="(nav, index) in navsPrimary" :key="index">
-              <!-- Mobile: If has children, show parent as clickable -->
-              <template v-if="nav.children">
-                <div 
-                  v-for="child in nav.children"
-                  :key="child.to"
-                  class="mobile-nav-item"
-                >
-                  <ULink
-                    v-slot="{ isActive }"
-                    :to="child.to"
-                    exact
-                    custom
-                  >
-                    <div 
-                      class="flex flex-col items-center justify-center p-3 rounded-xl transition-all duration-300 ease-out cursor-pointer whitespace-nowrap min-w-[80px]"
-                      :class="isActive ? 'mobile-active' : ''"
-                      @click="handleNavClick(child)"
-                    >
-                      <div class="flex flex-col items-center">
-                        <div class="mobile-icon-wrapper p-2 rounded-full transition-all duration-300">
-                          <UIcon
-                            v-if="child.icon"
-                            :name="child.icon"
-                            class="mobile-icon text-xl transition-all duration-300"
-                          />
-                        </div>
-                        <span class="mobile-text mt-1 text-xs font-medium transition-all duration-300 text-center">
-                          {{ child.title }}
-                        </span>
-                      </div>
-                    </div>
-                  </ULink>
-                </div>
-              </template>
-              
-              <!-- Mobile: Regular nav item -->
-              <ULink
-                v-else
-                v-slot="{ isActive }"
-                :to="nav.to"
-                exact
-                custom
+      <!-- Mobile Grid Menu (3 Columns) -->
+      <div class="w-full max-w-md mx-auto">
+        <div class="grid grid-cols-3 gap-2">
+          <template v-for="nav in navsPrimary" :key="nav.title">
+            <!-- Mobile: If has children, show all children -->
+            <template v-if="nav.children">
+              <NuxtLink
+                v-for="child in nav.children"
+                :key="child.to"
+                :to="child.to"
+                class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-gray-50 dark:bg-green-900/30 hover:bg-green-50 dark:hover:bg-green-900/50 border border-transparent hover:border-green-200 dark:hover:border-green-700 transition-all duration-200 group"
+                :class="{ 
+                  'bg-green-100 dark:bg-green-900 border-green-300 dark:border-green-600': isActive(child.to!) 
+                }"
+                @click="handleNavigate"
               >
-                <div 
-                  class="mobile-nav-item flex flex-col items-center justify-center p-3 rounded-xl transition-all duration-300 ease-out cursor-pointer whitespace-nowrap min-w-[80px]"
-                  :class="isActive ? 'mobile-active' : ''"
-                  @click="handleNavClick(nav)"
-                >
-                  <div class="flex flex-col items-center">
-                    <div class="mobile-icon-wrapper p-2 rounded-full transition-all duration-300">
-                      <UIcon
-                        v-if="nav.icon"
-                        :name="nav.icon"
-                        class="mobile-icon text-xl transition-all duration-300"
-                      />
-                    </div>
-                    <span class="mobile-text mt-1 text-xs font-medium transition-all duration-300 text-center">
-                      {{ nav.title }}
-                    </span>
-                  </div>
-                </div>
-              </ULink>
+                <UIcon
+                  v-if="child.icon"
+                  :name="child.icon"
+                  class="size-8 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-200"
+                />
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-200 text-center leading-tight">
+                  {{ child.title }}
+                </span>
+              </NuxtLink>
             </template>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Desktop Layout with dropdown support -->
-    <div class="hidden xl:flex md:flex sm:flex w-full justify-center">
-      <div class="flex items-center justify-center gap-2 py-2 flex-wrap">
-        <template v-for="(nav, index) in navsPrimary" :key="index">
-          
-          <!-- Desktop: Dropdown Menu -->
-          <div v-if="nav.children" class="relative" data-dropdown-container>
-            <button
-              class="desktop-nav-link flex items-center gap-2 font-medium px-6 py-3 text-sm rounded-lg transition-all duration-300 ease-out whitespace-nowrap"
-              :class="{ 'desktop-dropdown-active': isDropdownOpen(nav.title) }"
-              @click="handleDropdownClick(nav.title)"
-              @mouseenter="handleDropdownEnter(nav.title)"
-              @mouseleave="handleDropdownLeave"
+            
+            <!-- Mobile: Regular nav item -->
+            <NuxtLink
+              v-else
+              :to="nav.to"
+              class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-gray-50 dark:bg-green-900/30 hover:bg-green-50 dark:hover:bg-green-900/50 border border-transparent hover:border-green-200 dark:hover:border-green-700 transition-all duration-200 group"
+              :class="{ 
+                'bg-green-100 dark:bg-green-900 border-green-300 dark:border-green-600': isActive(nav.to!) 
+              }"
+              @click="handleNavigate"
             >
               <UIcon
                 v-if="nav.icon"
                 :name="nav.icon"
-                class="desktop-icon text-base transition-all duration-300"
+                class="size-8 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-200"
               />
-              <span class="desktop-text transition-all duration-300">{{ nav.title }}</span>
-              <UIcon
-                name="i-heroicons-chevron-down"
-                class="text-xs transition-transform duration-300"
-                :class="{ 'rotate-180': isDropdownOpen(nav.title) }"
-              />
-            </button>
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-200 text-center leading-tight">
+                {{ nav.title }}
+              </span>
+            </NuxtLink>
+          </template>
+        </div>
+      </div>
+    </div>
 
-            <!-- Dropdown Content -->
-            <Transition name="dropdown">
-              <div
-                v-if="isDropdownOpen(nav.title)"
-                class="absolute top-full left-0 mt-1 min-w-[200px] bg-white/95 dark:bg-green-900/95 backdrop-blur-xl rounded-xl shadow-xl border border-green-100/50 dark:border-green-700/50 py-2 z-[100]"
-                @mouseenter="handleDropdownContentEnter"
-                @mouseleave="handleDropdownContentLeave"
-              >
-                <ULink
-                  v-for="child in nav.children"
-                  :key="child.to"
-                  v-slot="{ isActive }"
-                  :to="child.to"
-                  custom
-                >
-                  <button
-                    class="w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-200 hover:bg-green-50 dark:hover:bg-green-800/50 rounded-lg"
-                    :class="{
-                      'bg-green-100/70 dark:bg-green-800/70 text-green-700 dark:text-green-300 font-semibold': isActive,
-                      'text-gray-700 dark:text-gray-200': !isActive
-                    }"
-                    @click="handleNavClick(child)"
-                  >
-                    <UIcon
-                      v-if="child.icon"
-                      :name="child.icon"
-                      class="text-base"
-                    />
-                    <span>{{ child.title }}</span>
-                  </button>
-                </ULink>
-              </div>
-            </Transition>
-          </div>
-
-          <!-- Desktop: Regular Nav Link -->
-          <ULink
-            v-else
-            :to="nav.to"
-            variant="link"
-            class="desktop-nav-link flex items-center gap-2 font-medium px-6 py-3 text-sm rounded-lg transition-all duration-300 ease-out whitespace-nowrap"
-            color="gray"
-            active-class="desktop-active"
-            exact
+    <!-- Desktop Layout: Horizontal Menu -->
+    <nav class="hidden xl:flex items-center justify-center gap-1" aria-label="Primary navigation">
+      <template v-for="nav in navsPrimary" :key="nav.title">
+        <!-- Desktop: Dropdown Menu with Hover -->
+        <UDropdownMenu
+          v-if="nav.children"
+          :items="getDropdownItems(nav.children)"
+          mode="hover"
+          :open-delay="150"
+          :close-delay="200"
+          :ui="{
+            content: 'w-48 bg-white dark:bg-green-950 border border-green-200 dark:border-green-800 z-[70]',
+            item: 'rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-green-900/50',
+            itemLeadingIcon: 'shrink-0 size-5 text-green-600 dark:text-green-400',
+          }"
+        >
+          <UButton
+            variant="ghost"
+            color="primary"
+            trailing-icon="i-heroicons-chevron-down-20-solid"
+            class="font-medium hover:bg-green-50 dark:hover:bg-green-900/30"
+            :aria-label="`${nav.title} menu`"
           >
             <UIcon
               v-if="nav.icon"
               :name="nav.icon"
-              class="desktop-icon text-base transition-all duration-300"
+              class="mr-2"
             />
-            <span class="desktop-text transition-all duration-300">{{ nav.title }}</span>
-          </ULink>
-        </template>
-      </div>
-    </div>
+            {{ nav.title }}
+          </UButton>
+        </UDropdownMenu>
 
+        <!-- Desktop: Regular Link -->
+        <UButton
+          v-else
+          :to="nav.to"
+          variant="ghost"
+          color="primary"
+          class="font-medium hover:bg-green-50 dark:hover:bg-green-900/30"
+          :class="{ 
+            'bg-green-100 dark:bg-green-900 font-semibold text-green-700 dark:text-green-300': isActive(nav.to!) 
+          }"
+        >
+          <UIcon
+            v-if="nav.icon"
+            :name="nav.icon"
+            class="mr-2"
+          />
+          {{ nav.title }}
+        </UButton>
+      </template>
+    </nav>
   </div>
 </template>
 
 <style scoped>
-/* ===== MOBILE STYLES ===== */
-.mobile-nav-item {
-  position: relative;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid transparent;
+/* Focus visible states for accessibility */
+:deep(.u-button:focus-visible) {
+  outline: 2px solid rgb(34 197 94);
+  outline-offset: 2px;
 }
 
-.mobile-nav-item:hover {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(16, 185, 129, 0.2);
-  transform: translateY(-1px);
-}
-
-.mobile-nav-item:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.mobile-nav-item .mobile-icon-wrapper {
-  background: transparent;
-}
-
-.mobile-nav-item:hover .mobile-icon-wrapper {
-  background: rgba(16, 185, 129, 0.1);
-}
-
-.mobile-nav-item .mobile-icon {
-  color: rgb(75, 85, 99);
-}
-
-.mobile-nav-item:hover .mobile-icon {
-  color: rgb(16, 185, 129);
-  transform: scale(1.1);
-}
-
-.mobile-nav-item .mobile-text {
-  color: rgb(75, 85, 99);
-}
-
-.mobile-nav-item:hover .mobile-text {
-  color: rgb(16, 185, 129);
-  font-weight: 600;
-}
-
-.mobile-active {
-  background: rgba(16, 185, 129, 0.1) !important;
-  border-color: rgba(16, 185, 129, 0.3) !important;
-  transform: translateY(-1px);
-}
-
-.mobile-active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30px;
-  height: 2px;
-  background: rgb(16, 185, 129);
-  border-radius: 0 0 2px 2px;
-}
-
-.mobile-active .mobile-icon-wrapper {
-  background: rgba(16, 185, 129, 0.15) !important;
-}
-
-.mobile-active .mobile-icon {
-  color: rgb(16, 185, 129) !important;
-  transform: scale(1.1);
-}
-
-.mobile-active .mobile-text {
-  color: rgb(16, 185, 129) !important;
-  font-weight: 700;
-}
-
-/* Dark mode mobile */
-.dark .mobile-nav-item {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.dark .mobile-nav-item:hover {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.dark .mobile-nav-item .mobile-icon,
-.dark .mobile-nav-item .mobile-text {
-  color: rgb(156, 163, 175);
-}
-
-.dark .mobile-active {
-  background: rgba(16, 185, 129, 0.15) !important;
-}
-
-/* ===== DESKTOP STYLES ===== */
-.desktop-nav-link {
-  position: relative;
-  color: rgb(55, 65, 81); /* gray-700 - better contrast */
-  background: transparent;
-  border: 1px solid transparent;
-}
-
-.desktop-nav-link:hover {
-  color: rgb(16, 185, 129);
-  background: rgba(16, 185, 129, 0.05);
-  border-color: rgba(16, 185, 129, 0.15);
-  transform: translateY(-1px);
-}
-
-.desktop-nav-link:hover .desktop-icon {
-  color: rgb(16, 185, 129);
-  transform: scale(1.05);
-}
-
-.desktop-nav-link:hover .desktop-text {
-  color: rgb(16, 185, 129);
-}
-
-/* Desktop Active State */
-.desktop-active {
-  color: rgb(16, 185, 129) !important;
-  background: rgba(16, 185, 129, 0.08) !important;
-  border-color: rgba(16, 185, 129, 0.2) !important;
-  font-weight: 600;
-}
-
-.desktop-active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 2px;
-  background: rgb(16, 185, 129);
-  border-radius: 2px 2px 0 0;
-}
-
-.desktop-active .desktop-icon,
-.desktop-active .desktop-text {
-  color: rgb(16, 185, 129) !important;
-}
-
-/* Dropdown active state */
-.desktop-dropdown-active {
-  color: rgb(16, 185, 129);
-  background: rgba(16, 185, 129, 0.05);
-  border-color: rgba(16, 185, 129, 0.15);
-}
-
-/* Dark mode desktop */
-.dark .desktop-nav-link {
-  color: rgb(229, 231, 235); /* gray-200 - better contrast */
-}
-
-.dark .desktop-nav-link:hover {
-  color: rgb(34, 197, 94);
-  background: rgba(34, 197, 94, 0.08);
-  border-color: rgba(34, 197, 94, 0.2);
-}
-
-.dark .desktop-nav-link:hover .desktop-icon,
-.dark .desktop-nav-link:hover .desktop-text {
-  color: rgb(34, 197, 94);
-}
-
-.dark .desktop-active {
-  color: rgb(34, 197, 94) !important;
-  background: rgba(34, 197, 94, 0.1) !important;
-  border-color: rgba(34, 197, 94, 0.25) !important;
-}
-
-.dark .desktop-active::after {
-  background: rgb(34, 197, 94);
-}
-
-.dark .desktop-active .desktop-icon,
-.dark .desktop-active .desktop-text {
-  color: rgb(34, 197, 94) !important;
-}
-
-/* Dropdown Transition */
-.dropdown-enter-active,
-.dropdown-leave-active {
+/* Smooth hover transitions */
+:deep(.u-button) {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dropdown-enter-from,
-.dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
+/* Active link enhancement */
+:deep(.router-link-active) {
+  font-weight: 600;
 }
 
-.dropdown-enter-to,
-.dropdown-leave-from {
-  opacity: 1;
-  transform: translateY(0);
+/* Dropdown animation */
+:deep([data-headlessui-state="open"]) {
+  animation: slideDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Focus states for accessibility */
-.mobile-nav-item:focus,
-.desktop-nav-link:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Scrollbar styles */
-.scrollbar-thin {
-  scrollbar-width: thin;
+/* Ensure dropdown is always on top */
+:deep([role="menu"]) {
+  z-index: 99999 !important;
 }
 
-.scrollbar-thumb-green-400\/50 {
-  scrollbar-color: rgba(34, 197, 94, 0.5) transparent;
+/* Dropdown menu wrapper */
+:deep([id^="headlessui-menu"]) {
+  z-index: 99999 !important;
 }
 
-.scrollbar-thin::-webkit-scrollbar {
-  height: 6px;
-  width: 6px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 10px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: rgba(34, 197, 94, 0.5);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(34, 197, 94, 0.7);
-}
-
-/* Smooth scroll behavior */
-.overflow-x-auto {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+/* Icon hover effect */
+:deep(.group:hover .shrink-0) {
+  transform: scale(1.1);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>

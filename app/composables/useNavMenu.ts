@@ -1,23 +1,19 @@
-import siteMeta from '@/site'
+import { navs as siteNavs } from '@/data/menu'
+import type { NavItem, NavMenu } from '~/types/navigation'
 
-// TypeScript interfaces untuk nav items
-export interface NavItem {
-    title: string
-    to?: string
-    icon?: string
-    badge?: string
-    children?: NavItem[]
-}
+export type { NavItem, NavMenu }
 
-export interface NavMenu {
-    primary: NavItem[]
-    secondary: NavItem[]
-}
-
+/**
+ * Composable untuk manage navigation menu
+ * Provides centralized navigation data dan helper functions
+ */
 export const useNavMenu = () => {
-    const navs = siteMeta.navs as NavMenu
+    const navs = siteNavs as NavMenu
+    const route = useRoute()
 
-    // Flatten nested items untuk search/routing
+    /**
+     * Flatten nested nav items untuk search/routing
+     */
     const flattenNavItems = (items: NavItem[]): NavItem[] => {
         return items.reduce((acc: NavItem[], item) => {
             if (item.children) {
@@ -27,21 +23,43 @@ export const useNavMenu = () => {
         }, [])
     }
 
-    const allNavs = [
+    /**
+     * Get all navigation items (flattened)
+     */
+    const allNavs = computed(() => [
         ...flattenNavItems(navs.primary),
-        ...navs.secondary
-    ]
+        ...navs.secondary,
+    ])
 
-    const currentRoute = useRoute()
-    const currentPath = computed(() => {
-        return currentRoute.path
-    })
+    /**
+     * Current route path
+     */
+    const currentPath = computed(() => route.path)
+
+    /**
+     * Find nav item by path
+     */
+    const findNavByPath = (path: string): NavItem | undefined => {
+        return allNavs.value.find(nav => nav.to === path)
+    }
+
+    /**
+     * Check if path is active
+     */
+    const isPathActive = (path: string): boolean => {
+        return currentPath.value === path || currentPath.value.startsWith(`${path}/`)
+    }
 
     return {
-        allNavs,
+        // Data
         navsPrimary: navs.primary,
         navsSecondary: navs.secondary,
+        allNavs,
         currentPath,
+
+        // Methods
         flattenNavItems,
+        findNavByPath,
+        isPathActive,
     }
 }

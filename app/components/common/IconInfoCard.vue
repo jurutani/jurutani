@@ -30,18 +30,18 @@ const colorClass = computed(() => {
 })
 
 const cardClass = computed(() => {
-  const base = 'group relative overflow-hidden rounded-xl p-6 transition-all duration-300'
+  const base = 'group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 h-full'
   
   if (props.variant === 'outlined') {
-    return `${base} bg-transparent border-2 border-gray-200 dark:border-gray-700 ${props.hoverable ? 'hover:border-green-500 dark:hover:border-green-400 hover:shadow-lg' : ''}`
+    return `${base} bg-white dark:bg-gray-800/50 backdrop-blur-sm border-2 border-gray-200 dark:border-gray-700 ${props.hoverable ? 'hover:border-green-500 dark:hover:border-green-400 hover:shadow-xl hover:-translate-y-2' : ''}`
   }
   
   if (props.variant === 'gradient') {
-    return `${base} bg-gradient-to-br from-white to-green-50 dark:from-gray-800 dark:to-green-900/20 shadow-md ${props.hoverable ? 'hover:shadow-xl hover:-translate-y-1' : ''}`
+    return `${base} bg-gradient-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/60 dark:to-green-900/20 shadow-md border border-gray-100 dark:border-gray-700/50 ${props.hoverable ? 'hover:shadow-2xl hover:-translate-y-2 hover:border-green-200 dark:hover:border-green-800' : ''}`
   }
   
   // Default variant
-  return `${base} bg-white dark:bg-gray-800 shadow-sm ${props.hoverable ? 'hover:shadow-lg hover:-translate-y-1' : ''}`
+  return `${base} bg-white dark:bg-gray-800/70 backdrop-blur-sm shadow-sm border border-gray-200 dark:border-gray-700/50 ${props.hoverable ? 'hover:shadow-xl hover:-translate-y-2 hover:border-green-300 dark:hover:border-green-700' : ''}`
 })
 </script>
 
@@ -49,45 +49,63 @@ const cardClass = computed(() => {
   <component
     :is="link ? 'NuxtLink' : 'div'"
     :to="link"
-    :class="cardClass"
+    class="block h-full"
   >
-    <!-- Hover Glow Effect -->
-    <div 
-      v-if="hoverable"
-      class="absolute inset-0 bg-gradient-to-br from-green-500/0 to-emerald-500/0 group-hover:from-green-500/5 group-hover:to-emerald-500/5 transition-all duration-300 pointer-events-none"
-    />
-
-    <!-- Content Container -->
-    <div class="relative z-10">
-      <!-- Icon -->
+    <div :class="cardClass">
+      <!-- Hover Glow Effect -->
       <div 
-        class="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl transition-transform duration-300"
-        :class="[colorClass, hoverable ? 'group-hover:scale-110' : '']"
-      >
-        <UIcon :name="icon" class="text-2xl" />
-      </div>
+        v-if="hoverable"
+        class="absolute inset-0 bg-gradient-to-br from-green-500/0 via-emerald-500/0 to-green-500/0 group-hover:from-green-500/10 group-hover:via-emerald-500/5 group-hover:to-green-500/10 transition-all duration-500 pointer-events-none rounded-2xl"
+      />
 
-      <!-- Title -->
-      <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3 transition-colors duration-300">
-        {{ title }}
-      </h3>
-
-      <!-- Description -->
-      <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-        {{ description }}
-      </p>
-
-      <!-- Link Indicator -->
+      <!-- Shine Effect -->
       <div 
-        v-if="link"
-        class="flex items-center gap-2 mt-4 text-green-600 dark:text-green-400 font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-      >
-        <span>Lihat detail</span>
-        <UIcon name="i-lucide-arrow-right" class="text-sm transition-transform group-hover:translate-x-1" />
+        v-if="hoverable"
+        class="absolute -inset-full top-0 block h-full w-1/2 transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:animate-shine"
+      />
+
+      <!-- Content Container -->
+      <div class="relative z-10 flex flex-col h-full">
+        <!-- Icon -->
+        <div 
+          class="inline-flex items-center justify-center w-14 h-14 mb-5 rounded-xl transition-all duration-300 shadow-sm"
+          :class="[colorClass, hoverable ? 'group-hover:scale-110 group-hover:shadow-md group-hover:rotate-3' : '']"
+        >
+          <UIcon :name="icon" class="text-2xl" />
+        </div>
+
+        <!-- Title -->
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors duration-300 group-hover:text-green-700 dark:group-hover:text-green-400">
+          {{ title }}
+        </h3>
+
+        <!-- Description -->
+        <p class="text-gray-600 dark:text-gray-300 leading-relaxed flex-grow">
+          {{ description }}
+        </p>
+
+        <!-- Link Indicator -->
+        <div 
+          v-if="link"
+          class="flex items-center gap-2 mt-5 pt-4 border-t border-gray-200 dark:border-gray-700/50 text-green-600 dark:text-green-400 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
+        >
+          <span>Lihat detail</span>
+          <UIcon name="i-heroicons-arrow-right" class="text-sm transition-transform group-hover:translate-x-1" />
+        </div>
       </div>
     </div>
-
-    <!-- Slot for additional content -->
-    <slot />
   </component>
 </template>
+
+<style scoped>
+@keyframes shine {
+  100% {
+    left: 125%;
+    opacity: 0.4;
+  }
+}
+
+.animate-shine {
+  animation: shine 0.75s;
+}
+</style>

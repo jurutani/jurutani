@@ -3,7 +3,6 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useSupabase } from '~/composables/useSupabase';
 
 const { supabase } = useSupabase();
-const colorMode = useColorMode();
 
 interface Expert {
   id: number;
@@ -136,7 +135,7 @@ useHead({
         <div class="flex items-center gap-4">
           <UButton
             to="/discussions"
-            color="green"
+            color="success"
             variant="ghost"
             icon="i-lucide-arrow-left"
             size="lg"
@@ -188,12 +187,12 @@ useHead({
           <UAlert
             title="Terjadi Kesalahan"
             description="Gagal memuat data pakar. Silakan coba lagi."
-            color="red"
+            color="error"
             icon="i-lucide-alert-circle"
             class="mb-4 max-w-md"
           />
           <UButton
-            color="green"
+            color="success"
             @click="fetchExperts"
             icon="i-lucide-refresh-cw"
           >
@@ -216,7 +215,7 @@ useHead({
               <UButton
                 v-for="category in categories"
                 :key="category"
-                :color="selectedCategory === category ? 'green' : 'gray'"
+                :color="selectedCategory === category ? 'success' : 'neutral'"
                 :variant="selectedCategory === category ? 'solid' : 'outline'"
                 class="text-center"
                 @click="selectCategory(category)"
@@ -235,7 +234,7 @@ useHead({
               />
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Pakar {{ selectedCategory }}
-                <UBadge color="green" variant="soft" class="ml-2">
+                <UBadge color="success" variant="soft" class="ml-2">
                   {{ filteredExperts.length }}
                 </UBadge>
               </h2>
@@ -273,7 +272,7 @@ useHead({
                       <h3 class="font-semibold text-lg text-gray-900 dark:text-white line-clamp-2">
                         {{ expert.profiles?.full_name || 'Nama tidak tersedia' }}
                       </h3>
-                      <UBadge color="green" variant="subtle">
+                      <UBadge color="success" variant="subtle">
                         {{ expert.category }}
                       </UBadge>
                       <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
@@ -284,7 +283,7 @@ useHead({
                     <!-- Button -->
                     <UButton
                       :to="`/discussions/expert/${expert.id}`"
-                      color="green"
+                      color="success"
                       size="md"
                       class="w-full"
                       icon="i-lucide-message-circle"

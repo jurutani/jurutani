@@ -10,7 +10,6 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
-const colorMode = useColorMode()
 
 // Data
 const instructor = ref(null)
@@ -157,7 +156,7 @@ watch(() => instructor.value, (newVal) => {
     <UAlert
       v-else-if="error"
       icon="i-lucide-alert-circle"
-      color="red"
+      color="error"
       title="Error"
       :description="error.message"
       class="max-w-6xl mx-auto px-4"
@@ -201,7 +200,7 @@ watch(() => instructor.value, (newVal) => {
                 <div class="flex flex-wrap items-center gap-3 text-sm font-medium opacity-90">
                   <UBadge
                     v-if="age"
-                    color="white"
+                    color="neutral"
                     variant="outline"
                     class="dark:border-green-600"
                   >
@@ -210,7 +209,7 @@ watch(() => instructor.value, (newVal) => {
                   </UBadge>
                   <UBadge
                     v-if="instructor.provinces"
-                    color="white"
+                    color="neutral"
                     variant="outline"
                     class="dark:border-green-600"
                   >
@@ -227,7 +226,7 @@ watch(() => instructor.value, (newVal) => {
                   :disabled="creatingConversation"
                   icon="i-lucide-message-circle"
                   size="lg"
-                  color="white"
+                  color="neutral"
                   label="Mulai Obrolan"
                   @click="startConversation"
                 />

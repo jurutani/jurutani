@@ -40,7 +40,7 @@ defineProps<{
 
       <!-- Start Button -->
       <UButton
-        color="green"
+        color="success"
         size="lg"
         block
         class="hover:bg-green-700 transition-colors duration-200"

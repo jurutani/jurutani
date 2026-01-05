@@ -87,7 +87,7 @@ defineProps<Props>()
             v-if="item.button_text"
             as="NuxtLink"
             :to="item.button_link"
-            color="green"
+            color="success"
             size="md"
             @click.stop
           >

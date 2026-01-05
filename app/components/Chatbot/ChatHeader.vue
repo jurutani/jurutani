@@ -24,7 +24,7 @@ defineProps<{
     <div class="flex items-center space-x-2">
       <UButton
         :icon="isExpanded ? 'i-heroicons-arrows-pointing-in' : 'i-heroicons-arrows-pointing-out'"
-        color="white"
+        color="neutral"
         variant="ghost"
         size="xs"
         class="hover:bg-white/20"
@@ -32,7 +32,7 @@ defineProps<{
       />
       <UButton
         icon="i-heroicons-x-mark"
-        color="white"
+        color="neutral"
         variant="ghost"
         size="xs"
         class="hover:bg-white/20"

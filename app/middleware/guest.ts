@@ -1,12 +1,12 @@
-import { useSupabase } from '~/composables/useSupabase'
-import { useProfile } from '~/composables/useProfile'
+import { useAuth } from '~/composables/useAuth'
+import { useUserProfile } from '~/composables/useUserProfile'
 import { toastStore } from '~/composables/useJuruTaniToast'
 
 export default defineNuxtRouteMiddleware(async () => {
-  const { user, session, initialize } = useSupabase()
-  const { fetchUserData, userData } = useProfile()
+  const { user, session, initialize } = useAuth()
+  const { fetchProfile, profileData } = useUserProfile()
 
-  // Inisialisasi Supabase session
+  // Inisialisasi auth session
   if (!session.value) {
     await initialize()
   }
@@ -14,8 +14,8 @@ export default defineNuxtRouteMiddleware(async () => {
   // Jika user sudah login
   if (user.value && session.value) {
     // Ambil data profil jika belum ada
-    if (!userData.value) {
-      await fetchUserData()
+    if (!profileData.value) {
+      await fetchProfile()
     }
 
     return navigateTo('/', { replace: true })

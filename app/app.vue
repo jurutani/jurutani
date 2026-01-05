@@ -4,7 +4,6 @@
 <template>
     <NuxtLoadingIndicator />
     <FirstVisitModal />
-    <AppModal /> 
     <AppToast /> 
     <NuxtLayout>
       <NuxtPage />

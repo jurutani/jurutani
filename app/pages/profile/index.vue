@@ -67,7 +67,7 @@ onMounted(() => {
             <div class="ml-3">
               <p class="text-red-800 dark:text-red-200 font-medium">Terjadi kesalahan saat memuat profil pengguna</p>
               <UButton
-                color="red"
+                color="error"
                 variant="ghost"
                 size="sm"
                 class="mt-2"
@@ -215,7 +215,7 @@ onMounted(() => {
             <!-- Action Buttons -->
             <div class="flex justify-center pt-6 border-t border-gray-200 dark:border-gray-700 transition-colors duration-200">
               <UButton
-                color="green"
+                color="success"
                 variant="solid"
                 size="lg"
                 icon="i-lucide-pencil"

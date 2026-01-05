@@ -1,34 +1,34 @@
 // composables/useChatUtils.ts
-import type { Message, Conversation } from './useChat'
+import type { Message, Conversation, GroupedMessages } from '~/types/chat'
 
 export const useChatUtils = () => {
-  
+
   // Format waktu untuk message
   const formatMessageTime = (timestamp: string) => {
     const date = new Date(timestamp)
     const now = new Date()
     const diff = now.getTime() - date.getTime()
-    
+
     // Jika hari ini
     if (diff < 24 * 60 * 60 * 1000 && date.getDate() === now.getDate()) {
-      return date.toLocaleTimeString('id-ID', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+      return date.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit'
       })
     }
-    
+
     // Jika kemarin
     const yesterday = new Date(now)
     yesterday.setDate(yesterday.getDate() - 1)
     if (date.getDate() === yesterday.getDate()) {
       return 'Kemarin'
     }
-    
+
     // Jika minggu ini
     if (diff < 7 * 24 * 60 * 60 * 1000) {
       return date.toLocaleDateString('id-ID', { weekday: 'short' })
     }
-    
+
     // Jika lebih dari seminggu
     return date.toLocaleDateString('id-ID', {
       day: 'numeric',
@@ -41,38 +41,38 @@ export const useChatUtils = () => {
     const date = new Date(timestamp)
     const now = new Date()
     const diff = now.getTime() - date.getTime()
-    
+
     // Jika dalam 1 menit
     if (diff < 60 * 1000) {
       return 'Baru saja'
     }
-    
+
     // Jika dalam 1 jam
     if (diff < 60 * 60 * 1000) {
       const minutes = Math.floor(diff / (60 * 1000))
       return `${minutes}m`
     }
-    
+
     // Jika hari ini
     if (diff < 24 * 60 * 60 * 1000 && date.getDate() === now.getDate()) {
-      return date.toLocaleTimeString('id-ID', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+      return date.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit'
       })
     }
-    
+
     // Jika kemarin
     const yesterday = new Date(now)
     yesterday.setDate(yesterday.getDate() - 1)
     if (date.getDate() === yesterday.getDate()) {
       return 'Kemarin'
     }
-    
+
     // Jika minggu ini
     if (diff < 7 * 24 * 60 * 60 * 1000) {
       return date.toLocaleDateString('id-ID', { weekday: 'short' })
     }
-    
+
     // Jika lebih dari seminggu
     return date.toLocaleDateString('id-ID', {
       day: 'numeric',
@@ -89,7 +89,7 @@ export const useChatUtils = () => {
   // Group messages by date
   const groupMessagesByDate = (messages: Message[]) => {
     const groups: { [key: string]: Message[] } = {}
-    
+
     messages.forEach(message => {
       const date = new Date(message.created_at)
       const dateKey = date.toLocaleDateString('id-ID', {
@@ -97,13 +97,13 @@ export const useChatUtils = () => {
         month: 'long',
         day: 'numeric'
       })
-      
+
       if (!groups[dateKey]) {
         groups[dateKey] = []
       }
       groups[dateKey].push(message)
     })
-    
+
     return groups
   }
 
@@ -114,14 +114,14 @@ export const useChatUtils = () => {
 
   // Get conversation partner
   const getConversationPartner = (conversation: Conversation, currentUserId: string) => {
-    return conversation.participant1_id === currentUserId 
-      ? conversation.participant2 
+    return conversation.participant1_id === currentUserId
+      ? conversation.participant2
       : conversation.participant1
   }
 
   // Count unread messages in conversation
   const countUnreadMessages = (messages: Message[], currentUserId: string) => {
-    return messages.filter(msg => 
+    return messages.filter(msg =>
       !msg.is_read && msg.sender_id !== currentUserId
     ).length
   }
@@ -145,7 +145,7 @@ export const useChatUtils = () => {
   // Scroll to bottom helper
   const scrollToBottom = (element: HTMLElement, smooth: boolean = true) => {
     if (!element) return
-    
+
     element.scrollTo({
       top: element.scrollHeight,
       behavior: smooth ? 'smooth' : 'auto'

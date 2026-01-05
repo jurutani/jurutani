@@ -2,22 +2,33 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 /**
  * Composable untuk manage navbar scroll state dan behavior
- * Mendeteksi scroll position dan update state untuk glassmorphism effect
+ * Menggunakan throttle untuk optimize performance
  */
-export const useNavbarScroll = () => {
+export const useNavbarScroll = (threshold = 10) => {
     const isScrolled = ref(false)
     const scrollY = ref(0)
+    const isScrollingDown = ref(false)
+    const lastScrollY = ref(0)
+
+    let ticking = false
 
     const handleScroll = () => {
-        scrollY.value = window.scrollY
-        isScrolled.value = scrollY.value > 10 // Threshold 10px untuk smooth transition
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                scrollY.value = window.scrollY
+                isScrolled.value = scrollY.value > threshold
+                isScrollingDown.value = scrollY.value > lastScrollY.value && scrollY.value > threshold
+                lastScrollY.value = scrollY.value
+                ticking = false
+            })
+            ticking = true
+        }
     }
 
     onMounted(() => {
         if (typeof window !== 'undefined') {
             window.addEventListener('scroll', handleScroll, { passive: true })
-            // Initial check
-            handleScroll()
+            handleScroll() // Initial check
         }
     })
 
@@ -30,5 +41,6 @@ export const useNavbarScroll = () => {
     return {
         isScrolled,
         scrollY,
+        isScrollingDown,
     }
 }

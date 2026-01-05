@@ -1,57 +1,79 @@
-<!-- components/chat/MessageInput.vue -->
 <script setup lang="ts">
 interface Props {
+  modelValue: string
   loading?: boolean
+  uploadingImage?: boolean
   disabled?: boolean
+  placeholder?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
-  disabled: false
+  uploadingImage: false,
+  disabled: false,
+  placeholder: 'Ketik pesan...'
 })
 
 const emit = defineEmits<{
-  sendMessage: [message: string]
+  'update:modelValue': [value: string]
+  send: []
+  uploadImage: []
 }>()
 
-const { isValidMessage } = useChatUtils()
+const messageValue = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
+})
 
-const newMessage = ref('')
+const isValid = computed(() => {
+  return messageValue.value.trim().length > 0 && messageValue.value.trim().length <= 1000
+})
 
-const sendMessage = () => {
-  if (!isValidMessage(newMessage.value) || props.loading || props.disabled) return
-  
-  const messageContent = newMessage.value.trim()
-  newMessage.value = ''
-  
-  emit('sendMessage', messageContent)
+const handleSend = () => {
+  if (isValid.value && !props.loading && !props.uploadingImage) {
+    emit('send')
+  }
 }
 
 const handleKeyPress = (event: KeyboardEvent) => {
   if (event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault()
-    sendMessage()
+    handleSend()
   }
 }
 </script>
 
 <template>
-  <div class="p-4 border-t border-gray-200 bg-white">
+  <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
     <div class="flex gap-3">
+      <!-- Image upload button -->
+      <UButton
+        icon="i-heroicons-photo"
+        color="neutral"
+        variant="ghost"
+        size="lg"
+        :disabled="uploadingImage || disabled"
+        @click="$emit('uploadImage')"
+      />
+      
+      <!-- Text input -->
       <UInput
-        v-model="newMessage"
-        placeholder="Ketik pesan..."
-        :disabled="loading || disabled"
-        class="flex-1"
+        v-model="messageValue"
+        :placeholder="placeholder"
+        :disabled="loading || uploadingImage || disabled"
+        class="flex-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
         size="lg"
         @keypress="handleKeyPress"
       />
+      
+      <!-- Send button -->
       <UButton
-        :disabled="!isValidMessage(newMessage) || loading || disabled"
+        :disabled="!isValid || loading || uploadingImage || disabled"
         :loading="loading"
         icon="i-heroicons-paper-airplane"
         size="lg"
-        @click="sendMessage"
+        color="success"
+        @click="handleSend"
       >
         Kirim
       </UButton>

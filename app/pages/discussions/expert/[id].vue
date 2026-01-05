@@ -10,7 +10,6 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
-const colorMode = useColorMode()
 
 // Data
 const expert = ref(null)
@@ -158,7 +157,7 @@ watch(() => expert.value, (newVal) => {
     <UAlert
       v-else-if="error"
       icon="i-lucide-alert-circle"
-      color="red"
+      color="error"
       title="Error"
       :description="error.message"
       class="max-w-6xl mx-auto px-4"
@@ -187,7 +186,7 @@ watch(() => expert.value, (newVal) => {
             <!-- Expert Badge -->
             <div class="absolute top-6 right-6">
               <UBadge
-                color="green"
+                color="success"
                 variant="soft"
                 class="font-semibold text-sm dark:bg-green-900 dark:text-green-200"
               >
@@ -244,7 +243,7 @@ watch(() => expert.value, (newVal) => {
                 :disabled="creatingConversation"
                 icon="i-lucide-message-circle"
                 size="lg"
-                color="green"
+                color="success"
                 label="Konsultasi Sekarang"
                 @click="startConversation"
               />
@@ -388,7 +387,7 @@ watch(() => expert.value, (newVal) => {
           <UButton
             to="/discussions/expert"
             icon="i-lucide-arrow-left"
-            color="green"
+            color="success"
             label="Kembali ke Daftar Pakar"
           />
         </div>

@@ -1,31 +1,9 @@
 import { ref, computed, watch } from 'vue'
 import type { Ref } from 'vue'
 import { useSupabase } from './useSupabase'
+import type { ContentListOptions, SortOption, FilterState } from '~/types/content'
 
-export interface ContentListOptions {
-    tableName: string
-    pageSize?: number
-    defaultSort?: {
-        column: string
-        ascending: boolean
-    }
-    statusField?: string
-    statusValue?: string
-    categoryField?: string
-}
-
-export interface SortOption {
-    label: string
-    value: string
-    column: string
-    ascending: boolean
-}
-
-export interface FilterState {
-    category: string
-    search: string
-    sort: string
-}
+export type { ContentListOptions, SortOption, FilterState }
 
 export function useContentList<T = any>(options: ContentListOptions) {
     const { supabase } = useSupabase()

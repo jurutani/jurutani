@@ -68,7 +68,7 @@ defineExpose({
         type="submit"
         :disabled="!inputMessage.trim() || disabled"
         icon="i-heroicons-paper-airplane"
-        color="green"
+        color="success"
         size="sm"
         class="transition-all duration-200 hover:scale-105"
       />

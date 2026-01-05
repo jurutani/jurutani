@@ -1,5 +1,3 @@
-// @unocss-include
-
 export default {
   title: 'Juru Tani',
   description: 'Juru Tani merupakan inovasi terbaru yang digagas oleh Politeknik Pembangunan Pertanian Yogyakarta Magelang, bertujuan membantu petani setempat dan mendukung pertanian Indonesia.',
@@ -34,36 +32,4 @@ export default {
   twitter: '@jurutani',
   trailingSlash: false,
   titleSeparator: '|',
-
-  navs: {
-    primary: [
-      { title: 'Beranda', to: '/', icon: 'i-lucide-home' },
-      {
-        title: 'Layanan',
-        icon: 'i-lucide-headset',
-        children: [
-          { title: 'Diskusi', to: '/discussions', icon: 'i-lucide-messages-square' },
-          { title: 'Marketplace', to: '/markets', icon: 'i-lucide-shopping-bag' }
-        ]
-      },
-      { title: 'Berita', to: '/news', icon: 'i-lucide-newspaper' },
-      {
-        title: 'Edukasi',
-        icon: 'i-lucide-graduation-cap',
-        children: [
-          { title: 'Materi', to: '/educations', icon: 'i-lucide-book' },
-          { title: 'Course', to: '/courses', icon: 'i-lucide-book-open' },
-          { title: 'Alat', to: '/tools', icon: 'i-lucide-wrench' }
-        ]
-      }
-    ],
-    secondary: [
-      { title: 'Profil', to: '/profile', icon: 'i-lucide-user' },
-      { title: 'Keamanan', to: '/security', icon: 'i-lucide-lock' },
-      { title: 'Pengaturan', to: '/setting', icon: 'i-lucide-settings' },
-      { title: 'Riwayat', to: '/history', icon: 'i-lucide-history' },
-      { title: 'Kontak', to: '/contact-us', icon: 'i-lucide-phone' },
-      { title: 'Bantuan', to: '/help-faqs', icon: 'i-lucide-help-circle' },
-    ],
-  },
 }

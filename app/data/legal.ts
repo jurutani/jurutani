@@ -9,7 +9,7 @@ export const privacyPolicyData: LegalPageData = {
     pageType: 'privacy',
     icon: 'i-lucide-shield',
     title: 'Kebijakan Privasi',
-    lastUpdated: '5 Mei 2025',
+    lastUpdated: '5 Mei 2026',
     intro: 'Juru Tani menghargai privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan platform kami.',
     sections: [
         {
@@ -63,7 +63,7 @@ export const termsOfServiceData: LegalPageData = {
     pageType: 'terms',
     icon: 'i-lucide-file-text',
     title: 'Syarat & Ketentuan',
-    lastUpdated: '20 Juli 2025',
+    lastUpdated: '20 Juli 2026',
     intro: 'Selamat datang di <strong>Juru Tani</strong>. Dokumen ini berisi syarat dan ketentuan yang mengatur penggunaan platform dan layanan kami. Mohon membaca dengan seksama sebelum menggunakan platform kami.',
     sections: [
         {

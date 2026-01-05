@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { toastStore } from '~/composables/useJuruTaniToast'
-import { useSupabase } from '~/composables/useSupabase'
-import { useRouter, useRoute } from 'vue-router'
+// SEO Optimization
+useSeoAuth('reset-password')
 
 // Definisikan layout
 definePageMeta({
@@ -10,6 +8,8 @@ definePageMeta({
   middleware: ['guest']
 })
 
+const toastStore = usejuruTaniToast()
+const { updatePassword } = useAuth()
 const { supabase } = useSupabase()
 const router = useRouter()
 const route = useRoute()
@@ -72,12 +72,10 @@ const handleUpdatePassword = async () => {
   try {
     isLoading.value = true
     
-    const { error } = await supabase.auth.updateUser({
-      password: password.value
-    })
+    const { success, error } = await updatePassword(password.value)
 
-    if (error) {
-      toastStore.error('Gagal mengupdate password. ' + error.message)
+    if (!success) {
+      toastStore.error('Gagal mengupdate password. ' + (error || ''))
       return
     }
 

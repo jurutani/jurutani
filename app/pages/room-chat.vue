@@ -6,7 +6,6 @@ useSeoMeta({
   ogDescription: 'Ikuti percakapan dan pembaruan terbaru di Ruang Obrolan Juru Tani untuk berdiskusi, berbagi tips, dan mendapatkan info pertanian terkini.',
 })
 definePageMeta({
-  prerender: false,
   middleware: ['auth']
 });
 </script>

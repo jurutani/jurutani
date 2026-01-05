@@ -6,6 +6,7 @@ const { supabase } = useSupabase()
 
 interface Course {
   id: string
+  slug: string
   title: string
   description: string
   image_url?: string
@@ -152,7 +153,7 @@ const contentClasses = computed(() => {
 
 // Navigation
 const viewDetails = () => {
-  navigateTo(`/educations/${props.course.id}`)
+  navigateTo(`/educations/${props.course.slug}`)
 }
 </script>
 
