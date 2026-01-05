@@ -98,7 +98,7 @@ onClickOutside(dropdownRef, () => {
             class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-200 font-medium shadow-sm hover:shadow-md"
             @click="handleLogout"
           >
-            <UIcon name="i-heroicons-arrow-left-on-rectangle" class="size-5" />
+            <UIcon name="heroicons:arrow-left-on-rectangle" class="size-5" />
             <span>Logout</span>
           </button>
         </div>
@@ -110,7 +110,7 @@ onClickOutside(dropdownRef, () => {
             class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-all duration-200 font-medium shadow-sm hover:shadow-md"
             @click="isOpen = false"
           >
-            <UIcon name="i-heroicons-arrow-right-on-rectangle" class="size-5" />
+            <UIcon name="heroicons:arrow-right-on-rectangle" class="size-5" />
             <span>Sign In</span>
           </NuxtLink>
           <NuxtLink
@@ -118,7 +118,7 @@ onClickOutside(dropdownRef, () => {
             class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-green-900 border border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-800 rounded-xl transition-all duration-200 font-medium"
             @click="isOpen = false"
           >
-            <UIcon name="i-heroicons-user-plus" class="size-5" />
+            <UIcon name="heroicons:user-plus" class="size-5" />
             <span>Register</span>
           </NuxtLink>
         </div>

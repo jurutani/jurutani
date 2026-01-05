@@ -158,7 +158,7 @@ useHead({
       back-label="Kembali ke Diskusi"
       :show-action-button="!hasAdminConversation"
       action-button-label="Chat dengan Admin"
-      action-button-icon="i-heroicons-chat-bubble-left-right"
+      action-button-icon="heroicons:chat-bubble-left-right"
       action-button-color="success"
       :action-button-loading="loading"
       @action="startChatWithAdmin"
@@ -198,7 +198,7 @@ useHead({
           </p>
           
           <UButton
-            icon="i-heroicons-chat-bubble-left-right"
+            icon="heroicons:chat-bubble-left-right"
             color="success"
             block
             :loading="loading"
@@ -231,7 +231,7 @@ useHead({
         v-if="!loading && !adminUser"
         class="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400"
       >
-        <UIcon name="i-heroicons-user-circle" class="w-10 h-10 mb-4 text-blue-500" />
+        <UIcon name="heroicons:user-circle" class="w-10 h-10 mb-4 text-blue-500" />
         <p class="text-lg font-semibold">Ada pertanyaan lebih lanjut?</p>
         <p class="text-sm text-center mt-2">
           Silakan hubungi tim support kami untuk bantuan

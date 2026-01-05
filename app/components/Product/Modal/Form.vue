@@ -193,7 +193,7 @@ onMounted(async () => {
             v-model="state.name"
             placeholder="Masukkan nama produk"
             size="lg"
-            icon="i-heroicons-tag"
+            icon="heroicons:tag"
           />
         </UFormField>
 
@@ -215,7 +215,7 @@ onMounted(async () => {
             :items="categoryItems"
             placeholder="Pilih kategori"
             size="lg"
-            icon="i-heroicons-tag"
+            icon="heroicons:tag"
           />
         </UFormField>
 
@@ -265,7 +265,7 @@ onMounted(async () => {
                 v-model="state.shopee_link"
                 placeholder="https://shopee.co.id/product..."
                 size="lg"
-                icon="i-heroicons-link"
+                icon="heroicons:link"
               />
             </UFormField>
             
@@ -275,7 +275,7 @@ onMounted(async () => {
                 v-model="state.tiktok_link"
                 placeholder="https://tiktok.com/shop/product..."
                 size="lg"
-                icon="i-heroicons-link"
+                icon="heroicons:link"
               />
             </UFormField>
             
@@ -285,7 +285,7 @@ onMounted(async () => {
                 v-model="state.tokopedia_link"
                 placeholder="https://tokopedia.com/product..."
                 size="lg"
-                icon="i-heroicons-link"
+                icon="heroicons:link"
               />
             </UFormField>
           </div>
@@ -298,7 +298,7 @@ onMounted(async () => {
               v-model="state.seller"
               placeholder="Masukkan nama toko"
               size="lg"
-              icon="i-heroicons-building-storefront"
+              icon="heroicons:building-storefront"
             />
           </UFormField>
 
@@ -307,7 +307,7 @@ onMounted(async () => {
               v-model="state.contact_seller"
               placeholder="Contoh: 08123456789"
               size="lg"
-              icon="i-heroicons-phone"
+              icon="heroicons:phone"
             />
           </UFormField>
         </div>
@@ -323,7 +323,7 @@ onMounted(async () => {
           :disabled="isSubmitting"
           @click="handleCancel"
         >
-          <UIcon name="i-heroicons-x-mark" class="mr-1" />
+          <UIcon name="heroicons:x-mark" class="mr-1" />
           Batal
         </UButton>
         <UButton
@@ -333,7 +333,7 @@ onMounted(async () => {
           :loading="isSubmitting"
           form="product-form"
         >
-          <UIcon name="i-heroicons-check" class="mr-1" />
+          <UIcon name="heroicons:check" class="mr-1" />
           Simpan Produk
         </UButton>
       </div>

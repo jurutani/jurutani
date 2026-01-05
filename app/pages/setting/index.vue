@@ -4,7 +4,7 @@
        <!-- Header Section -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 dark:bg-green-700 rounded-full mb-4 shadow-lg dark:shadow-green-900/50">
-          <UIcon name="i-lucide-shield" class="w-8 h-8 text-white" />
+          <UIcon name="lucide:shield" class="w-8 h-8 text-white" />
         </div>
         <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Pengaturan Akun</h1>
         <p class="text-gray-600 dark:text-gray-400 text-sm">
@@ -16,7 +16,7 @@
         <!-- Email Settings -->
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg dark:shadow-md border border-gray-200 dark:border-gray-800 p-6 transition-all duration-200">
           <div class="flex items-center mb-6">
-            <UIcon name="i-heroicons-envelope" class="w-6 h-6 text-green-600 dark:text-green-400 mr-3" />
+            <UIcon name="heroicons:envelope" class="w-6 h-6 text-green-600 dark:text-green-400 mr-3" />
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Pengaturan Email</h3>
           </div>
 
@@ -68,7 +68,7 @@
               class="w-full bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 disabled:bg-gray-400 dark:disabled:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
             >
               <span v-if="isLoadingChangeEmail" class="flex items-center justify-center">
-                <UIcon name="i-heroicons-arrow-path" class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" />
+                <UIcon name="heroicons:arrow-path" class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" />
                 Mengubah Email...
               </span>
               <span v-else>Ubah Email</span>
@@ -79,14 +79,14 @@
         <!-- Password Settings -->
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg dark:shadow-md border border-gray-200 dark:border-gray-800 p-6 transition-all duration-200">
           <div class="flex items-center mb-6">
-            <UIcon name="i-heroicons-key" class="w-6 h-6 text-green-600 dark:text-green-400 mr-3" />
+            <UIcon name="heroicons:key" class="w-6 h-6 text-green-600 dark:text-green-400 mr-3" />
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Pengaturan Password</h3>
           </div>
 
           <form class="space-y-4" @submit.prevent="handleResetPassword">
             <div class="bg-green-50 dark:bg-green-950/30 rounded-lg p-4 border border-green-200 dark:border-green-800 mb-4 transition-colors duration-200">
               <div class="flex items-start">
-                <UIcon name="i-heroicons-information-circle" class="w-5 h-5 text-green-500 dark:text-green-400 mt-0.5 mr-2 flex-shrink-0" />
+                <UIcon name="heroicons:information-circle" class="w-5 h-5 text-green-500 dark:text-green-400 mt-0.5 mr-2 flex-shrink-0" />
                 <div class="text-sm text-green-800 dark:text-green-200">
                   <p class="font-medium mb-1">Reset Password</p>
                   <p>Kami akan mengirim link reset password ke email Anda.</p>
@@ -116,7 +116,7 @@
               class="w-full bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 disabled:bg-gray-400 dark:disabled:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
             >
               <span v-if="isLoadingResetPassword" class="flex items-center justify-center">
-                <UIcon name="i-heroicons-arrow-path" class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" />
+                <UIcon name="heroicons:arrow-path" class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" />
                 Mengirim Link...
               </span>
               <span v-else>Kirim Link Reset Password</span>
@@ -127,7 +127,7 @@
         <!-- Success Messages -->
         <div v-if="successMessage" class="bg-green-50 dark:bg-green-950/30 rounded-lg p-4 border border-green-200 dark:border-green-800 transition-colors duration-200">
           <div class="flex items-start">
-            <UIcon name="i-heroicons-check-circle" class="w-5 h-5 text-green-500 dark:text-green-400 mt-0.5 mr-2 flex-shrink-0" />
+            <UIcon name="heroicons:check-circle" class="w-5 h-5 text-green-500 dark:text-green-400 mt-0.5 mr-2 flex-shrink-0" />
             <p class="text-sm text-green-800 dark:text-green-200">{{ successMessage }}</p>
           </div>
         </div>

@@ -100,7 +100,7 @@ const validateForm = (): boolean => {
 - Proper `UForm` component with `:state` binding
 - Added `name` attribute to all `UFormField` components
 - Fixed button colors to use `neutral` instead of `gray`
-- Changed icon from `i-heroicons-home` to `i-heroicons-building-storefront` for seller field
+- Changed icon from `heroicons:home` to `heroicons:building-storefront` for seller field
 
 ## Benefits
 

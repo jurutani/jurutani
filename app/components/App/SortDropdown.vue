@@ -40,10 +40,10 @@ const getCurrentSortLabel = () => {
       class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-green-500 dark:hover:border-green-400 focus:outline-none focus:border-green-500 dark:focus:border-green-400 focus:ring-4 focus:ring-green-500/10 transition-all duration-200 text-gray-700 dark:text-gray-300 font-medium"
       @click="isOpen = !isOpen"
     >
-      <UIcon name="i-heroicons-arrows-up-down" class="w-5 h-5 text-green-600 dark:text-green-400" />
+      <UIcon name="heroicons:arrows-up-down" class="w-5 h-5 text-green-600 dark:text-green-400" />
       <span>{{ getCurrentSortLabel() }}</span>
       <UIcon 
-        name="i-heroicons-chevron-down" 
+        name="heroicons:chevron-down" 
         class="w-4 h-4 transition-transform duration-200"
         :class="{ 'rotate-180': isOpen }"
       />
@@ -77,7 +77,7 @@ const getCurrentSortLabel = () => {
           >
             <UIcon 
               v-if="currentSort === option.value"
-              name="i-heroicons-check" 
+              name="heroicons:check" 
               class="w-5 h-5 text-green-600 dark:text-green-400" 
             />
             <span class="flex-1">{{ option.label }}</span>

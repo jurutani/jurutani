@@ -10,7 +10,7 @@ export const aboutHero: HeroSection = {
     subtitle: 'Platform Inovasi Penyuluhan Digital Pertanian Indonesia',
     badge: {
         text: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang',
-        icon: 'i-lucide-award'
+        icon: 'lucide:award'
     }
 }
 
@@ -60,32 +60,32 @@ export const galleryData: GalleryItem[] = [
 
 export const innovationPoints: IconCard[] = [
     {
-        icon: 'i-lucide-message-square',
+        icon: 'lucide:message-square',
         title: 'Konsultasi Digital Real-Time',
         description: 'Akses langsung dengan penyuluh pertanian profesional melalui chat dan video call'
     },
     {
-        icon: 'i-lucide-database',
+        icon: 'lucide:database',
         title: 'Database Komoditas Lengkap',
         description: 'Informasi detail tentang berbagai jenis tanaman dan teknik budidaya terbaru'
     },
     {
-        icon: 'i-lucide-cloud-rain',
+        icon: 'lucide:cloud-rain',
         title: 'Data Cuaca & Pasar Akurat',
         description: 'Prediksi cuaca harian dan harga komoditas real-time untuk perencanaan yang lebih baik'
     },
     {
-        icon: 'i-lucide-shopping-cart',
+        icon: 'lucide:shopping-cart',
         title: 'Marketplace Terintegrasi',
         description: 'Jual-beli pupuk, bibit, dan hasil panen langsung dengan pembeli tanpa perantara'
     },
     {
-        icon: 'i-lucide-book-open',
+        icon: 'lucide:book-open',
         title: 'Edukasi & Kursus Pertanian',
         description: 'Materi pembelajaran interaktif dari ahli dan praktisi pertanian berpengalaman'
     },
     {
-        icon: 'i-lucide-calculator',
+        icon: 'lucide:calculator',
         title: 'Alat Bantu Otomatis',
         description: 'Kalkulator pupuk, prediksi hasil, dan tools analisis untuk keputusan yang tepat'
     }
@@ -93,32 +93,32 @@ export const innovationPoints: IconCard[] = [
 
 export const platformAdvantages: FeatureCard[] = [
     {
-        icon: 'i-lucide-bar-chart-3',
+        icon: 'lucide:bar-chart-3',
         title: 'Data Terintegrasi & Real-Time',
         description: 'Database lengkap komoditas pertanian, data cuaca akurat, harga pasar real-time, dan informasi pasar yang terupdate setiap saat dalam satu platform terpadu'
     },
     {
-        icon: 'i-lucide-smartphone',
+        icon: 'lucide:smartphone',
         title: 'User-Friendly untuk Semua',
         description: 'Interface intuitif dirancang khusus untuk petani dengan berbagai tingkat literasi digital, dari yang masih konvensional hingga tech-savvy'
     },
     {
-        icon: 'i-lucide-headset',
+        icon: 'lucide:headset',
         title: 'Penyuluhan Digital 24/7',
         description: 'Akses langsung dengan penyuluh pertanian profesional kapan saja, di mana saja melalui chat, video call, atau forum diskusi komunitas petani'
     },
     {
-        icon: 'i-lucide-shopping-bag',
+        icon: 'lucide:shopping-bag',
         title: 'Marketplace Terintegrasi',
         description: 'Jual-beli pupuk, bibit berkualitas, hasil panen, dan produk pertanian lainnya langsung dengan pembeli tanpa perantara yang memberatkan'
     },
     {
-        icon: 'i-lucide-graduation-cap',
+        icon: 'lucide:graduation-cap',
         title: 'Edukasi Pertanian Berkualitas',
         description: 'Kursus online, webinar, dan artikel edukatif dari ahli pertanian profesional yang dikurasi khusus untuk peningkatan skill dan pengetahuan'
     },
     {
-        icon: 'i-lucide-wrench',
+        icon: 'lucide:wrench',
         title: 'Tools & Kalkulasi Otomatis',
         description: 'Kalkulator pupuk, prediksi hasil panen, analisis keuntungan, dan tools AI yang membantu petani membuat keputusan bisnis yang lebih tepat'
     }
@@ -126,7 +126,7 @@ export const platformAdvantages: FeatureCard[] = [
 
 export const teamCategories: TeamCategory[] = [
     {
-        icon: 'i-lucide-users',
+        icon: 'lucide:users',
         title: 'Mahasiswa Berprestasi',
         items: [
             'Mahasiswa terpilih dari berbagai program studi',
@@ -136,7 +136,7 @@ export const teamCategories: TeamCategory[] = [
         ]
     },
     {
-        icon: 'i-lucide-user-check',
+        icon: 'lucide:user-check',
         title: 'Dosen Pembimbing Berpengalaman',
         items: [
             'Ahli di bidang pertanian dan teknologi',
@@ -149,17 +149,17 @@ export const teamCategories: TeamCategory[] = [
 
 export const institutionHighlights: InstitutionHighlight[] = [
     {
-        icon: 'i-lucide-graduation-cap',
+        icon: 'lucide:graduation-cap',
         title: 'Pendidikan Vokasi',
         description: 'Program praktis berbasis industri'
     },
     {
-        icon: 'i-lucide-search',
+        icon: 'lucide:search',
         title: 'Riset & Inovasi',
         description: 'Penelitian pertanian berkelanjutan'
     },
     {
-        icon: 'i-lucide-globe',
+        icon: 'lucide:globe',
         title: 'Pemberdayaan Masyarakat',
         description: 'Solusi nyata untuk petani lokal'
     }
@@ -168,12 +168,12 @@ export const institutionHighlights: InstitutionHighlight[] = [
 export const visionMission = {
     vision: {
         title: 'Visi',
-        icon: 'i-lucide-eye',
+        icon: 'lucide:eye',
         content: 'Menjadi platform penyuluhan digital pertanian terdepan di Indonesia yang menghubungkan teknologi modern dengan kearifan lokal untuk menciptakan pertanian berkelanjutan dan sejahtera.'
     },
     mission: {
         title: 'Misi',
-        icon: 'i-lucide-target',
+        icon: 'lucide:target',
         items: [
             'Menyediakan akses mudah ke informasi pertanian berkualitas',
             'Menghubungkan petani dengan pasar yang lebih luas',

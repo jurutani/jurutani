@@ -39,7 +39,7 @@ const handleAction = () => {
         class="w-32 h-32 mx-auto object-contain opacity-60"
       />
       <div v-else class="w-32 h-32 mx-auto flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
-        <UIcon name="i-lucide-folder-open" class="w-12 h-12 text-gray-400" />
+        <UIcon name="lucide:folder-open" class="w-12 h-12 text-gray-400" />
       </div>
     </div>
 

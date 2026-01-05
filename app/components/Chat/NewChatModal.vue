@@ -78,7 +78,7 @@ const closeModal = () => {
     <template #header>
       <div class="flex items-center gap-3">
         <UIcon 
-          name="i-heroicons-chat-bubble-left-right"
+          name="heroicons:chat-bubble-left-right"
           class="w-6 h-6 text-green-500"
         />
         <div>
@@ -97,7 +97,7 @@ const closeModal = () => {
         <UInput
           v-model="userSearchQuery"
           placeholder="Cari pengguna (nama, email, atau role)..."
-          icon="i-heroicons-magnifying-glass"
+          icon="heroicons:magnifying-glass"
           size="lg"
           class="w-full"
           :loading="searchingUsers"
@@ -106,7 +106,7 @@ const closeModal = () => {
         <div class="max-h-64 overflow-y-auto space-y-2">
           <!-- Loading State -->
           <div v-if="searchingUsers" class="text-center py-4">
-            <UIcon name="i-heroicons-arrow-path" class="w-6 h-6 mx-auto mb-2 animate-spin text-green-500" />
+            <UIcon name="heroicons:arrow-path" class="w-6 h-6 mx-auto mb-2 animate-spin text-green-500" />
             <p class="text-sm text-gray-500 dark:text-gray-400">Mencari pengguna...</p>
           </div>
 
@@ -144,14 +144,14 @@ const closeModal = () => {
 
           <!-- No Results -->
           <div v-if="userSearchQuery && !searchingUsers && searchResults.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
-            <UIcon name="i-heroicons-user-group" class="w-8 h-8 mx-auto mb-2" />
+            <UIcon name="heroicons:user-group" class="w-8 h-8 mx-auto mb-2" />
             <p class="font-medium">Tidak ada pengguna ditemukan</p>
             <p class="text-sm">Coba kata kunci yang berbeda</p>
           </div>
 
           <!-- Initial State -->
           <div v-if="!userSearchQuery" class="text-center py-8 text-gray-500 dark:text-gray-400">
-            <UIcon name="i-heroicons-magnifying-glass" class="w-8 h-8 mx-auto mb-2" />
+            <UIcon name="heroicons:magnifying-glass" class="w-8 h-8 mx-auto mb-2" />
             <p class="font-medium">Cari Pengguna</p>
             <p class="text-sm">Masukkan nama, email, atau role untuk mencari pengguna</p>
           </div>

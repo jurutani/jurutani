@@ -40,7 +40,7 @@ const handleImageClick = () => {
       class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mr-2 mt-2 p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900/20 text-red-500"
       @click="$emit('delete', message.id)"
     >
-      <UIcon name="i-heroicons-trash" class="w-4 h-4" />
+      <UIcon name="heroicons:trash" class="w-4 h-4" />
     </button>
 
     <div 

@@ -101,7 +101,7 @@ onMounted(() => {
     <!-- Video Section Header -->
     <div class="mx-auto mb-8 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
-        <UIcon name="i-lucide-video" class="w-5 h-5 text-green-600 dark:text-green-400" />
+        <UIcon name="lucide:video" class="w-5 h-5 text-green-600 dark:text-green-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Pembelajaran Visual & Interaktif</span>
       </div>
       

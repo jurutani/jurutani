@@ -240,14 +240,14 @@ watch(() => product.value, (newVal) => {
           <UButton
             color="success"
             variant="ghost"
-            icon="i-lucide-arrow-left"
+            icon="lucide:arrow-left"
             @click="handleGoBack"
           >
             Kembali ke Pasar Tani
           </UButton>
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <UIcon name="i-heroicons-shopping-bag" class="w-5 h-5" />
+            <UIcon name="heroicons:shopping-bag" class="w-5 h-5" />
             <span class="font-semibold">Pasar Tani</span>
           </div>
         </div>
@@ -282,14 +282,14 @@ watch(() => product.value, (newVal) => {
                   class="pointer-events-auto bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full p-3 m-4 transition-all focus:outline-none shadow-lg backdrop-blur-sm hover:scale-110" 
                   @click="prevImage"
                 >
-                  <UIcon name="i-lucide-chevron-left" class="w-5 h-5" />
+                  <UIcon name="lucide:chevron-left" class="w-5 h-5" />
                 </button>
                 
                 <button 
                   class="pointer-events-auto bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full p-3 m-4 transition-all focus:outline-none shadow-lg backdrop-blur-sm hover:scale-110" 
                   @click="nextImage"
                 >
-                  <UIcon name="i-lucide-chevron-right" class="w-5 h-5" />
+                  <UIcon name="lucide:chevron-right" class="w-5 h-5" />
                 </button>
               </div>
               
@@ -357,7 +357,7 @@ watch(() => product.value, (newVal) => {
               <!-- Description -->
               <div class="mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <UIcon name="i-lucide-file-text" class="w-5 h-5 mr-2 text-gray-500" />
+                  <UIcon name="lucide:file-text" class="w-5 h-5 mr-2 text-gray-500" />
                   Deskripsi Produk
                 </h2>
                 <div class="text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -369,34 +369,34 @@ watch(() => product.value, (newVal) => {
               <!-- Product Details -->
               <div class="mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <UIcon name="i-lucide-box" class="w-5 h-5 mr-2 text-gray-500" />
+                  <UIcon name="lucide:box" class="w-5 h-5 mr-2 text-gray-500" />
                   Detail Produk
                 </h2>
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 space-y-3">
                   <div v-if="product.weight" class="flex items-center text-sm">
                     <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-3">
-                      <UIcon name="i-lucide-scale" class="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <UIcon name="lucide:scale" class="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </div>
                     <span class="text-gray-700 dark:text-gray-300"><span class="font-medium">Berat:</span> {{ product.weight }}</span>
                   </div>
                   
                   <div v-if="product.size" class="flex items-center text-sm">
                     <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mr-3">
-                      <UIcon name="i-lucide-ruler" class="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                      <UIcon name="lucide:ruler" class="w-4 h-4 text-purple-600 dark:text-purple-400" />
                     </div>
                     <span class="text-gray-700 dark:text-gray-300"><span class="font-medium">Ukuran:</span> {{ product.size }}</span>
                   </div>
                   
                   <div v-if="product.stock" class="flex items-center text-sm">
                     <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-3">
-                      <UIcon name="i-lucide-package" class="w-4 h-4 text-green-600 dark:text-green-400" />
+                      <UIcon name="lucide:package" class="w-4 h-4 text-green-600 dark:text-green-400" />
                     </div>
                     <span class="text-gray-700 dark:text-gray-300"><span class="font-medium">Stok:</span> {{ product.stock }}</span>
                   </div>
                   
                   <div v-if="product.created_at" class="flex items-center text-sm">
                     <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-3">
-                      <UIcon name="i-lucide-calendar" class="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                      <UIcon name="lucide:calendar" class="w-4 h-4 text-orange-600 dark:text-orange-400" />
                     </div>
                     <span class="text-gray-700 dark:text-gray-300"><span class="font-medium">Dipublikasikan:</span> {{ formatDate(product.created_at) }}</span>
                   </div>
@@ -406,7 +406,7 @@ watch(() => product.value, (newVal) => {
               <!-- Seller Info -->
               <div class="mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <UIcon name="i-lucide-user-circle" class="w-5 h-5 mr-2 text-gray-500" />
+                  <UIcon name="lucide:user-circle" class="w-5 h-5 mr-2 text-gray-500" />
                   Informasi Penjual
                 </h2>
                 <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
@@ -423,7 +423,7 @@ watch(() => product.value, (newVal) => {
                       {{ product.profiles?.full_name || product.seller || 'Penjual' }}
                     </h3>
                     <p v-if="product.location" class="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-1">
-                      <UIcon name="i-lucide-map-pin" class="w-4 h-4 mr-1" />
+                      <UIcon name="lucide:map-pin" class="w-4 h-4 mr-1" />
                       {{ product.location }}
                     </p>
                   </div>
@@ -433,7 +433,7 @@ watch(() => product.value, (newVal) => {
               <!-- E-commerce Links -->
               <div v-if="hasShopeeLink || hasTokopediaLink || hasTiktokLink" class="mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <UIcon name="i-lucide-shopping-bag" class="w-5 h-5 mr-2 text-gray-500" />
+                  <UIcon name="lucide:shopping-bag" class="w-5 h-5 mr-2 text-gray-500" />
                   Tersedia di Marketplace
                 </h2>
                 <div class="flex flex-wrap gap-3">
@@ -444,7 +444,7 @@ watch(() => product.value, (newVal) => {
                     rel="noopener noreferrer"
                     class="inline-flex items-center px-4 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-500 transition-all transform hover:scale-105 shadow-sm font-medium"
                   >
-                    <UIcon name="i-lucide-shopping-bag" class="w-4 h-4 mr-2" />
+                    <UIcon name="lucide:shopping-bag" class="w-4 h-4 mr-2" />
                     Shopee
                   </NuxtLink>
 
@@ -455,7 +455,7 @@ watch(() => product.value, (newVal) => {
                     rel="noopener noreferrer"
                     class="inline-flex items-center px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-all transform hover:scale-105 shadow-sm font-medium"
                   >
-                    <UIcon name="i-lucide-store" class="w-4 h-4 mr-2" />
+                    <UIcon name="lucide:store" class="w-4 h-4 mr-2" />
                     Tokopedia
                   </NuxtLink>
 
@@ -466,7 +466,7 @@ watch(() => product.value, (newVal) => {
                     rel="noopener noreferrer"
                     class="inline-flex items-center px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 transition-all transform hover:scale-105 shadow-sm font-medium"
                   >
-                    <UIcon name="i-lucide-music" class="w-4 h-4 mr-2" />
+                    <UIcon name="lucide:music" class="w-4 h-4 mr-2" />
                     TikTok Shop
                   </NuxtLink>
                 </div>
@@ -478,7 +478,7 @@ watch(() => product.value, (newVal) => {
                   @click="openWhatsApp"
                   class="inline-flex items-center justify-center w-full px-6 py-4 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 transition-all transform hover:scale-105 text-lg font-semibold shadow-lg hover:shadow-xl"
                 >
-                  <UIcon name="i-mdi-whatsapp" class="text-2xl mx-4" />
+                  <UIcon name="mdi:whatsapp" class="text-2xl mx-4" />
                   Hubungi Penjual
                 </button>
               </div>
@@ -492,7 +492,7 @@ watch(() => product.value, (newVal) => {
         <div class="mb-8">
           <div class="flex items-center gap-3 mb-2">
             <div class="flex items-center gap-2">
-              <UIcon name="i-lucide-package-2" class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+              <UIcon name="lucide:package-2" class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
                 Produk Serupa
               </h2>
@@ -527,7 +527,7 @@ watch(() => product.value, (newVal) => {
               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg transition-all duration-200 hover:shadow-lg font-semibold"
             >
               <span>Lihat Semua Produk</span>
-              <UIcon name="i-lucide-arrow-right" class="w-4 h-4" />
+              <UIcon name="lucide:arrow-right" class="w-4 h-4" />
             </NuxtLink>
           </div>
         </div>

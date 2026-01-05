@@ -5,7 +5,7 @@ const features = [
     id: 1,
     title: 'Konsultasi Pertanian',
     description: 'Konsultasi langsung dengan pakar pertanian berpengalaman untuk hasil panen terbaik',
-    icon: 'i-lucide-message-circle',
+    icon: 'lucide:message-circle',
     image: '/feature/consult.JPG',
     url: '/discussions',
     color: 'green'
@@ -17,13 +17,13 @@ const features = [
     image: '/feature/cuaca.JPG',
     color: 'blue',
     url: '/tools',
-    icon: 'i-lucide-sun'
+    icon: 'lucide:sun'
   },
   {
     id: 3,
     title: 'Marketplace Hasil Tani',
     description: 'Jual hasil pertanian Anda langsung ke konsumen tanpa perantara',
-    icon: 'i-lucide-store',
+    icon: 'lucide:store',
     image: '/feature/markets.JPG',
     url: '/markets',
     color: 'orange'
@@ -32,7 +32,7 @@ const features = [
     id: 4,
     title: 'Kursus & Pelatihan',
     description: 'Tingkatkan pengetahuan dan keterampilan bertani melalui kursus online dan offline',
-    icon: 'i-lucide-graduation-cap',
+    icon: 'lucide:graduation-cap',
     image: '/feature/training.JPG',
     url: '/courses',
     color: 'yellow'
@@ -41,7 +41,7 @@ const features = [
     id: 5,
     title: 'Komunitas Petani',
     description: 'Bergabung dengan komunitas petani untuk berbagi pengalaman dan pengetahuan',
-    icon: 'i-lucide-users',
+    icon: 'lucide:users',
     image: '/feature/comunity.JPG',
     url: '/discussions/group',
     color: 'indigo'
@@ -55,7 +55,7 @@ const features = [
       <!-- Section Header -->
       <div class="mx-auto mb-6 max-w-4xl text-center">
         <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
-          <UIcon name="i-lucide-pencil" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <UIcon name="lucide:pencil" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
           <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Fitur Terbaru</span>
         </div>
         <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
@@ -115,7 +115,7 @@ const features = [
                 class="flex items-center gap-2 text-white font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-sm md:text-base"
               >
                 <span>Pelajari Lebih Lanjut</span>
-                <UIcon name="i-lucide-arrow-right" class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
+                <UIcon name="lucide:arrow-right" class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
               </NuxtLink>
             </div>
             <!-- Animated Border on Hover -->

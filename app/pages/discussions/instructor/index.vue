@@ -178,7 +178,7 @@ useHead({
             to="/discussions"
             color="success"
             variant="ghost"
-            icon="i-lucide-arrow-left"
+            icon="lucide:arrow-left"
             size="lg"
             aria-label="Kembali ke Diskusi"
             class="rounded-full"
@@ -205,7 +205,7 @@ useHead({
         <template #header>
           <div class="flex items-center gap-3">
             <UIcon 
-              name="i-lucide-users" 
+              name="lucide:users" 
               class="w-6 h-6 text-green-600 dark:text-green-400"
             />
             <p class="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium">
@@ -217,7 +217,7 @@ useHead({
         <!-- Loading state -->
         <div v-if="loading" class="flex flex-col items-center justify-center py-16">
           <UIcon 
-            name="i-lucide-loader" 
+            name="lucide:loader" 
             class="w-12 h-12 text-green-600 dark:text-green-400 animate-spin mb-4"
           />
           <p class="text-gray-600 dark:text-gray-400">Memuat data penyuluh...</p>
@@ -229,13 +229,13 @@ useHead({
             title="Terjadi Kesalahan"
             description="Gagal memuat data penyuluh. Silakan coba lagi."
             color="error"
-            icon="i-lucide-alert-circle"
+            icon="lucide:alert-circle"
             class="mb-4 max-w-md"
           />
           <UButton
             color="success"
             @click="fetchInstructors"
-            icon="i-lucide-refresh-cw"
+            icon="lucide:refresh-cw"
           >
             Coba Lagi
           </UButton>
@@ -249,7 +249,7 @@ useHead({
             <div>
               <div class="flex items-center gap-2 mb-4">
                 <UIcon 
-                  name="i-lucide-search" 
+                  name="lucide:search" 
                   class="w-5 h-5 text-green-600 dark:text-green-400"
                 />
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Cari Penyuluh</h2>
@@ -259,7 +259,7 @@ useHead({
                   v-model="searchQuery"
                   type="text"
                   placeholder="Cari nama penyuluh..."
-                  icon="i-lucide-search"
+                  icon="lucide:search"
                   class="w-full"
                 />
               </div>
@@ -269,7 +269,7 @@ useHead({
             <div>
               <div class="flex items-center gap-2 mb-4">
                 <UIcon 
-                  name="i-lucide-map-pin" 
+                  name="lucide:map-pin" 
                   class="w-5 h-5 text-green-600 dark:text-green-400"
                 />
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Pilih Kabupaten/Kota</h2>
@@ -290,7 +290,7 @@ useHead({
           <div>
             <div class="flex items-center gap-2 mb-6">
               <UIcon 
-                name="i-lucide-briefcase" 
+                name="lucide:briefcase" 
                 class="w-5 h-5 text-green-600 dark:text-green-400"
               />
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -323,7 +323,7 @@ useHead({
                       />
                       <div class="absolute -bottom-2 -right-2 bg-green-500 dark:bg-green-600 w-6 h-6 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center">
                         <UIcon 
-                          name="i-lucide-check" 
+                          name="lucide:check" 
                           class="w-3 h-3 text-white"
                         />
                       </div>
@@ -345,7 +345,7 @@ useHead({
                       color="success"
                       size="md"
                       class="w-full"
-                      icon="i-lucide-message-circle"
+                      icon="lucide:message-circle"
                     >
                       Mulai Diskusi
                     </UButton>
@@ -368,7 +368,7 @@ useHead({
             <!-- Empty state -->
             <div v-else class="flex flex-col items-center justify-center py-16">
               <UIcon 
-                name="i-lucide-inbox" 
+                name="lucide:inbox" 
                 class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4"
               />
               <p class="text-gray-600 dark:text-gray-400 text-center max-w-sm">

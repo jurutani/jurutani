@@ -48,7 +48,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
     <div class="flex gap-3">
       <!-- Image upload button -->
       <UButton
-        icon="i-heroicons-photo"
+        icon="heroicons:photo"
         color="neutral"
         variant="ghost"
         size="lg"
@@ -70,7 +70,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
       <UButton
         :disabled="!isValid || loading || uploadingImage || disabled"
         :loading="loading"
-        icon="i-heroicons-paper-airplane"
+        icon="heroicons:paper-airplane"
         size="lg"
         color="success"
         @click="handleSend"

@@ -92,7 +92,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         <div class="space-y-6">
           <!-- Highlight fitur -->
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="ph:check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Pantau Lahan</h3>
               <p class="text-sm text-green-100">Lacak kondisi lahan dengan data real-time</p>
@@ -100,7 +100,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="ph:check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Prediksi Panen</h3>
               <p class="text-sm text-green-100">Estimasi hasil panen dengan teknologi AI</p>
@@ -108,7 +108,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="ph:check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Manajemen Bibit</h3>
               <p class="text-sm text-green-100">Kelola stok dan kualitas bibit tanaman</p>
@@ -146,7 +146,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 class="w-full"
               />
                 <div class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none">
-                  <UIcon name="i-ph-envelope" class="w-5 h-5" />
+                  <UIcon name="ph:envelope" class="w-5 h-5" />
                 </div>
               </div>
             </UFormField>
@@ -167,7 +167,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                   @click="togglePasswordVisibility"
                 >
                   <UIcon 
-                    :name="showPassword ? 'i-ph-eye-slash' : 'i-ph-eye'" 
+                    :name="showPassword ? 'ph:eye-slash' : 'ph:eye'" 
                     class="w-5 h-5" 
                   />
                 </button>
@@ -200,7 +200,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               class="bg-green-600 hover:bg-green-700 text-white font-medium"
             >
                 <template #leading>
-                  <UIcon v-if="!isLoading" name="i-ph-sign-in" class="w-5 h-5" />
+                  <UIcon v-if="!isLoading" name="ph:sign-in" class="w-5 h-5" />
                 </template>
                 {{ isLoading ? 'Memproses...' : 'Masuk' }}
               </UButton>
@@ -220,7 +220,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
             class="bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
             @click="handleSocialLogin('google')"
           >
-              <UIcon name="i-logos-google-icon" class="mr-2 h-5 w-5" />
+              <UIcon name="logos:google-icon" class="mr-2 h-5 w-5" />
               Masuk dengan Google
             </UButton>
           </div>

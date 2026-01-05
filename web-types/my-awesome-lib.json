@@ -12,7 +12,7 @@
             {
               "name": "name",
               "customType": "icon",
-              "placeholder": "i-heroicons-light-bulb"
+              "placeholder": "heroicons:light-bulb"
             },
             {
               "name": "size",
@@ -64,7 +64,9 @@
               "name": "chipVariant",
               "customType": "select",
               "default": "solid",
-              "options": ["solid"]
+              "options": [
+                "solid"
+              ]
             }
           ]
         },
@@ -79,19 +81,34 @@
               "name": "size",
               "customType": "select",
               "default": "sm",
-              "options": ["2xs", "xs", "sm", "md", "lg", "xl"]
+              "options": [
+                "2xs",
+                "xs",
+                "sm",
+                "md",
+                "lg",
+                "xl"
+              ]
             },
             {
               "name": "variant",
               "customType": "select",
               "default": "solid",
-              "options": ["solid", "outline", "soft", "ghost", "link"]
+              "options": [
+                "solid",
+                "outline",
+                "soft",
+                "ghost",
+                "link"
+              ]
             },
             {
               "name": "target",
               "customType": "select",
               "default": "",
-              "options": ["_blank"]
+              "options": [
+                "_blank"
+              ]
             }
           ],
           "slots": [

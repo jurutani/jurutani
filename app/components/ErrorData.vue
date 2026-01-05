@@ -22,7 +22,7 @@ const handleRetry = () => {
 
 <template>
   <UAlert
-    icon="i-heroicons-exclamation-triangle"
+    icon="heroicons:exclamation-triangle"
     color="error"
     variant="soft"
     title="Oops! Ada masalah di kebun 🌧️"
@@ -35,7 +35,7 @@ const handleRetry = () => {
         color="success" 
         variant="outline" 
         size="xs"
-        icon="i-heroicons-arrow-path"
+        icon="heroicons:arrow-path"
       >
         Coba Lagi
       </UButton>

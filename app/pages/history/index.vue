@@ -74,7 +74,7 @@ onMounted(() => {
       <!-- Header Section -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 dark:bg-green-700 rounded-full mb-4 shadow-lg dark:shadow-green-900/50">
-          <UIcon name="i-lucide-clock" class="w-8 h-8 text-white" />
+          <UIcon name="lucide:clock" class="w-8 h-8 text-white" />
         </div>
         <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Riwayat Aktivitas</h1>
         <p class="text-gray-600 dark:text-gray-400 text-sm">
@@ -110,7 +110,7 @@ onMounted(() => {
       <!-- Error State -->
       <div v-else-if="error" class="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-6 py-4 rounded-lg transition-colors duration-200">
         <div class="flex items-center">
-          <UIcon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-500 dark:text-red-400 mr-2 flex-shrink-0" />
+          <UIcon name="heroicons:exclamation-triangle" class="w-5 h-5 text-red-500 dark:text-red-400 mr-2 flex-shrink-0" />
           <p class="font-medium">Terjadi kesalahan saat memuat riwayat aktivitas.</p>
         </div>
         <button 

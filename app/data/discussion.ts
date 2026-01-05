@@ -15,7 +15,7 @@ export const discussionServices: DiscussionService[] = [
         title: 'Bicara dengan Penyuluh',
         subtitle: 'Konsultasi Langsung',
         description: 'Dapatkan panduan praktis dari penyuluh pertanian berpengalaman untuk mengatasi masalah budidaya, hama penyakit, dan teknik bertani modern.',
-        icon: 'i-lucide-user-plus',
+        icon: 'lucide:user-plus',
         image: '/services/penyuluhjurutani.JPG',
         route: '/discussions/instructor'
     },
@@ -24,7 +24,7 @@ export const discussionServices: DiscussionService[] = [
         title: 'Tanya ke Pakar',
         subtitle: 'Konsultasi Ahli',
         description: 'Konsultasi mendalam dengan ahli pertanian bersertifikat untuk analisis ilmiah, diagnosa penyakit tanaman, dan rekomendasi teknologi terbaru.',
-        icon: 'i-lucide-user-check',
+        icon: 'lucide:user-check',
         image: '/services/pakarjurutani.JPG',
         route: '/discussions/expert'
     },
@@ -33,7 +33,7 @@ export const discussionServices: DiscussionService[] = [
         title: 'Forum Komunitas',
         subtitle: 'Berbagi Pengalaman',
         description: 'Bergabung dengan komunitas petani dari seluruh Indonesia untuk berbagi tips sukses, pengalaman lapangan, dan inovasi pertanian.',
-        icon: 'i-lucide-users',
+        icon: 'lucide:users',
         image: '/services/komunitasjurutani.JPG',
         route: '/discussions/group'
     },
@@ -42,7 +42,7 @@ export const discussionServices: DiscussionService[] = [
         title: 'Room Chat Tematik',
         subtitle: 'Diskusi Real-time',
         description: 'Diskusi langsung dalam room chat khusus berdasarkan komoditas seperti padi, sayuran, buah-buahan, dan peternakan untuk solusi cepat.',
-        icon: 'i-lucide-message-circle',
+        icon: 'lucide:message-circle',
         image: '/services/chatjurutani.JPG',
         route: '/room-chat'
     },
@@ -51,7 +51,7 @@ export const discussionServices: DiscussionService[] = [
         title: 'Support Center',
         subtitle: 'Bantuan Langsung',
         description: 'Hubungi tim support Juru Tani untuk bantuan teknis aplikasi, keluhan layanan, atau pertanyaan umum dengan respon prioritas.',
-        icon: 'i-lucide-headset',
+        icon: 'lucide:headset',
         image: '/services/admin.JPG',
         route: '/room-chat/admin'
     }

@@ -47,7 +47,7 @@ const scrollToFaqs = () => {
     <CommonPageHeroSection
       title="Pusat Bantuan Juru Tani"
       subtitle="Temukan jawaban, panduan, dan dukungan yang Anda butuhkan untuk memaksimalkan hasil pertanian Anda bersama Juru Tani."
-      :badge="{ text: 'Help Center', icon: 'i-lucide-help-circle' }"
+      :badge="{ text: 'Help Center', icon: 'lucide:help-circle' }"
       align="center"
       decorative="ripple"
       :cta="{ text: 'Cari Bantuan', action: scrollToFaqs }"
@@ -139,7 +139,7 @@ const scrollToFaqs = () => {
                   <div class="relative inline-block mb-6">
                     <div class="absolute inset-0 bg-green-100 dark:bg-green-900/30 rounded-full animate-ping" />
                     <div class="relative w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 rounded-full flex items-center justify-center">
-                      <UIcon name="i-heroicons-magnifying-glass" class="w-10 h-10 text-green-600 dark:text-green-400" />
+                      <UIcon name="heroicons:magnifying-glass" class="w-10 h-10 text-green-600 dark:text-green-400" />
                     </div>
                   </div>
                   
@@ -160,7 +160,7 @@ const scrollToFaqs = () => {
                       @click="searchQuery = ''"
                       size="lg"
                     >
-                      <UIcon name="i-heroicons-arrow-path" class="mr-2" />
+                      <UIcon name="heroicons:arrow-path" class="mr-2" />
                       Hapus Pencarian
                     </UButton>
                     <UButton 
@@ -169,7 +169,7 @@ const scrollToFaqs = () => {
                       to="/contact-us"
                       size="lg"
                     >
-                      <UIcon name="i-heroicons-chat-bubble-left-right" class="mr-2" />
+                      <UIcon name="heroicons:chat-bubble-left-right" class="mr-2" />
                       Hubungi Kami
                     </UButton>
                   </div>
@@ -189,7 +189,7 @@ const scrollToFaqs = () => {
             
             <div class="relative z-10 text-center">
               <div class="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-green-100 dark:bg-green-900/50">
-                <UIcon name="i-heroicons-question-mark-circle" class="w-8 h-8 text-green-600 dark:text-green-400" />
+                <UIcon name="heroicons:question-mark-circle" class="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
               
               <h4 class="text-2xl font-bold text-green-900 dark:text-green-100 mb-3">
@@ -205,7 +205,7 @@ const scrollToFaqs = () => {
                   size="lg"
                   class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  <UIcon name="i-heroicons-chat-bubble-left-right" class="mr-2" />
+                  <UIcon name="heroicons:chat-bubble-left-right" class="mr-2" />
                   Hubungi Support
                 </UButton>
                 <UButton 
@@ -214,7 +214,7 @@ const scrollToFaqs = () => {
                   color="primary"
                   size="lg"
                 >
-                  <UIcon name="i-heroicons-users" class="mr-2" />
+                  <UIcon name="heroicons:users" class="mr-2" />
                   Tanya Komunitas
                 </UButton>
               </div>
@@ -257,7 +257,7 @@ const scrollToFaqs = () => {
       <div class="container mx-auto px-4 relative z-10 text-center">
         <!-- Floating Badge -->
         <div class="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-          <UIcon name="i-heroicons-sparkles" class="text-green-600 dark:text-green-400" />
+          <UIcon name="heroicons:sparkles" class="text-green-600 dark:text-green-400" />
           <span class="text-sm font-medium text-gray-900 dark:text-white">Butuh Bantuan Lebih?</span>
         </div>
 
@@ -274,7 +274,7 @@ const scrollToFaqs = () => {
             size="xl"
             class="bg-white text-green-700 font-bold hover:bg-green-50 shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
           >
-            <UIcon name="i-lucide-message-square" class="mr-2" />
+            <UIcon name="lucide:message-square" class="mr-2" />
             Chat dengan CS
           </UButton>
           <UButton
@@ -283,7 +283,7 @@ const scrollToFaqs = () => {
             variant="outline"
             class=" border-2 border-white hover:bg-white/10 backdrop-blur-sm shadow-xl hover:scale-105 transition-all duration-300"
           >
-            <UIcon name="i-lucide-user-check" class="mr-2" />
+            <UIcon name="lucide:user-check" class="mr-2" />
             Konsultasi Pakar
           </UButton>
         </div>

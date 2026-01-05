@@ -10,7 +10,7 @@ useSeoOptimized('privacy')
       <div class="flex justify-between items-center mb-6 pt-4">
         <div class="flex items-center">
           <div class="mr-3 p-2 bg-green-100 dark:bg-green-900 rounded-full">
-            <UIcon name="i-lucide-lock" class="h-6 w-6 text-green-600 dark:text-green-400" />
+            <UIcon name="lucide:lock" class="h-6 w-6 text-green-600 dark:text-green-400" />
           </div>
           <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">Juru Tani</h3>
         </div>
@@ -37,19 +37,19 @@ useSeoOptimized('privacy')
           <ul class="list-none space-y-3 text-base leading-relaxed pl-2">
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span><span class="font-semibold text-green-700 dark:text-green-400">Data Pribadi:</span> Nama, email, nomor telepon, dan informasi lain yang diberikan saat registrasi.</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span><span class="font-semibold text-green-700 dark:text-green-400">Data Aktivitas:</span> Log penggunaan aplikasi dan interaksi pengguna.</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span><span class="font-semibold text-green-700 dark:text-green-400">Data Lokasi:</span> Jika Anda mengizinkan, kami dapat mengakses lokasi untuk fitur tertentu.</span>
             </li>
@@ -63,19 +63,19 @@ useSeoOptimized('privacy')
           <ul class="list-none space-y-3 text-base leading-relaxed pl-2">
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Menyediakan dan mengelola layanan Juru Tani</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Meningkatkan pengalaman pengguna</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Mengirim notifikasi atau informasi terkait</span>
             </li>
@@ -87,7 +87,7 @@ useSeoOptimized('privacy')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">3. Keamanan Data</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <UIcon name="i-lucide-lock" class="h-5 w-5 text-green-500 dark:text-green-400" />
+              <UIcon name="lucide:lock" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Kami menggunakan teknologi enkripsi dan praktik terbaik untuk menjaga keamanan data Anda.
@@ -100,7 +100,7 @@ useSeoOptimized('privacy')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">4. Hak Anda</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <UIcon name="i-lucide-user" class="h-5 w-5 text-green-500 dark:text-green-400" />
+              <UIcon name="lucide:user" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Anda dapat meminta akses, koreksi, atau penghapusan data pribadi Anda kapan saja.
@@ -113,7 +113,7 @@ useSeoOptimized('privacy')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">5. Perubahan Kebijakan</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <UIcon name="i-lucide-info" class="h-5 w-5 text-green-500 dark:text-green-400" />
+              <UIcon name="lucide:info" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Kami dapat memperbarui kebijakan ini dari waktu ke waktu. Perubahan akan diumumkan di halaman ini.

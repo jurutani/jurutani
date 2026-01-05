@@ -168,14 +168,14 @@ watch(() => news.value, (newVal) => {
             <UButton
               color="success"
               variant="ghost"
-              icon="i-lucide-arrow-left"
+              icon="lucide:arrow-left"
               @click="handleGoBack"
             >
               Kembali ke Berita
             </UButton>
             
             <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-              <UIcon name="i-lucide-newspaper" class="w-5 h-5" />
+              <UIcon name="lucide:newspaper" class="w-5 h-5" />
               <span class="font-semibold">Juru Tani News</span>
             </div>
           </div>
@@ -191,7 +191,7 @@ watch(() => news.value, (newVal) => {
       <!-- Error State -->
       <div v-else-if="hasError" class="text-center py-20">
         <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8 max-w-md mx-auto">
-          <UIcon name="i-heroicons-exclamation-triangle" class="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <UIcon name="heroicons:exclamation-triangle" class="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h3 class="text-lg font-semibold text-red-700 dark:text-red-400 mb-2">Oops! Terjadi Kesalahan</h3>
           <p class="text-red-600 dark:text-red-300 mb-4">{{ error }}</p>
           <UButton color="error" variant="outline" @click="handleGoBack">
@@ -213,7 +213,7 @@ watch(() => news.value, (newVal) => {
           />
           <div v-else class="flex items-center justify-center h-full">
             <div class="text-center text-green-600 dark:text-green-400">
-              <UIcon name="i-heroicons-photo" class="w-16 h-16 mx-auto mb-2 opacity-50" />
+              <UIcon name="heroicons:photo" class="w-16 h-16 mx-auto mb-2 opacity-50" />
               <p class="text-sm opacity-75">Tidak ada gambar</p>
             </div>
           </div>
@@ -221,7 +221,7 @@ watch(() => news.value, (newVal) => {
           <!-- Category Badge -->
           <div class="absolute top-4 right-4">
             <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full shadow-sm">
-              <UIcon name="i-heroicons-tag" class="w-3 h-3" />
+              <UIcon name="heroicons:tag" class="w-3 h-3" />
               {{ formatCategory(news.category) }}
             </span>
           </div>
@@ -242,17 +242,17 @@ watch(() => news.value, (newVal) => {
           <!-- Meta Information -->
           <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center gap-1">
-              <UIcon name="i-heroicons-user" class="w-4 h-4" />
+              <UIcon name="heroicons:user" class="w-4 h-4" />
               <span>{{ news.author || 'Tim JuruTani' }}</span>
             </div>
             
             <div class="flex items-center gap-1">
-              <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
+              <UIcon name="heroicons:calendar" class="w-4 h-4" />
               <span>{{ formatDate(news.published_at || news.created_at) }}</span>
             </div>
             
             <div v-if="news.updated_at && news.updated_at !== news.created_at" class="flex items-center gap-1">
-              <UIcon name="i-heroicons-pencil-square" class="w-4 h-4" />
+              <UIcon name="heroicons:pencil-square" class="w-4 h-4" />
               <span>Diperbarui {{ formatDate(news.updated_at) }}</span>
             </div>
             
@@ -281,7 +281,7 @@ watch(() => news.value, (newVal) => {
               v-if="news.link"
               color="success"
               variant="outline"
-              icon="i-heroicons-link"
+              icon="heroicons:link"
               class="flex-1 sm:flex-none"
               @click="openLink"
             >
@@ -291,9 +291,9 @@ watch(() => news.value, (newVal) => {
             <!-- Attachment -->
             <UButton
               v-if="attachmentUrl"
-              color="blue" 
+              color="success" 
               variant="outline"
-              icon="i-heroicons-paper-clip"
+              icon="heroicons:paper-clip"
               class="flex-1 sm:flex-none"
               @click="openAttachment"
             >
@@ -358,7 +358,7 @@ watch(() => news.value, (newVal) => {
               class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
             >
               <span>Lihat Semua Berita</span>
-              <UIcon name="i-lucide-arrow-right" class="w-4 h-4 transition-transform" />
+              <UIcon name="lucide:arrow-right" class="w-4 h-4 transition-transform" />
             </NuxtLink>
           </div>
         </div>

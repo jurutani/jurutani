@@ -41,7 +41,7 @@ onMounted(() => {
        <!-- Header Section -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 dark:bg-green-700 rounded-full mb-4 shadow-lg dark:shadow-green-900/50">
-          <UIcon name="i-lucide-user" class="w-8 h-8 text-white" />
+          <UIcon name="lucide:user" class="w-8 h-8 text-white" />
         </div>
         <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Profil Pengguna</h1>
         <p class="text-gray-600 dark:text-gray-400 text-sm">
@@ -52,7 +52,7 @@ onMounted(() => {
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-16">
         <div class="inline-flex items-center px-6 py-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm dark:shadow-md border border-gray-100 dark:border-gray-800">
-          <UIcon name="i-heroicons-arrow-path" class="animate-spin -ml-1 mr-3 h-5 w-5 text-green-600 dark:text-green-400" />
+          <UIcon name="heroicons:arrow-path" class="animate-spin -ml-1 mr-3 h-5 w-5 text-green-600 dark:text-green-400" />
           <span class="text-gray-600 dark:text-gray-400">Memuat profil pengguna...</span>
         </div>
       </div>
@@ -62,7 +62,7 @@ onMounted(() => {
         <div class="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 dark:border-red-600 p-4 rounded-lg transition-colors duration-200">
           <div class="flex">
             <div class="flex-shrink-0">
-              <UIcon name="i-heroicons-exclamation-triangle" class="h-5 w-5 text-red-400 dark:text-red-500" />
+              <UIcon name="heroicons:exclamation-triangle" class="h-5 w-5 text-red-400 dark:text-red-500" />
             </div>
             <div class="ml-3">
               <p class="text-red-800 dark:text-red-200 font-medium">Terjadi kesalahan saat memuat profil pengguna</p>
@@ -121,7 +121,7 @@ onMounted(() => {
             <!-- Bio Section -->
             <div v-if="userData.bio" class="mb-6 p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-100 dark:border-green-800 transition-colors duration-200">
               <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 flex items-center">
-                <UIcon name="i-heroicons-chat-bubble-left" class="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
+                <UIcon name="heroicons:chat-bubble-left" class="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
                 Tentang Saya
               </h3>
               <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ userData.bio }}</p>
@@ -188,7 +188,7 @@ onMounted(() => {
                         class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 hover:underline break-words inline-flex items-center transition-colors duration-200"
                       >
                         {{ userData.website }}
-                        <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 ml-1" />
+                        <UIcon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 ml-1" />
                       </NuxtLink>
                       <span v-else class="text-gray-800 dark:text-gray-200 break-words">{{ userData.website }}</span>
                     </div>
@@ -218,7 +218,7 @@ onMounted(() => {
                 color="success"
                 variant="solid"
                 size="lg"
-                icon="i-lucide-pencil"
+                icon="lucide:pencil"
                 @click="toggleEditMode"
               >
                 Edit Profil

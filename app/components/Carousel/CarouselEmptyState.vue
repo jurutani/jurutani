@@ -9,7 +9,7 @@
     <template #header>
       <div class="text-center max-w-md mx-auto px-4">
         <div class="flex justify-center mb-4">
-          <UIcon name="i-heroicons-photo" class="w-16 h-16 text-gray-400 dark:text-gray-500" />
+          <UIcon name="heroicons:photo" class="w-16 h-16 text-gray-400 dark:text-gray-500" />
         </div>
         <h3 class="text-xl font-semibold text-white dark:text-gray-100 mb-2">
           Belum Ada Konten

@@ -7,7 +7,7 @@ import type { LegalPageData } from './types'
 
 export const privacyPolicyData: LegalPageData = {
     pageType: 'privacy',
-    icon: 'i-lucide-shield',
+    icon: 'lucide:shield',
     title: 'Kebijakan Privasi',
     lastUpdated: '5 Mei 2026',
     intro: 'Juru Tani menghargai privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan platform kami.',
@@ -15,7 +15,7 @@ export const privacyPolicyData: LegalPageData = {
         {
             id: 'information-collection',
             title: 'Informasi yang Kami Kumpulkan',
-            icon: 'i-lucide-database',
+            icon: 'lucide:database',
             type: 'list',
             content: [
                 '<strong>Data Pribadi:</strong> Nama, email, nomor telepon, dan informasi lain yang diberikan saat registrasi.',
@@ -26,7 +26,7 @@ export const privacyPolicyData: LegalPageData = {
         {
             id: 'information-usage',
             title: 'Penggunaan Informasi',
-            icon: 'i-lucide-settings',
+            icon: 'lucide:settings',
             type: 'nested',
             content: [
                 'Informasi digunakan untuk:',
@@ -38,21 +38,21 @@ export const privacyPolicyData: LegalPageData = {
         {
             id: 'data-security',
             title: 'Keamanan Data',
-            icon: 'i-lucide-lock',
+            icon: 'lucide:lock',
             type: 'text',
             content: 'Kami menggunakan teknologi enkripsi dan praktik terbaik untuk menjaga keamanan data Anda.'
         },
         {
             id: 'user-rights',
             title: 'Hak Anda',
-            icon: 'i-lucide-user-check',
+            icon: 'lucide:user-check',
             type: 'text',
             content: 'Anda dapat meminta akses, koreksi, atau penghapusan data pribadi Anda kapan saja.'
         },
         {
             id: 'policy-changes',
             title: 'Perubahan Kebijakan',
-            icon: 'i-lucide-refresh-cw',
+            icon: 'lucide:refresh-cw',
             type: 'text',
             content: 'Kami dapat memperbarui kebijakan ini dari waktu ke waktu. Perubahan akan diumumkan di halaman ini.'
         }
@@ -61,7 +61,7 @@ export const privacyPolicyData: LegalPageData = {
 
 export const termsOfServiceData: LegalPageData = {
     pageType: 'terms',
-    icon: 'i-lucide-file-text',
+    icon: 'lucide:file-text',
     title: 'Syarat & Ketentuan',
     lastUpdated: '20 Juli 2026',
     intro: 'Selamat datang di <strong>Juru Tani</strong>. Dokumen ini berisi syarat dan ketentuan yang mengatur penggunaan platform dan layanan kami. Mohon membaca dengan seksama sebelum menggunakan platform kami.',
@@ -69,14 +69,14 @@ export const termsOfServiceData: LegalPageData = {
         {
             id: 'introduction',
             title: 'Pengantar',
-            icon: 'i-lucide-info',
+            icon: 'lucide:info',
             type: 'text',
             content: 'Dengan mengakses dan menggunakan platform <strong>Juru Tani</strong>, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Jika Anda tidak setuju dengan salah satu dari ketentuan ini, Anda tidak diperkenankan untuk menggunakan layanan kami.'
         },
         {
             id: 'service-usage',
             title: 'Penggunaan Layanan',
-            icon: 'i-lucide-check-circle',
+            icon: 'lucide:check-circle',
             type: 'list',
             content: [
                 'Anda bertanggung jawab atas keamanan akun Anda, termasuk kata sandi dan semua aktivitas yang terjadi di dalamnya.',
@@ -87,14 +87,14 @@ export const termsOfServiceData: LegalPageData = {
         {
             id: 'intellectual-property',
             title: 'Hak Kekayaan Intelektual',
-            icon: 'i-lucide-shield-check',
+            icon: 'lucide:shield-check',
             type: 'text',
             content: 'Semua konten di platform ini termasuk logo, teks, grafik, dan perangkat lunak adalah milik <strong>Juru Tani</strong> kecuali dinyatakan lain. Dilarang menyalin, mendistribusikan, atau menggunakan konten tersebut tanpa izin tertulis dari kami.'
         },
         {
             id: 'responsibility',
             title: 'Tanggung Jawab',
-            icon: 'i-lucide-alert-triangle',
+            icon: 'lucide:alert-triangle',
             type: 'nested',
             content: [
                 'Kami tidak bertanggung jawab atas kerugian yang timbul akibat penyalahgunaan platform ini oleh pihak ketiga. Penggunaan informasi dan layanan kami sepenuhnya menjadi risiko Anda sendiri.',
@@ -106,7 +106,7 @@ export const termsOfServiceData: LegalPageData = {
         {
             id: 'terms-changes',
             title: 'Perubahan Ketentuan',
-            icon: 'i-lucide-refresh-ccw',
+            icon: 'lucide:refresh-ccw',
             type: 'text',
             content: 'Kami berhak memperbarui syarat dan ketentuan ini tanpa pemberitahuan sebelumnya. Dengan terus menggunakan platform kami setelah perubahan tersebut, Anda dianggap telah menyetujui syarat dan ketentuan yang telah diperbarui.'
         }

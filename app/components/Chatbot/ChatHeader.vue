@@ -23,7 +23,7 @@ defineProps<{
     </div>
     <div class="flex items-center space-x-2">
       <UButton
-        :icon="isExpanded ? 'i-heroicons-arrows-pointing-in' : 'i-heroicons-arrows-pointing-out'"
+        :icon="isExpanded ? 'heroicons:arrows-pointing-in' : 'heroicons:arrows-pointing-out'"
         color="neutral"
         variant="ghost"
         size="xs"
@@ -31,7 +31,7 @@ defineProps<{
         @click="onToggleExpand"
       />
       <UButton
-        icon="i-heroicons-x-mark"
+        icon="heroicons:x-mark"
         color="neutral"
         variant="ghost"
         size="xs"

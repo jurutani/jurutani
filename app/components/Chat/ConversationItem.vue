@@ -148,7 +148,7 @@ const cancelDelete = () => {
       <!-- Delete Button - only shown on hover -->
       <UButton
         v-if="isHovered && !isDeleting"
-        icon="i-heroicons-trash"
+        icon="heroicons:trash"
         color="error"
         variant="ghost"
         size="sm"
@@ -159,31 +159,31 @@ const cancelDelete = () => {
       <!-- Loading spinner when deleting -->
       <UIcon
         v-if="isDeleting"
-        name="i-heroicons-arrow-path"
+        name="heroicons:arrow-path"
         class="w-5 h-5 text-gray-400 animate-spin"
       />
       
       <!-- Chevron with agricultural icon -->
       <div class="flex flex-col items-center gap-1">
         <UIcon 
-          name="i-heroicons-chevron-right" 
+          name="heroicons:chevron-right" 
           class="w-5 h-5 text-green-400 dark:text-green-500 
                  group-hover:text-green-600 dark:group-hover:text-green-400 
                  transition-colors flex-shrink-0"
         />
         <UIcon 
           v-if="partner?.role === 'pakar'"
-          name="i-heroicons-academic-cap" 
+          name="heroicons:academic-cap" 
           class="w-3 h-3 text-green-500 dark:text-green-400"
         />
         <UIcon 
           v-else-if="partner?.role === 'penyuluh'"
-          name="i-heroicons-megaphone" 
+          name="heroicons:megaphone" 
           class="w-3 h-3 text-blue-500 dark:text-blue-400"
         />
         <UIcon 
           v-else
-          name="i-heroicons-user" 
+          name="heroicons:user" 
           class="w-3 h-3 text-gray-400 dark:text-gray-500"
         />
       </div>
@@ -194,7 +194,7 @@ const cancelDelete = () => {
       <template #header>
         <div class="flex items-center gap-3">
           <UIcon 
-            name="i-heroicons-exclamation-triangle" 
+            name="heroicons:exclamation-triangle" 
             class="w-6 h-6 text-red-500"
           />
           <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -215,7 +215,7 @@ const cancelDelete = () => {
           <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
             <div class="flex items-start gap-2">
               <UIcon 
-                name="i-heroicons-exclamation-triangle" 
+                name="heroicons:exclamation-triangle" 
                 class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"
               />
               <div class="text-sm text-red-700 dark:text-red-300">
@@ -238,7 +238,7 @@ const cancelDelete = () => {
           </UButton>
           <UButton
             color="error"
-            icon="i-heroicons-trash"
+            icon="heroicons:trash"
             :loading="isDeleting"
             @click="confirmDelete"
           >

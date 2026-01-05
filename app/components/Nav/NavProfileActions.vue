@@ -15,7 +15,7 @@
     <!-- <UButton
       variant="ghost"
       size="sm"
-      icon="i-heroicons-bell"
+      icon="heroicons:bell"
       aria-label="Notifications"
     /> -->
   </div>

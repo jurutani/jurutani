@@ -166,7 +166,7 @@ const viewDetails = () => {
         class="w-full h-full bg-gradient-to-br from-green-100 via-pink-100 to-orange-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center"
       >
         <div class="text-center text-green-400 dark:text-gray-600">
-          <UIcon name="i-heroicons-video-camera" class="w-20 h-20 mb-3 opacity-50" />
+          <UIcon name="heroicons:video-camera" class="w-20 h-20 mb-3 opacity-50" />
           <p class="text-sm font-medium opacity-75">Video Juru Tani</p>
         </div>
       </div>
@@ -174,7 +174,7 @@ const viewDetails = () => {
       <!-- Play Button Overlay -->
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div class="w-16 h-16 md:w-20 md:h-20 bg-green-600/90 hover:bg-green-600 rounded-full flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 shadow-2xl">
-          <UIcon name="i-heroicons-play" class="w-8 h-8 md:w-10 md:h-10 text-white ml-1" />
+          <UIcon name="heroicons:play" class="w-8 h-8 md:w-10 md:h-10 text-white ml-1" />
         </div>
       </div>
       
@@ -192,7 +192,7 @@ const viewDetails = () => {
         <span 
           class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
         >
-          <UIcon name="i-heroicons-video-camera" class="w-3 h-3" />
+          <UIcon name="heroicons:video-camera" class="w-3 h-3" />
           {{ formattedCategory }}
         </span>
       </div>
@@ -223,21 +223,21 @@ const viewDetails = () => {
         <!-- Meta Info -->
         <div class="flex items-center gap-4 text-xs md:text-sm text-gray-300">
           <div class="flex items-center gap-2">
-            <UIcon name="i-heroicons-calendar" class="w-4 h-4 text-green-400" />
+            <UIcon name="heroicons:calendar" class="w-4 h-4 text-green-400" />
             <span>{{ formattedDate }}</span>
           </div>
           <div v-if="isValidVideo" class="flex items-center gap-2">
-            <UIcon name="i-heroicons-play-circle" class="w-4 h-4 text-green-400" />
+            <UIcon name="heroicons:play-circle" class="w-4 h-4 text-green-400" />
             <span class="font-medium">Video</span>
           </div>
         </div>
         
         <!-- Watch Video Button -->
         <div class="flex items-center gap-2 text-white font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-          <UIcon name="i-heroicons-play-circle" class="w-5 h-5" />
+          <UIcon name="heroicons:play-circle" class="w-5 h-5" />
           <span class="text-sm md:text-base">Tonton Video</span>
           <UIcon 
-            name="i-heroicons-arrow-right" 
+            name="heroicons:arrow-right" 
             class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" 
           />
         </div>

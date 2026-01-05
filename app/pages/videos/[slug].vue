@@ -141,14 +141,14 @@ watch(() => video.value, (newVal) => {
           <UButton
             color="success"
             variant="ghost"
-            icon="i-lucide-arrow-left"
+            icon="lucide:arrow-left"
             @click="handleGoBack"
           >
             Kembali ke Edukasi
           </UButton>
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <UIcon name="i-heroicons-video-camera" class="w-5 h-5" />
+            <UIcon name="heroicons:video-camera" class="w-5 h-5" />
             <span class="font-semibold">Video Edukasi</span>
           </div>
         </div>
@@ -185,12 +185,12 @@ watch(() => video.value, (newVal) => {
               <div class="mb-6">
                 <div class="flex flex-wrap items-center gap-2 mb-4">
                   <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-medium rounded-full">
-                    <UIcon name="i-heroicons-video-camera" class="w-3 h-3" />
+                    <UIcon name="heroicons:video-camera" class="w-3 h-3" />
                     {{ formatCategory(video.category) }}
                   </span>
                   
                   <span v-if="video.duration" class="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-full">
-                    <UIcon name="i-heroicons-clock" class="w-3 h-3" />
+                    <UIcon name="heroicons:clock" class="w-3 h-3" />
                     {{ video.duration }}
                   </span>
                 </div>
@@ -202,7 +202,7 @@ watch(() => video.value, (newVal) => {
                 <!-- Meta Info -->
                 <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 pb-6 border-b border-gray-200 dark:border-gray-700">
                   <div class="flex items-center gap-1">
-                    <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
+                    <UIcon name="heroicons:calendar" class="w-4 h-4" />
                     <span>{{ formatDate(video.created_at) }}</span>
                   </div>
 
@@ -222,7 +222,7 @@ watch(() => video.value, (newVal) => {
               <!-- Description -->
               <div v-if="video.description">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <UIcon name="i-heroicons-document-text" class="w-5 h-5 text-green-600" />
+                  <UIcon name="heroicons:document-text" class="w-5 h-5 text-green-600" />
                   Deskripsi Video
                 </h2>
                 
@@ -237,7 +237,7 @@ watch(() => video.value, (newVal) => {
           <div class="lg:col-span-1">
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 sticky top-8">
               <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                <UIcon name="i-heroicons-play-circle" class="w-5 h-5 text-green-600" />
+                <UIcon name="heroicons:play-circle" class="w-5 h-5 text-green-600" />
                 Video Terkait
               </h3>
               
@@ -266,13 +266,13 @@ watch(() => video.value, (newVal) => {
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div v-else class="w-full h-full flex items-center justify-center">
-                      <UIcon name="i-heroicons-video-camera" class="w-12 h-12 text-gray-400" />
+                      <UIcon name="heroicons:video-camera" class="w-12 h-12 text-gray-400" />
                     </div>
                     
                     <!-- Play Overlay -->
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                       <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
-                        <UIcon name="i-heroicons-play" class="w-5 h-5 text-white ml-0.5" />
+                        <UIcon name="heroicons:play" class="w-5 h-5 text-white ml-0.5" />
                       </div>
                     </div>
 
@@ -291,7 +291,7 @@ watch(() => video.value, (newVal) => {
 
               <!-- No Related Videos -->
               <div v-else class="text-center py-8">
-                <UIcon name="i-heroicons-video-camera-slash" class="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                <UIcon name="heroicons:video-camera-slash" class="w-12 h-12 text-gray-400 mx-auto mb-2" />
                 <p class="text-sm text-gray-500 dark:text-gray-400">Tidak ada video terkait</p>
               </div>
             </div>
@@ -302,7 +302,7 @@ watch(() => video.value, (newVal) => {
         <section v-if="relatedVideos.length > 3" class="mt-12">
           <div class="mb-8">
             <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-              <UIcon name="i-heroicons-play-circle" class="w-6 h-6 text-green-600" />
+              <UIcon name="heroicons:play-circle" class="w-6 h-6 text-green-600" />
               Lebih Banyak Video {{ formatCategory(video.category) }}
             </h2>
           </div>
@@ -324,7 +324,7 @@ watch(() => video.value, (newVal) => {
               class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-pink-700 hover:from-green-700 hover:to-pink-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
             >
               <span>Lihat Semua Video</span>
-              <UIcon name="i-lucide-arrow-right" class="w-4 h-4 transition-transform" />
+              <UIcon name="lucide:arrow-right" class="w-4 h-4 transition-transform" />
             </NuxtLink>
           </div>
         </section>

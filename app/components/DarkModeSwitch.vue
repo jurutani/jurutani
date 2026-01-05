@@ -11,8 +11,8 @@ const nextMode = () => {
 const isDark = computed(() => colorMode.value === 'dark')
 
 const icon = computed(() => {
-  if (colorMode.preference === 'system') return 'i-lucide-monitor'
-  return isDark.value ? 'i-lucide-moon' : 'i-lucide-sun'
+  if (colorMode.preference === 'system') return 'lucide:monitor'
+  return isDark.value ? 'lucide:moon' : 'lucide:sun'
 })
 </script>
 

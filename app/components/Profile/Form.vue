@@ -304,7 +304,7 @@ const formatWebsiteUrl = (url: string) => {
           >
           <div class="flex space-x-2">
             <UButton
-              color="blue"
+              color="success"
               variant="soft"
               size="sm"
               as="label"
@@ -315,7 +315,7 @@ const formatWebsiteUrl = (url: string) => {
             </UButton>
             <UButton
               v-if="imagePreview"
-              color="gray"
+              color="neutral"
               variant="soft"
               size="sm"
               type="button"
@@ -451,7 +451,7 @@ const formatWebsiteUrl = (url: string) => {
     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors">
       <UButton
         type="button"
-        color="gray"
+        color="neutral"
         variant="soft"
         :disabled="loading"
         @click="handleCancel"
@@ -460,11 +460,11 @@ const formatWebsiteUrl = (url: string) => {
       </UButton>
       <UButton
         type="submit"
-        color="blue"
+        color="success"
         variant="solid"
         :loading="loading"
         :disabled="loading || !isFormValid"
-        icon="i-lucide-save"
+        icon="lucide:save"
       >
         Simpan Perubahan
       </UButton>

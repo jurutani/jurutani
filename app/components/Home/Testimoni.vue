@@ -54,7 +54,7 @@ const testimonials = [...testimonialsBase, ...testimonialsBase, ...testimonialsB
       <div class="mx-auto mb-12 max-w-4xl text-center">
         <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
           <!-- Icon Testimoni -->
-        <UIcon name="i-lucide-message-square-more" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+        <UIcon name="lucide:message-square-more" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
           <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Apa Kata Mereka</span>
         </div>
 
@@ -101,7 +101,7 @@ const testimonials = [...testimonialsBase, ...testimonialsBase, ...testimonialsB
             <UIcon 
               v-for="star in testimonial.rating" 
               :key="star"
-              name="i-lucide-star"
+              name="lucide:star"
               class="w-4 h-4 text-yellow-400 fill-yellow-400"
             />
           </div>

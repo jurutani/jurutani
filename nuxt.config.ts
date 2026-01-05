@@ -26,11 +26,6 @@ export default defineNuxtConfig({
     headNext: true,
   },
 
-  icon: {
-    size: '24px',
-    collections: ['mdi', 'fa', 'fa-brands'],
-  },
-
   nitro: {
     preset: 'netlify-static',
     prerender: {
@@ -72,8 +67,19 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
 
-  ui: {
+  icon: {
+    size: '24px',
+    collections: [
+      'heroicons',
+      'lucide',
+      'ic',
+      'ph',
+      'logos',
+      'mdi',
+      'twemoji',
+    ],
   },
+
 
   critters: {
     config: {

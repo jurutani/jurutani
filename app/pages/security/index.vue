@@ -4,7 +4,7 @@
       <!-- Header Section -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 dark:bg-green-700 rounded-full mb-4 shadow-lg dark:shadow-green-900/50">
-          <UIcon name="i-heroicons-lock-closed" class="w-8 h-8 text-white" />
+          <UIcon name="heroicons:lock-closed" class="w-8 h-8 text-white" />
         </div>
         <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Ganti Password</h1>
         <p class="text-gray-600 dark:text-gray-400 text-sm">
@@ -19,7 +19,7 @@
             <!-- Password Strength Info -->
             <div class="bg-blue-50 dark:bg-blue-950 rounded-lg p-4 border-l-4 border-blue-400 dark:border-blue-600 transition-colors duration-200">
               <div class="flex items-start">
-                <UIcon name="i-heroicons-information-circle" class="w-5 h-5 text-blue-400 dark:text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
+                <UIcon name="heroicons:information-circle" class="w-5 h-5 text-blue-400 dark:text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
                 <div>
                   <p class="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">Tips Password Kuat</p>
                   <ul class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
@@ -38,7 +38,7 @@
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <UIcon name="i-heroicons-lock-closed" class="h-5 w-5 text-gray-400 dark:text-gray-600" />
+                  <UIcon name="heroicons:lock-closed" class="h-5 w-5 text-gray-400 dark:text-gray-600" />
                 </div>
                 <input
                   id="newPassword"
@@ -57,7 +57,7 @@
                   class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-200"
                   @click="showNewPassword = !showNewPassword"
                 >
-                  <UIcon :name="showNewPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" class="h-5 w-5" />
+                  <UIcon :name="showNewPassword ? 'heroicons:eye-slash' : 'heroicons:eye'" class="h-5 w-5" />
                 </button>
               </div>
               <!-- Password Strength Indicator -->
@@ -84,7 +84,7 @@
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <UIcon name="i-heroicons-lock-closed" class="h-5 w-5 text-gray-400 dark:text-gray-600" />
+                  <UIcon name="heroicons:lock-closed" class="h-5 w-5 text-gray-400 dark:text-gray-600" />
                 </div>
                 <input
                   id="confirmPassword"
@@ -107,13 +107,13 @@
                   class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-200"
                   @click="showConfirmPassword = !showConfirmPassword"
                 >
-                  <UIcon :name="showConfirmPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" class="h-5 w-5" />
+                  <UIcon :name="showConfirmPassword ? 'heroicons:eye-slash' : 'heroicons:eye'" class="h-5 w-5" />
                 </button>
               </div>
               <!-- Password Match Indicator -->
               <div v-if="confirmPassword" class="flex items-center mt-2">
                 <UIcon 
-                  :name="newPassword === confirmPassword ? 'i-heroicons-check-circle' : 'i-heroicons-x-circle'" 
+                  :name="newPassword === confirmPassword ? 'heroicons:check-circle' : 'heroicons:x-circle'" 
                   :class="newPassword === confirmPassword ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400'"
                   class="w-4 h-4 mr-2"
                 />
@@ -148,7 +148,7 @@
                 Memproses...
               </span>
               <span v-else class="flex items-center justify-center">
-                <UIcon name="i-heroicons-shield-check" class="w-5 h-5 mr-2" />
+                <UIcon name="heroicons:shield-check" class="w-5 h-5 mr-2" />
                 Simpan Password
               </span>
             </button>
@@ -163,11 +163,11 @@
               class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 flex items-center"
               @click="$router.back()"
             >
-              <UIcon name="i-heroicons-arrow-left" class="w-4 h-4 mr-1" />
+              <UIcon name="heroicons:arrow-left" class="w-4 h-4 mr-1" />
               Kembali
             </button>
             <div class="flex items-center text-gray-500 dark:text-gray-400">
-              <UIcon name="i-heroicons-shield-check" class="w-4 h-4 mr-1" />
+              <UIcon name="heroicons:shield-check" class="w-4 h-4 mr-1" />
               <span>Enkripsi 256-bit</span>
             </div>
           </div>

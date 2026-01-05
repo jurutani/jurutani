@@ -195,7 +195,7 @@ onMounted(async () => {
             v-model="state.title"
             placeholder="Masukkan judul berita"
             size="lg"
-            icon="i-heroicons-chat-bubble-bottom-center-text"
+            icon="heroicons:chat-bubble-bottom-center-text"
           />
         </UFormField>
     
@@ -216,7 +216,7 @@ onMounted(async () => {
               :items="categoryItems"
               placeholder="Pilih kategori"
               size="lg"
-              icon="i-heroicons-tag"
+              icon="heroicons:tag"
             />
           </UFormField>
 
@@ -226,7 +226,7 @@ onMounted(async () => {
               v-model="state.link"
               placeholder="https://contoh.com/artikel (opsional)"
               size="lg"
-              icon="i-heroicons-link"
+              icon="heroicons:link"
             />
           </UFormField>
         </div>
@@ -279,7 +279,7 @@ onMounted(async () => {
           :disabled="isSubmitting"
           @click="handleCancel"
         >
-          <UIcon name="i-heroicons-x-mark" class="mr-1" />
+          <UIcon name="heroicons:x-mark" class="mr-1" />
           Batal
         </UButton>
         <UButton
@@ -289,7 +289,7 @@ onMounted(async () => {
           :loading="isSubmitting"
           form="news-form"
         >
-          <UIcon name="i-heroicons-check" class="mr-1" />
+          <UIcon name="heroicons:check" class="mr-1" />
           Simpan Berita
         </UButton>
       </div>

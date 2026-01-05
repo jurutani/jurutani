@@ -56,7 +56,7 @@ const clearSearch = () => {
     <div class="relative group">
       <!-- Search Icon -->
       <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-green-500 transition-colors duration-200">
-        <UIcon name="i-heroicons-magnifying-glass" class="w-5 h-5" />
+        <UIcon name="heroicons:magnifying-glass" class="w-5 h-5" />
       </div>
       
       <!-- Input Field -->
@@ -75,7 +75,7 @@ const clearSearch = () => {
         class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
         @click="clearSearch"
       >
-        <UIcon name="i-heroicons-x-mark" class="w-5 h-5" />
+        <UIcon name="heroicons:x-mark" class="w-5 h-5" />
       </button>
     </div>
     

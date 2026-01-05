@@ -76,11 +76,11 @@ const weatherIconClass = computed(() => {
         <!-- Location Info -->
         <div class="flex-1">
           <div class="inline-flex items-center gap-2 mb-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
-            <UIcon name="i-heroicons-map-pin" class="w-4 h-4 text-green-300" />
+            <UIcon name="heroicons:map-pin" class="w-4 h-4 text-green-300" />
             <span class="text-sm font-medium text-white/90">{{ weatherData.name }}, {{ weatherData.sys.country }}</span>
           </div>
           <p class="text-white/70 text-xs md:text-sm flex items-center gap-2 ml-1">
-            <UIcon name="i-heroicons-clock" class="w-3.5 h-3.5" />
+            <UIcon name="heroicons:clock" class="w-3.5 h-3.5" />
             {{ currentLocalTime }}
           </p>
         </div>
@@ -107,7 +107,7 @@ const weatherIconClass = computed(() => {
         <!-- Feels Like -->
         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-3 md:p-4 border border-white/20 transition-all duration-300 hover:bg-white/15 hover:scale-105">
           <div class="flex items-center gap-2 mb-1">
-            <UIcon name="i-heroicons-hand-raised" class="w-4 h-4 text-orange-300" />
+            <UIcon name="heroicons:hand-raised" class="w-4 h-4 text-orange-300" />
             <span class="text-xs text-white/70">Terasa</span>
           </div>
           <p class="text-lg md:text-xl font-bold text-white">{{ Math.round(weatherData.main.feels_like) }}°</p>
@@ -116,7 +116,7 @@ const weatherIconClass = computed(() => {
         <!-- Min/Max Temperature -->
         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-3 md:p-4 border border-white/20 transition-all duration-300 hover:bg-white/15 hover:scale-105">
           <div class="flex items-center gap-2 mb-1">
-            <UIcon name="i-heroicons-arrow-trending-up" class="w-4 h-4 text-blue-300" />
+            <UIcon name="heroicons:arrow-trending-up" class="w-4 h-4 text-blue-300" />
             <span class="text-xs text-white/70">Min/Max</span>
           </div>
           <p class="text-base md:text-lg font-bold text-white">

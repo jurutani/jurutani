@@ -164,7 +164,7 @@ const contentClasses = computed(() => {
         class="w-full h-full bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center"
       >
         <div class="text-center text-green-400 dark:text-gray-600">
-          <UIcon name="i-heroicons-shopping-bag" class="w-20 h-20 mb-3 opacity-50" />
+          <UIcon name="heroicons:shopping-bag" class="w-20 h-20 mb-3 opacity-50" />
           <p class="text-sm font-medium opacity-75">Produk Tani</p>
         </div>
       </div>
@@ -186,7 +186,7 @@ const contentClasses = computed(() => {
             'inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl'
           ]"
         >
-          <UIcon name="i-heroicons-tag" class="w-3 h-3" />
+          <UIcon name="heroicons:tag" class="w-3 h-3" />
           {{ product.category }}
         </span>
       </div>
@@ -194,7 +194,7 @@ const contentClasses = computed(() => {
       <!-- Stock Badge (if available) -->
       <div v-if="product.stock" class="absolute top-4 right-4 md:top-6 md:right-6">
         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
-          <UIcon name="i-heroicons-cube" class="w-3 h-3 text-green-600" />
+          <UIcon name="heroicons:cube" class="w-3 h-3 text-green-600" />
           Stok: {{ product.stock }}
         </span>
       </div>
@@ -240,11 +240,11 @@ const contentClasses = computed(() => {
         <!-- Meta Info -->
         <div class="flex items-center gap-4 text-xs md:text-sm text-gray-300">
           <div v-if="product.seller || product.profiles?.name" class="flex items-center gap-2">
-            <UIcon name="i-heroicons-user" class="w-4 h-4 text-green-400" />
+            <UIcon name="heroicons:user" class="w-4 h-4 text-green-400" />
             <span class="font-medium">{{ product.seller || product.profiles?.full_name || product.profiles?.name }}</span>
           </div>
           <div v-if="product.location" class="flex items-center gap-2">
-            <UIcon name="i-heroicons-map-pin" class="w-4 h-4 text-green-400" />
+            <UIcon name="heroicons:map-pin" class="w-4 h-4 text-green-400" />
             <span>{{ product.location }}</span>
           </div>
         </div>
@@ -252,15 +252,15 @@ const contentClasses = computed(() => {
         <!-- E-commerce Badges -->
         <div v-if="product.links?.shopee_link || product.links?.tokopedia_link || product.links?.tiktok_link" class="flex flex-wrap gap-2">
           <span v-if="product.links?.shopee_link" class="inline-flex items-center gap-1 px-2 py-1 bg-orange-500/80 text-white text-xs font-medium rounded-full backdrop-blur-sm">
-            <UIcon name="i-heroicons-shopping-bag" class="w-3 h-3" />
+            <UIcon name="heroicons:shopping-bag" class="w-3 h-3" />
             Shopee
           </span>
           <span v-if="product.links?.tokopedia_link" class="inline-flex items-center gap-1 px-2 py-1 bg-green-500/80 text-white text-xs font-medium rounded-full backdrop-blur-sm">
-            <UIcon name="i-heroicons-shopping-cart" class="w-3 h-3" />
+            <UIcon name="heroicons:shopping-cart" class="w-3 h-3" />
             Tokopedia
           </span>
           <span v-if="product.links?.tiktok_link" class="inline-flex items-center gap-1 px-2 py-1 bg-gray-900/80 text-white text-xs font-medium rounded-full backdrop-blur-sm">
-            <UIcon name="i-heroicons-musical-note" class="w-3 h-3" />
+            <UIcon name="heroicons:musical-note" class="w-3 h-3" />
             TikTok
           </span>
         </div>
@@ -269,7 +269,7 @@ const contentClasses = computed(() => {
         <div class="flex items-center gap-2 text-white font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
           <span class="text-sm md:text-base">Lihat Detail Produk</span>
           <UIcon 
-            name="i-heroicons-arrow-right" 
+            name="heroicons:arrow-right" 
             class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" 
           />
         </div>

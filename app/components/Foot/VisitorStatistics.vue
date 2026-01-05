@@ -152,14 +152,14 @@ onMounted(async () => {
   ])
 
   stats.value = [
-    { label: 'Pengunjung Hari Ini', value: stat.today.toLocaleString(), icon: 'i-mdi-account-clock' },
-    { label: 'Pengunjung Kemarin', value: stat.yesterday.toLocaleString(), icon: 'i-mdi-account-outline' },
-    { label: 'Bulan Ini', value: stat.thisMonth.toLocaleString(), icon: 'i-mdi-calendar-month' },
-    { label: 'Tahun Ini', value: stat.thisYear.toLocaleString(), icon: 'i-mdi-calendar' },
-    { label: 'Total Pengunjung', value: stat.total.toLocaleString(), icon: 'i-mdi-chart-line' },
-    { label: 'Total Pengguna', value: stat.totalUsers.toLocaleString(), icon: 'i-mdi-account-group' },
-    { label: 'Sedang Online', value: onlineUsersCount, icon: 'i-mdi-account-multiple' },
-    { label: 'Alamat IP Anda', value: ip, icon: 'i-mdi-ip-network' }
+    { label: 'Pengunjung Hari Ini', value: stat.today.toLocaleString(), icon: 'mdi:account-clock' },
+    { label: 'Pengunjung Kemarin', value: stat.yesterday.toLocaleString(), icon: 'mdi:account-outline' },
+    { label: 'Bulan Ini', value: stat.thisMonth.toLocaleString(), icon: 'mdi:calendar-month' },
+    { label: 'Tahun Ini', value: stat.thisYear.toLocaleString(), icon: 'mdi:calendar' },
+    { label: 'Total Pengunjung', value: stat.total.toLocaleString(), icon: 'mdi:chart-line' },
+    { label: 'Total Pengguna', value: stat.totalUsers.toLocaleString(), icon: 'mdi:account-group' },
+    { label: 'Sedang Online', value: onlineUsersCount, icon: 'mdi:account-multiple' },
+    { label: 'Alamat IP Anda', value: ip, icon: 'mdi:ip-network' }
   ]
 })
 

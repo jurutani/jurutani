@@ -33,7 +33,7 @@ const handleClear = () => {
     <UInput
       v-model="searchValue"
       :placeholder="placeholder"
-      icon="i-heroicons-magnifying-glass"
+      icon="heroicons:magnifying-glass"
       size="lg"
       color="success"
       variant="outline"

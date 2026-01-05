@@ -133,7 +133,7 @@ const cardClasses = computed(() => {
         v-else 
         class="w-full h-full bg-gradient-to-br from-green-900 to-emerald-900 flex items-center justify-center"
       >
-        <UIcon name="i-heroicons-play-circle" class="w-20 h-20 text-white/50" />
+        <UIcon name="heroicons:play-circle" class="w-20 h-20 text-white/50" />
       </div>
       
       <!-- Gradient Overlay -->
@@ -142,7 +142,7 @@ const cardClasses = computed(() => {
       <!-- Play Button Overlay -->
       <div class="absolute inset-0 flex items-center justify-center">
         <div class="w-16 h-16 md:w-20 md:h-20 bg-white/90 dark:bg-gray-800/90 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-2xl">
-          <UIcon name="i-heroicons-play" class="w-8 h-8 md:w-10 md:h-10 text-green-600 dark:text-green-400 ml-1" />
+          <UIcon name="heroicons:play" class="w-8 h-8 md:w-10 md:h-10 text-green-600 dark:text-green-400 ml-1" />
         </div>
       </div>
       
@@ -154,7 +154,7 @@ const cardClasses = computed(() => {
             'inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm'
           ]"
         >
-          <UIcon name="i-heroicons-academic-cap" class="w-3 h-3" />
+          <UIcon name="heroicons:academic-cap" class="w-3 h-3" />
           {{ course.category || 'Edukasi' }}
         </span>
       </div>
@@ -162,7 +162,7 @@ const cardClasses = computed(() => {
       <!-- Duration Badge -->
       <div v-if="course.duration" class="absolute top-4 right-4">
         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/70 text-white text-xs font-bold rounded-full backdrop-blur-sm">
-          <UIcon name="i-heroicons-clock" class="w-3 h-3" />
+          <UIcon name="heroicons:clock" class="w-3 h-3" />
           {{ course.duration }}
         </span>
       </div>
@@ -191,14 +191,14 @@ const cardClasses = computed(() => {
       <!-- Meta Info -->
       <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
         <div v-if="course.instructor" class="flex items-center gap-2">
-          <UIcon name="i-heroicons-user" class="w-4 h-4 text-green-600 dark:text-green-400" />
+          <UIcon name="heroicons:user" class="w-4 h-4 text-green-600 dark:text-green-400" />
           <span class="font-medium">{{ course.instructor }}</span>
         </div>
         
         <div class="flex items-center gap-1 ml-auto">
           <span class="text-xs">Tonton Sekarang</span>
           <UIcon 
-            name="i-heroicons-arrow-right" 
+            name="heroicons:arrow-right" 
             class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
           />
         </div>

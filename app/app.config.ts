@@ -30,8 +30,8 @@ export default defineAppConfig({
 
     // Icons configuration
     icons: {
-      loading: 'i-heroicons-arrow-path-20-solid',
-      search: 'i-heroicons-magnifying-glass-20-solid',
+      loading: 'heroicons:arrow-path-20-solid',
+      search: 'heroicons:magnifying-glass-20-solid',
     },
 
     // Notification/Toast configuration

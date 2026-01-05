@@ -21,7 +21,7 @@ const props = defineProps<{
         <div class="glass-card group">
           <div class="flex items-center gap-2 mb-3">
             <div class="icon-wrapper bg-blue-500/10">
-              <UIcon name="i-ic-baseline-water-drop" class="w-5 h-5 text-blue-500" />
+              <UIcon name="ic:baseline-water-drop" class="w-5 h-5 text-blue-500" />
             </div>
             <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Kelembaban</span>
           </div>
@@ -32,7 +32,7 @@ const props = defineProps<{
         <div class="glass-card group">
           <div class="flex items-center gap-2 mb-3">
             <div class="icon-wrapper bg-cyan-500/10">
-              <UIcon name="i-ic-baseline-air" class="w-5 h-5 text-cyan-500" />
+              <UIcon name="ic:baseline-air" class="w-5 h-5 text-cyan-500" />
             </div>
             <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Angin</span>
           </div>
@@ -44,7 +44,7 @@ const props = defineProps<{
         <div class="glass-card group">
           <div class="flex items-center gap-2 mb-3">
             <div class="icon-wrapper bg-orange-500/10">
-              <UIcon name="i-ic-baseline-wb-sunny" class="w-5 h-5 text-orange-500 transition-transform group-hover:rotate-180 duration-500" />
+              <UIcon name="ic:baseline-wb-sunny" class="w-5 h-5 text-orange-500 transition-transform group-hover:rotate-180 duration-500" />
             </div>
             <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Terbit</span>
           </div>
@@ -55,7 +55,7 @@ const props = defineProps<{
         <div class="glass-card group">
           <div class="flex items-center gap-2 mb-3">
             <div class="icon-wrapper bg-red-500/10">
-              <UIcon name="i-ic-baseline-wb-twilight" class="w-5 h-5 text-red-500" />
+              <UIcon name="ic:baseline-wb-twilight" class="w-5 h-5 text-red-500" />
             </div>
             <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Terbenam</span>
           </div>
@@ -66,7 +66,7 @@ const props = defineProps<{
         <div class="glass-card group">
           <div class="flex items-center gap-2 mb-3">
             <div class="icon-wrapper bg-purple-500/10">
-              <UIcon name="i-ic-baseline-visibility" class="w-5 h-5 text-purple-500" />
+              <UIcon name="ic:baseline-visibility" class="w-5 h-5 text-purple-500" />
             </div>
             <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Pandang</span>
           </div>
@@ -77,7 +77,7 @@ const props = defineProps<{
         <div class="glass-card group">
           <div class="flex items-center gap-2 mb-3">
             <div class="icon-wrapper bg-indigo-500/10">
-              <UIcon name="i-ic-baseline-speed" class="w-5 h-5 text-indigo-500" />
+              <UIcon name="ic:baseline-speed" class="w-5 h-5 text-indigo-500" />
             </div>
             <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Tekanan</span>
           </div>
@@ -90,7 +90,7 @@ const props = defineProps<{
       <div v-if="farmingConditions" class="glass-card-large group">
         <div class="flex items-center gap-3 mb-6">
           <div class="icon-wrapper-large bg-gradient-to-br from-green-500 to-emerald-500">
-            <UIcon name="i-ic-baseline-agriculture" class="w-7 h-7 text-slate-900 dark:text-slate-200" />
+            <UIcon name="ic:baseline-agriculture" class="w-7 h-7 text-slate-900 dark:text-slate-200" />
           </div>
           <h3 class="text-xl font-bold text-slate-900 dark:text-white">Rekomendasi Pertanian</h3>
         </div>
@@ -112,7 +112,7 @@ const props = defineProps<{
                 : 'bg-yellow-500/20'
             ]">
               <UIcon
-                :name="farmingConditions.suitable ? 'i-ic-baseline-check-circle' : 'i-ic-baseline-warning'"
+                :name="farmingConditions.suitable ? 'ic:baseline-check-circle' : 'ic:baseline-warning'"
                 :class="[
                   'w-6 h-6',
                   farmingConditions.suitable ? 'text-green-600 dark:text-green-300' : 'text-yellow-600 dark:text-yellow-300'
@@ -136,7 +136,7 @@ const props = defineProps<{
             class="recommendation-card"
           >
             <div class="icon-wrapper-small bg-green-500/20 dark:bg-green-500/10 flex-shrink-0">
-              <UIcon name="i-ic-baseline-check" class="w-4 h-4 text-green-600 dark:text-green-300" />
+              <UIcon name="ic:baseline-check" class="w-4 h-4 text-green-600 dark:text-green-300" />
             </div>
             <span class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">{{ rec }}</span>
           </div>

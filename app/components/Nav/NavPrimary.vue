@@ -108,7 +108,7 @@ const getDropdownItems = (children: any[]): DropdownMenuItem[][] => {
           <UButton
             variant="ghost"
             color="primary"
-            trailing-icon="i-heroicons-chevron-down-20-solid"
+            trailing-icon="heroicons:chevron-down-20-solid"
             class="font-medium hover:bg-green-50 dark:hover:bg-green-900/30"
             :aria-label="`${nav.title} menu`"
           >

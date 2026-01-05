@@ -156,7 +156,7 @@ watch(() => expert.value, (newVal) => {
     <!-- Error State -->
     <UAlert
       v-else-if="error"
-      icon="i-lucide-alert-circle"
+      icon="lucide:alert-circle"
       color="error"
       title="Error"
       :description="error.message"
@@ -208,7 +208,7 @@ watch(() => expert.value, (newVal) => {
                 loading="lazy"
               />
               <div class="absolute -bottom-2 -right-2 bg-green-500 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center">
-                <UIcon name="i-lucide-check" class="w-4 h-4 text-white" />
+                <UIcon name="lucide:check" class="w-4 h-4 text-white" />
               </div>
             </div>
 
@@ -223,15 +223,15 @@ watch(() => expert.value, (newVal) => {
                 </p>
                 <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                   <span v-if="age" class="flex items-center gap-1.5">
-                    <UIcon name="i-lucide-calendar" class="w-4 h-4" />
+                    <UIcon name="lucide:calendar" class="w-4 h-4" />
                     {{ age }} tahun
                   </span>
                   <span v-if="expert.provinces" class="flex items-center gap-1.5">
-                    <UIcon name="i-lucide-map-pin" class="w-4 h-4" />
+                    <UIcon name="lucide:map-pin" class="w-4 h-4" />
                     {{ expert.district }}, {{ expert.provinces }}
                   </span>
                   <span class="flex items-center gap-1.5 text-green-600 dark:text-green-400">
-                    <UIcon name="i-lucide-badge-check" class="w-4 h-4" />
+                    <UIcon name="lucide:badge-check" class="w-4 h-4" />
                     Terverifikasi
                   </span>
                 </div>
@@ -241,7 +241,7 @@ watch(() => expert.value, (newVal) => {
               <UButton
                 :loading="creatingConversation"
                 :disabled="creatingConversation"
-                icon="i-lucide-message-circle"
+                icon="lucide:message-circle"
                 size="lg"
                 color="success"
                 label="Konsultasi Sekarang"
@@ -261,7 +261,7 @@ watch(() => expert.value, (newVal) => {
             <template #header>
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
-                  <UIcon name="i-lucide-info" class="w-6 h-6 text-green-600 dark:text-green-400" />
+                  <UIcon name="lucide:info" class="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Tentang Pakar</h2>
               </div>
@@ -282,7 +282,7 @@ watch(() => expert.value, (newVal) => {
             <template #header>
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
-                  <UIcon name="i-lucide-lightbulb" class="w-6 h-6 text-green-600 dark:text-green-400" />
+                  <UIcon name="lucide:lightbulb" class="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Keahlian & Spesialisasi</h3>
               </div>
@@ -301,7 +301,7 @@ watch(() => expert.value, (newVal) => {
             <template #header>
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                  <UIcon name="i-lucide-mail" class="w-5 h-5 text-green-600 dark:text-green-400" />
+                  <UIcon name="lucide:mail" class="w-5 h-5 text-green-600 dark:text-green-400" />
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">Kontak</h3>
               </div>
@@ -309,7 +309,7 @@ watch(() => expert.value, (newVal) => {
 
             <div class="space-y-4">
               <div v-if="expert.profiles?.phone" class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <UIcon name="i-lucide-phone" class="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                <UIcon name="lucide:phone" class="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
                 <div>
                   <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">Telepon</p>
                   <p class="text-sm text-gray-800 dark:text-gray-200 font-medium">{{ expert.profiles.phone }}</p>
@@ -317,7 +317,7 @@ watch(() => expert.value, (newVal) => {
               </div>
 
               <div v-if="expert.profiles?.website" class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <UIcon name="i-lucide-globe" class="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                <UIcon name="lucide:globe" class="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
                 <div class="min-w-0 flex-1">
                   <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">Website</p>
                   <NuxtLink
@@ -331,7 +331,7 @@ watch(() => expert.value, (newVal) => {
               </div>
 
               <div class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                <UIcon name="i-lucide-at-sign" class="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                <UIcon name="lucide:at-sign" class="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
                 <div>
                   <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">Username</p>
                   <p class="text-sm text-gray-800 dark:text-gray-200 font-medium">@{{ expert.profiles?.username }}</p>
@@ -347,7 +347,7 @@ watch(() => expert.value, (newVal) => {
             <template #header>
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-emerald-100 dark:bg-emerald-900 rounded-lg flex items-center justify-center">
-                  <UIcon name="i-lucide-map-pin" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  <UIcon name="lucide:map-pin" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">Lokasi</h3>
               </div>
@@ -367,7 +367,7 @@ watch(() => expert.value, (newVal) => {
           >
             <div class="text-center">
               <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <UIcon name="i-lucide-star" class="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+                <UIcon name="lucide:star" class="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
               </div>
               <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Pakar Terverifikasi</h4>
               <p class="text-sm text-gray-600 dark:text-gray-400">Telah melewati proses verifikasi dan memiliki kredibilitas tinggi di bidang pertanian</p>
@@ -381,12 +381,12 @@ watch(() => expert.value, (newVal) => {
     <div v-else class="max-w-4xl mx-auto py-20 text-center">
       <UCard class="dark:bg-gray-900 dark:border-gray-800">
         <div class="flex flex-col items-center">
-          <UIcon name="i-lucide-search-x" class="w-24 h-24 text-gray-300 dark:text-gray-700 mb-6" />
+          <UIcon name="lucide:search-x" class="w-24 h-24 text-gray-300 dark:text-gray-700 mb-6" />
           <h2 class="text-3xl font-bold text-gray-700 dark:text-gray-300 mb-4">Pakar Tidak Ditemukan</h2>
           <p class="text-gray-500 dark:text-gray-400 text-lg mb-6">Maaf, pakar yang Anda cari tidak tersedia atau mungkin sudah tidak aktif.</p>
           <UButton
             to="/discussions/expert"
-            icon="i-lucide-arrow-left"
+            icon="lucide:arrow-left"
             color="success"
             label="Kembali ke Daftar Pakar"
           />

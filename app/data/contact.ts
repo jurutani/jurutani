@@ -7,21 +7,21 @@ import type { ContactInfo, FaqItem } from './types'
 
 export const contactInfo: ContactInfo[] = [
     {
-        icon: 'i-lucide-phone',
+        icon: 'lucide:phone',
         title: 'Telepon kami',
         description: 'Layanan Panggilan Juru Tani tersedia di hari Senin - Jumat. Jam layanan: 09.00 - 16.00 WIB',
         value: '+62 815 7552 5260',
         link: 'tel:+6281575525260'
     },
     {
-        icon: 'i-lucide-mail',
+        icon: 'lucide:mail',
         title: 'Email kami',
         description: 'Kirimi kami pesan email dan segera Tim Juru Tani akan memberikan respon secepatnya.',
         value: 'si.jurutani@gmail.com',
         link: 'mailto:si.jurutani@gmail.com'
     },
     {
-        icon: 'i-lucide-map-pin',
+        icon: 'lucide:map-pin',
         title: 'Lokasi kami',
         description: 'Mari datang dan berdiskusi dengan tim Juru Tani secara langsung.',
         value: 'Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo, Kota Yogyakarta, Daerah Istimewa Yogyakarta 55167',

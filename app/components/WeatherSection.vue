@@ -231,7 +231,7 @@ onMounted(() => {
               ]"
               @click="activeTab = 'current'"
             >
-              <UIcon name="i-ic-baseline-wb-sunny" class="w-4 h-4 sm:mr-2" />
+              <UIcon name="ic:baseline-wb-sunny" class="w-4 h-4 sm:mr-2" />
               <span class="hidden sm:inline">Cuaca Saat Ini</span>
             </button>
             <button
@@ -241,7 +241,7 @@ onMounted(() => {
               ]"
               @click="activeTab = 'hourly'"
             >
-              <UIcon name="i-ic-baseline-access-time" class="w-4 h-4 sm:mr-2" />
+              <UIcon name="ic:baseline-access-time" class="w-4 h-4 sm:mr-2" />
               <span class="hidden sm:inline">Ramalan 24 Jam</span>
             </button>
             <button
@@ -251,7 +251,7 @@ onMounted(() => {
               ]"
               @click="activeTab = 'forecast'"
             >
-              <UIcon name="i-ic-baseline-date-range" class="w-4 h-4 sm:mr-2" />
+              <UIcon name="ic:baseline-date-range" class="w-4 h-4 sm:mr-2" />
               <span class="hidden sm:inline">Ramalan 5 Hari</span>
             </button>
           </nav>

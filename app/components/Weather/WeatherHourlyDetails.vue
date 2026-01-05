@@ -14,7 +14,7 @@ const props = defineProps<{
       <div class="glass-card-container">
         <div class="flex items-center gap-3 mb-6">
           <div class="icon-wrapper-header bg-gradient-to-br from-green-500/20 to-green-500/20">
-            <UIcon name="i-ic-baseline-access-time" class="w-7 h-7 text-green-600 dark:text-green-400" />
+            <UIcon name="ic:baseline-access-time" class="w-7 h-7 text-green-600 dark:text-green-400" />
           </div>
           <h3 class="text-xl font-bold text-gray-900 dark:text-white">Ramalan 24 Jam Kedepan</h3>
         </div>
@@ -37,16 +37,16 @@ const props = defineProps<{
               </div>
               <p class="text-2xl font-bold text-gray-900 dark:text-white mb-2">{{ Math.round(hour.main.temp) }}°</p>
               <div class="rain-badge">
-                <UIcon name="i-heroicons-cloud-arrow-down" class="w-3.5 h-3.5" />
+                <UIcon name="heroicons:cloud-arrow-down" class="w-3.5 h-3.5" />
                 <span>{{ Math.round(hour.pop * 100) }}%</span>
               </div>
               <div class="stats-divider">
                 <div class="stat-item">
-                  <UIcon name="i-heroicons-wind" class="w-3.5 h-3.5 text-cyan-500" />
+                  <UIcon name="heroicons:wind" class="w-3.5 h-3.5 text-cyan-500" />
                   <span>{{ hour.wind.speed.toFixed(1) }} m/s</span>
                 </div>
                 <div class="stat-item">
-                  <UIcon name="i-heroicons-beaker" class="w-3.5 h-3.5 text-blue-500" />
+                  <UIcon name="heroicons:beaker" class="w-3.5 h-3.5 text-blue-500" />
                   <span>{{ hour.main.humidity }}%</span>
                 </div>
               </div>

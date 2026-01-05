@@ -238,14 +238,14 @@ watch(() => course.value, (newVal) => {
           <UButton
             color="success"
             variant="ghost"
-            icon="i-lucide-arrow-left"
+            icon="lucide:arrow-left"
             @click="handleGoBack"
           >
             Kembali ke Edukasi
           </UButton>
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <UIcon name="i-heroicons-academic-cap" class="w-5 h-5" />
+            <UIcon name="heroicons:academic-cap" class="w-5 h-5" />
             <span class="font-semibold">Edukasi Jurutani</span>
           </div>
         </div>
@@ -269,7 +269,7 @@ watch(() => course.value, (newVal) => {
           />
           <div v-else class="flex items-center justify-center h-full">
             <div class="text-center text-green-600 dark:text-green-400">
-              <UIcon name="i-heroicons-book-open" class="w-16 h-16 mx-auto mb-2 opacity-50" />
+              <UIcon name="heroicons:book-open" class="w-16 h-16 mx-auto mb-2 opacity-50" />
               <p class="text-sm opacity-75">Tidak ada gambar</p>
             </div>
           </div>
@@ -277,7 +277,7 @@ watch(() => course.value, (newVal) => {
           <!-- Category Badge -->
           <div class="absolute top-4 right-4">
             <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm font-medium rounded-full shadow-sm">
-              <UIcon name="i-heroicons-tag" class="w-3 h-3" />
+              <UIcon name="heroicons:tag" class="w-3 h-3" />
               {{ formatCategory(course.category) }}
             </span>
           </div>
@@ -293,17 +293,17 @@ watch(() => course.value, (newVal) => {
           <!-- Meta Information -->
           <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
             <div v-if="course.instructor" class="flex items-center gap-1">
-              <UIcon name="i-heroicons-user" class="w-4 h-4" />
+              <UIcon name="heroicons:user" class="w-4 h-4" />
               <span>{{ course.instructor }}</span>
             </div>
             
             <div class="flex items-center gap-1">
-              <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
+              <UIcon name="heroicons:calendar" class="w-4 h-4" />
               <span>{{ formatDate(course.created_at) }}</span>
             </div>
 
             <div v-if="course.duration" class="flex items-center gap-1">
-              <UIcon name="i-heroicons-clock" class="w-4 h-4" />
+              <UIcon name="heroicons:clock" class="w-4 h-4" />
               <span>{{ course.duration }}</span>
             </div>
             
@@ -328,7 +328,7 @@ watch(() => course.value, (newVal) => {
           
           <div v-else class="text-center py-8 mb-8">
             <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-              <UIcon name="i-heroicons-document-text" class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+              <UIcon name="heroicons:document-text" class="w-8 h-8 text-gray-400 dark:text-gray-500" />
             </div>
             <p class="text-gray-500 dark:text-gray-400 font-medium">Deskripsi belum tersedia</p>
           </div>
@@ -336,7 +336,7 @@ watch(() => course.value, (newVal) => {
           <!-- Video Player -->
           <div v-if="youtubeEmbedUrl" class="mb-8">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              <UIcon name="i-heroicons-play-circle" class="w-5 h-5 text-green-600" />
+              <UIcon name="heroicons:play-circle" class="w-5 h-5 text-green-600" />
               Video Pembelajaran
             </h3>
             <div class="relative aspect-video bg-gray-900 rounded-xl overflow-hidden">
@@ -353,7 +353,7 @@ watch(() => course.value, (newVal) => {
           <!-- Resources Section -->
           <div v-if="hasResources" class="mt-8 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-              <UIcon name="i-heroicons-folder-open" class="w-5 h-5 text-green-600" />
+              <UIcon name="heroicons:folder-open" class="w-5 h-5 text-green-600" />
               Sumber Pembelajaran
             </h3>
             
@@ -362,7 +362,7 @@ watch(() => course.value, (newVal) => {
               <div v-if="hasFiles">
                 <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
                   <div class="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-md flex items-center justify-center mr-2">
-                    <UIcon name="i-heroicons-document-text" class="w-4 h-4 text-green-800 dark:text-green-400" />
+                    <UIcon name="heroicons:document-text" class="w-4 h-4 text-green-800 dark:text-green-400" />
                   </div>
                   Materi & Dokumen
                 </h4>
@@ -376,11 +376,11 @@ watch(() => course.value, (newVal) => {
                   >
                     <div class="flex items-center">
                       <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
-                        <UIcon name="i-heroicons-arrow-down-tray" class="w-5 h-5 text-green-800 dark:text-green-400" />
+                        <UIcon name="heroicons:arrow-down-tray" class="w-5 h-5 text-green-800 dark:text-green-400" />
                       </div>
                       <span class="font-medium text-left text-sm">{{ file.name || `Dokumen ${index + 1}` }}</span>
                     </div>
-                    <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <UIcon name="heroicons:arrow-top-right-on-square" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
                 </div>
               </div>
@@ -389,7 +389,7 @@ watch(() => course.value, (newVal) => {
               <div v-if="hasLinks">
                 <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
                   <div class="w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-md flex items-center justify-center mr-2">
-                    <UIcon name="i-heroicons-link" class="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <UIcon name="heroicons:link" class="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </div>
                   Link Pembelajaran
                 </h4>
@@ -403,14 +403,14 @@ watch(() => course.value, (newVal) => {
                   >
                     <div class="flex items-center">
                       <div class="w-10 h-10 bg-green-100 dark:bg-green-800 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
-                        <UIcon name="i-heroicons-folder" class="w-5 h-5 text-green-800 dark:text-green-400" />
+                        <UIcon name="heroicons:folder" class="w-5 h-5 text-green-800 dark:text-green-400" />
                       </div>
                       <div class="text-left">
                         <p class="font-semibold text-sm">Google Drive</p>
                         <p class="text-xs opacity-75">Akses file tambahan</p>
                       </div>
                     </div>
-                    <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <UIcon name="heroicons:arrow-top-right-on-square" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
                 </div>
               </div>
@@ -450,7 +450,7 @@ watch(() => course.value, (newVal) => {
             class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
           >
             <span>Lihat Semua Materi</span>
-            <UIcon name="i-lucide-arrow-right" class="w-4 h-4 transition-transform" />
+            <UIcon name="lucide:arrow-right" class="w-4 h-4 transition-transform" />
           </NuxtLink>
         </div>
       </section>

@@ -48,7 +48,7 @@ const { getBadgeColor, getBadgeName, getBadgeDescription, isExpertRole } = useUs
           <!-- Expert Indicator -->
           <UIcon 
             v-if="isExpertRole(user.role)"
-            name="i-heroicons-check-badge-solid"
+            name="heroicons:check-badge-solid"
             class="w-5 h-5 text-green-500"
             title="Verified Expert"
           />

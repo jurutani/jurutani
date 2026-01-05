@@ -95,7 +95,7 @@ const handleReload = () => window.location.reload()
           @click="handleClearError"
           size="lg"
           color="primary"
-          icon="i-lucide-home"
+          icon="lucide:home"
         >
           Kembali ke Beranda
         </UButton>
@@ -105,7 +105,7 @@ const handleReload = () => window.location.reload()
           size="lg"
           color="neutral"
           variant="outline"
-          icon="i-lucide-refresh-cw"
+          icon="lucide:refresh-cw"
         >
           Muat Ulang Halaman
         </UButton>

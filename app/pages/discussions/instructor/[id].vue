@@ -155,7 +155,7 @@ watch(() => instructor.value, (newVal) => {
     <!-- Error State -->
     <UAlert
       v-else-if="error"
-      icon="i-lucide-alert-circle"
+      icon="lucide:alert-circle"
       color="error"
       title="Error"
       :description="error.message"
@@ -204,7 +204,7 @@ watch(() => instructor.value, (newVal) => {
                     variant="outline"
                     class="dark:border-green-600"
                   >
-                    <UIcon name="i-lucide-calendar" class="w-4 h-4 mr-1" />
+                    <UIcon name="lucide:calendar" class="w-4 h-4 mr-1" />
                     {{ age }} tahun
                   </UBadge>
                   <UBadge
@@ -213,7 +213,7 @@ watch(() => instructor.value, (newVal) => {
                     variant="outline"
                     class="dark:border-green-600"
                   >
-                    <UIcon name="i-lucide-map-pin" class="w-4 h-4 mr-1" />
+                    <UIcon name="lucide:map-pin" class="w-4 h-4 mr-1" />
                     {{ instructor.district }}, {{ instructor.provinces }}
                   </UBadge>
                 </div>
@@ -224,7 +224,7 @@ watch(() => instructor.value, (newVal) => {
                 <UButton
                   :loading="creatingConversation"
                   :disabled="creatingConversation"
-                  icon="i-lucide-message-circle"
+                  icon="lucide:message-circle"
                   size="lg"
                   color="neutral"
                   label="Mulai Obrolan"
@@ -260,12 +260,12 @@ watch(() => instructor.value, (newVal) => {
               <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Informasi Kontak</h3>
               <div class="space-y-3">
                 <div v-if="instructor.profiles?.phone" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl transition-all duration-200 hover:bg-green-50 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700">
-                  <UIcon name="i-lucide-phone" class="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <UIcon name="lucide:phone" class="w-5 h-5 text-green-500 flex-shrink-0" />
                   <span class="text-sm text-gray-700 dark:text-gray-300">{{ instructor.profiles.phone }}</span>
                 </div>
 
                 <div v-if="instructor.profiles?.website" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl transition-all duration-200 hover:bg-green-50 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700">
-                  <UIcon name="i-lucide-globe" class="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <UIcon name="lucide:globe" class="w-5 h-5 text-green-500 flex-shrink-0" />
                   <NuxtLink 
                     :to="instructor.profiles.website" 
                     target="_blank"
@@ -281,7 +281,7 @@ watch(() => instructor.value, (newVal) => {
             <UCard class="bg-green-50 dark:bg-green-950 dark:border-green-800 border-green-200">
               <template #header>
                 <h3 class="text-lg font-semibold text-green-800 dark:text-green-200 flex items-center gap-2">
-                  <UIcon name="i-lucide-map-pin" class="w-5 h-5" />
+                  <UIcon name="lucide:map-pin" class="w-5 h-5" />
                   Lokasi
                 </h3>
               </template>
@@ -303,7 +303,7 @@ watch(() => instructor.value, (newVal) => {
 
     <!-- Not Found State -->
     <div v-else class="text-center py-16">
-      <UIcon name="i-lucide-search-x" class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+      <UIcon name="lucide:search-x" class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" />
       <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">Instruktur Tidak Ditemukan</h2>
       <p class="text-gray-500 dark:text-gray-400">Instruktur yang Anda cari tidak tersedia.</p>
     </div>
