@@ -28,11 +28,6 @@ export default defineAppConfig({
       ring: 'ring-1 ring-gray-200 dark:ring-gray-800',
     },
 
-    // Icons configuration
-    icons: {
-      loading: 'i-heroicons-arrow-path-20-solid',
-      search: 'i-heroicons-magnifying-glass-20-solid',
-    },
 
     // Notification/Toast configuration
     notification: {
