@@ -29,7 +29,7 @@ import type { Product } from '~~/types/store'
         <!-- Tombol Action -->
         <div class="absolute bottom-0 left-0 right-0 flex justify-center gap-3 p-4 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
           <UButton 
-            icon="lucide:send" 
+            icon="i-lucide-send" 
             color="success"
             variant="solid"
             class="action-btn rounded-full"
@@ -37,10 +37,10 @@ import type { Product } from '~~/types/store'
             @click="() => window.open(`https://wa.me/62?text=Saya%20tertarik%20dengan%20produk%20ini`)"
           />
           <NuxtLink :to="`/store/${id}`" class="action-btn bg-primary hover:bg-primary-dark rounded-full flex items-center justify-center" aria-label="Detail Produk">
-            <UIcon name="lucide:eye" />
+            <UIcon name="i-lucide-eye" />
           </NuxtLink>
           <UButton 
-            icon="lucide:shopping-cart" 
+            icon="i-lucide-shopping-cart" 
             color="orange"
             variant="solid"
             class="action-btn rounded-full"
@@ -73,7 +73,7 @@ import type { Product } from '~~/types/store'
       <div class="border-t border-gray-100 p-4 dark:border-gray-700">
         <NuxtLink :to="`/store/${id}`" class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-center text-white transition-colors hover:bg-primary-dark">
           <span>Lihat Detail</span>
-          <UIcon name="lucide:arrow-right" />
+          <UIcon name="i-lucide-arrow-right" />
         </NuxtLink>
       </div>
   </div>

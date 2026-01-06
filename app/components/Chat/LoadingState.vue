@@ -5,11 +5,11 @@
         <!-- Animated agricultural icon -->
         <div class="relative inline-block">
           <UIcon 
-            name="heroicons:arrow-path" 
+            name="i-heroicons-arrow-path" 
             class="w-16 h-16 animate-spin text-green-500 dark:text-green-400 mx-auto"
           />
           <UIcon 
-            name="heroicons:sparkles" 
+            name="i-heroicons-sparkles" 
             class="w-8 h-8 text-green-400 dark:text-green-500 absolute -top-2 -right-2 animate-pulse"
           />
         </div>

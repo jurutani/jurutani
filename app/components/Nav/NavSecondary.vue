@@ -63,7 +63,7 @@ onClickOutside(dropdownRef, () => {
     >
       <div
         v-if="isOpen"
-        class="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-[400px] max-w-md bg-white dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-2xl shadow-xl z-[70] overflow-hidden"
+        class="fixed left-1/2 -translate-x-1/2 top-16 sm:absolute sm:left-auto sm:right-0 sm:translate-x-0 sm:top-auto mt-0 sm:mt-2 w-[calc(100vw-1rem)] max-w-[360px] sm:w-72 lg:w-80 bg-white dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-2xl shadow-xl z-[70] overflow-hidden"
       >
         <!-- User Info Section -->
         <div class="p-4 border-b border-green-200 dark:border-green-800">
@@ -93,54 +93,62 @@ onClickOutside(dropdownRef, () => {
 
         <!-- Logout Button (Full Width) -->
         <div v-if="isAuthenticated" class="p-3 border-b border-green-200 dark:border-green-800">
-          <button
-            type="button"
-            class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+          <UButton
+            block
+            color="error"
+            size="lg"
+            icon="i-heroicons-arrow-left-on-rectangle"
             @click="handleLogout"
           >
-            <UIcon name="heroicons:arrow-left-on-rectangle" class="size-5" />
-            <span>Logout</span>
-          </button>
+            Logout
+          </UButton>
         </div>
 
         <!-- Auth Buttons (for non-authenticated users) -->
         <div v-else class="p-3 border-b border-green-200 dark:border-green-800 space-y-2">
-          <NuxtLink
+          <UButton
+            block
+            color="success"
+            size="lg"
+            icon="i-heroicons-arrow-right-on-rectangle"
             to="/auth/login"
-            class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-all duration-200 font-medium shadow-sm hover:shadow-md"
             @click="isOpen = false"
           >
-            <UIcon name="heroicons:arrow-right-on-rectangle" class="size-5" />
-            <span>Sign In</span>
-          </NuxtLink>
-          <NuxtLink
+            Sign In
+          </UButton>
+          <UButton
+            block
+            color="success"
+            variant="outline"
+            size="lg"
+            icon="i-heroicons-user-plus"
             to="/auth/register"
-            class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-green-900 border border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-800 rounded-xl transition-all duration-200 font-medium"
             @click="isOpen = false"
           >
-            <UIcon name="heroicons:user-plus" class="size-5" />
-            <span>Register</span>
-          </NuxtLink>
+            Register
+          </UButton>
         </div>
 
         <!-- Secondary Menu Grid (2 Columns) -->
         <div v-if="navsSecondary && navsSecondary.length > 0" class="p-3">
           <div class="grid grid-cols-2 gap-2">
-            <NuxtLink
+            <UButton
               v-for="nav in navsSecondary"
               :key="nav.to"
               :to="nav.to"
-              class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-gray-50 dark:bg-green-900/30 hover:bg-green-50 dark:hover:bg-green-900/50 border border-transparent hover:border-green-200 dark:hover:border-green-700 transition-all duration-200 group"
+              color="success"
+              variant="ghost"
+              class="!h-auto !p-3 flex-col gap-1.5"
               @click="isOpen = false"
             >
               <UIcon 
                 :name="nav.icon" 
-                class="size-8 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-200" 
+                class="size-6 text-green-600 dark:text-green-400" 
               />
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-200 text-center">
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-200 text-center">
                 {{ nav.title }}
               </span>
-            </NuxtLink>
+            </UButton>
           </div>
         </div>
       </div>

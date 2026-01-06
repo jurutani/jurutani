@@ -7,7 +7,7 @@ useSeoOptimized('contact')
 // Contact methods data
 const contactMethods = [
   {
-    icon: 'heroicons:phone',
+    icon: 'i-heroicons-phone',
     title: 'Telepon Kami',
     description: 'Layanan panggilan tersedia Senin - Jumat, 09:00 - 16:00 WIB',
     value: '+62 815 7552 5260',
@@ -15,7 +15,7 @@ const contactMethods = [
     link: 'tel:+6281575525260'
   },
   {
-    icon: 'heroicons:envelope',
+    icon: 'i-heroicons-envelope',
     title: 'Email Kami',
     description: 'Kirim email dan tim kami akan merespon secepatnya',
     value: 'si.jurutani@gmail.com',
@@ -23,7 +23,7 @@ const contactMethods = [
     link: 'mailto:si.jurutani@gmail.com'
   },
   {
-    icon: 'heroicons:map-pin',
+    icon: 'i-heroicons-map-pin',
     title: 'Lokasi Kami',
     description: 'Kunjungi kantor kami untuk diskusi langsung',
     value: 'Jl. Kusumanegara No.2, Yogyakarta',
@@ -67,7 +67,7 @@ const scrollToForm = () => {
     <CommonPageHeroSection
       title="Hubungi Tim Juru Tani"
       subtitle="Kami siap membantu komunitas pertanian Indonesia berkembang. Sampaikan pertanyaan Anda dan mari berkembang bersama."
-      :badge="{ text: 'Contact Us', icon: 'heroicons:chat-bubble-left-right' }"
+      :badge="{ text: 'Contact Us', icon: 'i-heroicons-chat-bubble-left-right' }"
       align="center"
       decorative="ripple"
       :cta="{ text: 'Hubungi Sekarang', action: scrollToForm }"
@@ -127,7 +127,7 @@ const scrollToForm = () => {
                 <!-- Link Indicator -->
                 <div class="flex items-center gap-2 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700/50 text-green-600 dark:text-green-400 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <span>Hubungi via {{ method.title.toLowerCase() }}</span>
-                  <UIcon name="heroicons:arrow-right" class="text-sm transition-transform group-hover:translate-x-1" />
+                  <UIcon name="i-heroicons-arrow-right" class="text-sm transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             </NuxtLink>
@@ -158,7 +158,7 @@ const scrollToForm = () => {
             <div class="bg-gradient-to-br from-green-50 via-emerald-50 to-green-50 dark:from-green-900/20 dark:via-emerald-900/10 dark:to-green-900/20 rounded-2xl p-8 border border-green-200 dark:border-green-800/50">
               <div class="flex items-start gap-4 mb-6">
                 <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
-                  <UIcon name="heroicons:map-pin" class="text-2xl text-green-600 dark:text-green-400" />
+                  <UIcon name="i-heroicons-map-pin" class="text-2xl text-green-600 dark:text-green-400" />
                 </div>
                 <div>
                   <h3 class="text-xl font-bold text-green-900 dark:text-green-100 mb-2">
@@ -174,7 +174,7 @@ const scrollToForm = () => {
 
               <div class="flex items-start gap-4 mb-6">
                 <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
-                  <UIcon name="heroicons:clock" class="text-2xl text-green-600 dark:text-green-400" />
+                  <UIcon name="i-heroicons-clock" class="text-2xl text-green-600 dark:text-green-400" />
                 </div>
                 <div>
                   <h3 class="text-xl font-bold text-green-900 dark:text-green-100 mb-2">
@@ -196,7 +196,7 @@ const scrollToForm = () => {
                 color="primary"
                 class="mt-6"
               >
-                <UIcon name="heroicons:map" class="mr-2" />
+                <UIcon name="i-heroicons-map" class="mr-2" />
                 Buka di Google Maps
               </UButton>
             </div>
@@ -226,7 +226,7 @@ const scrollToForm = () => {
                     variant="outline"
                     color="primary"
                   >
-                    <UIcon name="heroicons:arrow-top-right-on-square" class="mr-1" />
+                    <UIcon name="i-heroicons-arrow-top-right-on-square" class="mr-1" />
                     Buka Maps
                   </UButton>
                 </div>
@@ -257,7 +257,7 @@ const scrollToForm = () => {
                     target="_blank"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                   >
-                    <UIcon name="heroicons:map-pin" class="text-green-600 dark:text-green-400" />
+                    <UIcon name="i-heroicons-map-pin" class="text-green-600 dark:text-green-400" />
                     Lihat Rute
                   </a>
                   <a
@@ -265,7 +265,7 @@ const scrollToForm = () => {
                     target="_blank"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                   >
-                    <UIcon name="heroicons:share" class="text-blue-600 dark:text-blue-400" />
+                    <UIcon name="i-heroicons-share" class="text-blue-600 dark:text-blue-400" />
                     Bagikan Lokasi
                   </a>
                 </div>
@@ -299,7 +299,7 @@ const scrollToForm = () => {
             
             <div class="relative z-10">
               <div class="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-green-100 dark:bg-green-900/50">
-                <UIcon name="heroicons:question-mark-circle" class="w-8 h-8 text-green-600 dark:text-green-400" />
+                <UIcon name="i-heroicons-question-mark-circle" class="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
               
               <h3 class="text-2xl font-bold text-green-900 dark:text-green-100 mb-3">
@@ -314,7 +314,7 @@ const scrollToForm = () => {
                 size="lg"
                 class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <UIcon name="heroicons:chat-bubble-left-right" class="mr-2" />
+                <UIcon name="i-heroicons-chat-bubble-left-right" class="mr-2" />
                 Hubungi Tim Kami
               </UButton>
             </div>

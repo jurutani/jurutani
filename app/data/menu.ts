@@ -2,33 +2,33 @@
 
 export const navs = {
     primary: [
-        { title: 'Beranda', to: '/', icon: 'lucide:home' },
+        { title: 'Beranda', to: '/', icon: 'i-lucide-home' },
         {
             title: 'Layanan',
-            icon: 'lucide:headset',
+            icon: 'i-lucide-headset',
             children: [
-                { title: 'Diskusi', to: '/discussions', icon: 'lucide:messages-square' },
-                { title: 'Marketplace', to: '/markets', icon: 'lucide:shopping-bag' }
+                { title: 'Diskusi', to: '/discussions', icon: 'i-lucide-messages-square' },
+                { title: 'Marketplace', to: '/markets', icon: 'i-lucide-shopping-bag' }
             ]
         },
-        { title: 'Berita', to: '/news', icon: 'lucide:newspaper' },
+        { title: 'Berita', to: '/news', icon: 'i-lucide-newspaper' },
         {
             title: 'Edukasi',
-            icon: 'lucide:graduation-cap',
+            icon: 'i-lucide-graduation-cap',
             children: [
-                { title: 'Materi', to: '/educations', icon: 'lucide:book' },
-                { title: 'Course', to: '/courses', icon: 'lucide:book-open' },
-                { title: 'Alat', to: '/tools', icon: 'lucide:wrench' }
+                { title: 'Materi', to: '/educations', icon: 'i-lucide-book' },
+                { title: 'Course', to: '/courses', icon: 'i-lucide-book-open' },
+                { title: 'Alat', to: '/tools', icon: 'i-lucide-wrench' }
             ]
         }
     ],
     secondary: [
-        { title: 'Profil', to: '/profile', icon: 'lucide:user' },
-        { title: 'Keamanan', to: '/security', icon: 'lucide:lock' },
-        { title: 'Pengaturan', to: '/setting', icon: 'lucide:settings' },
-        { title: 'Riwayat', to: '/history', icon: 'lucide:history' },
-        { title: 'Kontak', to: '/contact-us', icon: 'lucide:phone' },
-        { title: 'Bantuan', to: '/help-faqs', icon: 'lucide:help-circle' },
+        { title: 'Profil', to: '/profile', icon: 'i-lucide-user' },
+        { title: 'Keamanan', to: '/security', icon: 'i-lucide-lock' },
+        { title: 'Pengaturan', to: '/setting', icon: 'i-lucide-settings' },
+        { title: 'Riwayat', to: '/history', icon: 'i-lucide-history' },
+        { title: 'Kontak', to: '/contact-us', icon: 'i-lucide-phone' },
+        { title: 'Bantuan', to: '/help-faqs', icon: 'i-lucide-help-circle' },
     ],
 }
 
@@ -47,20 +47,20 @@ export const footerMenuLinks = [
 
 export const footerContactInfo = [
     {
-        icon: 'mdi:map-marker',
+        icon: 'i-mdi-map-marker',
         text: ['Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo,', 'Kota Yogyakarta, Daerah Istimewa Yogyakarta 55161']
     },
-    { icon: 'mdi:phone', text: '+62 856-6900-0010' },
-    { icon: 'mdi:email', text: 'si.jurutani@gmail.com' },
-    { icon: 'mdi:clock-outline', text: 'Senin - Jumat: 08.00 - 16.00 WIB' }
+    { icon: 'i-mdi-phone', text: '+62 856-6900-0010' },
+    { icon: 'i-mdi-email', text: 'si.jurutani@gmail.com' },
+    { icon: 'i-mdi-clock-outline', text: 'Senin - Jumat: 08.00 - 16.00 WIB' }
 ]
 
 export const footerSocialMedia = [
-    { name: 'WhatsApp', icon: 'mdi:whatsapp', url: 'https://api.whatsapp.com/send/?phone=625669000010', ariaLabel: 'WhatsApp' },
+    { name: 'WhatsApp', icon: 'i-mdi-whatsapp', url: 'https://api.whatsapp.com/send/?phone=625669000010', ariaLabel: 'WhatsApp' },
     { name: 'TikTok', icon: 'ic:baseline-tiktok', url: 'https://www.tiktok.com/@juru_tani', ariaLabel: 'TikTok' },
-    { name: 'Email', icon: 'mdi:gmail', url: 'mailto:si.jurutani@gmail.com', ariaLabel: 'Email' },
-    { name: 'Instagram', icon: 'mdi:instagram', url: 'https://www.instagram.com/jurutani_', ariaLabel: 'Instagram' },
-    { name: 'YouTube', icon: 'mdi:youtube', url: 'https://www.youtube.com/@Juru_Tani', ariaLabel: 'YouTube' }
+    { name: 'Email', icon: 'i-mdi-gmail', url: 'mailto:si.jurutani@gmail.com', ariaLabel: 'Email' },
+    { name: 'Instagram', icon: 'i-mdi-instagram', url: 'https://www.instagram.com/jurutani_', ariaLabel: 'Instagram' },
+    { name: 'YouTube', icon: 'i-mdi-youtube', url: 'https://www.youtube.com/@Juru_Tani', ariaLabel: 'YouTube' }
 ]
 
 export const footerBottomLinks = [

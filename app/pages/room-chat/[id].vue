@@ -263,11 +263,11 @@ onUnmounted(() => {
               class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
               @click="goBack"
             >
-              <UIcon name="heroicons:arrow-left" class="w-5 h-5" />
+              <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
               <span class="font-medium">Kembali ke Room Chat</span>
             </button>
             <div class="flex items-center gap-2 text-green-700 dark:text-green-300">
-              <UIcon name="heroicons:chat-bubble-left-ellipsis" class="w-5 h-5" />
+              <UIcon name="i-heroicons-chat-bubble-left-ellipsis" class="w-5 h-5" />
               <span class="font-semibold">Juru Tani Room Chat</span>
             </div>
           </div>
@@ -297,17 +297,17 @@ onUnmounted(() => {
             <div class="flex flex-col items-center gap-1">
               <UIcon 
                 v-if="partnerInfo?.role === 'pakar'"
-                name="heroicons:academic-cap" 
+                name="i-heroicons-academic-cap" 
                 class="w-4 h-4 text-green-500 dark:text-green-400"
               />
               <UIcon 
                 v-else-if="partnerInfo?.role === 'penyuluh'"
-                name="heroicons:megaphone" 
+                name="i-heroicons-megaphone" 
                 class="w-4 h-4 text-blue-500 dark:text-blue-400"
               />
               <UIcon 
                 v-else
-                name="heroicons:user" 
+                name="i-heroicons-user" 
                 class="w-4 h-4 text-gray-400 dark:text-gray-500"
               />
               <UBadge 
@@ -318,7 +318,7 @@ onUnmounted(() => {
             </div>
             <!-- Clear Conversation Button -->
             <UButton
-              icon="heroicons:trash"
+              icon="i-heroicons-trash"
               color="error"
               variant="ghost"
               size="sm"
@@ -337,7 +337,7 @@ onUnmounted(() => {
         >
         <div v-if="messages.length === 0" class="flex items-center justify-center h-full">
           <div class="text-center text-gray-500 dark:text-gray-400">
-            <UIcon name="heroicons:chat-bubble-left-right" class="w-12 h-12 mx-auto mb-2" />
+            <UIcon name="i-heroicons-chat-bubble-left-right" class="w-12 h-12 mx-auto mb-2" />
             <p>Belum ada pesan</p>
             <p class="text-sm">Mulai percakapan dengan mengirim pesan</p>
           </div>
@@ -372,7 +372,7 @@ onUnmounted(() => {
             <UButton
               color="neutral"
               variant="ghost"
-              icon="heroicons:x-mark-20-solid"
+              icon="i-heroicons-x-mark-20-solid"
               @click="cancelImagePreview"
             />
           </div>
@@ -463,7 +463,7 @@ onUnmounted(() => {
       <!-- Chat List View -->
       <div v-else class="flex flex-col flex-1 items-center justify-center">
         <div class="text-center text-gray-500 dark:text-gray-400">
-          <UIcon name="heroicons:chat-bubble-left-right" class="w-16 h-16 mx-auto mb-4" />
+          <UIcon name="i-heroicons-chat-bubble-left-right" class="w-16 h-16 mx-auto mb-4" />
           <h2 class="text-xl font-semibold mb-2">Belum ada Percakapan</h2>
           <p>Pilih percakapan dari daftar untuk mulai chat</p>
         </div>

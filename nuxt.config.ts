@@ -26,6 +26,15 @@ export default defineNuxtConfig({
     headNext: true,
   },
 
+  app: {
+    baseURL: '/',
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      ],
+    },
+  },
+
   nitro: {
     preset: 'netlify-static',
     prerender: {
@@ -35,15 +44,6 @@ export default defineNuxtConfig({
         '/markets',
       ]
     }
-  },
-
-  app: {
-    baseURL: '/',
-    head: {
-      link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      ],
-    },
   },
 
   modules: [
@@ -56,30 +56,15 @@ export default defineNuxtConfig({
     'nuxt-og-image',
     'nuxt-schema-org',
     '@nuxtjs/critters',
-    '@nuxt/icon',
     '@nuxt/eslint',
     '@nuxt/ui',
   ],
 
   colorMode: {
-    preference: 'system',
+    preference: 'light',
     fallback: 'light',
     classSuffix: '',
   },
-
-  icon: {
-    size: '24px',
-    collections: [
-      'heroicons',
-      'lucide',
-      'ic',
-      'ph',
-      'logos',
-      'mdi',
-      'twemoji',
-    ],
-  },
-
 
   critters: {
     config: {

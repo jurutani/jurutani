@@ -65,31 +65,31 @@ export function useSocialShare() {
     const platforms: SharePlatform[] = [
         {
             name: 'WhatsApp',
-            icon: 'mdi:whatsapp',
+            icon: 'i-mdi-whatsapp',
             color: 'bg-green-500 hover:bg-green-600',
             action: shareToWhatsApp
         },
         {
             name: 'Facebook',
-            icon: 'mdi:facebook',
+            icon: 'i-mdi-facebook',
             color: 'bg-blue-600 hover:bg-blue-700',
             action: shareToFacebook
         },
         {
             name: 'Instagram',
-            icon: 'mdi:instagram',
+            icon: 'i-mdi-instagram',
             color: 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600',
             action: shareToInstagram
         },
         {
             name: 'TikTok',
-            icon: 'mdi:music-note',
+            icon: 'i-mdi-music-note',
             color: 'bg-gray-900 hover:bg-gray-800',
             action: shareToTikTok
         },
         {
             name: 'Copy Link',
-            icon: 'heroicons:link',
+            icon: 'i-heroicons-link',
             color: 'bg-gray-500 hover:bg-gray-600',
             action: copyLink
         }

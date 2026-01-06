@@ -40,7 +40,7 @@ const navbarClasses = computed(() => ({
             
           >
           <UButton
-            :icon="isMobileMenuOpen ? 'heroicons:x-mark-20-solid' : 'heroicons:bars-3-20-solid'"
+            :icon="isMobileMenuOpen ? 'i-lucide-x' : 'i-lucide-menu'"
             variant="ghost"
             size="sm"
             :aria-label="isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'"

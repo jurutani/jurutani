@@ -90,7 +90,7 @@ const cardClass = computed(() => {
           class="flex items-center gap-2 mt-5 pt-4 border-t border-gray-200 dark:border-gray-700/50 text-green-600 dark:text-green-400 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
         >
           <span>Lihat detail</span>
-          <UIcon name="heroicons:arrow-right" class="text-sm transition-transform group-hover:translate-x-1" />
+          <UIcon name="i-heroicons-arrow-right" class="text-sm transition-transform group-hover:translate-x-1" />
         </div>
       </div>
     </div>

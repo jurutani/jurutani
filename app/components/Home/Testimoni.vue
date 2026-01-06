@@ -48,93 +48,127 @@ const testimonials = [...testimonialsBase, ...testimonialsBase, ...testimonialsB
 </script>
 
 <template>
-  <div class="testimonials-section py-16 bg-green-50 dark:bg-green-900/20">
-    <UContainer>
+  <div class="relative py-20 overflow-hidden bg-gradient-to-br from-green-50/50 to-emerald-50/50 dark:from-green-950/30 dark:to-emerald-950/30">
+    <!-- Decorative Elements -->
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-green-300/20 dark:bg-green-500/10 rounded-full blur-3xl" />
+    <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-emerald-200/30 dark:bg-emerald-600/10 rounded-full blur-3xl" />
+    
+    <UContainer class="relative z-10">
       <!-- Section Header -->
-      <div class="mx-auto mb-12 max-w-4xl text-center">
-        <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
-          <!-- Icon Testimoni -->
-        <UIcon name="lucide:message-square-more" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-          <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Apa Kata Mereka</span>
-        </div>
+      <CommonSectionHeader
+        title="Testimoni Pengguna Juru Tani"
+        subtitle="Bergabunglah dengan ribuan petani yang telah merasakan manfaat aplikasi Juru Tani dalam meningkatkan produktivitas dan efisiensi pertanian mereka"
+        align="center"
+        class="mb-16"
+      />
 
-        <h2 class="text-3xl py-2 md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-          Testimoni Pengguna Juru Tani
-        </h2>
-
-        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
-          Bergabunglah dengan ribuan petani yang telah merasakan manfaat aplikasi <span class="font-semibold text-emerald-600 dark:text-emerald-400">Juru Tani</span> dalam meningkatkan produktivitas dan efisiensi pertanian mereka.
-        </p>
-      </div>
-
-      <!-- Testimonials Grid - Horizontal Scroll Animation -->
+      <!-- Testimonials Horizontal Scroll -->
       <div class="testimonials-wrapper">
         <div class="testimonials-grid">
           <!-- Testimonial Card -->
           <div 
-            v-for="testimonial in testimonials" 
-            :key="testimonial.id" 
-            class="testimonial-card group bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700"
+            v-for="(testimonial, index) in testimonials" 
+            :key="`${testimonial.id}-${index}`" 
+            class="testimonial-card group animate-slide-up"
+            :style="`animation-delay: ${(index % testimonialsBase.length) * 100}ms`"
           >
-          <!-- Header dengan Avatar dan Icon -->
-          <div class="flex items-start justify-between mb-6">
-            <div class="flex gap-4 items-start flex-1">
-              <img
-                :src="testimonial.avatar"
-                :alt="testimonial.name"
-                class="w-12 h-12 rounded-full object-cover flex-shrink-0"
-                loading="lazy"
-              />
-              <div>
-                <h3 class="text-base font-bold text-gray-800 dark:text-white">
-                  {{ testimonial.name }}
-                </h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
-                  {{ testimonial.role }}
+            <!-- Card Background with Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-br from-white via-green-50/30 to-emerald-50/30 dark:from-green-900/80 dark:via-green-800/60 dark:to-emerald-900/80 rounded-2xl backdrop-blur-sm" />
+            
+            <!-- Border Glow Effect -->
+            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-green-200/50 via-emerald-200/30 to-green-200/50 dark:from-green-700/50 dark:via-emerald-700/30 dark:to-green-700/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
+            
+            <div class="relative z-10">
+              <!-- Header dengan Avatar -->
+              <div class="flex items-start gap-4 mb-4">
+                <div class="relative flex-shrink-0">
+                  <div class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-400/20 rounded-full blur-md group-hover:blur-lg transition-all duration-300" />
+                  <img
+                    :src="testimonial.avatar"
+                    :alt="testimonial.name"
+                    class="relative w-14 h-14 rounded-full object-cover border-2 border-white/50 dark:border-green-700/50 shadow-lg"
+                    loading="lazy"
+                  />
+                </div>
+                
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-base font-bold text-gray-900 dark:text-white truncate">
+                    {{ testimonial.name }}
+                  </h3>
+                  <p class="text-sm text-green-600 dark:text-green-400 truncate">
+                    {{ testimonial.role }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Rating Stars -->
+              <div class="flex gap-1 mb-4">
+                <UIcon 
+                  v-for="star in testimonial.rating" 
+                  :key="star"
+                  name="i-lucide-star"
+                  class="w-4 h-4 text-amber-400 fill-amber-400"
+                />
+              </div>
+
+              <!-- Quote Icon -->
+              <div class="mb-3">
+                <UIcon 
+                  name="i-heroicons-chat-bubble-left-right" 
+                  class="w-8 h-8 text-green-500/40 dark:text-green-400/40"
+                />
+              </div>
+
+              <!-- Testimonial Text -->
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm line-clamp-4 mb-4">
+                "{{ testimonial.description }}"
+              </p>
+
+              <!-- Email with Icon -->
+              <div class="flex items-center gap-2 pt-4 border-t border-green-100/50 dark:border-green-800/50">
+                <UIcon name="i-heroicons-envelope" class="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+                <p class="text-xs text-gray-600 dark:text-gray-400 truncate">
+                  {{ testimonial.email }}
                 </p>
               </div>
             </div>
           </div>
-
-          <!-- Rating Stars -->
-          <div class="flex gap-1 mb-4">
-            <UIcon 
-              v-for="star in testimonial.rating" 
-              :key="star"
-              name="lucide:star"
-              class="w-4 h-4 text-yellow-400 fill-yellow-400"
-            />
-          </div>
-
-          <!-- Testimonial Text -->
-          <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm md:text-base">
-            {{ testimonial.description }}
-          </p>
-
-          <!-- Email -->
-          <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">
-            {{ testimonial.email }}
-          </p>
         </div>
-      </div>
       </div>
     </UContainer>
   </div>
 </template>
 
 <style scoped>
+/* Animation */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out both;
+}
+
+/* Testimonials Wrapper */
 .testimonials-wrapper {
   overflow: hidden;
   width: 100%;
   position: relative;
+  padding: 2rem 0;
 }
 
 .testimonials-grid {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   animation: slideRightInfinite 60s linear infinite;
   width: max-content;
-  padding: 1rem 0;
 }
 
 @keyframes slideRightInfinite {
@@ -142,7 +176,7 @@ const testimonials = [...testimonialsBase, ...testimonialsBase, ...testimonialsB
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-33.333% - 2rem));
+    transform: translateX(calc(-33.333% - 1.5rem));
   }
 }
 
@@ -150,51 +184,64 @@ const testimonials = [...testimonialsBase, ...testimonialsBase, ...testimonialsB
   animation-play-state: paused;
 }
 
+/* Testimonial Card - Matching QuickHelp Style */
 .testimonial-card {
-  border-radius: 0.75rem;
+  position: relative;
+  border-radius: 1rem;
   padding: 1.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
-  min-width: 350px;
-  width: 350px;
+  min-width: 360px;
+  width: 360px;
+  border: 1px solid rgba(34, 197, 94, 0.1);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(34, 197, 94, 0.05);
 }
 
 .testimonial-card:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  transform: translateY(-4px);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(34, 197, 94, 0.1);
 }
 
-/* Dark mode shadow adjustment */
-:dark .testimonial-card {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+/* Dark mode adjustments */
+:global(.dark) .testimonial-card {
+  border-color: rgba(34, 197, 94, 0.2);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(34, 197, 94, 0.1);
 }
 
-:dark .testimonial-card:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+:global(.dark) .testimonial-card:hover {
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(34, 197, 94, 0.2);
 }
 
 /* Responsiveness */
 @media (max-width: 768px) {
   .testimonials-grid {
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .testimonial-card {
-    min-width: 280px;
-    width: 280px;
+    min-width: 300px;
+    width: 300px;
+    padding: 1.25rem;
   }
 }
 
 @media (max-width: 640px) {
   .testimonial-card {
-    min-width: 250px;
-    width: 250px;
+    min-width: 280px;
+    width: 280px;
     padding: 1rem;
-  }
-
-  .testimonials-grid {
-    gap: 1rem;
   }
 }
 </style>

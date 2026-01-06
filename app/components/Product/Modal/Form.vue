@@ -46,10 +46,22 @@ const categoryItems = computed(() => {
   }))
 })
 
+// Props
+interface Props {
+  modelValue: boolean
+}
+
+const props = defineProps<Props>()
+
 // Emits
 const emit = defineEmits<{
-  close: []
+  'update:modelValue': [value: boolean]
 }>()
+
+const showModal = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
+})
 
 // Zod Schema
 const schema = z.object({
@@ -95,7 +107,7 @@ const isSubmitting = ref(false)
 const checkUserAuth = (): boolean => {
   if (!userData.value) {
     toastStore.error('Login dulu')
-    emit('close')
+    showModal.value = false
     navigateTo('/auth/login')
     return false
   }
@@ -159,7 +171,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (error) throw error
 
     toastStore.success('Produk baru berhasil ditambahkan!')
-    emit('close')
+    showModal.value = false
 
   } catch (error: any) {
     console.error('Error saving market item:', error)
@@ -170,7 +182,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 const handleCancel = (): void => {
-  emit('close')
+  showModal.value = false
 }
 
 // Initialize component
@@ -181,7 +193,7 @@ onMounted(async () => {
 
 <template>
   <UModal
-    :close="{ onClick: () => emit('close') }"
+    v-model:open="showModal"
     title="Tambah Produk Baru"
     description="Isi formulir di bawah untuk menambahkan produk baru"
   >
@@ -193,7 +205,8 @@ onMounted(async () => {
             v-model="state.name"
             placeholder="Masukkan nama produk"
             size="lg"
-            icon="heroicons:tag"
+            icon="i-lucide-tag"
+            class="w-full"
           />
         </UFormField>
 
@@ -204,6 +217,8 @@ onMounted(async () => {
             placeholder="Masukkan deskripsi produk"
             :rows="5"
             size="lg"
+            icon="i-lucide-file-text"
+            class="w-full"
             autoresize
           />
         </UFormField>
@@ -215,7 +230,8 @@ onMounted(async () => {
             :items="categoryItems"
             placeholder="Pilih kategori"
             size="lg"
-            icon="heroicons:tag"
+            icon="i-lucide-tags"
+            class="w-full"
           />
         </UFormField>
 
@@ -227,6 +243,7 @@ onMounted(async () => {
               type="number"
               placeholder="Masukkan harga produk"
               size="lg"
+              icon="i-lucide-currency-dollar"
             >
               <template #leading>
                 <span class="text-gray-500 font-medium">Rp</span>
@@ -239,6 +256,8 @@ onMounted(async () => {
               v-model="state.price_range"
               placeholder="Contoh: 50.000 - 75.000"
               size="lg"
+              icon="i-lucide-scale-3d"
+              class="w-full"
             />
           </UFormField>
         </div>
@@ -252,7 +271,7 @@ onMounted(async () => {
           <UFileUpload
             v-model="state.imageFile"
             accept="image/*"
-            class="min-h-48"
+            class="min-h-48 w-full"
           />
         </UFormField>
 
@@ -265,7 +284,8 @@ onMounted(async () => {
                 v-model="state.shopee_link"
                 placeholder="https://shopee.co.id/product..."
                 size="lg"
-                icon="heroicons:link"
+                icon="i-lucide-link"
+                class="w-full"
               />
             </UFormField>
             
@@ -275,7 +295,8 @@ onMounted(async () => {
                 v-model="state.tiktok_link"
                 placeholder="https://tiktok.com/shop/product..."
                 size="lg"
-                icon="heroicons:link"
+                icon="i-lucide-link"
+                class="w-full"
               />
             </UFormField>
             
@@ -285,7 +306,8 @@ onMounted(async () => {
                 v-model="state.tokopedia_link"
                 placeholder="https://tokopedia.com/product..."
                 size="lg"
-                icon="heroicons:link"
+                icon="i-lucide-link"
+                class="w-full"
               />
             </UFormField>
           </div>
@@ -298,7 +320,8 @@ onMounted(async () => {
               v-model="state.seller"
               placeholder="Masukkan nama toko"
               size="lg"
-              icon="heroicons:building-storefront"
+              icon="i-lucide-store"
+              class="w-full"
             />
           </UFormField>
 
@@ -307,7 +330,8 @@ onMounted(async () => {
               v-model="state.contact_seller"
               placeholder="Contoh: 08123456789"
               size="lg"
-              icon="heroicons:phone"
+              icon="i-lucide-phone"
+              class="w-full"
             />
           </UFormField>
         </div>
@@ -323,7 +347,7 @@ onMounted(async () => {
           :disabled="isSubmitting"
           @click="handleCancel"
         >
-          <UIcon name="heroicons:x-mark" class="mr-1" />
+          <UIcon name="i-heroicons-x-mark" class="mr-1" />
           Batal
         </UButton>
         <UButton
@@ -333,7 +357,7 @@ onMounted(async () => {
           :loading="isSubmitting"
           form="product-form"
         >
-          <UIcon name="heroicons:check" class="mr-1" />
+          <UIcon name="i-heroicons-check" class="mr-1" />
           Simpan Produk
         </UButton>
       </div>

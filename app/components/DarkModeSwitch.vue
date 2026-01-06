@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const colorMode = useColorMode()
 
-const modes = ['system', 'light', 'dark'] as const
+const modes = ['light', 'dark'] as const
 
 const nextMode = () => {
   const index = modes.indexOf(colorMode.preference as any)
@@ -11,8 +11,7 @@ const nextMode = () => {
 const isDark = computed(() => colorMode.value === 'dark')
 
 const icon = computed(() => {
-  if (colorMode.preference === 'system') return 'lucide:monitor'
-  return isDark.value ? 'lucide:moon' : 'lucide:sun'
+  return isDark.value ? 'i-lucide-moon' : 'i-lucide-sun'
 })
 </script>
 

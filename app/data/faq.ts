@@ -7,11 +7,11 @@ import type { FaqCategory, FaqData, IconCard } from './types'
  */
 
 export const faqCategories: FaqCategory[] = [
-    { id: 'general', name: 'Umum', icon: 'lucide:info' },
-    { id: 'account', name: 'Akun & Pendaftaran', icon: 'lucide:user-circle' },
-    { id: 'farming', name: 'Kajian Pertanian', icon: 'lucide:sparkles' },
-    { id: 'marketplace', name: 'Pemasaran', icon: 'lucide:shopping-bag' },
-    { id: 'technical', name: 'Bantuan Teknis', icon: 'lucide:settings' }
+    { id: 'general', name: 'Umum', icon: 'i-lucide-info' },
+    { id: 'account', name: 'Akun & Pendaftaran', icon: 'i-lucide-user-circle' },
+    { id: 'farming', name: 'Kajian Pertanian', icon: 'i-lucide-sparkles' },
+    { id: 'marketplace', name: 'Pemasaran', icon: 'i-lucide-shopping-bag' },
+    { id: 'technical', name: 'Bantuan Teknis', icon: 'i-lucide-settings' }
 ]
 
 export const faqData: FaqData = {
@@ -131,28 +131,28 @@ export const quickHelpCards: IconCard[] = [
     {
         title: 'Panduan Pengguna',
         description: 'Pelajari dasar-dasar penggunaan aplikasi Juru Tani dari pendaftaran hingga fitur utama.',
-        icon: 'lucide:book-open',
+        icon: 'i-lucide-book-open',
         link: '#faq-categories',
         color: 'emerald'
     },
     {
         title: 'Video Tutorial',
         description: 'Tonton demonstrasi visual cara memanfaatkan fitur canggih Juru Tani untuk lahan Anda.',
-        icon: 'lucide:video',
+        icon: 'i-lucide-video',
         link: '/videos',
         color: 'blue'
     },
     {
         title: 'Tanya Komunitas',
         description: 'Bergabung dengan ribuan petani lain untuk bertukar pikiran dan solusi permasalahan lapangan.',
-        icon: 'lucide:users',
+        icon: 'i-lucide-users',
         link: '/discussions',
         color: 'green'
     },
     {
         title: 'Layanan Pelanggan',
         description: 'Butuh bantuan mendesak? Tim support kami siap membantu Anda 24/7.',
-        icon: 'lucide:headset',
+        icon: 'i-lucide-headset',
         link: '/contact-us',
         color: 'emerald'
     }
@@ -162,21 +162,21 @@ export const supportResources: IconCard[] = [
     {
         title: 'Pusat Pengetahuan',
         description: 'Akses perpustakaan artikel teknik budidaya, jurnal ilmiah, dan panduan hama penyakit terlengkap.',
-        icon: 'lucide:library',
+        icon: 'i-lucide-library',
         link: '/educations',
         color: 'blue'
     },
     {
         title: 'Pelatihan & Sertifikasi',
         description: 'Ikuti kursus online untuk meningkatkan skill bertani Anda dan dapatkan sertifikat dari mitra kami.',
-        icon: 'lucide:graduation-cap',
+        icon: 'i-lucide-graduation-cap',
         link: '/courses',
         color: 'green'
     },
     {
         title: 'Event & Webinar',
         description: 'Jangan lewatkan jadwal temu tani online dan webinar bersama pakar nasional.',
-        icon: 'lucide:calendar',
+        icon: 'i-lucide-calendar',
         link: '/events',
         color: 'emerald'
     }

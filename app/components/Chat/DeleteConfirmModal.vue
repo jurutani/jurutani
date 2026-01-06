@@ -39,7 +39,7 @@ const handleCancel = () => {
 }
 
 const iconName = computed(() => {
-  return props.variant === 'danger' ? 'heroicons:exclamation-triangle' : 'heroicons:exclamation-circle'
+  return props.variant === 'danger' ? 'i-heroicons-exclamation-triangle' : 'i-heroicons-exclamation-circle'
 })
 
 const iconColor = computed(() => {

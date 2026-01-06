@@ -464,7 +464,7 @@ const formatWebsiteUrl = (url: string) => {
         variant="solid"
         :loading="loading"
         :disabled="loading || !isFormValid"
-        icon="lucide:save"
+        icon="i-lucide-save"
       >
         Simpan Perubahan
       </UButton>

@@ -4,7 +4,7 @@ import { getHomePageSchemas, useJsonLdSchemas } from '@/composables/useJsonLdSch
 definePageMeta({
   layout: 'default',
   navOrder: 1,
-  icon: 'mdi:home'
+  icon: 'i-mdi-home'
 })
 
 // SEO Optimization with Publisher & Author

@@ -137,7 +137,7 @@ useHead({
             to="/discussions"
             color="success"
             variant="ghost"
-            icon="lucide:arrow-left"
+            icon="i-lucide-arrow-left"
             size="lg"
             aria-label="Kembali ke Diskusi"
             class="rounded-full"
@@ -164,7 +164,7 @@ useHead({
         <template #header>
           <div class="flex items-center gap-3">
             <UIcon 
-              name="lucide:lightbulb" 
+              name="i-lucide-lightbulb" 
               class="w-6 h-6 text-green-600 dark:text-green-400"
             />
             <p class="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium">
@@ -176,7 +176,7 @@ useHead({
         <!-- Loading state -->
         <div v-if="loading" class="flex flex-col items-center justify-center py-16">
           <UIcon 
-            name="lucide:loader" 
+            name="i-lucide-loader" 
             class="w-12 h-12 text-green-600 dark:text-green-400 animate-spin mb-4"
           />
           <p class="text-gray-600 dark:text-gray-400">Memuat data pakar...</p>
@@ -188,13 +188,13 @@ useHead({
             title="Terjadi Kesalahan"
             description="Gagal memuat data pakar. Silakan coba lagi."
             color="error"
-            icon="lucide:alert-circle"
+            icon="i-lucide-alert-circle"
             class="mb-4 max-w-md"
           />
           <UButton
             color="success"
             @click="fetchExperts"
-            icon="lucide:refresh-cw"
+            icon="i-lucide-refresh-cw"
           >
             Coba Lagi
           </UButton>
@@ -206,7 +206,7 @@ useHead({
           <div>
             <div class="flex items-center gap-2 mb-4">
               <UIcon 
-                name="lucide:tag" 
+                name="i-lucide-tag" 
                 class="w-5 h-5 text-green-600 dark:text-green-400"
               />
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Pilih Kategori</h2>
@@ -229,7 +229,7 @@ useHead({
           <div>
             <div class="flex items-center gap-2 mb-6">
               <UIcon 
-                name="lucide:users" 
+                name="i-lucide-users" 
                 class="w-5 h-5 text-green-600 dark:text-green-400"
               />
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -261,7 +261,7 @@ useHead({
                       />
                       <div class="absolute -bottom-2 -right-2 bg-green-500 dark:bg-green-600 w-6 h-6 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center">
                         <UIcon 
-                          name="lucide:check" 
+                          name="i-lucide-check" 
                           class="w-3 h-3 text-white"
                         />
                       </div>
@@ -286,7 +286,7 @@ useHead({
                       color="success"
                       size="md"
                       class="w-full"
-                      icon="lucide:message-circle"
+                      icon="i-lucide-message-circle"
                     >
                       Mulai Diskusi
                     </UButton>
@@ -309,7 +309,7 @@ useHead({
             <!-- Empty state -->
             <div v-else class="flex flex-col items-center justify-center py-16">
               <UIcon 
-                name="lucide:inbox" 
+                name="i-lucide-inbox" 
                 class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4"
               />
               <p class="text-gray-600 dark:text-gray-400 text-center max-w-sm">

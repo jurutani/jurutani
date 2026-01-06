@@ -12,7 +12,7 @@
             {
               "name": "name",
               "customType": "icon",
-              "placeholder": "heroicons:light-bulb"
+              "placeholder": "i-heroicons-light-bulb"
             },
             {
               "name": "size",

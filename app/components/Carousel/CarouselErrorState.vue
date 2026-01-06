@@ -14,7 +14,7 @@ defineProps<Props>()
     <template #header>
       <div class="text-center max-w-md mx-auto px-4">
         <div class="flex justify-center mb-4">
-          <UIcon name="heroicons:exclamation-triangle" class="w-16 h-16 text-red-400 dark:text-red-300" />
+          <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-red-400 dark:text-red-300" />
         </div>
         <h3 class="text-xl font-semibold text-white dark:text-gray-100 mb-2">
           Terjadi Kesalahan

@@ -153,18 +153,18 @@ const getFileExtension = (filename: string) => {
 };
 
 const getFileIcon = (type: string) => {
-  if (!type) return 'heroicons:document';
+  if (!type) return 'i-heroicons-document';
   
-  if (type.includes('pdf')) return 'heroicons:document-text';
-  if (type.includes('image')) return 'heroicons:photo';
-  if (type.includes('video')) return 'heroicons:film';
-  if (type.includes('audio')) return 'heroicons:speaker-wave';
-  if (type.includes('zip') || type.includes('rar')) return 'heroicons:archive-box';
-  if (type.includes('word') || type.includes('doc')) return 'heroicons:document-text';
-  if (type.includes('excel') || type.includes('sheet')) return 'heroicons:table-cells';
-  if (type.includes('powerpoint') || type.includes('presentation')) return 'heroicons:presentation-chart-bar';
+  if (type.includes('pdf')) return 'i-heroicons-document-text';
+  if (type.includes('image')) return 'i-heroicons-photo';
+  if (type.includes('video')) return 'i-heroicons-film';
+  if (type.includes('audio')) return 'i-heroicons-speaker-wave';
+  if (type.includes('zip') || type.includes('rar')) return 'i-heroicons-archive-box';
+  if (type.includes('word') || type.includes('doc')) return 'i-heroicons-document-text';
+  if (type.includes('excel') || type.includes('sheet')) return 'i-heroicons-table-cells';
+  if (type.includes('powerpoint') || type.includes('presentation')) return 'i-heroicons-presentation-chart-bar';
   
-  return 'heroicons:document';
+  return 'i-heroicons-document';
 };
 
 const formatFileSize = (bytes: number) => {
@@ -284,12 +284,12 @@ watch(() => meeting.value, (newVal) => {
             class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-all duration-200 hover:bg-green-50 dark:hover:bg-green-900/20 px-3 py-2 rounded-lg"
             @click="goBack"
           >
-            <UIcon name="heroicons:arrow-left" class="w-5 h-5" />
+            <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
             <span class="font-medium">Kembali ke Course</span>
           </button>
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
-            <UIcon name="heroicons:academic-cap" class="w-5 h-5" />
+            <UIcon name="i-heroicons-academic-cap" class="w-5 h-5" />
             <span class="font-semibold">Juru Tani Courses</span>
           </div>
         </div>
@@ -310,7 +310,7 @@ watch(() => meeting.value, (newVal) => {
       <div v-else-if="error" class="text-center py-20">
         <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200 dark:border-red-800 rounded-2xl p-8 max-w-md mx-auto shadow-lg">
           <div class="w-16 h-16 bg-red-100 dark:bg-red-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
-            <UIcon name="heroicons:exclamation-triangle" class="w-8 h-8 text-red-500" />
+            <UIcon name="i-heroicons-exclamation-triangle" class="w-8 h-8 text-red-500" />
           </div>
           <h3 class="text-xl font-bold text-red-700 dark:text-red-400 mb-2">Oops! Terjadi Kesalahan</h3>
           <p class="text-red-600 dark:text-red-300 mb-6">{{ error }}</p>
@@ -345,7 +345,7 @@ watch(() => meeting.value, (newVal) => {
           >
           <div v-else class="flex items-center justify-center h-full">
             <div class="text-center text-green-600 dark:text-green-400">
-              <UIcon name="heroicons:academic-cap" class="w-20 h-20 mx-auto mb-4 opacity-60" />
+              <UIcon name="i-heroicons-academic-cap" class="w-20 h-20 mx-auto mb-4 opacity-60" />
               <p class="text-lg font-medium opacity-80">Tidak ada gambar</p>
             </div>
           </div>
@@ -372,17 +372,17 @@ watch(() => meeting.value, (newVal) => {
           <!-- Meta Information -->
           <div class="flex flex-wrap items-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-10 pb-8 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded-full">
-              <UIcon name="heroicons:calendar" class="w-4 h-4" />
+              <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
               <span class="font-medium">{{ formatDate(meeting.created_at) }}</span>
             </div>
             
             <div v-if="author" class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded-full">
-              <UIcon name="heroicons:user" class="w-4 h-4" />
+              <UIcon name="i-heroicons-user" class="w-4 h-4" />
               <span class="font-medium">{{ author.full_name || 'Instruktur' }}</span>
             </div>
 
             <div v-if="meeting.organization" class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded-full">
-              <UIcon name="heroicons:building-office" class="w-4 h-4" />
+              <UIcon name="i-heroicons-building-office" class="w-4 h-4" />
               <span class="font-medium">{{ meeting.organization }}</span>
             </div>
           </div>
@@ -391,7 +391,7 @@ watch(() => meeting.value, (newVal) => {
           <div v-if="author" class="mb-10 p-8 bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 dark:from-green-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-green-200 dark:border-green-700 shadow-sm">
             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
               <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                <UIcon name="heroicons:user-circle" class="w-5 h-5 text-white" />
+                <UIcon name="i-heroicons-user-circle" class="w-5 h-5 text-white" />
               </div>
               Instruktur
             </h2>
@@ -415,7 +415,7 @@ watch(() => meeting.value, (newVal) => {
           <div class="mb-10">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
               <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <UIcon name="heroicons:document-text" class="w-5 h-5 text-white" />
+                <UIcon name="i-heroicons-document-text" class="w-5 h-5 text-white" />
               </div>
               Deskripsi Course
             </h2>
@@ -431,7 +431,7 @@ watch(() => meeting.value, (newVal) => {
           <div v-if="meeting.link" class="mb-10 p-8 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-2xl border border-green-200 dark:border-green-800 shadow-sm">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
               <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                <UIcon name="heroicons:link" class="w-5 h-5 text-white" />
+                <UIcon name="i-heroicons-link" class="w-5 h-5 text-white" />
               </div>
               Link Course
             </h2>
@@ -446,7 +446,7 @@ watch(() => meeting.value, (newVal) => {
               <UButton
                 color="success"
                 variant="solid"
-                icon="heroicons:arrow-top-right-on-square"
+                icon="i-heroicons-arrow-top-right-on-square"
                 size="xl"
                 class="whitespace-nowrap shadow-lg hover:shadow-xl transition-shadow"
                 @click="openCourseLink"
@@ -460,7 +460,7 @@ watch(() => meeting.value, (newVal) => {
           <div class="mb-8">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
               <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                <UIcon name="heroicons:paper-clip" class="w-5 h-5 text-white" />
+                <UIcon name="i-heroicons-paper-clip" class="w-5 h-5 text-white" />
               </div>
               Lampiran
               <span class="text-sm font-normal bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 px-2 py-1 rounded-full">{{ attachmentUrls.length }}</span>
@@ -495,7 +495,7 @@ watch(() => meeting.value, (newVal) => {
                   </div>
                 </div>
                 <div class="flex items-center justify-center w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-full group-hover:bg-blue-200 dark:group-hover:bg-blue-800/60 transition-colors flex-shrink-0">
-                  <UIcon name="heroicons:arrow-down-tray" class="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
+                  <UIcon name="i-heroicons-arrow-down-tray" class="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
                 </div>
 
                 <!-- Hover overlay -->
@@ -505,7 +505,7 @@ watch(() => meeting.value, (newVal) => {
             
             <div v-else class="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-600/50 rounded-2xl border border-gray-200 dark:border-gray-600">
               <div class="w-20 h-20 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <UIcon name="heroicons:paper-clip" class="w-10 h-10 text-gray-400" />
+                <UIcon name="i-heroicons-paper-clip" class="w-10 h-10 text-gray-400" />
               </div>
               <p class="text-gray-500 dark:text-gray-400 text-xl font-medium mb-2">Tidak ada lampiran</p>
               <p class="text-gray-400 dark:text-gray-500">Lampiran akan ditampilkan di sini jika tersedia</p>

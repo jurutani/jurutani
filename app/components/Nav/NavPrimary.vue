@@ -57,7 +57,7 @@ const getDropdownItems = (children: any[]): DropdownMenuItem[][] => {
                 <UIcon
                   v-if="child.icon"
                   :name="child.icon"
-                  class="size-8 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-200"
+                  class="h-6 w-6 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-200"
                 />
                 <span class="text-xs font-medium text-gray-700 dark:text-gray-200 text-center leading-tight">
                   {{ child.title }}
@@ -78,7 +78,7 @@ const getDropdownItems = (children: any[]): DropdownMenuItem[][] => {
               <UIcon
                 v-if="nav.icon"
                 :name="nav.icon"
-                class="size-8 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-200"
+                class="h-6 w-6 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-200"
               />
               <span class="text-xs font-medium text-gray-700 dark:text-gray-200 text-center leading-tight">
                 {{ nav.title }}
@@ -108,14 +108,14 @@ const getDropdownItems = (children: any[]): DropdownMenuItem[][] => {
           <UButton
             variant="ghost"
             color="primary"
-            trailing-icon="heroicons:chevron-down-20-solid"
+            trailing-icon="i-heroicons-chevron-down-20-solid"
             class="font-medium hover:bg-green-50 dark:hover:bg-green-900/30"
             :aria-label="`${nav.title} menu`"
           >
             <UIcon
               v-if="nav.icon"
               :name="nav.icon"
-              class="mr-2"
+              class="mr-2 h-6 w-6"
             />
             {{ nav.title }}
           </UButton>
@@ -135,7 +135,7 @@ const getDropdownItems = (children: any[]): DropdownMenuItem[][] => {
           <UIcon
             v-if="nav.icon"
             :name="nav.icon"
-            class="mr-2"
+            class="mr-2 h-6 w-6"
           />
           {{ nav.title }}
         </UButton>

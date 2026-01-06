@@ -51,10 +51,22 @@ const categoryItems = computed(() => {
   }))
 })
 
+// Props
+interface Props {
+  modelValue: boolean
+}
+
+const props = defineProps<Props>()
+
 // Emits
 const emit = defineEmits<{
-  close: []
+  'update:modelValue': [value: boolean]
 }>()
+
+const showModal = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
+})
 
 // Zod Schema
 const schema = z.object({
@@ -95,7 +107,7 @@ const isSubmitting = ref(false)
 const checkUserAuth = (): boolean => {
   if (!userData.value) {
     toastStore.error('Login dulu')
-    emit('close')
+    showModal.value = false
     navigateTo('/auth/login')
     return false
   }
@@ -161,7 +173,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (error) throw error
 
     toastStore.success('Berita baru berhasil ditambahkan!')
-    emit('close')
+    showModal.value = false
 
   } catch (error: any) {
     console.error('Error saving news:', error)
@@ -172,7 +184,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 const handleCancel = (): void => {
-  emit('close')
+  showModal.value = false
 }
 
 // Initialize component
@@ -183,7 +195,7 @@ onMounted(async () => {
 
 <template>
   <UModal
-    :close="{ onClick: () => emit('close') }"
+    v-model:open="showModal"
     title="Tambah Berita Baru"
     description="Isi formulir di bawah untuk menambahkan berita baru"
   >
@@ -195,7 +207,8 @@ onMounted(async () => {
             v-model="state.title"
             placeholder="Masukkan judul berita"
             size="lg"
-            icon="heroicons:chat-bubble-bottom-center-text"
+            icon="i-lucide-heading-1"
+            class="w-full"
           />
         </UFormField>
     
@@ -205,6 +218,8 @@ onMounted(async () => {
             v-model="state.sub_title"
             placeholder="Masukkan sub judul berita (opsional)"
             size="lg"
+            icon="i-lucide-subtitles"
+            class="w-full"
           />
         </UFormField>
     
@@ -216,7 +231,8 @@ onMounted(async () => {
               :items="categoryItems"
               placeholder="Pilih kategori"
               size="lg"
-              icon="heroicons:tag"
+              icon="i-lucide-tag"
+              class="w-full"
             />
           </UFormField>
 
@@ -226,7 +242,8 @@ onMounted(async () => {
               v-model="state.link"
               placeholder="https://contoh.com/artikel (opsional)"
               size="lg"
-              icon="heroicons:link"
+              icon="i-lucide-link"
+              class="w-full"
             />
           </UFormField>
         </div>
@@ -239,6 +256,8 @@ onMounted(async () => {
             :rows="6"
             size="lg"
             autoresize
+            icon="i-lucide-file-text"
+            class="w-full"
           />
         </UFormField>
     
@@ -251,7 +270,7 @@ onMounted(async () => {
           <UFileUpload
             v-model="state.imageFile"
             accept="image/*"
-            class="min-h-48"
+            class="min-h-48 w-full"
           />
         </UFormField>
     
@@ -264,7 +283,7 @@ onMounted(async () => {
           <UFileUpload
             v-model="state.attachmentFile"
             accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            class="min-h-32"
+            class="min-h-32 w-full"
           />
         </UFormField>
       </UForm>
@@ -279,7 +298,7 @@ onMounted(async () => {
           :disabled="isSubmitting"
           @click="handleCancel"
         >
-          <UIcon name="heroicons:x-mark" class="mr-1" />
+          <UIcon name="i-heroicons-x-mark" class="mr-1" />
           Batal
         </UButton>
         <UButton
@@ -289,7 +308,7 @@ onMounted(async () => {
           :loading="isSubmitting"
           form="news-form"
         >
-          <UIcon name="heroicons:check" class="mr-1" />
+          <UIcon name="i-heroicons-check" class="mr-1" />
           Simpan Berita
         </UButton>
       </div>

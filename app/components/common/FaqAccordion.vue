@@ -52,7 +52,7 @@ const isOpen = (index: number) => openItems.value.includes(index)
             : 'bg-gray-100 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400'"
         >
           <UIcon 
-            name="heroicons:chevron-right" 
+            name="i-heroicons-chevron-right" 
             class="w-5 h-5 transition-transform duration-300"
           />
         </div>
@@ -109,12 +109,12 @@ const isOpen = (index: number) => openItems.value.includes(index)
                 <button 
                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-900/30 hover:text-green-700 dark:hover:text-green-400"
                 >
-                  <UIcon name="heroicons:hand-thumb-up" class="w-4 h-4" />
+                  <UIcon name="i-heroicons-hand-thumb-up" class="w-4 h-4" />
                 </button>
                 <button 
                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-700 dark:hover:text-red-400"
                 >
-                  <UIcon name="heroicons:hand-thumb-down" class="w-4 h-4" />
+                  <UIcon name="i-heroicons-hand-thumb-down" class="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -131,7 +131,7 @@ const isOpen = (index: number) => openItems.value.includes(index)
       <slot name="empty">
         <div class="max-w-md mx-auto">
           <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-            <UIcon name="heroicons:question-mark-circle" class="w-8 h-8 text-gray-400" />
+            <UIcon name="i-heroicons-question-mark-circle" class="w-8 h-8 text-gray-400" />
           </div>
           <p class="text-gray-600 dark:text-gray-400 text-lg font-medium mb-2">
             Tidak ada pertanyaan ditemukan

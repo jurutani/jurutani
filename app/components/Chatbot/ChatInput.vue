@@ -67,7 +67,7 @@ defineExpose({
       <UButton
         type="submit"
         :disabled="!inputMessage.trim() || disabled"
-        icon="heroicons:paper-airplane"
+        icon="i-heroicons-paper-airplane"
         color="success"
         size="sm"
         class="transition-all duration-200 hover:scale-105"

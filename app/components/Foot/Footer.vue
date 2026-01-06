@@ -69,13 +69,17 @@ const currentYear = new Date().getFullYear()
               <div 
                 v-for="(contact, index) in contactInfo" 
                 :key="index"
-                class="flex items-center"
+                class="flex items-start"
               >
-                <UIcon :name="contact.icon" class="text-green-600 dark:text-green-400 mr-2" />
-                <div v-if="Array.isArray(contact.text)">
-                  <p v-for="(line, i) in contact.text" :key="i" class="text-sm">{{ line }}</p>
+                <div class="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                  <UIcon :name="contact.icon" class="text-green-600 dark:text-green-400 w-5 h-5" />
                 </div>
-                <p v-else class="text-sm">{{ contact.text }}</p>
+                <div class="ml-3 flex-1">
+                  <div v-if="Array.isArray(contact.text)">
+                    <p v-for="(line, i) in contact.text" :key="i" class="text-sm">{{ line }}</p>
+                  </div>
+                  <p v-else class="text-sm">{{ contact.text }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -85,7 +89,7 @@ const currentYear = new Date().getFullYear()
       <!-- Social Media Links -->
       <div class="flex flex-col items-center mb-10">
         <h4 class="text-center font-medium mb-6">Temukan Kami</h4>
-        <div class="flex flex-wrap justify-center gap-4">
+        <div class="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-5">
           <NuxtLink
             v-for="social in socialMedia"
             :key="social.name"
@@ -95,11 +99,9 @@ const currentYear = new Date().getFullYear()
             :aria-label="social.ariaLabel"
             class="social-icon-container"
           >
-            <UBadge 
-              class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 border border-white/20 dark:border-green-800/30 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <UIcon :name="social.icon" class="text-green-600 dark:text-green-400" />
-            </UBadge>
+            <div class="social-icon-wrapper">
+              <UIcon :name="social.icon" class="text-green-600 dark:text-green-400 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
+            </div>
           </NuxtLink>
         </div>
       </div>
@@ -161,32 +163,47 @@ const currentYear = new Date().getFullYear()
 }
 
 /* Social media icons */
-.social-icon {
+.social-icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.8) 0%, rgba(220, 252, 231, 0.8) 100%);
 }
 
-.social-icon:hover {
-  border-color: rgba(34, 197, 94, 0.3);
-  background-color: rgba(255, 255, 255, 0.8);
+.dark .social-icon-wrapper {
+  background: linear-gradient(135deg, rgba(20, 83, 45, 0.5) 0%, rgba(22, 101, 52, 0.5) 100%);
 }
-.dark .social-icon:hover {
-  background-color: rgba(22, 101, 52, 0.3);
+
+.social-icon-wrapper:hover {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 253, 244, 0.9) 100%);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.15);
+}
+
+.dark .social-icon-wrapper:hover {
+  background: linear-gradient(135deg, rgba(22, 101, 52, 0.6) 0%, rgba(34, 197, 94, 0.4) 100%);
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .social-icon {
-    width: 45px;
-    height: 45px;
+@media (min-width: 640px) {
+  .social-icon-wrapper {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (min-width: 768px) {
+  .social-icon-wrapper {
+    width: 56px;
+    height: 56px;
   }
 }
 

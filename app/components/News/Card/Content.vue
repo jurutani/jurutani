@@ -141,7 +141,7 @@ const contentClasses = computed(() => {
         class="w-full h-full bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center"
       >
         <div class="text-center text-green-400 dark:text-gray-600">
-          <UIcon name="heroicons:newspaper" class="w-20 h-20 mb-3 opacity-50" />
+          <UIcon name="i-heroicons-newspaper" class="w-20 h-20 mb-3 opacity-50" />
           <p class="text-sm font-medium opacity-75">Juru Tani</p>
         </div>
       </div>
@@ -163,7 +163,7 @@ const contentClasses = computed(() => {
             'inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl'
           ]"
         >
-          <UIcon name="heroicons:tag" class="w-3 h-3" />
+          <UIcon name="i-heroicons-tag" class="w-3 h-3" />
           {{ formattedCategory }}
         </span>
       </div>
@@ -194,11 +194,11 @@ const contentClasses = computed(() => {
         <!-- Meta Info -->
         <div class="flex items-center gap-4 text-xs md:text-sm text-gray-300">
           <div class="flex items-center gap-2">
-            <UIcon name="heroicons:user" class="w-4 h-4 text-green-400" />
+            <UIcon name="i-heroicons-user" class="w-4 h-4 text-green-400" />
             <span class="font-medium">{{ news.author || 'Admin Juru Tani' }}</span>
           </div>
           <div class="flex items-center gap-2">
-            <UIcon name="heroicons:calendar" class="w-4 h-4 text-green-400" />
+            <UIcon name="i-heroicons-calendar" class="w-4 h-4 text-green-400" />
             <span>{{ formattedDate }}</span>
           </div>
         </div>
@@ -207,7 +207,7 @@ const contentClasses = computed(() => {
         <div class="flex items-center gap-2 text-white font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
           <span class="text-sm md:text-base">Baca Selengkapnya</span>
           <UIcon 
-            name="heroicons:arrow-right" 
+            name="i-heroicons-arrow-right" 
             class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" 
           />
         </div>

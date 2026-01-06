@@ -21,11 +21,11 @@ const emit = defineEmits<{
       <!-- Agricultural themed icon -->
       <div class="relative mb-6">
         <UIcon 
-          name="heroicons:chat-bubble-left-right" 
+          name="i-heroicons-chat-bubble-left-right" 
           class="w-20 h-20 text-green-200 dark:text-green-800 mx-auto"
         />
         <UIcon 
-          name="heroicons:sparkles" 
+          name="i-heroicons-sparkles" 
           class="w-8 h-8 text-green-400 dark:text-green-500 absolute -top-2 -right-2 animate-pulse"
         />
       </div>
@@ -44,22 +44,22 @@ const emit = defineEmits<{
       <!-- Features highlight -->
       <div v-if="!searchQuery && showFeatures" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 text-sm">
         <div class="flex flex-col items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
-          <UIcon name="heroicons:academic-cap" class="w-6 h-6 text-green-600 dark:text-green-400 mb-2" />
+          <UIcon name="i-heroicons-academic-cap" class="w-6 h-6 text-green-600 dark:text-green-400 mb-2" />
           <span class="text-green-700 dark:text-green-300 font-medium">Konsultasi Ahli</span>
         </div>
         <div class="flex flex-col items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
-          <UIcon name="heroicons:megaphone" class="w-6 h-6 text-blue-600 dark:text-blue-400 mb-2" />
+          <UIcon name="i-heroicons-megaphone" class="w-6 h-6 text-blue-600 dark:text-blue-400 mb-2" />
           <span class="text-blue-700 dark:text-blue-300 font-medium">Tips Penyuluh</span>
         </div>
         <div class="flex flex-col items-center p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-100 dark:border-amber-800">
-          <UIcon name="heroicons:users" class="w-6 h-6 text-amber-600 dark:text-amber-400 mb-2" />
+          <UIcon name="i-heroicons-users" class="w-6 h-6 text-amber-600 dark:text-amber-400 mb-2" />
           <span class="text-amber-700 dark:text-amber-300 font-medium">Komunitas Petani</span>
         </div>
       </div>
       
       <UButton
         v-if="!searchQuery"
-        icon="heroicons:plus-circle"
+        icon="i-heroicons-plus-circle"
         color="success"
         variant="solid"
         size="lg"
@@ -71,7 +71,7 @@ const emit = defineEmits<{
       
       <UButton
         v-else
-        icon="heroicons:arrow-path"
+        icon="i-heroicons-arrow-path"
         color="success"
         variant="outline"
         @click="$emit('clearSearch')"

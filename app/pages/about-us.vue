@@ -124,32 +124,32 @@ const galleryData = [
 // Innovation Points Data
 const innovationPoints = [
   {
-    icon: 'lucide:message-square',
+    icon: 'i-lucide-message-square',
     title: 'Konsultasi Digital Real-Time',
     desc: 'Akses langsung dengan penyuluh pertanian profesional melalui chat dan video call'
   },
   {
-    icon: 'lucide:database',
+    icon: 'i-lucide-database',
     title: 'Database Komoditas Lengkap',
     desc: 'Informasi detail tentang berbagai jenis tanaman dan teknik budidaya terbaru'
   },
   {
-    icon: 'lucide:cloud-rain',
+    icon: 'i-lucide-cloud-rain',
     title: 'Data Cuaca & Pasar Akurat',
     desc: 'Prediksi cuaca harian dan harga komoditas real-time untuk perencanaan yang lebih baik'
   },
   {
-    icon: 'lucide:shopping-cart',
+    icon: 'i-lucide-shopping-cart',
     title: 'Marketplace Terintegrasi',
     desc: 'Jual-beli pupuk, bibit, dan hasil panen langsung dengan pembeli tanpa perantara'
   },
   {
-    icon: 'lucide:book-open',
+    icon: 'i-lucide-book-open',
     title: 'Edukasi & Kursus Pertanian',
     desc: 'Materi pembelajaran interaktif dari ahli dan praktisi pertanian berpengalaman'
   },
   {
-    icon: 'lucide:user',
+    icon: 'i-lucide-user',
     title: 'Alat Bantu Otomatis',
     desc: 'Kalkulator pupuk, prediksi hasil, dan tools analisis untuk keputusan yang tepat'
   }
@@ -164,32 +164,32 @@ interface FeatureCard {
 
 const platformAdvantages: FeatureCard[] = [
   {
-    icon: 'lucide:bar-chart-3',
+    icon: 'i-lucide-bar-chart-3',
     title: 'Data Terintegrasi & Real-Time',
     description: 'Database lengkap komoditas pertanian, data cuaca akurat, harga pasar real-time, dan informasi pasar yang terupdate setiap saat dalam satu platform terpadu'
   },
   {
-    icon: 'lucide:smartphone',
+    icon: 'i-lucide-smartphone',
     title: 'User-Friendly untuk Semua',
     description: 'Interface intuitif dirancang khusus untuk petani dengan berbagai tingkat literasi digital, dari yang masih konvensional hingga tech-savvy'
   },
   {
-    icon: 'lucide:headset',
+    icon: 'i-lucide-headset',
     title: 'Penyuluhan Digital 24/7',
     description: 'Akses langsung dengan penyuluh pertanian profesional kapan saja, di mana saja melalui chat, video call, atau forum diskusi komunitas petani'
   },
   {
-    icon: 'lucide:shopping-bag',
+    icon: 'i-lucide-shopping-bag',
     title: 'Marketplace Terintegrasi',
     description: 'Jual-beli pupuk, bibit berkualitas, hasil panen, dan produk pertanian lainnya langsung dengan pembeli tanpa perantara yang memberatkan'
   },
   {
-    icon: 'lucide:graduation-cap',
+    icon: 'i-lucide-graduation-cap',
     title: 'Edukasi Pertanian Berkualitas',
     description: 'Kursus online, webinar, dan artikel edukatif dari ahli pertanian profesional yang dikurasi khusus untuk peningkatan skill dan pengetahuan'
   },
   {
-    icon: 'lucide:user',
+    icon: 'i-lucide-user',
     title: 'Tools & Kalkulasi Otomatis',
     description: 'Kalkulator pupuk, prediksi hasil panen, analisis keuntungan, dan tools AI yang membantu petani membuat keputusan bisnis yang lebih tepat'
   }
@@ -198,7 +198,7 @@ const platformAdvantages: FeatureCard[] = [
 // Developer Team Data
 const teamCategories = [
   {
-    icon: 'lucide:user-search',
+    icon: 'i-lucide-user-search',
     title: 'Mahasiswa Berprestasi',
     items: [
       'Mahasiswa terpilih dari berbagai program studi',
@@ -208,7 +208,7 @@ const teamCategories = [
     ]
   },
   {
-    icon: 'lucide:user-check',
+    icon: 'i-lucide-user-check',
     title: 'Dosen Pembimbing Berpengalaman',
     items: [
       'Ahli di bidang pertanian dan teknologi',
@@ -221,17 +221,17 @@ const teamCategories = [
 
 const institutionHighlights = [
   {
-    icon: 'lucide:graduation-cap',
+    icon: 'i-lucide-graduation-cap',
     title: 'Pendidikan Vokasi',
     desc: 'Program praktis berbasis industri'
   },
   {
-    icon: 'lucide:search',
+    icon: 'i-lucide-search',
     title: 'Riset & Inovasi',
     desc: 'Penelitian pertanian berkelanjutan'
   },
   {
-    icon: 'lucide:earth',
+    icon: 'i-lucide-earth',
     title: 'Pemberdayaan Masyarakat',
     desc: 'Solusi nyata untuk petani lokal'
   }
@@ -282,7 +282,7 @@ const institutionHighlights = [
             <div class="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 class="text-2xl font-bold text-green-700 dark:text-green-300 mb-4 flex items-center">
-                  <span class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3 text-lg"><UIcon name="lucide:sprout" /></span>
+                  <span class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3 text-lg"><UIcon name="i-lucide-sprout" /></span>
                   Inovasi yang Lahir dari Pendidikan
                 </h3>
                 <p class="mb-6">
@@ -298,7 +298,7 @@ const institutionHighlights = [
 
               <div>
                 <h3 class="text-2xl font-bold text-green-700 dark:text-green-300 mb-4 flex items-center">
-                  <span class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3 text-lg"><UIcon name="lucide:user-check" /></span>
+                  <span class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3 text-lg"><UIcon name="i-lucide-user-check" /></span>
                   Solusi Penyuluhan Digital Terpadu
                 </h3>
                 <p class="mb-6">
@@ -373,7 +373,7 @@ const institutionHighlights = [
           <div class="bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-8 border border-green-200 dark:border-green-700">
             <div class="text-center mb-6">
               <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <UIcon name="lucide:eye" class="w-8 h-8 text-white" />
+                <UIcon name="i-lucide-eye" class="w-8 h-8 text-white" />
               </div>
               <h3 class="text-2xl font-bold text-green-800 dark:text-green-300">
                 Visi
@@ -388,7 +388,7 @@ const institutionHighlights = [
           <div class="bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-8 border border-green-200 dark:border-green-700">
             <div class="text-center mb-6">
               <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <UIcon name="lucide:check-circle-2" class="w-8 h-8 text-white" />
+                <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-white" />
               </div>
               <h3 class="text-2xl font-bold text-green-800 dark:text-green-300">
                 Misi
@@ -396,15 +396,15 @@ const institutionHighlights = [
             </div>
             <ul class="text-gray-700 dark:text-gray-300 space-y-3">
               <li class="flex items-start">
-                <UIcon name="lucide:check" class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
+                <UIcon name="i-lucide-check" class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
                 Mengembangkan solusi digital yang mudah diakses petani
               </li>
               <li class="flex items-start">
-                <UIcon name="lucide:check" class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
+                <UIcon name="i-lucide-check" class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
                 Menyediakan data real-time untuk keputusan pertanian yang tepat
               </li>
               <li class="flex items-start">
-                <UIcon name="lucide:check" class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
+                <UIcon name="i-lucide-check" class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
                 Membangun komunitas petani yang terhubung dan berdaya
               </li>
             </ul>

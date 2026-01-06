@@ -27,32 +27,32 @@ const statusConfig = {
   approved: {
     label: 'Disetujui',
     class: 'bg-green-100 dark:bg-green-950/50 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800',
-    icon: 'heroicons:check-circle'
+    icon: 'i-heroicons-check-circle'
   },
   pending: {
     label: 'Menunggu',
     class: 'bg-yellow-100 dark:bg-yellow-950/50 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-    icon: 'heroicons:clock'
+    icon: 'i-heroicons-clock'
   },
   rejected: {
     label: 'Ditolak',
     class: 'bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800',
-    icon: 'heroicons:x-circle'
+    icon: 'i-heroicons-x-circle'
   },
   Approved: {
     label: 'Disetujui',
     class: 'bg-green-100 dark:bg-green-950/50 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800',
-    icon: 'heroicons:check-circle'
+    icon: 'i-heroicons-check-circle'
   },
   Pending: {
     label: 'Menunggu',
     class: 'bg-yellow-100 dark:bg-yellow-950/50 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-    icon: 'heroicons:clock'
+    icon: 'i-heroicons-clock'
   },
   Rejected: {
     label: 'Ditolak',
     class: 'bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800',
-    icon: 'heroicons:x-circle'
+    icon: 'i-heroicons-x-circle'
   }
 };
 
@@ -175,14 +175,14 @@ onMounted(() => {
   <div>
     <!-- Loading State -->
     <div v-if="loading" class="text-center py-16">
-      <UIcon name="heroicons:arrow-path" class="inline-block animate-spin h-8 w-8 text-green-600 dark:text-green-500 mb-4" />
+      <UIcon name="i-heroicons-arrow-path" class="inline-block animate-spin h-8 w-8 text-green-600 dark:text-green-500 mb-4" />
       <p class="text-gray-500 dark:text-gray-400">Memuat riwayat pasar...</p>
     </div>
     
     <!-- Error State -->
     <div v-else-if="error" class="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-6 py-4 rounded-lg transition-colors duration-200">
       <div class="flex items-center">
-        <UIcon name="heroicons:exclamation-triangle" class="w-5 h-5 text-red-500 dark:text-red-400 mr-2 flex-shrink-0" />
+        <UIcon name="i-heroicons-exclamation-triangle" class="w-5 h-5 text-red-500 dark:text-red-400 mr-2 flex-shrink-0" />
         <p class="font-medium">Terjadi kesalahan saat memuat riwayat pasar.</p>
       </div>
       <button 
@@ -195,7 +195,7 @@ onMounted(() => {
     
     <!-- Empty State -->
     <div v-else-if="!marketItems || marketItems.length === 0" class="text-center py-16">
-      <UIcon name="heroicons:shopping-cart" class="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+      <UIcon name="i-heroicons-shopping-cart" class="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
       <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200 mb-2">Belum ada produk pasar</h3>
       <p class="text-gray-500 dark:text-gray-400 mb-4">
         Belum ada produk pasar yang Anda buat. Mulai posting produk pertama Anda!
@@ -204,7 +204,7 @@ onMounted(() => {
         to="/markets/create" 
         class="inline-flex items-center px-6 py-3 bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white rounded-lg transition-colors"
       >
-        <UIcon name="heroicons:plus" class="w-5 h-5 mr-2" />
+        <UIcon name="i-heroicons-plus" class="w-5 h-5 mr-2" />
         Posting Produk
       </nuxt-link>
     </div>
@@ -221,7 +221,7 @@ onMounted(() => {
             <!-- Type Badge -->
             <div class="flex items-center space-x-3">
               <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-950/50 text-green-800 dark:text-green-300 transition-colors">
-                <UIcon name="heroicons:shopping-cart" class="w-4 h-4 mr-1" />
+                <UIcon name="i-heroicons-shopping-cart" class="w-4 h-4 mr-1" />
                 {{ item.typeLabel }}
               </span>
               
@@ -278,7 +278,7 @@ onMounted(() => {
                   class="inline-flex items-center px-4 py-2 text-sm font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-950/50 transition-colors"
                 >
                   Lihat Detail
-                  <UIcon name="heroicons:arrow-right" class="w-4 h-4 ml-1" />
+                  <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 ml-1" />
                 </nuxt-link>
               </div>
             </div>

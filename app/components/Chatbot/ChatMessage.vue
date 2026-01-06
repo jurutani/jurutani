@@ -69,7 +69,7 @@ const shouldShowExpandButton = (message: Message) => {
           <!-- Expand/Collapse button -->
           <UButton
             v-if="shouldShowExpandButton(message)"
-            :icon="isExpanded ? 'heroicons:chevron-up' : 'heroicons:chevron-down'"
+            :icon="isExpanded ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"
             size="2xs"
             variant="ghost"
             :color="message.type === 'user' ? 'white' : 'gray'"
@@ -85,7 +85,7 @@ const shouldShowExpandButton = (message: Message) => {
         </div>
         <div v-if="message.type === 'user'" class="flex-shrink-0 mt-0.5">
           <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
-            <UIcon name="heroicons:user" class="w-3 h-3 text-white" />
+            <UIcon name="i-heroicons-user" class="w-3 h-3 text-white" />
           </div>
         </div>
       </div>

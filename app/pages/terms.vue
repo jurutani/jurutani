@@ -10,7 +10,7 @@ useSeoOptimized('terms')
       <div class="flex justify-between items-center mb-6">
         <div class="flex items-center">
           <div class="mr-3 p-2 bg-green-100 dark:bg-green-900 rounded-full">
-            <UIcon name="lucide:book-open" class="h-6 w-6 text-green-600 dark:text-green-400" />
+            <UIcon name="i-lucide-book-open" class="h-6 w-6 text-green-600 dark:text-green-400" />
           </div>
           <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">Juru Tani</h3>
         </div>
@@ -36,7 +36,7 @@ useSeoOptimized('terms')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">1. Pengantar</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <UIcon name="lucide:info" class="h-5 w-5 text-green-500 dark:text-green-400" />
+              <UIcon name="i-lucide-info" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Dengan mengakses dan menggunakan platform <strong class="text-green-700 dark:text-green-400">Juru Tani</strong>, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Jika Anda tidak setuju dengan salah satu dari ketentuan ini, Anda tidak diperkenankan untuk menggunakan layanan kami.
@@ -50,19 +50,19 @@ useSeoOptimized('terms')
           <ul class="list-none space-y-3 text-base leading-relaxed pl-2">
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Anda bertanggung jawab atas keamanan akun Anda, termasuk kata sandi dan semua aktivitas yang terjadi di dalamnya.</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Dilarang menggunakan layanan untuk tindakan yang melanggar hukum atau merugikan pihak lain.</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">
-                <UIcon name="lucide:check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+                <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
               <span>Kami berhak menangguhkan atau menghentikan akses pengguna yang melanggar ketentuan ini.</span>
             </li>
@@ -74,7 +74,7 @@ useSeoOptimized('terms')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">3. Hak Kekayaan Intelektual</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <UIcon name="lucide:shield" class="h-5 w-5 text-green-500 dark:text-green-400" />
+              <UIcon name="i-lucide-shield" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Semua konten di platform ini termasuk logo, teks, grafik, dan perangkat lunak adalah milik <strong class="text-green-700 dark:text-green-400">Juru Tani</strong> kecuali dinyatakan lain. Dilarang menyalin, mendistribusikan, atau menggunakan konten tersebut tanpa izin tertulis dari kami.
@@ -87,7 +87,7 @@ useSeoOptimized('terms')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">4. Tanggung Jawab</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <UIcon name="lucide:alert-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
+              <UIcon name="i-lucide-alert-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <div class="text-base leading-relaxed">
               <p class="mb-2">
@@ -115,7 +115,7 @@ useSeoOptimized('terms')
           <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400 border-l-4 border-green-500 dark:border-green-400 pl-4 mb-3">5. Perubahan Ketentuan</h2>
           <div class="flex items-start">
             <span class="inline-flex mr-2 mt-1">
-              <UIcon name="lucide:refresh-cw" class="h-5 w-5 text-green-500 dark:text-green-400" />
+              <UIcon name="i-lucide-refresh-cw" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
               Kami berhak memperbarui syarat dan ketentuan ini tanpa pemberitahuan sebelumnya. Dengan terus menggunakan platform kami setelah perubahan tersebut, Anda dianggap telah menyetujui syarat dan ketentuan yang telah diperbarui.

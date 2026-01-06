@@ -147,7 +147,7 @@ useHead({
       back-to="/discussions"
       back-label="Kembali ke Diskusi"
       action-button-label="Chat Baru"
-      action-button-icon="heroicons:plus"
+      action-button-icon="i-heroicons-plus"
       action-button-color="success"
       @action="handleNewChat"
     />

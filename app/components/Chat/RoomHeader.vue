@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   backLabel: 'Kembali ke Diskusi',
   showActionButton: true,
   actionButtonLabel: 'Chat Baru',
-  actionButtonIcon: 'heroicons:plus',
+  actionButtonIcon: 'i-heroicons-plus',
   actionButtonColor: 'success',
   actionButtonLoading: false
 })
@@ -38,7 +38,7 @@ const handleAction = () => {
         class="flex items-center justify-center w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/30 hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors"
         :aria-label="backLabel"
       >
-        <UIcon name="heroicons:arrow-left" class="w-6 h-6 text-green-600 dark:text-green-400" />
+        <UIcon name="i-heroicons-arrow-left" class="w-6 h-6 text-green-600 dark:text-green-400" />
       </NuxtLink>
       
       <div>

@@ -52,7 +52,7 @@ const getWeatherIconClass = (weatherMain: string) => {
         <!-- Header -->
         <div class="flex items-center gap-3 mb-6">
           <div class="icon-wrapper-header bg-gradient-to-br from-green-500/20 to-green-500/20">
-            <UIcon name="ic:baseline-date-range" class="w-7 h-7 text-green-600 dark:text-green-400" />
+            <UIcon name="i-ic-baseline-date-range" class="w-7 h-7 text-green-600 dark:text-green-400" />
           </div>
           <h3 class="text-xl font-bold text-gray-900 dark:text-white">Ramalan 5 Hari Kedepan</h3>
         </div>
@@ -104,7 +104,7 @@ const getWeatherIconClass = (weatherMain: string) => {
                   </p>
                   <!-- Rain probability badge -->
                   <div class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-white/20 backdrop-blur-md border border-white/30">
-                    <UIcon name="heroicons:cloud-arrow-down" class="w-3 h-3 sm:w-4 sm:h-4 text-green-200" />
+                    <UIcon name="i-heroicons-cloud-arrow-down" class="w-3 h-3 sm:w-4 sm:h-4 text-green-200" />
                     <span class="text-xs font-medium text-white">{{ Math.round(day.pop * 100) }}%</span>
                   </div>
                 </div>
@@ -135,7 +135,7 @@ const getWeatherIconClass = (weatherMain: string) => {
                 <!-- Humidity -->
                 <div class="stat-badge bg-white/15">
                   <div class="flex items-center gap-1.5 mb-1">
-                  <UIcon name="ic:baseline-water-drop" class="w-4 h-4 text-green-200" />
+                  <UIcon name="i-ic-baseline-water-drop" class="w-4 h-4 text-green-200" />
                   <span class="text-xs text-white/80">Lembab</span>
                   </div>
                   <p class="text-lg font-bold text-white">{{ day.humidity }}%</p>
@@ -144,7 +144,7 @@ const getWeatherIconClass = (weatherMain: string) => {
                 <!-- Wind -->
                 <div class="stat-badge bg-white/15">
                   <div class="flex items-center gap-1.5 mb-1">
-                  <UIcon name="ic:baseline-air" class="w-4 h-4 text-cyan-200" />
+                  <UIcon name="i-ic-baseline-air" class="w-4 h-4 text-cyan-200" />
                   <span class="text-xs text-white/80">Angin</span>
                   </div>
                   <p class="text-lg font-bold text-white">{{ day.wind_speed.toFixed(1) }} m/s</p>
@@ -156,14 +156,14 @@ const getWeatherIconClass = (weatherMain: string) => {
             <div class="relative z-10 grid grid-cols-2 gap-2 sm:hidden pt-3 mt-3 border-t border-white/20">
               <!-- Humidity -->
               <div class="stat-badge-mobile bg-white/15">
-                <UIcon name="ic:baseline-water-drop" class="w-4 h-4 text-green-200 mx-auto mb-1" />
+                <UIcon name="i-ic-baseline-water-drop" class="w-4 h-4 text-green-200 mx-auto mb-1" />
                 <p class="text-xs text-white/70 mb-0.5 hidden">Lembab</p>
                 <p class="text-sm font-bold text-white">{{ day.humidity }}%</p>
               </div>
 
               <!-- Wind -->
               <div class="stat-badge-mobile bg-white/15">
-                <UIcon name="ic:baseline-air" class="w-4 h-4 text-cyan-200 mx-auto mb-1" />
+                <UIcon name="i-ic-baseline-air" class="w-4 h-4 text-cyan-200 mx-auto mb-1" />
                 <p class="text-xs text-white/70 mb-0.5 hidden">Angin</p>
                 <p class="text-sm font-bold text-white">{{ day.wind_speed.toFixed(1) }}<span class="text-xs text-white/70 ml-0.5">m/s</span></p>
               </div>

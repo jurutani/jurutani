@@ -37,7 +37,7 @@ const handleShare = (platform: any) => {
         <UButton
           :variant="buttonVariant === 'outline' ? 'outline' : buttonVariant === 'minimal' ? 'ghost' : 'solid'"
           color="success"
-          icon="heroicons:share"
+          icon="i-heroicons-share"
         >
           {{ buttonText }}
         </UButton>

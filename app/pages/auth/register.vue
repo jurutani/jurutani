@@ -191,7 +191,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         <div class="space-y-6">
           <!-- Highlight fitur -->
           <div class="flex items-start space-x-3">
-            <UIcon name="ph:check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Komunitas Petani</h3>
               <p class="text-sm text-green-100">Terhubung dengan ribuan petani sukses di seluruh Indonesia</p>
@@ -199,7 +199,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <UIcon name="ph:check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Teknologi Pertanian</h3>
               <p class="text-sm text-green-100">Akses teknologi terbaru untuk meningkatkan hasil panen</p>
@@ -207,7 +207,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <UIcon name="ph:check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Analisis Pertanian</h3>
               <p class="text-sm text-green-100">Pantau perkembangan lahan dengan data analitik yang akurat</p>
@@ -246,7 +246,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                 class="w-full"
               />
                 <div class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none">
-                  <UIcon name="ph:envelope" class="w-5 h-5" />
+                  <UIcon name="i-lucide-mail" class="w-5 h-5" />
                 </div>
               </div>
             </UFormField>
@@ -268,7 +268,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                   @click="togglePasswordVisibility"
                 >
                   <UIcon 
-                    :name="showPassword ? 'ph:eye-slash' : 'ph:eye'" 
+                    :name="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'" 
                     class="w-5 h-5" 
                   />
                 </button>
@@ -313,7 +313,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
                   @click="toggleConfirmPasswordVisibility"
                 >
                   <UIcon 
-                    :name="showConfirmPassword ? 'ph:eye-slash' : 'ph:eye'" 
+                    :name="showConfirmPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'" 
                     class="w-5 h-5" 
                   />
                 </button>
@@ -322,7 +322,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               <!-- Password Match Indicator -->
               <div v-if="form.confirmPassword" class="mt-2 flex items-center text-xs">
                 <UIcon 
-                  :name="passwordsMatch ? 'ph:check-circle-fill' : 'ph:x-circle-fill'"
+                  :name="passwordsMatch ? 'i-ph-check-circle-fill' : 'i-ph-x-circle-fill'"
                   :class="passwordsMatch ? 'text-green-500' : 'text-red-500'"
                   class="w-4 h-4 mr-1"
                 />
@@ -372,7 +372,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               class="bg-green-600 hover:bg-green-700 text-white font-medium"
             >
                 <template #leading>
-                  <UIcon v-if="!isLoading" name="ph:user-plus" class="w-5 h-5" />
+                  <UIcon v-if="!isLoading" name="i-lucide-user-plus" class="w-5 h-5" />
                 </template>
                 {{ isLoading ? 'Mendaftar...' : 'Daftar Sekarang' }}
               </UButton>
@@ -391,10 +391,10 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
             variant="outline"
             :disabled="isLoading"
             :loading="isLoading"
-            class="bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
+            class="bg-white cursor-pointer hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
             @click="handleSocialLogin('google')"
           >
-              <UIcon v-if="!isLoading" name="logos:google-icon" class="mr-2 h-5 w-5" />
+              <UIcon v-if="!isLoading" name="i-logos-google-icon" class="mr-2 h-5 w-5" />
               Daftar dengan Google
             </UButton>
           </div>

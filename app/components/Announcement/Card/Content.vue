@@ -86,38 +86,38 @@ const getFileIcon = (attachment: AttachmentFile) => {
   if (ext) {
     switch (ext) {
       case 'pdf':
-        return 'heroicons:document-text';
+        return 'i-heroicons-document-text';
       case 'doc':
       case 'docx':
-        return 'heroicons:document';
+        return 'i-heroicons-document';
       case 'xls':
       case 'xlsx':
-        return 'heroicons:table-cells';
+        return 'i-heroicons-table-cells';
       case 'ppt':
       case 'pptx':
-        return 'heroicons:presentation-chart-bar';
+        return 'i-heroicons-presentation-chart-bar';
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'gif':
-        return 'heroicons:photo';
+        return 'i-heroicons-photo';
       case 'zip':
       case 'rar':
-        return 'heroicons:archive-box';
+        return 'i-heroicons-archive-box';
     }
   }
   
   // Check MIME type as fallback
   if (mimeType) {
-    if (mimeType.includes('pdf')) return 'heroicons:document-text';
-    if (mimeType.includes('word') || mimeType.includes('document')) return 'heroicons:document';
-    if (mimeType.includes('sheet') || mimeType.includes('excel')) return 'heroicons:table-cells';
-    if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) return 'heroicons:presentation-chart-bar';
-    if (mimeType.includes('image')) return 'heroicons:photo';
-    if (mimeType.includes('zip') || mimeType.includes('archive')) return 'heroicons:archive-box';
+    if (mimeType.includes('pdf')) return 'i-heroicons-document-text';
+    if (mimeType.includes('word') || mimeType.includes('document')) return 'i-heroicons-document';
+    if (mimeType.includes('sheet') || mimeType.includes('excel')) return 'i-heroicons-table-cells';
+    if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) return 'i-heroicons-presentation-chart-bar';
+    if (mimeType.includes('image')) return 'i-heroicons-photo';
+    if (mimeType.includes('zip') || mimeType.includes('archive')) return 'i-heroicons-archive-box';
   }
   
-  return 'heroicons:document';
+  return 'i-heroicons-document';
 };
 
 // Format file size
@@ -159,7 +159,7 @@ const organizationDisplay = computed(() => {
       <div class="absolute top-3 left-3">
         <div :class="['backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-lg', categoryColor]">
           <div class="flex items-center space-x-1">
-            <UIcon :name="announcement.category === 'online' ? 'heroicons:computer-desktop' : announcement.category === 'offline' ? 'heroicons:map-pin' : 'heroicons:globe-alt'" class="w-3 h-3" />
+            <UIcon :name="announcement.category === 'online' ? 'i-heroicons-computer-desktop' : announcement.category === 'offline' ? 'i-heroicons-map-pin' : 'i-heroicons-globe-alt'" class="w-3 h-3" />
             <span>{{ formattedCategory }}</span>
           </div>
         </div>
@@ -168,7 +168,7 @@ const organizationDisplay = computed(() => {
       <!-- Attachment Indicator -->
       <div v-if="hasAttachments" class="absolute top-3 right-3">
         <div class="bg-indigo-500/90 backdrop-blur-sm text-white text-xs px-2.5 py-1.5 rounded-full flex items-center font-medium shadow-lg">
-          <UIcon name="heroicons:paper-clip" class="w-3 h-3 mr-1" />
+          <UIcon name="i-heroicons-paper-clip" class="w-3 h-3 mr-1" />
           {{ attachmentCount }}
         </div>
       </div>
@@ -179,11 +179,11 @@ const organizationDisplay = computed(() => {
       <!-- Date and Organization -->
       <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-3">
         <span class="flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md">
-          <UIcon name="heroicons:calendar-days" class="w-3.5 h-3.5 mr-1.5" />
+          <UIcon name="i-heroicons-calendar-days" class="w-3.5 h-3.5 mr-1.5" />
           {{ formattedDate }}
         </span>
         <span class="flex items-center bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-md text-emerald-700 dark:text-emerald-400">
-          <UIcon name="heroicons:building-office" class="w-3.5 h-3.5 mr-1.5" />
+          <UIcon name="i-heroicons-building-office" class="w-3.5 h-3.5 mr-1.5" />
           {{ organizationDisplay }}
         </span>
       </div>
@@ -201,7 +201,7 @@ const organizationDisplay = computed(() => {
       <!-- Attachments Preview -->
       <div v-if="hasAttachments" class="mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
         <div class="flex items-center text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
-          <UIcon name="heroicons:paper-clip" class="w-4 h-4 mr-1.5" />
+          <UIcon name="i-heroicons-paper-clip" class="w-4 h-4 mr-1.5" />
           {{ attachmentCount }} file lampiran
         </div>
         <div class="grid grid-cols-1 gap-1">
@@ -240,7 +240,7 @@ const organizationDisplay = computed(() => {
           <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"/>
           <div class="relative flex items-center justify-center px-4 py-3">
             <span class="mr-2">Lihat Detail</span>
-            <UIcon name="heroicons:arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover/button:translate-x-1" />
+            <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover/button:translate-x-1" />
           </div>
         </NuxtLink>
 
@@ -253,7 +253,7 @@ const organizationDisplay = computed(() => {
           class="group/link bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center"
           title="Buka link eksternal"
         >
-          <UIcon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 transition-transform duration-300 group-hover/link:scale-110" />
+          <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 transition-transform duration-300 group-hover/link:scale-110" />
         </a>
       </div>
     </div>

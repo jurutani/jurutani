@@ -94,7 +94,7 @@ onMounted(() => {
         <div class="text-center p-6">
           <!-- Icon email -->
           <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <UIcon name="ph:envelope-simple-fill" class="w-8 h-8 text-green-600" />
+            <UIcon name="i-ph-envelope-simple-fill" class="w-8 h-8 text-green-600" />
           </div>
           
           <!-- Title -->
@@ -136,7 +136,7 @@ onMounted(() => {
               class="w-full"
               @click="handleResendConfirmation"
             >
-              <UIcon name="ph:paper-plane-tilt" class="w-4 h-4 mr-2" />
+              <UIcon name="i-ph-paper-plane-tilt" class="w-4 h-4 mr-2" />
               {{ loading ? 'Mengirim...' : 'Kirim Ulang Email' }}
             </UButton>
             
@@ -147,7 +147,7 @@ onMounted(() => {
               disabled
               class="w-full"
             >
-              <UIcon name="ph:clock" class="w-4 h-4 mr-2" />
+              <UIcon name="i-ph-clock" class="w-4 h-4 mr-2" />
               Kirim Ulang dalam {{ countdown }}s
             </UButton>
           </div>
@@ -162,7 +162,7 @@ onMounted(() => {
               to="/auth/login"
               class="text-green-600 hover:text-green-700 font-medium"
             >
-              <UIcon name="ph:arrow-left" class="w-4 h-4 mr-1" />
+              <UIcon name="i-ph-arrow-left" class="w-4 h-4 mr-1" />
               Kembali ke Login
             </UButton>
           </div>

@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { modalStore } from '~/composables/useJuruTaniModal'
 import { toastStore } from '~/composables/useJuruTaniToast'
 
-// Import modal components
-import NewsModalForm from '~/components/News/Modal/Form.vue'
-import ProductModalForm from '~/components/Product/Modal/Form.vue'
-
 const isDropdownOpen = ref(false)
+const showNewsModal = ref(false)
+const showProductModal = ref(false)
+
 const toggleDropdown = () => (isDropdownOpen.value = !isDropdownOpen.value)
 const closeDropdown = () => (isDropdownOpen.value = false)
 
@@ -24,17 +22,16 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 
 // Modal handlers
 const openNews = () => {
-  modalStore.open(NewsModalForm, { isEdit: false })
+  showNewsModal.value = true
   closeDropdown()
   toastStore.info('Silakan isi form berita baru')
 }
 
 const openProduct = () => {
-  modalStore.open(ProductModalForm, { isEdit: false })
+  showProductModal.value = true
   closeDropdown()
   toastStore.info('Silakan isi form produk baru')
 }
-
 </script>
 
 <template>
@@ -89,6 +86,10 @@ const openProduct = () => {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
     </button>
+
+    <!-- Modal Components -->
+    <NewsModalForm v-model="showNewsModal" />
+    <ProductModalForm v-model="showProductModal" />
   </div>
 </template>
 
