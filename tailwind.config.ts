@@ -5,13 +5,27 @@ export default {
 
   content: {
     files: [
-      './app/**/*.{vue,js,ts}',
-      './components/**/*.{vue,js,ts}',
-      './layouts/**/*.vue',
-      './pages/**/*.vue',
-      './plugins/**/*.{js,ts}',
+      // App directory - comprehensive coverage
+      './app/**/*.{vue,js,ts,jsx,tsx,mjs,cjs}',
       './app.vue',
-      './nuxt.config.{js,ts}',
+      './error.vue',
+
+      // Config files
+      './nuxt.config.{js,ts,mjs}',
+      './app.config.{js,ts}',
+      './tailwind.config.{js,ts}',
+
+      // Root level directories (fallback jika ada)
+      './components/**/*.{vue,js,ts,jsx,tsx}',
+      './layouts/**/*.{vue,js,ts}',
+      './pages/**/*.{vue,js,ts}',
+      './plugins/**/*.{js,ts,mjs}',
+      './composables/**/*.{js,ts}',
+      './utils/**/*.{js,ts}',
+      './data/**/*.{js,ts,json}',
+
+      // Site metadata
+      './site.{js,ts,json}',
     ],
   },
 }

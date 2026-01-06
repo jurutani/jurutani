@@ -40,8 +40,19 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       ignore: [
+        '/about-us',
+        '/contact-us',
+        '/help-faqs',
+        '/privacy-policy',
+        '/terms',
         '/room-chat',
         '/markets',
+        '/news',
+        '/educations',
+        '/videos',
+        '/courses',
+        '/discussions',
+        '/tools',
       ]
     }
   },

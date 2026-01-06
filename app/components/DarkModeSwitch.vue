@@ -10,9 +10,6 @@ const nextMode = () => {
 
 const isDark = computed(() => colorMode.value === 'dark')
 
-const icon = computed(() => {
-  return isDark.value ? 'i-lucide-moon' : 'i-lucide-sun'
-})
 </script>
 
 <template>
@@ -29,7 +26,7 @@ const icon = computed(() => {
       <Transition name="slide" mode="out-in">
         <UIcon
           :key="colorMode.preference"
-          :name="icon"
+          :name="isDark ? 'i-lucide-sun' : 'i-lucide-moon'"
           class="text-2xl"
         />
       </Transition>
