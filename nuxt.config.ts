@@ -20,12 +20,6 @@ export default defineNuxtConfig({
     },
   },
 
-  experimental: {
-    componentIslands: true,
-    viewTransition: true,
-    headNext: true,
-  },
-
   app: {
     baseURL: '/',
     head: {
@@ -39,8 +33,8 @@ export default defineNuxtConfig({
     preset: 'netlify-static',
     prerender: {
       crawlLinks: true,
+      routes: ['/'],
       ignore: [
-        '/index',
         '/food-prices',
         '/about-us',
         '/contact-us',
@@ -67,7 +61,7 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     'nuxt-og-image',
     'nuxt-schema-org',
-    '@nuxtjs/critters',
+    // '@nuxtjs/critters',
     '@nuxt/eslint',
     '@nuxt/ui',
   ],
@@ -78,11 +72,11 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
 
-  critters: {
-    config: {
-      preload: 'swap',
-    },
-  },
+  // critters: {
+  //   config: {
+  //     preload: 'swap',
+  //   },
+  // },
 
   css: [
     '@/assets/css/tailwind.css',
@@ -128,9 +122,6 @@ export default defineNuxtConfig({
       FieldArray: 'VeeFieldArray',
       ErrorMessage: 'VeeErrorMessage',
     },
-  },
-
-  pinia: {
   },
 
   imports: {
