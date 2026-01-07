@@ -21,6 +21,7 @@ useJsonLdSchemas(schemas)
     <WeatherSection class="mt-16" />
     <LaunchSale class="mt-16" />
     <HotDeals class="mt-16" />
+    <FoodPriceSection class="mt-16" />
     <FeatureSection class="mt-16" />
     <HomeSponsorship class="mt-16" />
     <HomeTestimoni />

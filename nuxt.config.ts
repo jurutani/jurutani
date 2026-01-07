@@ -40,6 +40,8 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       ignore: [
+        '/index',
+        '/food-prices',
         '/about-us',
         '/contact-us',
         '/help-faqs',

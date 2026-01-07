@@ -92,7 +92,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         <div class="space-y-6">
           <!-- Highlight fitur -->
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-lucide-map-pin" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Pantau Lahan</h3>
               <p class="text-sm text-green-100">Lacak kondisi lahan dengan data real-time</p>
@@ -100,7 +100,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-lucide-check-circle" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Prediksi Panen</h3>
               <p class="text-sm text-green-100">Estimasi hasil panen dengan teknologi AI</p>
@@ -108,7 +108,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-lucide-check-circle" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Manajemen Bibit</h3>
               <p class="text-sm text-green-100">Kelola stok dan kualitas bibit tanaman</p>

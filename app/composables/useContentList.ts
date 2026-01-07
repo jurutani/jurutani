@@ -28,6 +28,19 @@ export function useContentList<T = any>(options: ContentListOptions) {
     const sortColumn = options.defaultSort?.column || 'created_at'
     const sortAscending = options.defaultSort?.ascending || false
 
+    // Define search fields per table type
+    const getSearchFields = (): string[] => {
+        const table = options.tableName.toLowerCase()
+        const fieldMap: Record<string, string[]> = {
+            'news': ['title', 'content', 'sub_title'],
+            'videos': ['title', 'description'],
+            'courses': ['title', 'description'],
+            'markets': ['name', 'description', 'seller'],
+            'meetings': ['title', 'content']
+        }
+        return fieldMap[table] || ['title', 'description', 'content']
+    }
+
     // Sort Options
     const sortOptions: SortOption[] = [
         { label: 'Terbaru', value: 'newest', column: 'created_at', ascending: false },
@@ -47,6 +60,15 @@ export function useContentList<T = any>(options: ContentListOptions) {
     const hasData = computed(() => items.value.length > 0)
     const showPagination = computed(() => !isLoading.value && hasData.value && totalPages.value > 1)
 
+    // Build search query - optimized for Supabase FTS
+    const buildSearchQuery = (searchTerm: string): string => {
+        const fields = getSearchFields()
+        const normalizedTerm = searchTerm.trim()
+
+        // Create OR conditions for each field
+        return fields.map(field => `${field}.ilike.%${normalizedTerm}%`).join(',')
+    }
+
     // Fetch data
     const fetchItems = async () => {
         loading.value = true
@@ -59,7 +81,7 @@ export function useContentList<T = any>(options: ContentListOptions) {
                 .select('*', { count: 'exact' })
                 .is('deleted_at', null)
 
-            // Apply status filter if specified
+            // Apply status filter if specified (handles both 'status' and 'status_news')
             if (options.statusField && options.statusValue) {
                 query = query.eq(options.statusField, options.statusValue)
             }
@@ -69,10 +91,10 @@ export function useContentList<T = any>(options: ContentListOptions) {
                 query = query.eq(options.categoryField, filters.value.category)
             }
 
-            // Apply search filter (search in title, content, and description)
+            // Apply search filter using optimized search fields
             if (filters.value.search.trim()) {
-                const searchTerm = filters.value.search.trim()
-                query = query.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
+                const searchQuery = buildSearchQuery(filters.value.search)
+                query = query.or(searchQuery)
             }
 
             // Apply sorting

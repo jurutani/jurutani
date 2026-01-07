@@ -8,7 +8,8 @@ export const navs = {
             icon: 'i-lucide-headset',
             children: [
                 { title: 'Diskusi', to: '/discussions', icon: 'i-lucide-messages-square' },
-                { title: 'Marketplace', to: '/markets', icon: 'i-lucide-shopping-bag' }
+                { title: 'Marketplace', to: '/markets', icon: 'i-lucide-shopping-bag' },
+                { title: 'Harga Pangan', to: '/food-prices', icon: 'i-lucide-bar-chart-2' }
             ]
         },
         { title: 'Berita', to: '/news', icon: 'i-lucide-newspaper' },
@@ -50,9 +51,9 @@ export const footerContactInfo = [
         icon: 'i-mdi-map-marker',
         text: ['Jl. Kusumanegara No.2, Tahunan, Kec. Umbulharjo,', 'Kota Yogyakarta, Daerah Istimewa Yogyakarta 55161']
     },
-    { icon: 'i-mdi-phone', text: '+62 856-6900-0010' },
-    { icon: 'i-mdi-email', text: 'si.jurutani@gmail.com' },
-    { icon: 'i-mdi-clock-outline', text: 'Senin - Jumat: 08.00 - 16.00 WIB' }
+    { icon: 'i-lucide-phone', text: '+62 856-6900-0010' },
+    { icon: 'i-lucide-mail', text: 'si.jurutani@gmail.com' },
+    { icon: 'i-lucide-clock', text: 'Senin - Jumat: 08.00 - 16.00 WIB' }
 ]
 
 export const footerSocialMedia = [

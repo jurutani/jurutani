@@ -5,12 +5,14 @@ interface Props {
   modelValue?: string
   placeholder?: string
   debounce?: number
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: '',
   placeholder: 'Cari berita, artikel, atau topik...',
-  debounce: 500
+  debounce: 300,
+  disabled: false
 })
 
 const emit = defineEmits<{
@@ -26,7 +28,7 @@ watch(() => props.modelValue, (newValue) => {
   searchQuery.value = newValue
 })
 
-// Handle input with debounce
+// Handle input with debounce - more responsive
 const handleInput = (event: Event) => {
   const value = (event.target as HTMLInputElement).value
   searchQuery.value = value
@@ -37,17 +39,22 @@ const handleInput = (event: Event) => {
     clearTimeout(debounceTimer)
   }
   
-  // Set new timer
+  // Set new timer - triggers search on server
   debounceTimer = setTimeout(() => {
     emit('search', value)
   }, props.debounce)
 }
 
-// Clear search
+// Clear search immediately
 const clearSearch = () => {
   searchQuery.value = ''
   emit('update:modelValue', '')
   emit('search', '')
+  
+  // Clear any pending debounce
+  if (debounceTimer) {
+    clearTimeout(debounceTimer)
+  }
 }
 </script>
 

@@ -97,7 +97,7 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
  * Generate SEO meta dengan keyword yang sudah dioptimasi per halaman
  * Membuat struktur yang konsisten dan SEO-friendly
  */
-export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos') => {
+export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'food-prices' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos') => {
     const pageMetaConfig: Record<string, SEOMetaOptions> = {
         home: {
             title: 'Juru Tani | Solusi Pertanian Digital',
@@ -139,6 +139,12 @@ export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussi
             title: 'Tools & Kalkulator Pertanian',
             description: 'Rekomendasi alat pertanian, tips perawatan, kalkulator, dan tools berguna untuk petani modern.',
             keywords: ['alat pertanian', 'tools pertanian', 'kalkulator pertanian', 'alat bantu tani', 'peralatan pertanian', 'aplikasi pertanian'],
+            ogType: 'website',
+        },
+        'food-prices': {
+            title: 'Daftar Harga Pangan DIY',
+            description: 'Informasi harga pangan dan komoditas pertanian terkini dari produsen lokal di Daerah Istimewa Yogyakarta.',
+            keywords: ['harga pangan', 'harga komoditas', 'harga sayur', 'harga hasil tani', 'informasi harga', 'harga pasar', 'daftar harga DIY'],
             ogType: 'website',
         },
         about: {
@@ -227,7 +233,7 @@ export const getOgImageUrl = (customImage?: string) => {
  * Hook untuk mengoptimalkan SEO meta di halaman
  * Usage: const seoMeta = useSeoOptimized('news')
  */
-export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos') => {
+export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'food-prices' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos') => {
     const seoMeta = getPageSeoMeta(pageType)
 
     // Auto-apply useSeoMeta

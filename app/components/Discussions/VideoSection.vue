@@ -134,6 +134,7 @@ onMounted(() => {
       <AppSearchBar 
         v-model="filters.search"
         placeholder="Cari video tutorial, teknik pertanian, atau topik pembelajaran..."
+        :debounce="300"
         @search="handleSearchChange"
       />
       

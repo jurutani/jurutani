@@ -139,8 +139,21 @@ watch(() => video.value, (newVal) => {
       <!-- Error State -->
       <ErrorData v-else-if="hasError" :error="error" />
       
+      
       <!-- Video Detail Content -->
       <div v-else-if="hasData">
+        <!-- Breadcrumb -->
+        <nav class="mb-8 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <NuxtLink to="/" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            Beranda
+          </NuxtLink>
+          <UIcon name="i-lucide-chevron-right" class="w-4 h-4" />
+          <NuxtLink to="/videos" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            Video Edukasi
+          </NuxtLink>
+          <UIcon name="i-lucide-chevron-right" class="w-4 h-4" />
+          <span class="text-gray-900 dark:text-white font-medium">{{ video.title }}</span>
+        </nav>
         <!-- Main Content Area -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <!-- Left Column - Video Player & Info -->

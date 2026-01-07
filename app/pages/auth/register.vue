@@ -191,7 +191,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         <div class="space-y-6">
           <!-- Highlight fitur -->
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-lucide-users" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Komunitas Petani</h3>
               <p class="text-sm text-green-100">Terhubung dengan ribuan petani sukses di seluruh Indonesia</p>
@@ -199,7 +199,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-lucide-check-circle" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Teknologi Pertanian</h3>
               <p class="text-sm text-green-100">Akses teknologi terbaru untuk meningkatkan hasil panen</p>
@@ -207,7 +207,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
           </div>
           
           <div class="flex items-start space-x-3">
-            <UIcon name="i-ph-check-circle-fill" class="w-6 h-6 text-green-300 mt-0.5" />
+            <UIcon name="i-lucide-check-circle" class="w-6 h-6 text-green-300 mt-0.5" />
             <div>
               <h3 class="font-medium">Analisis Pertanian</h3>
               <p class="text-sm text-green-100">Pantau perkembangan lahan dengan data analitik yang akurat</p>
@@ -322,7 +322,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
               <!-- Password Match Indicator -->
               <div v-if="form.confirmPassword" class="mt-2 flex items-center text-xs">
                 <UIcon 
-                  :name="passwordsMatch ? 'i-ph-check-circle-fill' : 'i-ph-x-circle-fill'"
+                  :name="passwordsMatch ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
                   :class="passwordsMatch ? 'text-green-500' : 'text-red-500'"
                   class="w-4 h-4 mr-1"
                 />

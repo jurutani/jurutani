@@ -257,6 +257,19 @@ watch(() => course.value, (newVal) => {
       <!-- Error State -->
       <ErrorData v-else-if="hasError" :error="error" />
       
+      <!-- Breadcrumb -->
+      <nav v-if="hasData" class="mb-8 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <NuxtLink to="/" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+          Beranda
+        </NuxtLink>
+        <UIcon name="i-lucide-chevron-right" class="w-4 h-4" />
+        <NuxtLink to="/educations" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+          Materi Edukasi
+        </NuxtLink>
+        <UIcon name="i-lucide-chevron-right" class="w-4 h-4" />
+        <span class="text-gray-900 dark:text-white font-medium">{{ course.title }}</span>
+      </nav>
+      
       <!-- Course Detail Content -->
       <article v-else-if="hasData" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <!-- Hero Image -->
