@@ -21,12 +21,10 @@
     "format": "prettier --write \"**/*.{html,vue,svelte,astro,js,jsx,cjs,mjs,ts,tsx,cts,mts,css,md,mdx,json}\" !public --ignore-path .gitignore"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.11.3",
     "@supabase/supabase-js": "^2.51.0",
     "@vee-validate/nuxt": "^4.15.0",
     "@vee-validate/zod": "^4.15.0",
     "@vueuse/core": "^14.1.0",
-    "pinia": "^3.0.4",
     "rollup": "^4.30.1",
     "zod": "^3.25.56"
   },
@@ -36,8 +34,6 @@
     "@iconify-json/logos": "^1.2.10",
     "@iconify-json/lucide": "^1.2.82",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/ph": "^1.2.2",
-    "@iconify-json/twemoji": "^1.2.5",
     "@nuxt/eslint": "^0.7.5",
     "@nuxt/image": "^2.0.0",
     "@nuxt/ui": "^4.3.0",

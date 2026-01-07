@@ -61,7 +61,6 @@ export default defineNuxtConfig({
 
   modules: [
     '@vueuse/nuxt',
-    '@pinia/nuxt',
     '@nuxt/image',
     '@vee-validate/nuxt',
     '@nuxtjs/sitemap',
