@@ -8,7 +8,7 @@
         </div>
         <h1 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Pengaturan Akun</h1>
         <p class="text-gray-600 dark:text-gray-400 text-sm">
-          Kelola pengaturan email akun Juru Tani Anda dengan aman.
+          Kelola pengaturan email akun JuruTani Anda dengan aman.
         </p>
       </div>
 
@@ -158,9 +158,9 @@ const { supabase } = useSupabase()
 
 // SEO Meta
 useHead({
-  title: 'Pengaturan Akun - Juru Tani',
+  title: 'Pengaturan Akun - JuruTani',
   meta: [
-    { name: 'description', content: 'Kelola pengaturan email dan password akun Juru Tani Anda dengan aman.' }
+    { name: 'description', content: 'Kelola pengaturan email dan password akun JuruTani Anda dengan aman.' }
   ]
 })
 

@@ -16,7 +16,7 @@
       </div>
       
       <h3 class="text-xl font-bold text-green-800 dark:text-green-300 mb-2">
-        Memuat Juru Tani Chat
+        Memuat JuruTani Chat
       </h3>
       <p class="text-green-600 dark:text-green-400 text-sm mb-6">
         Menyiapkan conversation dengan ahli pertanian...

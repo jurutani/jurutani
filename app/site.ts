@@ -1,6 +1,6 @@
 export default {
-  title: 'Juru Tani',
-  description: 'Juru Tani merupakan inovasi terbaru yang digagas oleh Politeknik Pembangunan Pertanian Yogyakarta Magelang, bertujuan membantu petani setempat dan mendukung pertanian Indonesia.',
+  title: 'JuruTani',
+  description: 'JuruTani merupakan inovasi terbaru yang digagas oleh Politeknik Pembangunan Pertanian Yogyakarta Magelang, bertujuan membantu petani setempat dan mendukung pertanian Indonesia.',
   author: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang',
   publisher: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang',
   publisherShort: 'Polbangtan Yogyakarta Magelang',

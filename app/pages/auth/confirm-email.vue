@@ -171,7 +171,7 @@ onMounted(() => {
       
       <!-- Footer -->
       <div class="text-center text-sm text-gray-400 mt-6">
-        <p>&copy; 2026 Juru Tani. Teknologi untuk pertanian Indonesia.</p>
+        <p>&copy; 2026 JuruTani. Teknologi untuk pertanian Indonesia.</p>
       </div>
     </div>
   </div>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-// Data testimoni pengguna Juru Tani
+// Data testimoni pengguna JuruTani
 const testimonialsBase = [
   {
     id: 1,
     name: 'Ahmad Blora',
     email: 'Bloraachmad@gmail.com',
     role: 'Petani Tanaman Pangan',
-    description: 'Aplikasi juru tani sangat membantu saya mendapatkan informasi tentang masalah pertanian. Contohnya tentang hama dan penyakit tanaman, saya bisa bertanya langsung lewat chat juru tani.',
+    description: 'Aplikasi JuruTani sangat membantu saya mendapatkan informasi tentang masalah pertanian. Contohnya tentang hama dan penyakit tanaman, saya bisa bertanya langsung lewat chat JuruTani.',
     avatar: 'https://ui-avatars.com/api/?name=Ahmad+Blora&background=10b981&color=fff',
     color: 'green',
     rating: 5
@@ -16,7 +16,7 @@ const testimonialsBase = [
     name: 'Fisya Hapsari',
     email: 'fisyanahapsari@gmail.com',
     role: 'UMKM Produk Pertanian',
-    description: 'Juru tani bermanfaat untuk promosi produk saya untuk lebih dikenal banyak orang. Platform ini memberikan akses yang luas untuk memasarkan hasil pertanian saya.',
+    description: 'JuruTani bermanfaat untuk promosi produk saya untuk lebih dikenal banyak orang. Platform ini memberikan akses yang luas untuk memasarkan hasil pertanian saya.',
     avatar: 'https://ui-avatars.com/api/?name=Fisya+Hapsari&background=f59e0b&color=fff',
     color: 'blue',
     rating: 5
@@ -26,7 +26,7 @@ const testimonialsBase = [
     name: 'Sugeng',
     email: 'Sugeng2703@gmail.com',
     role: 'Petani Mitra',
-    description: 'Juru tani solusi yang tepat untuk membantu saya menghubungi langsung ke penyuluh. Fitur komunikasi langsung ini sangat memudahkan saya dalam berkonsultasi tentang teknik bertani.',
+    description: 'JuruTani solusi yang tepat untuk membantu saya menghubungi langsung ke penyuluh. Fitur komunikasi langsung ini sangat memudahkan saya dalam berkonsultasi tentang teknik bertani.',
     avatar: 'https://ui-avatars.com/api/?name=Sugeng&background=ef4444&color=fff',
     color: 'orange',
     rating: 5
@@ -36,7 +36,7 @@ const testimonialsBase = [
     name: 'Suwarni',
     email: 'Suwarni@gmail.com',
     role: 'Petani Sayuran',
-    description: 'Juru tani mantap! Terdapat fitur cuaca dan kalkulator benih dan pupuk sebagai bahan pertimbangan dalam budidaya tanaman. Tools ini sangat membantu perencanaan pertanian saya.',
+    description: 'JuruTani mantap! Terdapat fitur cuaca dan kalkulator benih dan pupuk sebagai bahan pertimbangan dalam budidaya tanaman. Tools ini sangat membantu perencanaan pertanian saya.',
     avatar: 'https://ui-avatars.com/api/?name=Suwarni&background=8b5cf6&color=fff',
     color: 'yellow',
     rating: 5
@@ -56,8 +56,8 @@ const testimonials = [...testimonialsBase, ...testimonialsBase, ...testimonialsB
     <UContainer class="relative z-10">
       <!-- Section Header -->
       <CommonSectionHeader
-        title="Testimoni Pengguna Juru Tani"
-        subtitle="Bergabunglah dengan ribuan petani yang telah merasakan manfaat aplikasi Juru Tani dalam meningkatkan produktivitas dan efisiensi pertanian mereka"
+        title="Testimoni Pengguna JuruTani"
+        subtitle="Bergabunglah dengan ribuan petani yang telah merasakan manfaat aplikasi JuruTani dalam meningkatkan produktivitas dan efisiensi pertanian mereka"
         align="center"
         class="mb-16"
       />

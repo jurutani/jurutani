@@ -142,7 +142,7 @@ const contentClasses = computed(() => {
       >
         <div class="text-center text-green-400 dark:text-gray-600">
           <UIcon name="i-heroicons-newspaper" class="w-20 h-20 mb-3 opacity-50" />
-          <p class="text-sm font-medium opacity-75">Juru Tani</p>
+          <p class="text-sm font-medium opacity-75">JuruTani</p>
         </div>
       </div>
       
@@ -195,7 +195,7 @@ const contentClasses = computed(() => {
         <div class="flex items-center gap-4 text-xs md:text-sm text-gray-300">
           <div class="flex items-center gap-2">
             <UIcon name="i-heroicons-user" class="w-4 h-4 text-green-400" />
-            <span class="font-medium">{{ news.author || 'Admin Juru Tani' }}</span>
+            <span class="font-medium">{{ news.author || 'Admin JuruTani' }}</span>
           </div>
           <div class="flex items-center gap-2">
             <UIcon name="i-heroicons-calendar" class="w-4 h-4 text-green-400" />

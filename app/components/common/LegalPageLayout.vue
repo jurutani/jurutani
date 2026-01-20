@@ -37,7 +37,7 @@ const renderContent = (content: string | string[], type?: string) => {
           <div class="p-2 bg-green-100 dark:bg-green-900 rounded-full">
             <UIcon :name="data.icon" class="h-6 w-6 text-green-600 dark:text-green-400" />
           </div>
-          <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">Juru Tani</h3>
+          <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">JuruTani</h3>
         </div>
       </div>
 

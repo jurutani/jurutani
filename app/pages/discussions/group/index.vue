@@ -29,7 +29,7 @@
           <div class="w-16 h-16 rounded-full flex items-center justify-center shadow-lg">
             <NuxtImg 
               src="/jurutani.png" 
-              alt="Juru Tani Logo" 
+              alt="JuruTani Logo" 
               class="w-10 h-10"
               width="40"
               height="40"
@@ -37,7 +37,7 @@
           </div>
         </div>
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 text-center mb-2">
-          Komunitas Juru Tani
+          Komunitas JuruTani
         </h2>
         <p class="text-sm text-gray-600 dark:text-gray-400 text-center leading-relaxed">
           Bergabunglah dengan komunitas petani untuk berbagi pengalaman, tips, dan informasi terbaru seputar pertanian

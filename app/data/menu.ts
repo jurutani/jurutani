@@ -8,6 +8,7 @@ export const navs = {
             icon: 'i-lucide-headset',
             children: [
                 { title: 'Diskusi', to: '/discussions', icon: 'i-lucide-messages-square' },
+                { title: 'Messages', to: '/room-chat', icon: 'i-lucide-message-square' },
                 { title: 'Marketplace', to: '/markets', icon: 'i-lucide-shopping-bag' },
                 { title: 'Harga Pangan', to: '/food-prices', icon: 'i-lucide-bar-chart-2' }
             ]

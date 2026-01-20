@@ -49,7 +49,7 @@ defineExpose({
       <div class="flex flex-col items-center justify-center space-y-6 p-4">
         <div class="space-y-4 text-center">
           <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-800 dark:text-emerald-400 leading-tight">
-            Selamat Datang di Juru Tani!
+            Selamat Datang di JuruTani!
           </h1>
           <p class="text-base md:text-lg text-gray-700 dark:text-gray-300">
             Terima kasih telah mengunjungi website kami.

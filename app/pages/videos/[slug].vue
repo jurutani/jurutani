@@ -95,7 +95,7 @@ const handleGoBack = (): void => {
 
 // SEO
 const seoTitle = computed(() => video.value ? `${video.value.title}` : 'Memuat Video...')
-const seoDescription = computed(() => video.value ? (video.value.description || `Tonton ${video.value.title} - Video edukasi pertanian dari Juru Tani`) : 'Video edukasi pertanian dari Juru Tani.')
+const seoDescription = computed(() => video.value ? (video.value.description || `Tonton ${video.value.title} - Video edukasi pertanian dari JuruTani`) : 'Video edukasi pertanian dari JuruTani.')
 const seoImage = computed(() => video.value?.thumbnail || '/video.png')
 const seoKeywords = computed(() => video.value ? [
   'video pertanian',

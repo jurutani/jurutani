@@ -1,5 +1,5 @@
 /**
- * SEO Utility Functions untuk Juru Tani
+ * SEO Utility Functions untuk JuruTani
  * Membantu optimasi meta tags, canonical URL, dan OG images di semua halaman
  */
 
@@ -51,7 +51,7 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
     const fullDescription = pageDescription || siteDescription
 
     // Generate keywords
-    const defaultKeywords = ['juru tani', 'pertanian', 'penyuluhan', 'digital', 'petani indonesia', 'teknologi pertanian']
+    const defaultKeywords = ['JuruTani', 'pertanian', 'penyuluhan', 'digital', 'petani indonesia', 'teknologi pertanian']
     const combinedKeywords = pageKeywords
         ? [...pageKeywords, ...defaultKeywords]
         : defaultKeywords
@@ -97,12 +97,12 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
  * Generate SEO meta dengan keyword yang sudah dioptimasi per halaman
  * Membuat struktur yang konsisten dan SEO-friendly
  */
-export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'food-prices' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos') => {
+export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'food-prices' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos' | 'chat') => {
     const pageMetaConfig: Record<string, SEOMetaOptions> = {
         home: {
-            title: 'Juru Tani | Solusi Pertanian Digital',
+            title: 'JuruTani | Solusi Pertanian Digital',
             description: 'Platform pertanian digital dari Polbangtan Yogyakarta-Magelang untuk mendukung petani lokal menuju era pertanian modern.',
-            keywords: ['juru tani', 'pertanian digital', 'inovasi pertanian', 'polbangtan yogyakarta', 'petani indonesia', 'teknologi pertanian', 'penyuluhan digital'],
+            keywords: ['JuruTani', 'pertanian digital', 'inovasi pertanian', 'polbangtan yogyakarta', 'petani indonesia', 'teknologi pertanian', 'penyuluhan digital'],
             ogType: 'website',
         },
         news: {
@@ -148,66 +148,72 @@ export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussi
             ogType: 'website',
         },
         about: {
-            title: 'Tentang Juru Tani',
-            description: 'Juru Tani Reborn: inovasi digital Polbangtan untuk mengembangkan pertanian Indonesia menuju era digital.',
-            keywords: ['tentang juru tani', 'visi misi juru tani', 'polbangtan yogyakarta', 'polbangtan magelang', 'tentang pertanian digital'],
+            title: 'Tentang Si JuruTani',
+            description: 'Si JuruTani: inovasi digital Polbangtan untuk mengembangkan pertanian Indonesia menuju era digital.',
+            keywords: ['tentang JuruTani', 'visi misi JuruTani', 'polbangtan yogyakarta', 'polbangtan magelang', 'tentang pertanian digital'],
             ogType: 'website',
         },
         contact: {
             title: 'Hubungi Kami',
-            description: 'Hubungi tim Juru Tani untuk informasi atau pertanyaan tentang platform pertanian digital kami.',
-            keywords: ['hubungi juru tani', 'kontak juru tani', 'layanan pelanggan', 'customer service', 'dukungan juru tani'],
+            description: 'Hubungi tim Si JuruTani untuk informasi atau pertanyaan tentang platform pertanian digital kami.',
+            keywords: ['hubungi JuruTani', 'kontak JuruTani', 'layanan pelanggan', 'customer service', 'dukungan JuruTani'],
             ogType: 'website',
         },
         help: {
             title: 'Bantuan & FAQ',
-            description: 'FAQ dan panduan lengkap untuk menggunakan platform Juru Tani secara optimal dengan bantuan teknis.',
-            keywords: ['faq juru tani', 'bantuan juru tani', 'pertanyaan umum', 'cara menggunakan', 'panduan pengguna', 'tips juru tani'],
+            description: 'FAQ dan panduan lengkap untuk menggunakan platform Si JuruTani secara optimal dengan bantuan teknis.',
+            keywords: ['faq JuruTani', 'bantuan JuruTani', 'pertanyaan umum', 'cara menggunakan', 'panduan pengguna', 'tips JuruTani'],
             ogType: 'website',
         },
         terms: {
             title: 'Syarat & Ketentuan',
-            description: 'Baca syarat dan ketentuan penggunaan platform Juru Tani. Perjanjian pengguna dan kebijakan layanan untuk semua pengguna.',
-            keywords: ['syarat ketentuan', 'terms of service', 'kebijakan juru tani', 'perjanjian pengguna'],
+            description: 'Baca syarat dan ketentuan penggunaan platform Si JuruTani. Perjanjian pengguna dan kebijakan layanan untuk semua pengguna.',
+            keywords: ['syarat ketentuan', 'terms of service', 'kebijakan JuruTani', 'perjanjian pengguna'],
             ogType: 'website',
         },
         privacy: {
             title: 'Kebijakan Privasi',
-            description: 'Kebijakan privasi Juru Tani: komitmen kami melindungi data pribadi dan keamanan pengguna platform.',
+            description: 'Kebijakan privasi Si JuruTani: komitmen kami melindungi data pribadi dan keamanan pengguna platform.',
             keywords: ['kebijakan privasi', 'privacy policy', 'keamanan data', 'perlindungan data pribadi'],
             ogType: 'website',
         },
         security: {
             title: 'Keamanan Akun',
-            description: 'Kelola keamanan akun Juru Tani dengan fitur keamanan lengkap untuk melindungi data pribadi.',
+            description: 'Kelola keamanan akun Si JuruTani dengan fitur keamanan lengkap untuk melindungi data pribadi.',
             keywords: ['keamanan akun', 'keamanan data', 'proteksi akun', 'keamanan login', 'verifikasi identitas'],
             ogType: 'website',
         },
         profile: {
             title: 'Profil Saya',
-            description: 'Kelola profil pribadi Anda di Juru Tani. Edit informasi, preferensi, dan pengaturan akun dengan mudah.',
+            description: 'Kelola profil pribadi Anda di Si JuruTani. Edit informasi, preferensi, dan pengaturan akun dengan mudah.',
             keywords: ['profil pengguna', 'akun saya', 'pengaturan profil', 'data pribadi'],
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
         history: {
             title: 'Riwayat Aktivitas',
-            description: 'Lihat riwayat lengkap aktivitas, transaksi, diskusi, dan interaksi Anda di platform Juru Tani.',
+            description: 'Lihat riwayat lengkap aktivitas, transaksi, diskusi, dan interaksi Anda di platform Si JuruTani.',
             keywords: ['riwayat aktivitas', 'riwayat transaksi', 'history', 'log aktivitas'],
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
         setting: {
             title: 'Pengaturan Akun',
-            description: 'Atur preferensi dan pengaturan akun Anda di Juru Tani. Kustomisasi pengalaman pengguna sesuai kebutuhan.',
+            description: 'Atur preferensi dan pengaturan akun Anda di Si JuruTani. Kustomisasi pengalaman pengguna sesuai kebutuhan.',
             keywords: ['pengaturan akun', 'preferences', 'settings', 'konfigurasi'],
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
         videos: {
-            title: 'Video Juru Tani',
-            description: 'Video Juru Tani: belajar pertanian dengan video tutorial interaktif dan materi pembelajaran lengkap.',
-            keywords: ['video juru tani', 'pertanian digital', 'video tutorial', 'materi pembelajaran', 'belajar pertanian'],
+            title: 'Video Si JuruTani',
+            description: 'Video Si JuruTani: belajar pertanian dengan video tutorial interaktif dan materi pembelajaran lengkap.',
+            keywords: ['video si JuruTani', 'pertanian digital', 'video tutorial', 'materi pembelajaran', 'belajar pertanian'],
+            ogType: 'website',
+        },
+        chat: {
+            title: 'Ruang Obrolan — JuruTani',
+            description: 'Ikuti percakapan dan pembaruan terbaru di Ruang Obrolan JuruTani untuk berdiskusi, berbagi tips, dan mendapatkan info pertanian terkini.',
+            keywords: ['ruang obrolan', 'obrolan', 'diskusi', 'tips', 'info pertanian'],
             ogType: 'website',
         },
     }
@@ -233,7 +239,7 @@ export const getOgImageUrl = (customImage?: string) => {
  * Hook untuk mengoptimalkan SEO meta di halaman
  * Usage: const seoMeta = useSeoOptimized('news')
  */
-export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'food-prices' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos') => {
+export const useSeoOptimized = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'food-prices' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos' | 'chat') => {
     const seoMeta = getPageSeoMeta(pageType)
 
     // Auto-apply useSeoMeta
@@ -293,7 +299,7 @@ export const useSeoDetail = (options: {
     const fullDescription = pageDescription || siteMeta.description
 
     // Generate keywords
-    const defaultKeywords = ['juru tani', 'pertanian', 'penyuluhan', 'digital', 'petani indonesia']
+    const defaultKeywords = ['JuruTani', 'pertanian', 'penyuluhan', 'digital', 'petani indonesia']
     const combinedKeywords = pageKeywords
         ? [...pageKeywords, ...defaultKeywords]
         : defaultKeywords
@@ -342,31 +348,31 @@ export const getAuthPageSeoMeta = (pageType: 'login' | 'register' | 'forgot-pass
     const pageMetaConfig: Record<string, SEOMetaOptions> = {
         login: {
             title: 'Masuk',
-            description: 'Masuk ke akun Juru Tani Anda untuk mengakses semua fitur pertanian digital yang kami sediakan.',
-            keywords: ['login juru tani', 'masuk akun', 'autentikasi'],
+            description: 'Masuk ke akun JuruTani Anda untuk mengakses semua fitur pertanian digital yang kami sediakan.',
+            keywords: ['login JuruTani', 'masuk akun', 'autentikasi'],
             robots: 'noindex, follow',
         },
         register: {
             title: 'Daftar',
-            description: 'Daftar akun baru di Juru Tani dan mulai bergabung dengan komunitas petani modern di Indonesia.',
-            keywords: ['daftar juru tani', 'registrasi', 'buat akun'],
+            description: 'Daftar akun baru di JuruTani dan mulai bergabung dengan komunitas petani modern di Indonesia.',
+            keywords: ['daftar JuruTani', 'registrasi', 'buat akun'],
             robots: 'noindex, follow',
         },
         'forgot-password': {
             title: 'Lupa Kata Sandi',
-            description: 'Pulihkan akses akun Juru Tani Anda dengan mereset kata sandi dengan mudah dan aman.',
+            description: 'Pulihkan akses akun JuruTani Anda dengan mereset kata sandi dengan mudah dan aman.',
             keywords: ['lupa password', 'reset password', 'recover account'],
             robots: 'noindex, follow',
         },
         'reset-password': {
             title: 'Atur Ulang Kata Sandi',
-            description: 'Atur ulang kata sandi Juru Tani Anda untuk keamanan akun yang lebih baik.',
+            description: 'Atur ulang kata sandi JuruTani Anda untuk keamanan akun yang lebih baik.',
             keywords: ['atur password', 'ubah password', 'reset password'],
             robots: 'noindex, follow',
         },
         'confirm-email': {
             title: 'Konfirmasi Email',
-            description: 'Konfirmasi email Anda untuk menyelesaikan proses registrasi di Juru Tani.',
+            description: 'Konfirmasi email Anda untuk menyelesaikan proses registrasi di JuruTani.',
             keywords: ['konfirmasi email', 'verifikasi email'],
             robots: 'noindex, follow',
         },

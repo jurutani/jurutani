@@ -1,82 +1,122 @@
 <script setup lang="ts">
 interface Props {
-  modelValue: string
   loading?: boolean
   uploadingImage?: boolean
-  disabled?: boolean
-  placeholder?: string
+  modelValue: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  loading: false,
-  uploadingImage: false,
-  disabled: false,
-  placeholder: 'Ketik pesan...'
-})
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
-  send: []
-  uploadImage: []
+  'send': []
+  'uploadImage': []
 }>()
 
-const messageValue = computed({
+const textareaRef = ref<HTMLTextAreaElement>()
+const isFocused = ref(false)
+
+const localValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 })
 
-const isValid = computed(() => {
-  return messageValue.value.trim().length > 0 && messageValue.value.trim().length <= 1000
+const canSend = computed(() => {
+  return localValue.value.trim().length > 0 && !props.loading
 })
 
+const characterCount = computed(() => localValue.value.length)
+const maxCharacters = 1000
+
 const handleSend = () => {
-  if (isValid.value && !props.loading && !props.uploadingImage) {
+  if (canSend.value) {
     emit('send')
   }
 }
 
-const handleKeyPress = (event: KeyboardEvent) => {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault()
+const handleKeydown = (e: KeyboardEvent) => {
+  // Send on Enter, new line on Shift+Enter
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault()
     handleSend()
   }
 }
+
+// Auto-resize textarea
+watch(localValue, () => {
+  nextTick(() => {
+    if (textareaRef.value) {
+      textareaRef.value.style.height = 'auto'
+      textareaRef.value.style.height = textareaRef.value.scrollHeight + 'px'
+    }
+  })
+})
 </script>
 
 <template>
-  <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-    <div class="flex gap-3">
-      <!-- Image upload button -->
+  <div class="p-4 bg-white dark:bg-gray-900">
+    <div 
+      :class="[
+        'flex items-end gap-2 p-3 rounded-2xl border-2 transition-all duration-200',
+        isFocused 
+          ? 'border-green-500 dark:border-green-600 bg-green-50/50 dark:bg-green-900/10' 
+          : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'
+      ]"
+    >
+      <!-- Image Upload Button -->
       <UButton
         icon="i-heroicons-photo"
         color="neutral"
         variant="ghost"
-        size="lg"
-        :disabled="uploadingImage || disabled"
-        @click="$emit('uploadImage')"
+        size="sm"
+        :loading="uploadingImage"
+        :disabled="loading"
+        class="shrink-0"
+        @click="emit('uploadImage')"
       />
-      
-      <!-- Text input -->
-      <UInput
-        v-model="messageValue"
-        :placeholder="placeholder"
-        :disabled="loading || uploadingImage || disabled"
-        class="flex-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
-        size="lg"
-        @keypress="handleKeyPress"
-      />
-      
-      <!-- Send button -->
+
+      <!-- Textarea Input -->
+      <div class="flex-1 min-w-0">
+        <textarea
+          ref="textareaRef"
+          v-model="localValue"
+          placeholder="Ketik pesan..."
+          rows="1"
+          :maxlength="maxCharacters"
+          :disabled="loading"
+          class="w-full resize-none bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-[15px] leading-relaxed max-h-32 overflow-y-auto"
+          @keydown="handleKeydown"
+          @focus="isFocused = true"
+          @blur="isFocused = false"
+        />
+        
+        <!-- Character Counter -->
+        <div 
+          v-if="characterCount > maxCharacters * 0.8" 
+          class="text-[11px] text-gray-500 dark:text-gray-400 mt-1"
+        >
+          {{ characterCount }}/{{ maxCharacters }}
+        </div>
+      </div>
+
+      <!-- Send Button -->
       <UButton
-        :disabled="!isValid || loading || uploadingImage || disabled"
-        :loading="loading"
         icon="i-heroicons-paper-airplane"
-        size="lg"
-        color="success"
+        :color="canSend ? 'success' : 'neutral'"
+        :variant="canSend ? 'solid' : 'ghost'"
+        size="sm"
+        :loading="loading"
+        :disabled="!canSend"
+        class="shrink-0 transition-all duration-200"
+        :class="canSend ? 'scale-110' : 'scale-100'"
         @click="handleSend"
-      >
-        Kirim
-      </UButton>
+      />
     </div>
+    
+    <!-- Helper Text -->
+    <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-2 px-1">
+      Tekan <kbd class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-[10px]">Enter</kbd> untuk kirim, 
+      <kbd class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-[10px]">Shift+Enter</kbd> untuk baris baru
+    </p>
   </div>
 </template>

@@ -50,7 +50,7 @@ export const discussionServices: DiscussionService[] = [
         id: 'chat-admin',
         title: 'Support Center',
         subtitle: 'Bantuan Langsung',
-        description: 'Hubungi tim support Juru Tani untuk bantuan teknis aplikasi, keluhan layanan, atau pertanyaan umum dengan respon prioritas.',
+        description: 'Hubungi tim support JuruTani untuk bantuan teknis aplikasi, keluhan layanan, atau pertanyaan umum dengan respon prioritas.',
         icon: 'i-lucide-headset',
         image: '/services/admin.JPG',
         route: '/room-chat/admin'

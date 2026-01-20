@@ -1,5 +1,5 @@
 /**
- * Shared TypeScript interfaces for Juru Tani data structures
+ * Shared TypeScript interfaces for JuruTani data structures
  * Used across all pages for type safety and consistency
  */
 

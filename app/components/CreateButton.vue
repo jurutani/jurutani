@@ -104,7 +104,7 @@ const openProduct = () => {
   transform: translateY(10px);
 }
 
-/* Dekorasi tema Juru Tani */
+/* Dekorasi tema JuruTani */
 .floating-action-button::before {
   content: '';
   position: absolute;

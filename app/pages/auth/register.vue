@@ -216,7 +216,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         </div>
         
         <div class="text-sm">
-          &copy; 2026 Juru Tani. Teknologi untuk pertanian Indonesia.
+          &copy; 2026 JuruTani. Teknologi untuk pertanian Indonesia.
         </div>
       </div>
     </div>
@@ -230,7 +230,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
         
         <div class="text-center mb-8">
           <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Buat Akun Baru</h2>
-          <p class="text-gray-500 dark:text-gray-400 mt-2">Bergabung dengan platform Juru Tani</p>
+          <p class="text-gray-500 dark:text-gray-400 mt-2">Bergabung dengan platform JuruTani</p>
         </div>
         
         <UCard class="shadow-sm border-green-100 dark:border-green-700">

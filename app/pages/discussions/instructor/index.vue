@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { USelectMenu } from '#components';
 import { ref, onMounted, computed, watch } from 'vue';
 import { useSupabase } from '~/composables/useSupabase';
 
@@ -22,14 +21,20 @@ interface District {
   province: string;
 }
 
+interface DistrictOption {
+  value: string;
+  label: string;
+  province: string;
+}
+
 // Data
 const instructors = ref<Instructor[]>([]);
 const districts = ref<District[]>([]);
 const loading = ref(true);
-const error = ref(null);
+const error = ref<any>(null);
 
 // Filter states
-const selectedDistrict = ref<string>('');
+const selectedDistrict = ref<DistrictOption | null>(null);
 const searchQuery = ref<string>('');
 
 // Pagination states
@@ -37,7 +42,7 @@ const currentPage = ref<number>(1);
 const pageSize = 10;
 
 // Computed properties
-const availableDistricts = computed(() => {
+const availableDistricts = computed<DistrictOption[]>(() => {
   // Get all unique districts with their province info
   const districtOptions = districts.value.map(d => ({
     value: d.name,
@@ -61,14 +66,13 @@ const availableDistricts = computed(() => {
 });
 
 const filteredInstructors = computed(() => {
-  // Return empty array while loading
   if (loading.value || !instructors.value) {
     return [];
   }
   
   return instructors.value.filter(instructor => {
     // District filter - only filter by district if selectedDistrict is not empty
-    const matchesDistrict = !selectedDistrict.value || instructor.district === selectedDistrict.value;
+    const matchesDistrict = !selectedDistrict.value?.value || instructor.district === selectedDistrict.value.value;
     
     // Search filter - safely check if full_name exists
     const fullName = instructor.profiles?.full_name || '';
@@ -145,6 +149,12 @@ const fetchInstructors = async () => {
   }
 };
 
+// Reset filter handler
+const handleResetFilter = () => {
+  selectedDistrict.value = null;
+  searchQuery.value = '';
+};
+
 // Watchers untuk reset page ketika filter berubah
 watch([selectedDistrict, searchQuery], () => {
   currentPage.value = 1;
@@ -172,27 +182,12 @@ useHead({
   <div class="min-h-screen py-8 md:py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header Section -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
-        <div class="flex items-center gap-4">
-          <UButton
-            to="/discussions"
-            color="success"
-            variant="ghost"
-            icon="i-lucide-arrow-left"
-            size="lg"
-            aria-label="Kembali ke Diskusi"
-            class="rounded-full"
-          />
-          <div>
-            <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
-              Diskusi Penyuluh
-            </h1>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              Konsultasi dengan penyuluh pertanian berpengalaman
-            </p>
-          </div>
-        </div>
-      </div>
+      <DiscussionsDiscussionHeader
+        title="Diskusi Penyuluh"
+        subtitle="Konsultasi dengan penyuluh pertanian berpengalaman"
+        icon="i-lucide-users"
+        back-url="/discussions"
+      />
 
       <!-- Main Card -->
       <UCard 
@@ -243,48 +238,45 @@ useHead({
 
         <!-- Content -->
         <div v-else class="space-y-8">
-          <!-- Search input -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <!-- Search and Filter -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <!-- Left: Search -->
-            <div>
-              <div class="flex items-center gap-2 mb-4">
-                <UIcon 
-                  name="i-lucide-search" 
-                  class="w-5 h-5 text-green-600 dark:text-green-400"
-                />
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Cari Penyuluh</h2>
-              </div>
-              <div class="relative">
-                <UInput
-                  v-model="searchQuery"
-                  type="text"
-                  placeholder="Cari nama penyuluh..."
-                  icon="i-lucide-search"
-                  class="w-full"
-                />
-              </div>
-            </div>
+            <DiscussionsDiscussionSearch
+              v-model="searchQuery"
+              title="Cari Penyuluh"
+              placeholder="Cari nama penyuluh..."
+            />
 
             <!-- Right: District select -->
             <div>
               <div class="flex items-center gap-2 mb-4">
-                <UIcon 
-                  name="i-lucide-map-pin" 
-                  class="w-5 h-5 text-green-600 dark:text-green-400"
-                />
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Pilih Kabupaten/Kota</h2>
+              <UIcon 
+                name="i-lucide-map-pin" 
+                class="w-5 h-5 text-green-600 dark:text-green-400"
+              />
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Pilih Kabupaten/Kota</h2>
               </div>
-              <div>
-                <USelectMenu
-                  :v-model="selectedDistrict"
-                  :items="availableDistricts"
-                  option-attribute="label"
-                  value-attribute="value"
-                  class="w-full"
-                />
+              <div class="relative">
+              <USelectMenu
+                v-model="selectedDistrict"
+                :items="availableDistricts"
+                placeholder="Pilih kabupaten/kota"
+                searchable
+                searchable-placeholder="Cari kabupaten/kota..."
+                class="w-full"
+                :ui="{
+                wrapper: 'relative',
+                base: 'w-full py-3.5 pl-4 pr-10 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:border-green-500 dark:focus:border-green-400 focus:ring-4 focus:ring-green-500/10 transition-all duration-200 text-gray-900 dark:text-white',
+                placeholder: 'text-gray-400 dark:text-gray-500 ml-6'
+                }"
+              >
+                <template #leading>
+                <UIcon name="i-heroicons-map-pin" class="w-5 h-5 text-gray-400" />
+                </template>
+              </USelectMenu>
               </div>
             </div>
-          </div>
+            </div>
 
           <!-- Instructors list -->
           <div>
@@ -295,7 +287,7 @@ useHead({
               />
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Penyuluh
-                <span v-if="selectedDistrict" class="text-green-600"> di {{ selectedDistrict }}</span>
+                <span v-if="selectedDistrict?.value" class="text-green-600"> di {{ selectedDistrict.label }}</span>
                 <UBadge color="success" variant="soft" class="ml-2">
                   {{ filteredInstructors.length }}
                 </UBadge>
@@ -305,56 +297,19 @@ useHead({
             <div v-if="filteredInstructors.length > 0">
               <!-- Instructors grid -->
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <UCard
+                <DiscussionsDiscussionCard
                   v-for="instructor in paginatedInstructors"
                   :key="instructor.id"
-                  class="hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  :ui="{ 
-                    body: { padding: 'p-4 sm:p-6' }
-                  }"
-                >
-                  <div class="flex flex-col items-center text-center space-y-4">
-                    <!-- Avatar -->
-                    <div class="relative">
-                      <img
-                        :src="instructor.profiles?.avatar_url || '/profile.png'"
-                        :alt="instructor.profiles?.full_name || 'Penyuluh'"
-                        class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-green-100 dark:border-green-900"
-                      />
-                      <div class="absolute -bottom-2 -right-2 bg-green-500 dark:bg-green-600 w-6 h-6 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center">
-                        <UIcon 
-                          name="i-lucide-check" 
-                          class="w-3 h-3 text-white"
-                        />
-                      </div>
-                    </div>
-
-                    <!-- Info -->
-                    <div class="space-y-2 flex-1">
-                      <h3 class="font-semibold text-lg text-gray-900 dark:text-white line-clamp-2">
-                        {{ instructor.profiles?.full_name || 'Nama tidak tersedia' }}
-                      </h3>
-                      <p class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ instructor.district }}, {{ instructor.provinces }}
-                      </p>
-                    </div>
-
-                    <!-- Button -->
-                    <UButton
-                      :to="`/discussions/instructor/${instructor.id}`"
-                      color="success"
-                      size="md"
-                      class="w-full"
-                      icon="i-lucide-message-circle"
-                    >
-                      Mulai Diskusi
-                    </UButton>
-                  </div>
-                </UCard>
+                  :id="instructor.id"
+                  :profile="instructor.profiles"
+                  :location="`${instructor.district}, ${instructor.provinces}`"
+                  type="instructor"
+                />
               </div>
 
               <!-- Pagination -->
               <AppPagination
+                v-if="totalPages > 1"
                 :current-page="currentPage"
                 :total-pages="totalPages"
                 :total-items="filteredInstructors.length"
@@ -366,18 +321,12 @@ useHead({
             </div>
 
             <!-- Empty state -->
-            <div v-else class="flex flex-col items-center justify-center py-16">
-              <UIcon 
-                name="i-lucide-inbox" 
-                class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4"
-              />
-              <p class="text-gray-600 dark:text-gray-400 text-center max-w-sm">
-                Tidak ada penyuluh tersedia
-                <span v-if="selectedDistrict"> di {{ selectedDistrict }}</span>
-                <span v-if="searchQuery"> dengan nama "{{ searchQuery }}"</span>
-                saat ini.
-              </p>
-            </div>
+            <DiscussionsDiscussionEmptyState
+              v-else
+              :message="`Tidak ada penyuluh tersedia${selectedDistrict?.value ? ' di ' + selectedDistrict.label : ''}${searchQuery ? ' dengan nama &quot;' + searchQuery + '&quot;' : ''} saat ini.`"
+              :show-reset-button="!!(selectedDistrict?.value || searchQuery)"
+              @reset="handleResetFilter"
+            />
           </div>
         </div>
       </UCard>

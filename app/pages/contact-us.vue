@@ -35,16 +35,16 @@ const contactMethods = [
 // FAQ data
 const faqs: FaqItem[] = [
   {
-    question: 'Layanan apa saja yang disediakan oleh Juru Tani?',
-    answer: 'Juru Tani menyediakan layanan konsultasi pertanian yang komprehensif, solusi teknologi pertanian, sistem manajemen tanaman, platform koneksi pasar, dan sumber belajar untuk praktik pertanian berkelanjutan.'
+    question: 'Layanan apa saja yang disediakan oleh JuruTani?',
+    answer: 'JuruTani menyediakan layanan konsultasi pertanian yang komprehensif, solusi teknologi pertanian, sistem manajemen tanaman, platform koneksi pasar, dan sumber belajar untuk praktik pertanian berkelanjutan.'
   },
   {
-    question: 'Bagaimana cara bergabung dengan komunitas Juru Tani?',
+    question: 'Bagaimana cara bergabung dengan komunitas JuruTani?',
     answer: 'Anda dapat mendaftar melalui aplikasi seluler atau situs web kami. Setelah terdaftar, Anda akan mendapatkan akses ke basis pengetahuan, forum komunitas, dan layanan pertanian yang dipersonalisasi.'
   },
   {
-    question: 'Apakah Juru Tani tersedia di wilayah saya?',
-    answer: 'Juru Tani saat ini melayani berbagai wilayah di seluruh Indonesia. Silakan hubungi tim dukungan kami dengan lokasi spesifik Anda untuk memeriksa ketersediaan di daerah Anda.'
+    question: 'Apakah JuruTani tersedia di wilayah saya?',
+    answer: 'JuruTani saat ini melayani berbagai wilayah di seluruh Indonesia. Silakan hubungi tim dukungan kami dengan lokasi spesifik Anda untuk memeriksa ketersediaan di daerah Anda.'
   },
   {
     question: 'Berapa lama waktu respon tim support?',
@@ -65,7 +65,7 @@ const scrollToForm = () => {
   <div class="min-h-screen max-w-6xl mx-auto w-full">
     <!-- Hero Section -->
     <CommonPageHeroSection
-      title="Hubungi Tim Juru Tani"
+      title="Hubungi Tim JuruTani"
       subtitle="Kami siap membantu komunitas pertanian Indonesia berkembang. Sampaikan pertanyaan Anda dan mari berkembang bersama."
       :badge="{ text: 'Contact Us', icon: 'i-heroicons-chat-bubble-left-right' }"
       align="center"
@@ -245,7 +245,7 @@ const scrollToForm = () => {
                   :allowfullscreen="true"
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
-                  title="Lokasi Kantor Juru Tani"
+                  title="Lokasi Kantor JuruTani"
                 />
               </div>
 

@@ -209,7 +209,12 @@ export const useChat = () => {
       loading.value = true
       const currentUser = await getCurrentUser()
 
-      if (!currentUser) throw new Error('User not authenticated')
+      if (!currentUser) {
+        console.error('❌ No current user found')
+        throw new Error('User not authenticated')
+      }
+
+      console.log('🔍 Fetching conversations for user:', currentUser.id)
 
       const { data, error: fetchError } = await supabase
         .from('conversations')
@@ -221,12 +226,18 @@ export const useChat = () => {
         .or(`participant1_id.eq.${currentUser.id},participant2_id.eq.${currentUser.id}`)
         .order('updated_at', { ascending: false })
 
-      if (fetchError) throw fetchError
+      if (fetchError) {
+        console.error('❌ Supabase error:', fetchError)
+        throw fetchError
+      }
 
+      console.log('✅ Fetched conversations:', data?.length || 0)
       conversations.value = data || []
       return data
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch conversations'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch conversations'
+      console.error('❌ getUserConversations error:', errorMessage)
+      error.value = errorMessage
       throw err
     } finally {
       loading.value = false

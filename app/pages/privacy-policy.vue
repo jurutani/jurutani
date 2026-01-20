@@ -12,7 +12,7 @@ useSeoOptimized('privacy')
           <div class="mr-3 p-2 bg-green-100 dark:bg-green-900 rounded-full">
             <UIcon name="i-lucide-lock" class="h-6 w-6 text-green-600 dark:text-green-400" />
           </div>
-          <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">Juru Tani</h3>
+          <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">JuruTani</h3>
         </div>
       </div>
 
@@ -25,7 +25,7 @@ useSeoOptimized('privacy')
       <!-- Intro with decorative element -->
       <div class="relative mb-10 bg-green-50 dark:bg-green-900/30 p-5 rounded-lg border-l-4 border-green-500 dark:border-green-600">
         <p class="text-base md:text-lg leading-relaxed">
-          <strong class="text-green-700 dark:text-green-400">Juru Tani</strong> menghargai privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan platform kami.
+          <strong class="text-green-700 dark:text-green-400">JuruTani</strong> menghargai privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan platform kami.
         </p>
       </div>
 
@@ -65,7 +65,7 @@ useSeoOptimized('privacy')
               <span class="inline-flex mr-2 mt-1">
                 <UIcon name="i-lucide-check-circle" class="h-5 w-5 text-green-500 dark:text-green-400" />
               </span>
-              <span>Menyediakan dan mengelola layanan Juru Tani</span>
+              <span>Menyediakan dan mengelola layanan JuruTani</span>
             </li>
             <li class="flex items-start">
               <span class="inline-flex mr-2 mt-1">

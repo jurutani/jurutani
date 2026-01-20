@@ -239,7 +239,7 @@ const fetchMeetingById = async () => {
 
 const seoTitle = computed(() => meeting.value ? `${meeting.value.title}` : 'Memuat Meeting...')
 const seoDescription = computed(() => {
-  if (!meeting.value) return 'Course seputar pertanian dari Juru Tani.'
+  if (!meeting.value) return 'Course seputar pertanian dari JuruTani.'
   if (meeting.value.description && meeting.value.description !== '') return meeting.value.description
   return ''
 })
@@ -290,7 +290,7 @@ watch(() => meeting.value, (newVal) => {
           
           <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
             <UIcon name="i-heroicons-academic-cap" class="w-5 h-5" />
-            <span class="font-semibold">Juru Tani Courses</span>
+            <span class="font-semibold">JuruTani Courses</span>
           </div>
         </div>
       </div>

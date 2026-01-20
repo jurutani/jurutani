@@ -24,7 +24,7 @@ export default defineNuxtPlugin(() => {
             },
             {
                 name: 'keywords',
-                content: 'juru tani, pertanian, penyuluhan, digital, petani indonesia, teknologi pertanian, polbangtan',
+                content: 'JuruTani, pertanian, penyuluhan, digital, petani indonesia, teknologi pertanian, polbangtan',
             },
 
             // Author & Publisher Meta Tags (PENTING untuk SEO)

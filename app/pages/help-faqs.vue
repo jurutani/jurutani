@@ -45,8 +45,8 @@ const scrollToFaqs = () => {
   <div class="min-h-screen w-full max-w-6xl mx-auto">
     <!-- 1. Hero Section Component -->
     <CommonPageHeroSection
-      title="Pusat Bantuan Juru Tani"
-      subtitle="Temukan jawaban, panduan, dan dukungan yang Anda butuhkan untuk memaksimalkan hasil pertanian Anda bersama Juru Tani."
+      title="Pusat Bantuan JuruTani"
+      subtitle="Temukan jawaban, panduan, dan dukungan yang Anda butuhkan untuk memaksimalkan hasil pertanian Anda bersama JuruTani."
       :badge="{ text: 'Help Center', icon: 'i-lucide-help-circle' }"
       align="center"
       decorative="ripple"
@@ -265,7 +265,7 @@ const scrollToFaqs = () => {
           Tidak Menemukan Apa yang Anda Cari?
         </h2>
         <p class="text-gray-700 dark:text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed">
-          Jangan ragu untuk menghubungi tim Juru Tani. Kami berkomitmen untuk mendampingi setiap langkah perjalanan bertani Anda dengan solusi terbaik.
+          Jangan ragu untuk menghubungi tim JuruTani. Kami berkomitmen untuk mendampingi setiap langkah perjalanan bertani Anda dengan solusi terbaik.
         </p>
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center">

@@ -219,7 +219,7 @@ watch(() => expert.value, (newVal) => {
                   {{ expert.profiles?.full_name || 'Nama Pakar' }}
                 </h1>
                 <p class="text-lg text-green-600 dark:text-green-400 font-semibold mb-2">
-                  Pakar Juru Tani Profesional
+                  Pakar JuruTani Profesional
                 </p>
                 <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                   <span v-if="age" class="flex items-center gap-1.5">

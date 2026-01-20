@@ -1,259 +1,258 @@
 <script setup lang="ts">
-// SEO Optimization dengan meta tags yang lebih detail
-useHead({
-  title: 'Tentang Juru Tani - Platform Penyuluhan Digital Pertanian Indonesia',
-  meta: [
-    {
-      name: 'description',
-      content: 'Juru Tani adalah inovasi platform penyuluhan digital pertanian dari Politeknik Pembangunan Pertanian Yogyakarta Magelang. Menghubungkan teknologi modern dengan pertanian berkelanjutan untuk petani Indonesia.'
-    },
-    {
-      name: 'keywords',
-      content: 'Juru Tani, penyuluhan digital, pertanian, teknologi pertanian, inovasi pertanian, Polbangtan, platform digital, petani Indonesia, Agriculture 4.0'
-    },
-    {
-      property: 'og:title',
-      content: 'Tentang Juru Tani - Platform Penyuluhan Digital Pertanian'
-    },
-    {
-      property: 'og:description',
-      content: 'Inovasi penyuluhan digital dari mahasiswa dan dosen Politeknik Pembangunan Pertanian Yogyakarta Magelang untuk memajukan pertanian Indonesia'
-    },
-    {
-      property: 'og:type',
-      content: 'website'
-    },
-    {
-      property: 'og:image',
-      content: '/jurutani.png'
-    },
-    {
-      name: 'twitter:card',
-      content: 'summary_large_image'
-    },
-    {
-      name: 'twitter:title',
-      content: 'Tentang Juru Tani - Platform Penyuluhan Digital Pertanian'
-    },
-    {
-      name: 'twitter:description',
-      content: 'Inovasi platform penyuluhan digital dari Polbangtan Yogyakarta Magelang'
-    }
-  ],
-  link: [
-    {
-      rel: 'canonical',
-      href: 'https://jurutani.id/about-us'
-    }
-  ],
-  script: [
-    {
-      type: 'application/ld+json',
-      innerHTML: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        name: 'Juru Tani',
-        alternateName: 'Juru Tani - Platform Penyuluhan Digital Pertanian',
-        url: 'https://jurutani.id',
-        logo: 'https://jurutani.id/jurutani.png',
-        description: 'Platform inovasi penyuluhan digital pertanian Indonesia yang menghubungkan teknologi modern dengan pertanian berkelanjutan',
-        sameAs: [
-          'https://www.instagram.com/jurutani',
-          'https://www.facebook.com/jurutani',
-          'https://twitter.com/jurutani'
-        ],
-        foundingDate: '2024',
-        founder: {
+  // SEO Optimization dengan meta tags yang lebih detail
+  useHead({
+    title: 'Tentang JuruTani - Platform Penyuluhan Digital Pertanian Indonesia',
+    meta: [
+      {
+        name: 'description',
+        content: 'JuruTani adalah inovasi platform penyuluhan digital pertanian dari Politeknik Pembangunan Pertanian Yogyakarta Magelang. Menghubungkan teknologi modern dengan pertanian berkelanjutan untuk petani Indonesia.'
+      },
+      {
+        name: 'keywords',
+        content: 'JuruTani, penyuluhan digital, pertanian, teknologi pertanian, inovasi pertanian, Polbangtan, platform digital, petani Indonesia, Agriculture 4.0'
+      },
+      {
+        property: 'og:title',
+        content: 'Tentang JuruTani - Platform Penyuluhan Digital Pertanian'
+      },
+      {
+        property: 'og:description',
+        content: 'Inovasi penyuluhan digital dari mahasiswa dan dosen Politeknik Pembangunan Pertanian Yogyakarta Magelang untuk memajukan pertanian Indonesia'
+      },
+      {
+        property: 'og:type',
+        content: 'website'
+      },
+      {
+        property: 'og:image',
+        content: '/jurutani.png'
+      },
+      {
+        name: 'twitter:card',
+        content: 'summary_large_image'
+      },
+      {
+        name: 'twitter:title',
+        content: 'Tentang JuruTani - Platform Penyuluhan Digital Pertanian'
+      },
+      {
+        name: 'twitter:description',
+        content: 'Inovasi platform penyuluhan digital dari Polbangtan Yogyakarta Magelang'
+      }
+    ],
+    link: [
+      {
+        rel: 'canonical',
+        href: 'https://jurutani.id/about-us'
+      }
+    ],
+    script: [
+      {
+        type: 'application/ld+json',
+        innerHTML: JSON.stringify({
+          '@context': 'https://schema.org',
           '@type': 'Organization',
-          name: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang'
-        },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          contactType: 'Customer Support',
-          email: 'info@jurutani.id'
-        }
-      })
+          name: 'JuruTani',
+          alternateName: 'JuruTani - Platform Penyuluhan Digital Pertanian',
+          url: 'https://jurutani.id',
+          logo: 'https://jurutani.id/jurutani.png',
+          description: 'Platform inovasi penyuluhan digital pertanian Indonesia yang menghubungkan teknologi modern dengan pertanian berkelanjutan',
+          sameAs: [
+            'https://www.instagram.com/jurutani',
+            'https://www.facebook.com/jurutani',
+            'https://twitter.com/jurutani'
+          ],
+          foundingDate: '2024',
+          founder: {
+            '@type': 'Organization',
+            name: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang'
+          },
+          contactPoint: {
+            '@type': 'ContactPoint',
+            contactType: 'Customer Support',
+            email: 'info@jurutani.id'
+          }
+        })
+      }
+    ]
+  })
+
+  useSeoOptimized('about')
+
+  // ============ DATA DECLARATIONS ============
+
+  // Image declarations
+  const logoJuruTani = '/jurutani.png'
+  const sponsorLogo = '/logo/sponsor1.png'
+
+  const galleryImages = [
+    '/gallery/image1.JPG',
+    '/gallery/image2.JPG', 
+    '/gallery/image3.JPG',
+    '/gallery/image4.JPG',
+    '/gallery/image5.JPG'
+  ] as const
+
+  const galleryData = [
+    {
+      src: galleryImages[0],
+      title: 'Layanan Penyuluhan',
+      desc: 'Konsultasi langsung dengan penyuluh pertanian digital melalui aplikasi JuruTani'
+    },
+    {
+      src: galleryImages[1],
+      title: 'Berita Pertanian',
+      desc: 'Informasi terbaru seputar pertanian, teknologi, dan kegiatan masyarakat tani'
+    },
+    {
+      src: galleryImages[2],
+      title: 'Marketplace Petani',
+      desc: 'Tempat jual beli pupuk, bibit, dan hasil panen secara langsung'
+    },
+    {
+      src: galleryImages[3],
+      title: 'Edukasi & Artikel',
+      desc: 'Bacaan informatif untuk meningkatkan pengetahuan dan keterampilan petani'
+    },
+    {
+      src: galleryImages[4],
+      title: 'Kursus & Alat Bantu',
+      desc: 'Belajar mandiri melalui kursus dan alat bantu seperti kalkulator pupuk atau cuaca'
     }
-  ]
-})
+  ] as const
 
-useSeoOptimized('about')
+  // Innovation Points Data
+  const innovationPoints = [
+    {
+      icon: 'i-lucide-message-square',
+      title: 'Konsultasi Digital Real-Time',
+      desc: 'Akses langsung dengan penyuluh pertanian profesional melalui chat dan video call'
+    },
+    {
+      icon: 'i-lucide-database',
+      title: 'Database Komoditas Lengkap',
+      desc: 'Informasi detail tentang berbagai jenis tanaman dan teknik budidaya terbaru'
+    },
+    {
+      icon: 'i-lucide-cloud-rain',
+      title: 'Data Cuaca & Pasar Akurat',
+      desc: 'Prediksi cuaca harian dan harga komoditas real-time untuk perencanaan yang lebih baik'
+    },
+    {
+      icon: 'i-lucide-shopping-cart',
+      title: 'Marketplace Terintegrasi',
+      desc: 'Jual-beli pupuk, bibit, dan hasil panen langsung dengan pembeli tanpa perantara'
+    },
+    {
+      icon: 'i-lucide-book-open',
+      title: 'Edukasi & Kursus Pertanian',
+      desc: 'Materi pembelajaran interaktif dari ahli dan praktisi pertanian berpengalaman'
+    },
+    {
+      icon: 'i-lucide-user',
+      title: 'Alat Bantu Otomatis',
+      desc: 'Kalkulator pupuk, prediksi hasil, dan tools analisis untuk keputusan yang tepat'
+    }
+  ] as const
 
-// ============ DATA DECLARATIONS ============
-
-// Image declarations
-const logoJuruTani = '/jurutani.png'
-const sponsorLogo = '/logo/sponsor1.png'
-
-const galleryImages = [
-  '/gallery/image1.JPG',
-  '/gallery/image2.JPG', 
-  '/gallery/image3.JPG',
-  '/gallery/image4.JPG',
-  '/gallery/image5.JPG'
-] as const
-
-const galleryData = [
-  {
-    src: galleryImages[0],
-    title: 'Layanan Penyuluhan',
-    desc: 'Konsultasi langsung dengan penyuluh pertanian digital melalui aplikasi Juru Tani'
-  },
-  {
-    src: galleryImages[1],
-    title: 'Berita Pertanian',
-    desc: 'Informasi terbaru seputar pertanian, teknologi, dan kegiatan masyarakat tani'
-  },
-  {
-    src: galleryImages[2],
-    title: 'Marketplace Petani',
-    desc: 'Tempat jual beli pupuk, bibit, dan hasil panen secara langsung'
-  },
-  {
-    src: galleryImages[3],
-    title: 'Edukasi & Artikel',
-    desc: 'Bacaan informatif untuk meningkatkan pengetahuan dan keterampilan petani'
-  },
-  {
-    src: galleryImages[4],
-    title: 'Kursus & Alat Bantu',
-    desc: 'Belajar mandiri melalui kursus dan alat bantu seperti kalkulator pupuk atau cuaca'
+  // Keunggulan Platform Data
+  interface FeatureCard {
+    icon: string
+    title: string
+    description: string
   }
-] as const
 
-// Innovation Points Data
-const innovationPoints = [
-  {
-    icon: 'i-lucide-message-square',
-    title: 'Konsultasi Digital Real-Time',
-    desc: 'Akses langsung dengan penyuluh pertanian profesional melalui chat dan video call'
-  },
-  {
-    icon: 'i-lucide-database',
-    title: 'Database Komoditas Lengkap',
-    desc: 'Informasi detail tentang berbagai jenis tanaman dan teknik budidaya terbaru'
-  },
-  {
-    icon: 'i-lucide-cloud-rain',
-    title: 'Data Cuaca & Pasar Akurat',
-    desc: 'Prediksi cuaca harian dan harga komoditas real-time untuk perencanaan yang lebih baik'
-  },
-  {
-    icon: 'i-lucide-shopping-cart',
-    title: 'Marketplace Terintegrasi',
-    desc: 'Jual-beli pupuk, bibit, dan hasil panen langsung dengan pembeli tanpa perantara'
-  },
-  {
-    icon: 'i-lucide-book-open',
-    title: 'Edukasi & Kursus Pertanian',
-    desc: 'Materi pembelajaran interaktif dari ahli dan praktisi pertanian berpengalaman'
-  },
-  {
-    icon: 'i-lucide-user',
-    title: 'Alat Bantu Otomatis',
-    desc: 'Kalkulator pupuk, prediksi hasil, dan tools analisis untuk keputusan yang tepat'
-  }
-] as const
+  const platformAdvantages: FeatureCard[] = [
+    {
+      icon: 'i-lucide-bar-chart-3',
+      title: 'Data Terintegrasi & Real-Time',
+      description: 'Database lengkap komoditas pertanian, data cuaca akurat, harga pasar real-time, dan informasi pasar yang terupdate setiap saat dalam satu platform terpadu'
+    },
+    {
+      icon: 'i-lucide-smartphone',
+      title: 'User-Friendly untuk Semua',
+      description: 'Interface intuitif dirancang khusus untuk petani dengan berbagai tingkat literasi digital, dari yang masih konvensional hingga tech-savvy'
+    },
+    {
+      icon: 'i-lucide-headset',
+      title: 'Penyuluhan Digital 24/7',
+      description: 'Akses langsung dengan penyuluh pertanian profesional kapan saja, di mana saja melalui chat, video call, atau forum diskusi komunitas petani'
+    },
+    {
+      icon: 'i-lucide-shopping-bag',
+      title: 'Marketplace Terintegrasi',
+      description: 'Jual-beli pupuk, bibit berkualitas, hasil panen, dan produk pertanian lainnya langsung dengan pembeli tanpa perantara yang memberatkan'
+    },
+    {
+      icon: 'i-lucide-graduation-cap',
+      title: 'Edukasi Pertanian Berkualitas',
+      description: 'Kursus online, webinar, dan artikel edukatif dari ahli pertanian profesional yang dikurasi khusus untuk peningkatan skill dan pengetahuan'
+    },
+    {
+      icon: 'i-lucide-user',
+      title: 'Tools & Kalkulasi Otomatis',
+      description: 'Kalkulator pupuk, prediksi hasil panen, analisis keuntungan, dan tools AI yang membantu petani membuat keputusan bisnis yang lebih tepat'
+    }
+  ] as const
 
-// Keunggulan Platform Data
-interface FeatureCard {
-  icon: string
-  title: string
-  description: string
-}
+  // Developer Team Data
+  const teamCategories = [
+    {
+      icon: 'i-lucide-user-search',
+      title: 'Mahasiswa Berprestasi',
+      items: [
+        'Mahasiswa terpilih dari berbagai program studi',
+        'Kompetensi teknologi digital terdepan',
+        'Pemahaman mendalam tentang pertanian praktis',
+        'Semangat untuk menciptakan dampak sosial'
+      ]
+    },
+    {
+      icon: 'i-lucide-user-check',
+      title: 'Dosen Pembimbing Berpengalaman',
+      items: [
+        'Ahli di bidang pertanian dan teknologi',
+        'Pengalaman puluhan tahun di industri',
+        'Komitmen pada inovasi berkelanjutan',
+        'Mentoring profesional untuk tim mahasiswa'
+      ]
+    }
+  ] as const
 
-const platformAdvantages: FeatureCard[] = [
-  {
-    icon: 'i-lucide-bar-chart-3',
-    title: 'Data Terintegrasi & Real-Time',
-    description: 'Database lengkap komoditas pertanian, data cuaca akurat, harga pasar real-time, dan informasi pasar yang terupdate setiap saat dalam satu platform terpadu'
-  },
-  {
-    icon: 'i-lucide-smartphone',
-    title: 'User-Friendly untuk Semua',
-    description: 'Interface intuitif dirancang khusus untuk petani dengan berbagai tingkat literasi digital, dari yang masih konvensional hingga tech-savvy'
-  },
-  {
-    icon: 'i-lucide-headset',
-    title: 'Penyuluhan Digital 24/7',
-    description: 'Akses langsung dengan penyuluh pertanian profesional kapan saja, di mana saja melalui chat, video call, atau forum diskusi komunitas petani'
-  },
-  {
-    icon: 'i-lucide-shopping-bag',
-    title: 'Marketplace Terintegrasi',
-    description: 'Jual-beli pupuk, bibit berkualitas, hasil panen, dan produk pertanian lainnya langsung dengan pembeli tanpa perantara yang memberatkan'
-  },
-  {
-    icon: 'i-lucide-graduation-cap',
-    title: 'Edukasi Pertanian Berkualitas',
-    description: 'Kursus online, webinar, dan artikel edukatif dari ahli pertanian profesional yang dikurasi khusus untuk peningkatan skill dan pengetahuan'
-  },
-  {
-    icon: 'i-lucide-user',
-    title: 'Tools & Kalkulasi Otomatis',
-    description: 'Kalkulator pupuk, prediksi hasil panen, analisis keuntungan, dan tools AI yang membantu petani membuat keputusan bisnis yang lebih tepat'
-  }
-] as const
-
-// Developer Team Data
-const teamCategories = [
-  {
-    icon: 'i-lucide-user-search',
-    title: 'Mahasiswa Berprestasi',
-    items: [
-      'Mahasiswa terpilih dari berbagai program studi',
-      'Kompetensi teknologi digital terdepan',
-      'Pemahaman mendalam tentang pertanian praktis',
-      'Semangat untuk menciptakan dampak sosial'
-    ]
-  },
-  {
-    icon: 'i-lucide-user-check',
-    title: 'Dosen Pembimbing Berpengalaman',
-    items: [
-      'Ahli di bidang pertanian dan teknologi',
-      'Pengalaman puluhan tahun di industri',
-      'Komitmen pada inovasi berkelanjutan',
-      'Mentoring profesional untuk tim mahasiswa'
-    ]
-  }
-] as const
-
-const institutionHighlights = [
-  {
-    icon: 'i-lucide-graduation-cap',
-    title: 'Pendidikan Vokasi',
-    desc: 'Program praktis berbasis industri'
-  },
-  {
-    icon: 'i-lucide-search',
-    title: 'Riset & Inovasi',
-    desc: 'Penelitian pertanian berkelanjutan'
-  },
-  {
-    icon: 'i-lucide-earth',
-    title: 'Pemberdayaan Masyarakat',
-    desc: 'Solusi nyata untuk petani lokal'
-  }
-] as const
+  const institutionHighlights = [
+    {
+      icon: 'i-lucide-graduation-cap',
+      title: 'Pendidikan Vokasi',
+      desc: 'Program praktis berbasis industri'
+    },
+    {
+      icon: 'i-lucide-search',
+      title: 'Riset & Inovasi',
+      desc: 'Penelitian pertanian berkelanjutan'
+    },
+    {
+      icon: 'i-lucide-earth',
+      title: 'Pemberdayaan Masyarakat',
+      desc: 'Solusi nyata untuk petani lokal'
+    }
+  ] as const
 
 </script>
 
 <template>
-  <div class="bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-900 min-h-screen transition-colors duration-300">
+  <div class="min-h-screen transition-colors duration-300">
     
     <!-- Hero Section with Logo -->
     <section class="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24">
-      <div class="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10"/>
       <div class="container mx-auto px-4 relative z-10">
         <div class="text-center max-w-4xl mx-auto">
           <!-- Logo -->
           <div class="mb-8">
-            <NuxtImg :src="logoJuruTani" alt="Juru Tani Reborn Logo" class="w-32 md:w-40 mx-auto drop-shadow-2xl animate-pulse" />
+            <NuxtImg :src="logoJuruTani" alt="Si JuruTani Logo" class="w-32 md:w-40 mx-auto drop-shadow-2xl animate-pulse" />
           </div>
           
           <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-green-800 bg-clip-text text-transparent mb-6 leading-tight">
-            Juru Tani Reborn
+            Si JuruTani
           </h1>
           <div class="w-24 h-1 bg-gradient-to-r from-green-500 to-emerald-500 mx-auto mb-6"/>
           <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
@@ -266,17 +265,17 @@ const institutionHighlights = [
 
     <div class="container mx-auto px-4 pb-16">
       
-      <!-- Tentang Juru Tani Reborn -->
+      <!-- Tentang Si JuruTani -->
       <section class="mb-16" id="tentang">
         <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl border border-green-100 dark:border-green-800">
           <h2 class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-2 text-center">
-            Apa itu Juru Tani?
+            Apa itu Si JuruTani?
           </h2>
           <p class="text-center text-sm text-green-600 dark:text-green-400 mb-8 font-medium">Platform Inovasi Penyuluhan Digital Pertanian</p>
           
           <div class="prose prose-lg max-w-none text-gray-700 dark:text-gray-300 leading-relaxed">
             <p class="text-center text-xl mb-8 font-medium text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border-l-4 border-green-500">
-              <strong>Juru Tani</strong> adalah inovasi penyuluhan digital pertanian yang menghubungkan teknologi modern dengan kearifan pertanian tradisional Indonesia untuk menciptakan ekosistem pertanian berkelanjutan.
+              <strong>Si JuruTani</strong> adalah inovasi penyuluhan digital pertanian yang menghubungkan teknologi modern dengan kearifan pertanian tradisional Indonesia untuk menciptakan ekosistem pertanian berkelanjutan.
             </p>
             
             <div class="grid md:grid-cols-2 gap-8">
@@ -286,10 +285,10 @@ const institutionHighlights = [
                   Inovasi yang Lahir dari Pendidikan
                 </h3>
                 <p class="mb-6">
-                  <strong>Juru Tani</strong> adalah hasil karya inovatif dari mahasiswa dan dosen <strong>Politeknik Pembangunan Pertanian Yogyakarta Magelang (Polbangtan YoMa)</strong>. Platform ini dikembangkan dengan dedikasi tinggi untuk menjawab tantangan modernisasi pertanian Indonesia di era digital.
+                  <strong>Si JuruTani</strong> adalah hasil karya inovatif dari mahasiswa dan dosen <strong>Politeknik Pembangunan Pertanian Yogyakarta Magelang (Polbangtan YoMa)</strong>. Platform ini dikembangkan dengan dedikasi tinggi untuk menjawab tantangan modernisasi pertanian Indonesia di era digital.
                 </p>
                 <p class="mb-6">
-                  Dengan memanfaatkan teknologi digital terdepan dan database yang komprehensif, Juru Tani memungkinkan petani untuk mengakses informasi real-time tentang komoditas pertanian, data cuaca akurat, harga pasar kompetitif, dan teknik pertanian berkelanjutan yang disesuaikan dengan kondisi lokal.
+                  Dengan memanfaatkan teknologi digital terdepan dan database yang komprehensif, Si JuruTani memungkinkan petani untuk mengakses informasi real-time tentang komoditas pertanian, data cuaca akurat, harga pasar kompetitif, dan teknik pertanian berkelanjutan yang disesuaikan dengan kondisi lokal.
                 </p>
                 <p class="mb-6">
                   Setiap fitur dirancang dengan mempertimbangkan kebutuhan nyata petani Indonesia, dari yang masih menggunakan pertanian tradisional hingga yang siap bertransformasi ke Agriculture 4.0.
@@ -302,13 +301,13 @@ const institutionHighlights = [
                   Solusi Penyuluhan Digital Terpadu
                 </h3>
                 <p class="mb-6">
-                  Platform ini bukan sekadar aplikasi mobile, melainkan ekosistem digital komprehensif yang mengintegrasikan berbagai layanan penyuluhan pertanian modern. Juru Tani menjembatani kesenjangan antara petani dan ahli pertanian melalui teknologi yang accessible dan user-friendly.
+                  Platform ini bukan sekadar aplikasi mobile, melainkan ekosistem digital komprehensif yang mengintegrasikan berbagai layanan penyuluhan pertanian modern. Si JuruTani menjembatani kesenjangan antara petani dan ahli pertanian melalui teknologi yang accessible dan user-friendly.
                 </p>
                 <p class="mb-6">
                   Dengan antarmuka yang intuitif dan fitur-fitur canggih, petani dapat meningkatkan produktivitas, efisiensi, dan keberlanjutan usaha tani mereka. Platform ini juga memfasilitasi kolaborasi antar petani dan akses langsung ke pasar, menciptakan nilai tambah yang signifikan.
                 </p>
                 <p class="mb-6">
-                  Juru Tani adalah bukti nyata komitmen Polbangtan YoMa dalam menghasilkan lulusan yang tidak hanya kompeten secara akademis, tetapi juga mampu menciptakan inovasi yang memberikan dampak nyata bagi masyarakat pertanian Indonesia.
+                  Si <strong>JuruTani</strong> adalah bukti nyata komitmen Polbangtan YoMa dalam menghasilkan lulusan yang tidak hanya kompeten secara akademis, tetapi juga mampu menciptakan inovasi yang memberikan dampak nyata bagi masyarakat pertanian Indonesia.
                 </p>
               </div>
             </div>
@@ -339,7 +338,7 @@ const institutionHighlights = [
             Galeri Inovasi Penyuluhan Digital
           </h2>
           <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Perjalanan pengembangan dan implementasi Juru Tani sebagai inovasi penyuluhan digital pertanian Indonesia
+            Perjalanan pengembangan dan implementasi JuruTani sebagai inovasi penyuluhan digital pertanian Indonesia
           </p>
         </div>
         
@@ -416,7 +415,7 @@ const institutionHighlights = [
       <section class="mb-16">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-4">
-            Keunggulan Kompetitif Juru Tani
+            Keunggulan Kompetitif JuruTani
           </h2>
           <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Platform penyuluhan digital yang dirancang khusus untuk kebutuhan petani Indonesia dengan fitur-fitur unggulan yang tidak ditemukan di platform lain
@@ -467,7 +466,7 @@ const institutionHighlights = [
 
           <div class="mt-10 pt-10 border-t border-green-200 dark:border-green-800">
             <p class="text-gray-700 dark:text-gray-300 text-center leading-relaxed">
-              <strong>Juru Tani</strong> adalah produk dari komitmen Polbangtan Yogyakarta Magelang dalam mengembangkan inovasi yang berdampak positif bagi pertanian Indonesia. Melalui kolaborasi antara mahasiswa berprestasi, dosen berpengalaman, dan mitra industri, platform ini terus berkembang dan memberikan manfaat maksimal bagi petani Indonesia.
+              <strong>JuruTani</strong> adalah produk dari komitmen Polbangtan Yogyakarta Magelang dalam mengembangkan inovasi yang berdampak positif bagi pertanian Indonesia. Melalui kolaborasi antara mahasiswa berprestasi, dosen berpengalaman, dan mitra industri, platform ini terus berkembang dan memberikan manfaat maksimal bagi petani Indonesia.
             </p>
           </div>
         </div>

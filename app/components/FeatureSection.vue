@@ -46,6 +46,15 @@ const features = [
     url: '/discussions/group',
     color: 'indigo'
   },
+  {
+    id: 6,
+    title: 'Daftar Harga Pangan',
+    description: 'Cek harga pangan terbaru dan terpercaya Daerah Istimewa Yogyakarta',
+    icon: 'i-lucide-list',
+    image: '/feature/priceslist.JPG',
+    url: '/food-prices',
+    color: 'green'
+  }
 ]
 </script>
 
@@ -58,13 +67,13 @@ const features = [
           <UIcon name="i-lucide-pencil" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
           <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Fitur Terbaru</span>
         </div>
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-          Layanan Juru tani Reborn
+        <h2 class="text-3xl pb-1 md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+          Layanan Si JuruTani
         </h2>
         <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
           Solusi lengkap untuk kebutuhan pertanian modern Anda dengan teknologi terkini:
           <span class="font-semibold text-emerald-600 dark:text-emerald-400"> Diskusi dengan Penyuluh</span>, 
-          <span class="font-semibold text-teal-600 dark:text-teal-400">Pakar Juru Tani</span>, hingga  
+          <span class="font-semibold text-teal-600 dark:text-teal-400">Pakar JuruTani</span>, hingga  
           <span class="font-semibold text-cyan-600 dark:text-cyan-400">AI</span> yang dibuat khusus untuk menyelesaikan permasalahan pertanian.
         </p>
       </div>

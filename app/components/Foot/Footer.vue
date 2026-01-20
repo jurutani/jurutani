@@ -109,7 +109,7 @@ const currentYear = new Date().getFullYear()
       <!-- Bottom Divider & Copyright -->
       <div class="pt-6 border-t border-green-200/30 dark:border-green-700/30">
         <div class="flex flex-col md:flex-row justify-between items-center text-sm text-green-700/70 dark:text-green-300/70">
-          <p>© {{ currentYear }} Juru Tani. Semua Hak Dilindungi.</p>
+          <p>© {{ currentYear }} JuruTani. Semua Hak Dilindungi.</p>
           <div class="flex space-x-4 mt-3 md:mt-0">
             <NuxtLink 
               v-for="link in footerLinks"

@@ -21,8 +21,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  update: [data: UserData];
-  cancel: [];
+  update: [];
 }>();
 
 const { supabase } = useSupabase();
@@ -241,7 +240,7 @@ const handleSubmit = async () => {
     console.log('Profile updated successfully:', updateData);
 
     // Emit success
-    emit('update', { ...updates, email: props.userData.email });
+    emit('update');
     toastStore.success('Profil berhasil diperbarui.');
     resetImage();
     
@@ -253,10 +252,7 @@ const handleSubmit = async () => {
   }
 };
 
-const handleCancel = () => {
-  resetImage();
-  emit('cancel');
-};
+
 
 // Computed properties
 const currentAvatar = computed(() => {
@@ -448,20 +444,12 @@ const formatWebsiteUrl = (url: string) => {
     </div>
 
     <!-- Buttons -->
-    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors">
-      <UButton
-        type="button"
-        color="neutral"
-        variant="soft"
-        :disabled="loading"
-        @click="handleCancel"
-      >
-        Batal
-      </UButton>
+    <div class="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors">
       <UButton
         type="submit"
         color="success"
         variant="solid"
+        size="lg"
         :loading="loading"
         :disabled="loading || !isFormValid"
         icon="i-lucide-save"

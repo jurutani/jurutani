@@ -1,44 +1,80 @@
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue';
-import { useProfile } from '~/composables/useProfile';
+import { ref, computed, onMounted } from 'vue'
+import { useProfile } from '~/composables/useProfile'
 
 const {
   userData,
   loading,
   error,
-  isEditing,
   fetchUserData,
-  updateUserProfile,
   formatDate,
   formatRole,
   isValidUrl
-} = useProfile();
+} = useProfile()
 
-const toggleEditMode = () => {
-  isEditing.value = !isEditing.value;
-};
+// Active tab state
+const activeTab = ref('personal')
 
-const handleProfileUpdate = async (updatedProfile: Record<string, any>) => {
-  await nextTick(); // Jika ada animasi atau loading
-  await updateUserProfile(updatedProfile);
-};
+// Modal state
+const showEditModal = ref(false)
+
+// Computed untuk menentukan apakah user adalah pakar atau penyuluh
+const isPakar = computed(() => {
+  return userData.value?.role === 'pakar'
+})
+
+const isPenyuluh = computed(() => {
+  return userData.value?.role === 'penyuluh'
+})
+
+const showProfessionalTab = computed(() => {
+  return isPakar.value || isPenyuluh.value
+})
+
+// Tabs configuration
+const tabs = computed(() => {
+  const baseTabs = [
+    {
+      label: 'Profil Pribadi',
+      icon: 'i-lucide-user',
+      value: 'personal'
+    }
+  ]
+
+  if (showProfessionalTab.value) {
+    baseTabs.push({
+      label: 'Data Profesional',
+      icon: isPakar.value ? 'i-lucide-lightbulb' : 'i-lucide-user-check',
+      value: 'professional'
+    })
+  }
+
+  return baseTabs
+})
 
 const handleImageError = (event: Event) => {
-  const target = event.target as HTMLImageElement;
-  console.error('Profile image failed to load:', target.src);
-  target.src = '/profile.png';
-};
+  const target = event.target as HTMLImageElement
+  console.error('Profile image failed to load:', target.src)
+  target.src = '/profile.png'
+}
+
+const handleProfileUpdate = async () => {
+  await fetchUserData()
+}
+
+const openEditModal = () => {
+  showEditModal.value = true
+}
 
 onMounted(() => {
-  fetchUserData();
-});
+  fetchUserData()
+})
 </script>
-
 
 <template>
   <div class="min-h-screen py-12 transition-colors duration-200">
     <div class="container mx-auto px-4 py-8">
-       <!-- Header Section -->
+      <!-- Header Section -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 bg-green-600 dark:bg-green-700 rounded-full mb-4 shadow-lg dark:shadow-green-900/50">
           <UIcon name="i-lucide-user" class="w-8 h-8 text-white" />
@@ -80,9 +116,10 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Profile Content -->
+      <!-- Profile Content with Tabs -->
       <div v-else-if="userData" class="max-w-4xl mx-auto">
-        <div v-if="!isEditing" class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/50 border border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-200">
+        <!-- Profile Header Card -->
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/50 border border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-200 mb-6">
           <!-- Header Profile dengan Background -->
           <div class="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 px-6 py-8 transition-all duration-200">
             <div class="flex flex-col md:flex-row items-center">
@@ -115,127 +152,150 @@ onMounted(() => {
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Profile Details -->
+        <!-- Tabs Section -->
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/50 border border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-200">
           <div class="p-6">
-            <!-- Bio Section -->
-            <div v-if="userData.bio" class="mb-6 p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-100 dark:border-green-800 transition-colors duration-200">
-              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 flex items-center">
-                <UIcon name="i-heroicons-chat-bubble-left" class="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
-                Tentang Saya
-              </h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ userData.bio }}</p>
-            </div>
+            <!-- Tabs Navigation -->
+            <UTabs 
+              v-model="activeTab" 
+              color="neutral" 
+              variant="link" 
+              :content="false" 
+              :items="tabs" 
+              class="w-full mb-6"
+            />
 
-            <!-- Information Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-              <!-- Personal Info -->
-              <div class="space-y-4">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 border-b border-green-200 dark:border-green-800 pb-2 transition-colors duration-200">
-                  Informasi Pribadi
+            <!-- Tab Content: Profil Pribadi -->
+            <div v-if="activeTab === 'personal'" class="py-4">
+              <!-- Bio Section -->
+              <div v-if="userData.bio" class="mb-6 p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-100 dark:border-green-800 transition-colors duration-200">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 flex items-center">
+                  <UIcon name="i-heroicons-chat-bubble-left" class="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
+                  Tentang Saya
                 </h3>
-                
-                <div class="space-y-3">
-                  <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Nama Lengkap</p>
-                    <p class="text-gray-800 dark:text-gray-200">{{ userData.full_name || '-' }}</p>
-                  </div>
-                  
-                  <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Username</p>
-                    <p class="text-gray-800 dark:text-gray-200">{{ userData.username || '-' }}</p>
-                  </div>
-                  
-                  <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Tanggal Lahir</p>
-                    <p class="text-gray-800 dark:text-gray-200">{{ formatDate(userData.birth_date) }}</p>
-                  </div>
-                  
-                  <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Role</p>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 transition-colors duration-200">
-                      {{ formatRole(userData.role) }}
-                    </span>
-                  </div>
-                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ userData.bio }}</p>
               </div>
 
-              <!-- Contact Info -->
-              <div class="space-y-4">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 border-b border-green-200 dark:border-green-800 pb-2 transition-colors duration-200">
-                  Kontak
-                </h3>
-                
-                <div class="space-y-3">
-                  <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</p>
-                    <p class="text-gray-800 dark:text-gray-200 break-words">{{ userData.email }}</p>
-                  </div>
+              <!-- Information Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Personal Info -->
+                <div class="space-y-4">
+                  <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 border-b border-green-200 dark:border-green-800 pb-2 transition-colors duration-200">
+                    Informasi Pribadi
+                  </h3>
                   
-                  <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Nomor Telepon</p>
-                    <p class="text-gray-800 dark:text-gray-200">{{ userData.phone || '-' }}</p>
-                  </div>
-                  
-                  <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Website</p>
-                    <div v-if="userData.website">
-                      <NuxtLink
-                        v-if="isValidUrl(userData.website)"
-                        :to="userData.website"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 hover:underline break-words inline-flex items-center transition-colors duration-200"
-                      >
-                        {{ userData.website }}
-                        <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 ml-1" />
-                      </NuxtLink>
-                      <span v-else class="text-gray-800 dark:text-gray-200 break-words">{{ userData.website }}</span>
+                  <div class="space-y-3">
+                    <div>
+                      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Nama Lengkap</p>
+                      <p class="text-gray-800 dark:text-gray-200">{{ userData.full_name || '-' }}</p>
                     </div>
-                    <p v-else class="text-gray-800 dark:text-gray-200">-</p>
+                    
+                    <div>
+                      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Username</p>
+                      <p class="text-gray-800 dark:text-gray-200">{{ userData.username || '-' }}</p>
+                    </div>
+                    
+                    <div>
+                      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Tanggal Lahir</p>
+                      <p class="text-gray-800 dark:text-gray-200">{{ formatDate(userData.birth_date) }}</p>
+                    </div>
+                    
+                    <div>
+                      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Role</p>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 transition-colors duration-200">
+                        {{ formatRole(userData.role) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="space-y-4">
+                  <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 border-b border-green-200 dark:border-green-800 pb-2 transition-colors duration-200">
+                    Kontak
+                  </h3>
+                  
+                  <div class="space-y-3">
+                    <div>
+                      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</p>
+                      <p class="text-gray-800 dark:text-gray-200 wrap-break-word">{{ userData.email }}</p>
+                    </div>
+                    
+                    <div>
+                      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Nomor Telepon</p>
+                      <p class="text-gray-800 dark:text-gray-200">{{ userData.phone || '-' }}</p>
+                    </div>
+                    
+                    <div>
+                      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Website</p>
+                      <div v-if="userData.website">
+                        <NuxtLink
+                          v-if="isValidUrl(userData.website)"
+                          :to="userData.website"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 hover:underline wrap-break-word inline-flex items-center transition-colors duration-200"
+                        >
+                          {{ userData.website }}
+                          <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 ml-1" />
+                        </NuxtLink>
+                        <span v-else class="text-gray-800 dark:text-gray-200 wrap-break-word">{{ userData.website }}</span>
+                      </div>
+                      <p v-else class="text-gray-800 dark:text-gray-200">-</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Address Info -->
+                <div class="space-y-4">
+                  <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 border-b border-green-200 dark:border-green-800 pb-2 transition-colors duration-200">
+                    Alamat
+                  </h3>
+                  
+                  <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Alamat Lengkap</p>
+                    <p class="text-gray-800 dark:text-gray-200 leading-relaxed">
+                      {{ userData.address || 'Belum diisi' }}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <!-- Address Info -->
-              <div class="space-y-4">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 border-b border-green-200 dark:border-green-800 pb-2 transition-colors duration-200">
-                  Alamat
-                </h3>
-                
-                <div>
-                  <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Alamat Lengkap</p>
-                  <p class="text-gray-800 dark:text-gray-200 leading-relaxed">
-                    {{ userData.address || 'Belum diisi' }}
-                  </p>
-                </div>
+              <!-- Edit Button -->
+              <div class="flex justify-center pt-4">
+                <UButton
+                  color="success"
+                  size="lg"
+                  icon="i-lucide-edit"
+                  @click="openEditModal"
+                >
+                  Edit Profil
+                </UButton>
               </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex justify-center pt-6 border-t border-gray-200 dark:border-gray-700 transition-colors duration-200">
-              <UButton
-                color="success"
-                variant="solid"
-                size="lg"
-                icon="i-lucide-pencil"
-                @click="toggleEditMode"
-              >
-                Edit Profil
-              </UButton>
+            <!-- Tab Content: Data Profesional -->
+            <div v-else-if="activeTab === 'professional'" class="py-4">
+              <!-- Expert Form -->
+              <ProfileExpertForm v-if="isPakar" />
+              
+              <!-- Instructor Form -->
+              <ProfileInstructorForm v-if="isPenyuluh" />
             </div>
           </div>
         </div>
-
-        <!-- Edit Form -->
-        <ProfileForm 
-          v-else
-          :user-data="userData" 
-          @update="handleProfileUpdate"
-          @cancel="toggleEditMode"
-        />
       </div>
     </div>
+
+    <!-- Edit Profile Modal -->
+    <ProfileModalForm 
+      v-if="userData"
+      v-model="showEditModal"
+      :user-data="userData"
+      @update="handleProfileUpdate"
+    />
   </div>
 </template>
 

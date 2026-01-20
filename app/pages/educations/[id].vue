@@ -192,7 +192,7 @@ const openDriveLink = (): void => {
 
 // SEO
 const seoTitle = computed(() => course.value ? `${course.value.title}` : 'Memuat Materi...')
-const seoDescription = computed(() => course.value ? (course.value.description || `Pelajari ${course.value.title} - Materi edukasi pertanian dari Juru Tani`) : 'Materi edukasi pertanian dari Juru Tani.')
+const seoDescription = computed(() => course.value ? (course.value.description || `Pelajari ${course.value.title} - Materi edukasi pertanian dari JuruTani`) : 'Materi edukasi pertanian dari JuruTani.')
 const seoImage = computed(() => imageUrl.value || '/jurutani.png')
 const seoKeywords = computed(() => course.value ? [
   'edukasi pertanian',

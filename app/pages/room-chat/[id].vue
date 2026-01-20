@@ -1,348 +1,294 @@
 <script setup lang="ts">
-import { toastStore } from '~/composables/useJuruTaniToast'
-import { useChat } from '~/composables/useChat'
-import { useChatUtils } from '~/composables/useChatUtils'
-import { useUserBadge } from '~/composables/useUserBadge'
+  import { toastStore } from '~/composables/useJuruTaniToast'
+  import { useChat } from '~/composables/useChat'
+  import { useChatUtils } from '~/composables/useChatUtils'
+  import { useUserBadge } from '~/composables/useUserBadge'
 
-const router = useRouter()
-const route = useRoute()
+  const router = useRouter()
+  const route = useRoute()
 
-// Chat composables
-const {
-  conversations,
-  getUserConversations,
-  getCurrentUser,
-  loading,
-  messages,
-  currentConversation,
-  getMessages,
-  sendMessage: sendChatMessage,
-  sendImageMessage,
-  subscribeToMessages,
-  unsubscribeFromMessages,
-  markAsRead,
-  deleteMessage,
-  clearConversationMessages,
-  uploadingImage,
-  isValidImageFile
-} = useChat()
+  // Chat composables
+  const {
+    conversations,
+    getUserConversations,
+    getCurrentUser,
+    loading,
+    messages,
+    currentConversation,
+    getMessages,
+    sendMessage: sendChatMessage,
+    sendImageMessage,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+    markAsRead,
+    deleteMessage,
+    clearConversationMessages,
+    uploadingImage,
+    isValidImageFile
+  } = useChat()
 
-const {
-  formatMessageTime,
-  groupMessagesByDate,
-  isOwnMessage,
-  scrollToBottom,
-  getConversationPartner,
-  getAvatarFallback
-} = useChatUtils()
+  const {
+    formatMessageTime,
+    groupMessagesByDate,
+    isOwnMessage,
+    scrollToBottom,
+    getConversationPartner,
+    getAvatarFallback
+  } = useChatUtils()
 
-const { getBadgeColor, getBadgeName } = useUserBadge()
+  const { getBadgeColor, getBadgeName } = useUserBadge()
 
-// Reactive States
-const newMessage = ref('')
-const messagesContainer = ref<HTMLElement>()
-const currentUser = ref(null)
-const imageInput = ref<HTMLInputElement>()
-const selectedImage = ref<File | null>(null)
-const imagePreview = ref<string | null>(null)
-const imageCaption = ref('')
-const showImagePreview = ref(false)
-const showDeleteConfirm = ref(false)
-const messageToDelete = ref<string | null>(null)
-const showClearConfirm = ref(false)
+  // Reactive States
+  const newMessage = ref('')
+  const messagesContainer = ref<HTMLElement>()
+  const currentUser = ref(null)
+  const imageInput = ref<HTMLInputElement>()
+  const selectedImage = ref<File | null>(null)
+  const imagePreview = ref<string | null>(null)
+  const imageCaption = ref('')
+  const showImagePreview = ref(false)
+  const showDeleteConfirm = ref(false)
+  const messageToDelete = ref<string | null>(null)
+  const showClearConfirm = ref(false)
 
-const conversationId = computed(() => route.params.id as string)
+  const conversationId = computed(() => route.params.id as string)
 
-const groupedMessages = computed(() => {
-  return groupMessagesByDate(messages.value)
-})
+  const groupedMessages = computed(() => {
+    return groupMessagesByDate(messages.value)
+  })
 
-const partnerInfo = computed(() => {
-  if (!currentConversation.value || !currentUser.value) return null
-  return getConversationPartner(currentConversation.value, currentUser.value.id)
-})
+  const partnerInfo = computed(() => {
+    if (!currentConversation.value || !currentUser.value) return null
+    return getConversationPartner(currentConversation.value, currentUser.value.id)
+  })
 
-// Methods
-const sendMessage = async () => {
-  if (!newMessage.value.trim() || loading.value) return
+  // Methods
+  const sendMessage = async () => {
+    if (!newMessage.value.trim() || loading.value) return
 
-  try {
-    const content = newMessage.value.trim()
-    newMessage.value = ''
-    await sendChatMessage(conversationId.value, content)
+    try {
+      const content = newMessage.value.trim()
+      newMessage.value = ''
+      await sendChatMessage(conversationId.value, content)
 
-    await nextTick()
-    if (messagesContainer.value) scrollToBottom(messagesContainer.value)
-  } catch (error) {
-    console.error('Gagal mengirim pesan:', error)
-    toastStore.error('Gagal mengirim pesan, Silakan coba lagi nanti')
+      await nextTick()
+      if (messagesContainer.value) scrollToBottom(messagesContainer.value)
+    } catch (error) {
+      console.error('Gagal mengirim pesan:', error)
+      toastStore.error('Gagal mengirim pesan, Silakan coba lagi nanti')
+    }
   }
-}
 
-// Image handling methods
-const triggerImageUpload = () => {
-  imageInput.value?.click()
-}
-
-const handleImageSelect = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  const file = target.files?.[0]
-  
-  if (!file) return
-  
-  if (!isValidImageFile(file)) {
-    toastStore.error('File harus berupa gambar (JPEG, PNG, GIF, WebP) dan maksimal 10MB')
-    return
+  // Image handling methods
+  const triggerImageUpload = () => {
+    imageInput.value?.click()
   }
-  
-  selectedImage.value = file
-  imageCaption.value = ''
-  
-  // Create preview
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    imagePreview.value = e.target?.result as string
-    showImagePreview.value = true
-  }
-  reader.readAsDataURL(file)
-}
 
-const sendImageMessageChat = async () => {
-  if (!selectedImage.value || uploadingImage.value) return
-  
-  try {
-    await sendImageMessage(conversationId.value, selectedImage.value, imageCaption.value)
+  const handleImageSelect = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    const file = target.files?.[0]
     
-    // Reset image state
+    if (!file) return
+    
+    if (!isValidImageFile(file)) {
+      toastStore.error('File harus berupa gambar (JPEG, PNG, GIF, WebP) dan maksimal 10MB')
+      return
+    }
+    
+    selectedImage.value = file
+    imageCaption.value = ''
+    
+    // Create preview
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imagePreview.value = e.target?.result as string
+      showImagePreview.value = true
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const sendImageMessageChat = async () => {
+    if (!selectedImage.value || uploadingImage.value) return
+    
+    try {
+      await sendImageMessage(conversationId.value, selectedImage.value, imageCaption.value)
+      
+      // Reset image state
+      resetImageState()
+      
+      await nextTick()
+      if (messagesContainer.value) scrollToBottom(messagesContainer.value)
+      
+      toastStore.success('Gambar berhasil dikirim')
+    } catch (error) {
+      console.error('Gagal mengirim gambar:', error)
+      toastStore.error('Gagal mengirim gambar, Silakan coba lagi nanti')
+    }
+  }
+
+  const resetImageState = () => {
+    selectedImage.value = null
+    imagePreview.value = null
+    imageCaption.value = ''
+    showImagePreview.value = false
+    if (imageInput.value) {
+      imageInput.value.value = ''
+    }
+  }
+
+  const cancelImagePreview = () => {
     resetImageState()
-    
-    await nextTick()
-    if (messagesContainer.value) scrollToBottom(messagesContainer.value)
-    
-    toastStore.success('Gambar berhasil dikirim')
-  } catch (error) {
-    console.error('Gagal mengirim gambar:', error)
-    toastStore.error('Gagal mengirim gambar, Silakan coba lagi nanti')
   }
-}
 
-const resetImageState = () => {
-  selectedImage.value = null
-  imagePreview.value = null
-  imageCaption.value = ''
-  showImagePreview.value = false
-  if (imageInput.value) {
-    imageInput.value.value = ''
+  // Message deletion methods
+  const confirmDeleteMessage = (messageId: string) => {
+    messageToDelete.value = messageId
+    showDeleteConfirm.value = true
   }
-}
 
-const cancelImagePreview = () => {
-  resetImageState()
-}
+  const handleDeleteMessage = async () => {
+    if (!messageToDelete.value) return
+    
+    try {
+      await deleteMessage(messageToDelete.value)
+      toastStore.success('Pesan berhasil dihapus')
+    } catch (error) {
+      console.error('Gagal menghapus pesan:', error)
+      toastStore.error('Gagal menghapus pesan')
+    } finally {
+      showDeleteConfirm.value = false
+      messageToDelete.value = null
+    }
+  }
 
-// Message deletion methods
-const confirmDeleteMessage = (messageId: string) => {
-  messageToDelete.value = messageId
-  showDeleteConfirm.value = true
-}
-
-const handleDeleteMessage = async () => {
-  if (!messageToDelete.value) return
-  
-  try {
-    await deleteMessage(messageToDelete.value)
-    toastStore.success('Pesan berhasil dihapus')
-  } catch (error) {
-    console.error('Gagal menghapus pesan:', error)
-    toastStore.error('Gagal menghapus pesan')
-  } finally {
+  const cancelDeleteMessage = () => {
     showDeleteConfirm.value = false
     messageToDelete.value = null
   }
-}
 
-const cancelDeleteMessage = () => {
-  showDeleteConfirm.value = false
-  messageToDelete.value = null
-}
+  // Clear conversation methods
+  const confirmClearConversation = () => {
+    showClearConfirm.value = true
+  }
 
-// Clear conversation methods
-const confirmClearConversation = () => {
-  showClearConfirm.value = true
-}
+  const handleClearConversation = async () => {
+    try {
+      await clearConversationMessages(conversationId.value)
+      toastStore.success('Semua pesan berhasil dihapus')
+    } catch (error) {
+      console.error('Gagal menghapus semua pesan:', error)
+      toastStore.error('Gagal menghapus semua pesan')
+    } finally {
+      showClearConfirm.value = false
+    }
+  }
 
-const handleClearConversation = async () => {
-  try {
-    await clearConversationMessages(conversationId.value)
-    toastStore.success('Semua pesan berhasil dihapus')
-  } catch (error) {
-    console.error('Gagal menghapus semua pesan:', error)
-    toastStore.error('Gagal menghapus semua pesan')
-  } finally {
+  const cancelClearConversation = () => {
     showClearConfirm.value = false
   }
-}
 
-const cancelClearConversation = () => {
-  showClearConfirm.value = false
-}
+  const { toggleSidebar } = useChatLayout()
 
-const goBack = () => {
-  router.push('/room-chat')
-}
-
-const handleImageClick = (imageUrl: string) => {
-  window.open(imageUrl, '_blank')
-}
-
-// Watch messages for auto-scroll
-watch(messages, async () => {
-  await nextTick()
-  if (messagesContainer.value) scrollToBottom(messagesContainer.value)
-}, { deep: true })
-
-// Lifecycle
-onMounted(async () => {
-  try {
-    currentUser.value = await getCurrentUser()
-
-    // SEO Optimization untuk chat room (private page)
-    useSeoMeta({
-      title: 'Room Chat - Juru Tani',
-      description: 'Room chat untuk berdiskusi dengan pengguna lain di Juru Tani',
-      robots: 'noindex, follow',
-      ogTitle: 'Room Chat - Juru Tani',
-      ogDescription: 'Ruang percakapan pribadi di Juru Tani',
-      ogImage: '/og-image.jpg',
-    })
-
-    if (conversationId.value) {
-      await getMessages(conversationId.value)
-      await markAsRead(conversationId.value)
-      subscribeToMessages(conversationId.value)
-
-      // Fetch conversation data if not already loaded
-      let conversationData = currentConversation.value
-      if (!conversationData || conversationData.id !== conversationId.value) {
-        conversationData = conversations.value.find(c => c.id === conversationId.value)
-        if (!conversationData) {
-          await getUserConversations()
-          conversationData = conversations.value.find(c => c.id === conversationId.value)
-        }
-        if (conversationData) {
-          currentConversation.value = conversationData
-        }
-      }
-
-      await nextTick()
-      if (messagesContainer.value) {
-        scrollToBottom(messagesContainer.value, false)
-      }
-    } else {
-      await getUserConversations()
-    }
-  } catch (error) {
-    console.error('Gagal memuat data chat:', error)
-    if (conversationId.value) router.push('/room-chat')
+  const handleClearMessages = () => {
+    confirmClearConversation()
   }
-})
 
-onUnmounted(() => {
-  unsubscribeFromMessages()
-})
+  const handleImageClick = (imageUrl: string) => {
+    window.open(imageUrl, '_blank')
+  }
+
+  // Watch messages for auto-scroll
+  watch(messages, async () => {
+    await nextTick()
+    if (messagesContainer.value) scrollToBottom(messagesContainer.value)
+  }, { deep: true })
+
+  // Lifecycle
+  onMounted(async () => {
+    try {
+      currentUser.value = await getCurrentUser()
+
+      // SEO Optimization untuk chat room (private page)
+      useSeoMeta({
+        title: 'Room Chat - JuruTani',
+        description: 'Room chat untuk berdiskusi dengan pengguna lain di JuruTani',
+        robots: 'noindex, follow',
+        ogTitle: 'Room Chat - JuruTani',
+        ogDescription: 'Ruang percakapan pribadi di JuruTani',
+        ogImage: '/og-image.jpg',
+      })
+
+      if (conversationId.value) {
+        await getMessages(conversationId.value)
+        await markAsRead(conversationId.value)
+        subscribeToMessages(conversationId.value)
+
+        // Fetch conversation data if not already loaded
+        let conversationData = currentConversation.value
+        if (!conversationData || conversationData.id !== conversationId.value) {
+          conversationData = conversations.value.find(c => c.id === conversationId.value)
+          if (!conversationData) {
+            await getUserConversations()
+            conversationData = conversations.value.find(c => c.id === conversationId.value)
+          }
+          if (conversationData) {
+            currentConversation.value = conversationData
+          }
+        }
+
+        await nextTick()
+        if (messagesContainer.value) {
+          scrollToBottom(messagesContainer.value, false)
+        }
+      } else {
+        await getUserConversations()
+      }
+    } catch (error) {
+      console.error('Gagal memuat data chat:', error)
+      if (conversationId.value) router.push('/room-chat')
+    }
+  })
+
+  onUnmounted(() => {
+    unsubscribeFromMessages()
+  })
 </script>
 
 <template>
-  <div class="mt-16 mb-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-4xl h-full flex flex-col bg-white dark:bg-gray-900 shadow-lg rounded-lg overflow-hidden">
-      <!-- Back Button - Fixed at top -->
-      <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
-        <div class="px-4 py-4">
-          <div class="flex items-center justify-between">
-            <button 
-              class="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
-              @click="goBack"
-            >
-              <UIcon name="i-heroicons-arrow-left" class="w-5 h-5" />
-              <span class="font-medium">Kembali ke Room Chat</span>
-            </button>
-            <div class="flex items-center gap-2 text-green-700 dark:text-green-300">
-              <UIcon name="i-heroicons-chat-bubble-left-ellipsis" class="w-5 h-5" />
-              <span class="font-semibold">Juru Tani Room Chat</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Chat Room View -->
-      <div v-if="conversationId" class="flex flex-col flex-1 min-h-0">
-        <!-- Header - Fixed -->
-        <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
-          <div class="flex items-center gap-3">
-            <UAvatar
-              :src="partnerInfo?.avatar_url"
-              :alt="partnerInfo?.full_name"
-              size="md"
-            >
-              <template #fallback>
-                {{ getAvatarFallback(partnerInfo?.full_name || '') }}
-              </template>
-            </UAvatar>
-            <div>
-              <p class="font-semibold text-gray-900 dark:text-gray-100 text-lg md:text-xl">{{ partnerInfo?.full_name }}</p>
-              <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400">Online</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="flex flex-col items-center gap-1">
-              <UIcon 
-                v-if="partnerInfo?.role === 'pakar'"
-                name="i-heroicons-academic-cap" 
-                class="w-4 h-4 text-green-500 dark:text-green-400"
-              />
-              <UIcon 
-                v-else-if="partnerInfo?.role === 'penyuluh'"
-                name="i-heroicons-megaphone" 
-                class="w-4 h-4 text-blue-500 dark:text-blue-400"
-              />
-              <UIcon 
-                v-else
-                name="i-heroicons-user" 
-                class="w-4 h-4 text-gray-400 dark:text-gray-500"
-              />
-              <UBadge 
-                :color="getBadgeColor(partnerInfo?.role)" 
-                variant="solid" 
-                size="xs"
-              >{{ getBadgeName(partnerInfo?.role) }}</UBadge>
-            </div>
-            <!-- Clear Conversation Button -->
-            <UButton
-              icon="i-heroicons-trash"
-              color="error"
-              variant="ghost"
-              size="sm"
-              :disabled="messages.length === 0"
-              @click="confirmClearConversation"
-            >
-              Hapus Semua
-            </UButton>
-          </div>
-        </div>
+  <div v-if="conversationId" class="flex flex-col h-full bg-white dark:bg-gray-900">
+    <!-- Chat Header -->
+    <ChatHeader
+      :partner="partnerInfo"
+      :messages-count="messages.length"
+      :show-back-button="true"
+      @back="toggleSidebar"
+      @clear-messages="handleClearMessages"
+      @toggle-sidebar="toggleSidebar"
+    />
 
-        <!-- Messages Container - Scrollable -->
-        <div 
-          ref="messagesContainer" 
-          class="flex-1 overflow-y-auto max-h-[calc(100vh-16rem)] p-4 bg-gray-50 dark:bg-gray-900 space-y-4"
-        >
-        <div v-if="messages.length === 0" class="flex items-center justify-center h-full">
-          <div class="text-center text-gray-500 dark:text-gray-400">
-            <UIcon name="i-heroicons-chat-bubble-left-right" class="w-12 h-12 mx-auto mb-2" />
-            <p>Belum ada pesan</p>
+    <!-- Messages Container - Scrollable -->
+    <div 
+      ref="messagesContainer" 
+      class="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900 space-y-4"
+    >
+      <!-- Loading Skeleton -->
+      <ChatMessageSkeleton v-if="loading && messages.length === 0" :count="5" />
+      
+      <!-- Empty State -->
+      <div v-else-if="messages.length === 0" class="flex items-center justify-center h-full">
+        <div class="text-center text-gray-500 dark:text-gray-400 space-y-3">
+          <div class="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto">
+            <UIcon name="i-heroicons-chat-bubble-left-right" class="w-8 h-8 text-green-600 dark:text-green-400" />
+          </div>
+          <div>
+            <p class="font-semibold text-gray-900 dark:text-gray-100">Belum ada pesan</p>
             <p class="text-sm">Mulai percakapan dengan mengirim pesan</p>
           </div>
         </div>
+      </div>
 
+      <!-- Messages -->
+      <div v-else class="space-y-4">
         <div v-for="(messagesGroup, date) in groupedMessages" :key="date" class="space-y-3">
           <!-- Date Separator -->
           <div class="flex justify-center">
@@ -363,6 +309,7 @@ onUnmounted(() => {
           />
         </div>
       </div>
+    </div>
 
       <!-- Image Preview Modal -->
       <UModal v-model:open="showImagePreview">
@@ -440,33 +387,35 @@ onUnmounted(() => {
         @cancel="cancelClearConversation"
       />
 
-      <!-- Message Input - Fixed at bottom -->
-      <div class="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <input
-          ref="imageInput"
-          type="file"
-          accept="image/*"
-          class="hidden"
-          @change="handleImageSelect"
-        >
-        
-        <ChatMessageInput
-          v-model="newMessage"
-          :loading="loading"
-          :uploading-image="uploadingImage"
-          @send="sendMessage"
-          @upload-image="triggerImageUpload"
-        />
+    <!-- Message Input - Fixed at bottom -->
+    <div class="shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <input
+        ref="imageInput"
+        type="file"
+        accept="image/*"
+        class="hidden"
+        @change="handleImageSelect"
+      >
+      
+      <ChatMessageInput
+        v-model="newMessage"
+        :loading="loading"
+        :uploading-image="uploadingImage"
+        @send="sendMessage"
+        @upload-image="triggerImageUpload"
+      />
+    </div>
+  </div>
+  
+  <!-- No Conversation Selected -->
+  <div v-else class="flex flex-col items-center justify-center h-full p-8">
+    <div class="text-center text-gray-500 dark:text-gray-400 space-y-4">
+      <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto">
+        <UIcon name="i-heroicons-chat-bubble-left-right" class="w-10 h-10" />
       </div>
-      </div>
-
-      <!-- Chat List View -->
-      <div v-else class="flex flex-col flex-1 items-center justify-center">
-        <div class="text-center text-gray-500 dark:text-gray-400">
-          <UIcon name="i-heroicons-chat-bubble-left-right" class="w-16 h-16 mx-auto mb-4" />
-          <h2 class="text-xl font-semibold mb-2">Belum ada Percakapan</h2>
-          <p>Pilih percakapan dari daftar untuk mulai chat</p>
-        </div>
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Pilih Percakapan</h2>
+        <p>Pilih percakapan dari sidebar untuk mulai chat</p>
       </div>
     </div>
   </div>

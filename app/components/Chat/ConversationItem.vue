@@ -52,11 +52,12 @@ const cancelDelete = () => {
 <template>
   <div
     class="flex items-center gap-4 p-4 
-           hover:bg-green-25 dark:hover:bg-green-900/20 
+           hover:bg-green-50 dark:hover:bg-green-900/10 
            cursor-pointer transition-all duration-200 group 
            border-l-4 border-transparent 
-           hover:border-green-400 dark:hover:border-green-500
-           dark:bg-gray-800 bg-white relative"
+           hover:border-green-500 dark:hover:border-green-500
+           dark:bg-gray-800/50 bg-white relative
+           hover:shadow-sm"
     @click="emit('openChat', conversation.id)"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
@@ -117,7 +118,7 @@ const cancelDelete = () => {
         </div>
         
         <div class="flex flex-col items-end gap-1 ml-3">
-          <span class="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+          <span class="text-xs text-gray-500 dark:text-gray-400 shrink-0">
             {{ conversation.last_message_at ? formatLastMessageTime(conversation.last_message_at) : '' }}
           </span>
           
@@ -127,7 +128,7 @@ const cancelDelete = () => {
             color="success"
             variant="solid"
             size="sm"
-            class="flex-shrink-0 shadow-sm animate-pulse"
+            class="shrink-0 shadow-sm animate-pulse"
           >
             {{ conversation.unread_count > 99 ? '99+' : conversation.unread_count }}
           </UBadge>
@@ -169,7 +170,7 @@ const cancelDelete = () => {
           name="i-heroicons-chevron-right" 
           class="w-5 h-5 text-green-400 dark:text-green-500 
                  group-hover:text-green-600 dark:group-hover:text-green-400 
-                 transition-colors flex-shrink-0"
+                 transition-colors shrink-0"
         />
         <UIcon 
           v-if="partner?.role === 'pakar'"
@@ -216,7 +217,7 @@ const cancelDelete = () => {
             <div class="flex items-start gap-2">
               <UIcon 
                 name="i-heroicons-exclamation-triangle" 
-                class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"
+                class="w-5 h-5 text-red-500 mt-0.5 shrink-0"
               />
               <div class="text-sm text-red-700 dark:text-red-300">
                 <p class="font-medium mb-1">Tindakan ini tidak dapat dibatalkan!</p>

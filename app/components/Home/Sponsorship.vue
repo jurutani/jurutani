@@ -44,7 +44,7 @@ const currentSponsor = ref<Sponsor | null>(sponsors[0])
         <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
             Bergabunglah bersama kami untuk memberdayakan petani Indonesia melalui 
             <span class="font-semibold text-emerald-600 dark:text-emerald-400">teknologi</span>, 
-            <span class="font-semibold text-teal-600 dark:text-teal-400">pakar Juru Tani</span>, dan 
+            <span class="font-semibold text-teal-600 dark:text-teal-400">pakar JuruTani</span>, dan 
             <span class="font-semibold text-cyan-600 dark:text-cyan-400">AI</span> yang dirancang khusus untuk menyelesaikan permasalahan di bidang pertanian.
         </p>
         </div>

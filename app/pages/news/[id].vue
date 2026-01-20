@@ -120,7 +120,7 @@ const openLink = (): void => {
 
 // SEO
 const seoTitle = computed(() => news.value ? `${news.value.title}` : 'Memuat Berita...')
-const seoDescription = computed(() => news.value ? (news.value.sub_title || (news.value.content ? news.value.content.slice(0, 160) : '')) : 'Berita terkini seputar pertanian dari Juru Tani.')
+const seoDescription = computed(() => news.value ? (news.value.sub_title || (news.value.content ? news.value.content.slice(0, 160) : '')) : 'Berita terkini seputar pertanian dari JuruTani.')
 const seoImage = computed(() => imageUrl.value || '/jurutani.png')
 const seoKeywords = computed(() => news.value ? [
   'berita pertanian',
@@ -176,7 +176,7 @@ watch(() => news.value, (newVal) => {
             
             <div class="flex items-center gap-2 text-green-700 dark:text-green-400">
               <UIcon name="i-lucide-newspaper" class="w-5 h-5" />
-              <span class="font-semibold">Juru Tani News</span>
+              <span class="font-semibold">JuruTani News</span>
             </div>
           </div>
         </div>

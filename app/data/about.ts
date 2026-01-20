@@ -1,12 +1,12 @@
 import type { HeroSection, IconCard, GalleryItem, FeatureCard, TeamCategory, InstitutionHighlight } from './types'
 
 /**
- * About Page Data - Juru Tani Platform
+ * About Page Data - JuruTani Platform
  * All content for about-us.vue centralized here
  */
 
 export const aboutHero: HeroSection = {
-    title: 'Juru Tani Reborn',
+    title: 'Si JuruTani',
     subtitle: 'Platform Inovasi Penyuluhan Digital Pertanian Indonesia',
     badge: {
         text: 'Politeknik Pembangunan Pertanian Yogyakarta Magelang',
@@ -29,8 +29,8 @@ export const galleryData: GalleryItem[] = [
     {
         src: galleryImages[0],
         title: 'Layanan Penyuluhan',
-        description: 'Konsultasi langsung dengan penyuluh pertanian digital melalui aplikasi Juru Tani',
-        alt: 'Layanan penyuluhan digital Juru Tani'
+        description: 'Konsultasi langsung dengan penyuluh pertanian digital melalui aplikasi JuruTani',
+        alt: 'Layanan penyuluhan digital JuruTani'
     },
     {
         src: galleryImages[1],
@@ -185,13 +185,13 @@ export const visionMission = {
 }
 
 export const aboutIntro = {
-    title: 'Tentang Juru Tani',
+    title: 'Tentang Si JuruTani',
     subtitle: 'Platform Inovasi Penyuluhan Digital Pertanian',
-    content: `<strong>Juru Tani Reborn</strong> adalah karya inovasi yang dikembangkan oleh <strong>mahasiswa dan dosen Politeknik Pembangunan Pertanian (Polbangtan) Yogyakarta Magelang</strong>, sebuah institusi pendidikan tinggi yang berada di bawah naungan <strong>Kementerian Pertanian Republik Indonesia</strong>.
+    content: `<strong>Si JuruTani</strong> adalah karya inovasi yang dikembangkan oleh <strong>mahasiswa dan dosen Politeknik Pembangunan Pertanian (Polbangtan) Yogyakarta Magelang</strong>, sebuah institusi pendidikan tinggi yang berada di bawah naungan <strong>Kementerian Pertanian Republik Indonesia</strong>.
 
 Platform ini lahir dari kepedulian mendalam terhadap tantangan yang dihadapi oleh petani Indonesia di era digital. Kami menyadari bahwa petani membutuhkan solusi yang tidak hanya canggih secara teknologi, tetapi juga mudah diakses dan relevan dengan kondisi pertanian lokal.
 
-<strong>Juru Tani Reborn</strong> bukan sekadar aplikasi — ini adalah <strong>ekosistem digital</strong> yang dirancang untuk memberdayakan petani melalui:
+<strong>Si JuruTani</strong> bukan sekadar aplikasi — ini adalah <strong>ekosistem digital</strong> yang dirancang untuk memberdayakan petani melalui:
 - Akses <strong>penyuluhan pertanian profesional</strong> kapan saja, di mana saja
 - <strong>Database lengkap</strong> informasi komoditas, teknik budidaya, dan penanganan hama
 - <strong>Data real-time</strong> cuaca dan harga pasar untuk pengambilan keputusan yang lebih baik
@@ -199,7 +199,7 @@ Platform ini lahir dari kepedulian mendalam terhadap tantangan yang dihadapi ole
 - <strong>Konten edukatif</strong> berupa artikel, video tutorial, dan kursus online
 - <strong>Alat bantu praktis</strong> seperti kalkulator pupuk dan prediksi hasil panen
 
-Kami percaya bahwa dengan menggabungkan <strong>teknologi digital terkini</strong> dan <strong>pengetahuan pertanian mendalam</strong>, Juru Tani dapat menjadi mitra terpercaya petani Indonesia dalam meningkatkan produktivitas, efisiensi, dan kesejahteraan.
+Kami percaya bahwa dengan menggabungkan <strong>teknologi digital terkini</strong> dan <strong>pengetahuan pertanian mendalam</strong>, Si JuruTani dapat menjadi mitra terpercaya petani Indonesia dalam meningkatkan produktivitas, efisiensi, dan kesejahteraan.
 
-<strong>Juru Tani Reborn</strong> adalah wujud komitmen kami untuk memajukan sektor pertanian Indonesia menuju <strong>Agriculture 4.0</strong> — pertanian yang cerdas, berkelanjutan, dan sejahtera.`
+<strong>Si JuruTani</strong> adalah wujud komitmen kami untuk memajukan sektor pertanian Indonesia menuju <strong>Agriculture 4.0</strong> — pertanian yang cerdas, berkelanjutan, dan sejahtera.`
 }

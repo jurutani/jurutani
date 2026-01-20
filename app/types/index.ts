@@ -44,3 +44,6 @@ export * from './common'
 
 // Chatbot types
 export * from './chatbot'
+
+// Professional types
+export * from './professional'

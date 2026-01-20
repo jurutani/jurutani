@@ -9,7 +9,7 @@
         Coming Soon 🌱
       </h1>
       <p class="text-green-800 dark:text-green-400 text-lg max-w-xl mx-auto">
-        This page is growing... Just like a young seedling, it needs a bit more time. Stay tuned for updates from Juru Tani!
+        This page is growing... Just like a young seedling, it needs a bit more time. Stay tuned for updates from JuruTani!
       </p>
     </div>
     <UButton

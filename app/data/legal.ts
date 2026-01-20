@@ -10,7 +10,7 @@ export const privacyPolicyData: LegalPageData = {
     icon: 'i-lucide-shield',
     title: 'Kebijakan Privasi',
     lastUpdated: '5 Mei 2026',
-    intro: 'Juru Tani menghargai privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan platform kami.',
+    intro: 'JuruTani menghargai privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan platform kami.',
     sections: [
         {
             id: 'information-collection',
@@ -30,7 +30,7 @@ export const privacyPolicyData: LegalPageData = {
             type: 'nested',
             content: [
                 'Informasi digunakan untuk:',
-                'Menyediakan dan mengelola layanan Juru Tani',
+                'Menyediakan dan mengelola layanan JuruTani',
                 'Meningkatkan pengalaman pengguna',
                 'Mengirim notifikasi atau informasi terkait'
             ]
@@ -64,14 +64,14 @@ export const termsOfServiceData: LegalPageData = {
     icon: 'i-lucide-file-text',
     title: 'Syarat & Ketentuan',
     lastUpdated: '20 Juli 2026',
-    intro: 'Selamat datang di <strong>Juru Tani</strong>. Dokumen ini berisi syarat dan ketentuan yang mengatur penggunaan platform dan layanan kami. Mohon membaca dengan seksama sebelum menggunakan platform kami.',
+    intro: 'Selamat datang di <strong>JuruTani</strong>. Dokumen ini berisi syarat dan ketentuan yang mengatur penggunaan platform dan layanan kami. Mohon membaca dengan seksama sebelum menggunakan platform kami.',
     sections: [
         {
             id: 'introduction',
             title: 'Pengantar',
             icon: 'i-lucide-info',
             type: 'text',
-            content: 'Dengan mengakses dan menggunakan platform <strong>Juru Tani</strong>, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Jika Anda tidak setuju dengan salah satu dari ketentuan ini, Anda tidak diperkenankan untuk menggunakan layanan kami.'
+            content: 'Dengan mengakses dan menggunakan platform <strong>JuruTani</strong>, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Jika Anda tidak setuju dengan salah satu dari ketentuan ini, Anda tidak diperkenankan untuk menggunakan layanan kami.'
         },
         {
             id: 'service-usage',
@@ -89,7 +89,7 @@ export const termsOfServiceData: LegalPageData = {
             title: 'Hak Kekayaan Intelektual',
             icon: 'i-lucide-shield-check',
             type: 'text',
-            content: 'Semua konten di platform ini termasuk logo, teks, grafik, dan perangkat lunak adalah milik <strong>Juru Tani</strong> kecuali dinyatakan lain. Dilarang menyalin, mendistribusikan, atau menggunakan konten tersebut tanpa izin tertulis dari kami.'
+            content: 'Semua konten di platform ini termasuk logo, teks, grafik, dan perangkat lunak adalah milik <strong>JuruTani</strong> kecuali dinyatakan lain. Dilarang menyalin, mendistribusikan, atau menggunakan konten tersebut tanpa izin tertulis dari kami.'
         },
         {
             id: 'responsibility',
@@ -98,7 +98,7 @@ export const termsOfServiceData: LegalPageData = {
             type: 'nested',
             content: [
                 'Kami tidak bertanggung jawab atas kerugian yang timbul akibat penyalahgunaan platform ini oleh pihak ketiga. Penggunaan informasi dan layanan kami sepenuhnya menjadi risiko Anda sendiri.',
-                '<strong>Juru Tani</strong> tidak memberikan jaminan bahwa:',
+                '<strong>JuruTani</strong> tidak memberikan jaminan bahwa:',
                 'Layanan akan selalu tersedia tanpa gangguan',
                 'Layanan akan bebas dari kesalahan atau bug'
             ]

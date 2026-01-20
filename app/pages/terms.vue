@@ -12,7 +12,7 @@ useSeoOptimized('terms')
           <div class="mr-3 p-2 bg-green-100 dark:bg-green-900 rounded-full">
             <UIcon name="i-lucide-book-open" class="h-6 w-6 text-green-600 dark:text-green-400" />
           </div>
-          <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">Juru Tani</h3>
+          <h3 class="text-lg font-semibold text-green-700 dark:text-green-400">JuruTani</h3>
         </div>
       </div>
 
@@ -25,7 +25,7 @@ useSeoOptimized('terms')
       <!-- Intro with decorative element -->
       <div class="relative mb-10 bg-green-50 dark:bg-green-900/30 p-5 rounded-lg border-l-4 border-green-500 dark:border-green-600">
         <p class="text-base md:text-lg leading-relaxed">
-          Selamat datang di <strong class="text-green-700 dark:text-green-400">Juru Tani</strong>. Dokumen ini berisi syarat dan ketentuan yang mengatur penggunaan platform dan layanan kami. Mohon membaca dengan seksama sebelum menggunakan platform kami.
+          Selamat datang di <strong class="text-green-700 dark:text-green-400">JuruTani</strong>. Dokumen ini berisi syarat dan ketentuan yang mengatur penggunaan platform dan layanan kami. Mohon membaca dengan seksama sebelum menggunakan platform kami.
         </p>
       </div>
 
@@ -39,7 +39,7 @@ useSeoOptimized('terms')
               <UIcon name="i-lucide-info" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
-              Dengan mengakses dan menggunakan platform <strong class="text-green-700 dark:text-green-400">Juru Tani</strong>, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Jika Anda tidak setuju dengan salah satu dari ketentuan ini, Anda tidak diperkenankan untuk menggunakan layanan kami.
+              Dengan mengakses dan menggunakan platform <strong class="text-green-700 dark:text-green-400">JuruTani</strong>, Anda setuju untuk terikat oleh syarat dan ketentuan ini. Jika Anda tidak setuju dengan salah satu dari ketentuan ini, Anda tidak diperkenankan untuk menggunakan layanan kami.
             </p>
           </div>
         </section>
@@ -77,7 +77,7 @@ useSeoOptimized('terms')
               <UIcon name="i-lucide-shield" class="h-5 w-5 text-green-500 dark:text-green-400" />
             </span>
             <p class="text-base leading-relaxed">
-              Semua konten di platform ini termasuk logo, teks, grafik, dan perangkat lunak adalah milik <strong class="text-green-700 dark:text-green-400">Juru Tani</strong> kecuali dinyatakan lain. Dilarang menyalin, mendistribusikan, atau menggunakan konten tersebut tanpa izin tertulis dari kami.
+              Semua konten di platform ini termasuk logo, teks, grafik, dan perangkat lunak adalah milik <strong class="text-green-700 dark:text-green-400">JuruTani</strong> kecuali dinyatakan lain. Dilarang menyalin, mendistribusikan, atau menggunakan konten tersebut tanpa izin tertulis dari kami.
             </p>
           </div>
         </section>
@@ -94,7 +94,7 @@ useSeoOptimized('terms')
                 Kami tidak bertanggung jawab atas kerugian yang timbul akibat penyalahgunaan platform ini oleh pihak ketiga. Penggunaan informasi dan layanan kami sepenuhnya menjadi risiko Anda sendiri.
               </p>
               <p>
-                <strong class="text-green-700 dark:text-green-400">Juru Tani</strong> tidak memberikan jaminan bahwa:
+                <strong class="text-green-700 dark:text-green-400">JuruTani</strong> tidak memberikan jaminan bahwa:
               </p>
               <ul class="list-none space-y-2 mt-2 pl-6">
                 <li class="flex items-start">

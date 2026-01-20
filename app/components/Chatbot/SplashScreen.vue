@@ -25,10 +25,10 @@ defineProps<{
       <!-- Title -->
       <div>
         <h1 class="text-xl font-bold text-green-700 mb-2 dark:text-green-300">
-          Juru tani AI
+          JuruTani AI
         </h1>
         <p class="text-gray-600 text-sm dark:text-gray-300">
-          Asisten Penyuluh Juru tani
+          Asisten Penyuluh JuruTani
         </p>
       </div>
 

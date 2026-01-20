@@ -14,7 +14,7 @@ const messages = ref([
   {
     id: 1,
     type: 'bot',
-    text: 'Halo! Saya adalah Juru tani AI, asisten penyuluh juru tani untuk pertanian, peternakan, dan pembangunan. Saya dapat membantu Anda dengan informasi tentang:\n\n• Teknik budidaya tanaman dan peternakan\n• Teknologi pertanian modern\n• Manajemen sumber daya alam\n• Pembangunan infrastruktur pertanian\n• Pemasaran hasil pertanian\n• Program pemerintah untuk petani\n\nAda yang ingin Anda tanyakan?',
+    text: 'Halo! Saya adalah JuruTani AI, asisten penyuluh JuruTani untuk pertanian, peternakan, dan pembangunan. Saya dapat membantu Anda dengan informasi tentang:\n\n• Teknik budidaya tanaman dan peternakan\n• Teknologi pertanian modern\n• Manajemen sumber daya alam\n• Pembangunan infrastruktur pertanian\n• Pemasaran hasil pertanian\n• Program pemerintah untuk petani\n\nAda yang ingin Anda tanyakan?',
     timestamp: new Date()
   }
 ])
@@ -60,7 +60,7 @@ const closeChat = () => {
 
 const sendMessageToGemini = async (message) => {
   try {
-    const systemPrompt = `Anda adalah Juru tani AI, asisten penyuluh juru tani yang ahli dan berpengalaman. Tugas Anda adalah memberikan penjelasan yang jelas, akurat, praktis, dan mudah dipahami dalam bahasa Indonesia.
+    const systemPrompt = `Anda adalah JuruTani AI, asisten penyuluh JuruTani yang ahli dan berpengalaman. Tugas Anda adalah memberikan penjelasan yang jelas, akurat, praktis, dan mudah dipahami dalam bahasa Indonesia.
 
     Bidang keahlian Anda meliputi:
     

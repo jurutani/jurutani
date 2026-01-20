@@ -190,7 +190,7 @@ const viewDetails = () => {
       >
         <div class="text-center text-green-400 dark:text-gray-600">
           <UIcon name="i-heroicons-book-open" class="w-20 h-20 mb-3 opacity-50" />
-          <p class="text-sm font-medium opacity-75">Materi Juru Tani</p>
+          <p class="text-sm font-medium opacity-75">Materi JuruTani</p>
         </div>
       </div>
       

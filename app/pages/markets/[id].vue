@@ -194,7 +194,7 @@ const openWhatsApp = (): void => {
 
 // SEO
 const seoTitle = computed(() => product.value ? `${product.value.name}` : 'Memuat Produk...')
-const seoDescription = computed(() => product.value ? (product.value.description || `${product.value.name} - Harga ${formattedPrice.value}`) : 'Produk pertanian dari Juru Tani.')
+const seoDescription = computed(() => product.value ? (product.value.description || `${product.value.name} - Harga ${formattedPrice.value}`) : 'Produk pertanian dari JuruTani.')
 const seoImage = computed(() => images.value[0] || '/product.png')
 const seoKeywords = computed(() => product.value ? [
   'marketplace pertanian',

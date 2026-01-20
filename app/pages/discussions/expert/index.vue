@@ -12,17 +12,18 @@ interface Expert {
   profiles: {
     full_name: string;
     avatar_url: string;
-  };
+  } | null;
 }
 
 // Data
 const experts = ref<Expert[]>([]);
 const loading = ref(true);
-const error = ref(null);
+const error = ref<any>(null);
 
 // Filter states
-const selectedCategory = ref<string>('Budidaya');
+const selectedCategory = ref<string>('');
 const categories = ref<string[]>([]);
+const searchQuery = ref<string>('');
 
 // Pagination states
 const currentPage = ref<number>(1);
@@ -40,7 +41,12 @@ const fetchCategories = async () => {
       console.error('Error fetching categories:', fetchError);
       categories.value = [];
     } else {
-      categories.value = (data || []).map((item: { name: string }) => item.name);
+      const categoryNames = (data || []).map((item: { name: string }) => item.name);
+      categories.value = categoryNames;
+      // Set first category as default if available
+      if (categoryNames.length > 0) {
+        selectedCategory.value = categoryNames[0];
+      }
     }
   } catch (err) {
     console.error('Error fetching categories:', err);
@@ -50,7 +56,21 @@ const fetchCategories = async () => {
 
 // Computed properties
 const filteredExperts = computed(() => {
-  return experts.value.filter(expert => expert.category === selectedCategory.value);
+  if (loading.value || !experts.value) {
+    return [];
+  }
+  
+  return experts.value.filter(expert => {
+    // Category filter
+    const matchesCategory = !selectedCategory.value || expert.category === selectedCategory.value;
+    
+    // Search filter
+    const fullName = expert.profiles?.full_name || '';
+    const matchesSearch = !searchQuery.value || 
+      fullName.toLowerCase().includes(searchQuery.value.toLowerCase());
+    
+    return matchesCategory && matchesSearch;
+  });
 });
 
 // Pagination computed properties
@@ -104,15 +124,23 @@ const selectCategory = (category: string) => {
   currentPage.value = 1; // Reset pagination ketika category berubah
 };
 
-// Watcher untuk reset page ketika kategori berubah
-watch(selectedCategory, () => {
+// Reset filter handler
+const handleResetFilter = () => {
+  if (categories.value.length > 0) {
+    selectedCategory.value = categories.value[0];
+  }
+  searchQuery.value = '';
+};
+
+// Watcher untuk reset page ketika filter berubah
+watch([selectedCategory, searchQuery], () => {
   currentPage.value = 1;
 });
 
 // Initial data fetch
 onMounted(async () => {
-  await fetchExperts();
   await fetchCategories();
+  await fetchExperts();
 });
 
 // Head meta
@@ -128,30 +156,15 @@ useHead({
 </script>
 
 <template>
-  <div class="min-h-screen  py-8 md:py-12">
+  <div class="min-h-screen py-8 md:py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header Section -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
-        <div class="flex items-center gap-4">
-          <UButton
-            to="/discussions"
-            color="success"
-            variant="ghost"
-            icon="i-lucide-arrow-left"
-            size="lg"
-            aria-label="Kembali ke Diskusi"
-            class="rounded-full"
-          />
-          <div>
-            <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
-              Diskusi Pakar
-            </h1>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              Konsultasi dengan pakar pertanian berpengalaman
-            </p>
-          </div>
-        </div>
-      </div>
+      <DiscussionsDiscussionHeader
+        title="Diskusi Pakar"
+        subtitle="Konsultasi dengan pakar pertanian berpengalaman"
+        icon="i-lucide-lightbulb"
+        back-url="/discussions"
+      />
 
       <!-- Main Card -->
       <UCard 
@@ -202,100 +215,63 @@ useHead({
 
         <!-- Content -->
         <div v-else class="space-y-8">
-          <!-- Category selection -->
+          <!-- Search Bar - Full width -->
+          <DiscussionsDiscussionSearch
+            v-model="searchQuery"
+            title="Cari Pakar"
+            placeholder="Cari nama pakar pertanian..."
+          />
+          
+          <!-- Category Filter -->
           <div>
-            <div class="flex items-center gap-2 mb-4">
-              <UIcon 
-                name="i-lucide-tag" 
-                class="w-5 h-5 text-green-600 dark:text-green-400"
-              />
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Pilih Kategori</h2>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              <UButton
-                v-for="category in categories"
-                :key="category"
-                :color="selectedCategory === category ? 'success' : 'neutral'"
-                :variant="selectedCategory === category ? 'solid' : 'outline'"
-                class="text-center"
-                @click="selectCategory(category)"
-              >
-                {{ category }}
-              </UButton>
-            </div>
+            <AppCategoryFilter
+              :categories="categories"
+              :current-category="selectedCategory"
+              :show-all-option="false"
+              @update:category="selectCategory"
+            />
           </div>
 
           <!-- Experts based on selected category -->
           <div>
-            <div class="flex items-center gap-2 mb-6">
-              <UIcon 
-                name="i-lucide-users" 
-                class="w-5 h-5 text-green-600 dark:text-green-400"
-              />
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-                Pakar {{ selectedCategory }}
-                <UBadge color="success" variant="soft" class="ml-2">
-                  {{ filteredExperts.length }}
-                </UBadge>
-              </h2>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+              <div class="flex items-center gap-2">
+                <UIcon 
+                  name="i-lucide-users" 
+                  class="w-5 h-5 text-green-600 dark:text-green-400"
+                />
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                  <span v-if="selectedCategory">Pakar {{ selectedCategory }}</span>
+                  <span v-else>Semua Pakar</span>
+                  <UBadge color="success" variant="soft" class="ml-2">
+                    {{ filteredExperts.length }}
+                  </UBadge>
+                </h2>
+              </div>
+              
+              <!-- Results Info -->
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                Menampilkan <span class="font-semibold text-green-600 dark:text-green-400">{{ paginatedExperts.length }}</span> dari <span class="font-semibold">{{ filteredExperts.length }}</span> pakar
+              </div>
             </div>
 
             <div v-if="filteredExperts.length > 0">
               <!-- Experts grid -->
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <UCard
+                <DiscussionsDiscussionCard
                   v-for="expert in paginatedExperts"
                   :key="expert.id"
-                  class="hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  :ui="{ 
-                    body: { padding: 'p-4 sm:p-6' }
-                  }"
-                >
-                  <div class="flex flex-col items-center text-center space-y-4">
-                    <!-- Avatar -->
-                    <div class="relative">
-                      <img
-                        :src="expert.profiles?.avatar_url || '/profile.png'"
-                        :alt="expert.profiles?.full_name || 'Pakar'"
-                        class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-green-100 dark:border-green-900"
-                      />
-                      <div class="absolute -bottom-2 -right-2 bg-green-500 dark:bg-green-600 w-6 h-6 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center">
-                        <UIcon 
-                          name="i-lucide-check" 
-                          class="w-3 h-3 text-white"
-                        />
-                      </div>
-                    </div>
-
-                    <!-- Info -->
-                    <div class="space-y-2 flex-1">
-                      <h3 class="font-semibold text-lg text-gray-900 dark:text-white line-clamp-2">
-                        {{ expert.profiles?.full_name || 'Nama tidak tersedia' }}
-                      </h3>
-                      <UBadge color="success" variant="subtle">
-                        {{ expert.category }}
-                      </UBadge>
-                      <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-                        {{ expert.note || `Ahli dalam bidang ${expert.category.toLowerCase()} yang telah berpengalaman membantu petani.` }}
-                      </p>
-                    </div>
-
-                    <!-- Button -->
-                    <UButton
-                      :to="`/discussions/expert/${expert.id}`"
-                      color="success"
-                      size="md"
-                      class="w-full"
-                      icon="i-lucide-message-circle"
-                    >
-                      Mulai Diskusi
-                    </UButton>
-                  </div>
-                </UCard>
+                  :id="expert.id"
+                  :profile="expert.profiles"
+                  :category="expert.category"
+                  :note="expert.note || `Ahli dalam bidang ${expert.category.toLowerCase()} yang telah berpengalaman membantu petani.`"
+                  type="expert"
+                />
               </div>
 
               <!-- Pagination -->
               <AppPagination
+                v-if="totalPages > 1"
                 :current-page="currentPage"
                 :total-pages="totalPages"
                 :total-items="filteredExperts.length"
@@ -307,17 +283,12 @@ useHead({
             </div>
 
             <!-- Empty state -->
-            <div v-else class="flex flex-col items-center justify-center py-16">
-              <UIcon 
-                name="i-lucide-inbox" 
-                class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4"
-              />
-              <p class="text-gray-600 dark:text-gray-400 text-center max-w-sm">
-                Tidak ada pakar tersedia untuk kategori
-                <span class="font-semibold">{{ selectedCategory }}</span>
-                saat ini.
-              </p>
-            </div>
+            <DiscussionsDiscussionEmptyState
+              v-else
+              :message="`Tidak ada pakar tersedia${selectedCategory ? ' untuk kategori ' + selectedCategory : ''}${searchQuery ? ' dengan nama &quot;' + searchQuery + '&quot;' : ''} saat ini.`"
+              :show-reset-button="!!(selectedCategory || searchQuery)"
+              @reset="handleResetFilter"
+            />
           </div>
         </div>
       </UCard>

@@ -186,9 +186,9 @@ const { supabase } = useSupabase()
 
 // SEO Meta
 useHead({
-  title: 'Ganti Password - Juru Tani',
+  title: 'Ganti Password - JuruTani',
   meta: [
-    { name: 'description', content: 'Ubah password akun Juru Tani Anda dengan mudah dan aman.' }
+    { name: 'description', content: 'Ubah password akun JuruTani Anda dengan mudah dan aman.' }
   ]
 })
 

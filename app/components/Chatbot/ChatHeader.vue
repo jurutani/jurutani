@@ -17,8 +17,8 @@ defineProps<{
         />
       </div>
       <div>
-        <h3 class="font-semibold text-sm">Juru tani </h3>
-        <p class="text-xs text-green-100">Penyuluh Juru tani</p>
+        <h3 class="font-semibold text-sm">JuruTani </h3>
+        <p class="text-xs text-green-100">Penyuluh JuruTani</p>
       </div>
     </div>
     <div class="flex items-center space-x-2">
