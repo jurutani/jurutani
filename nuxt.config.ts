@@ -14,7 +14,7 @@ const {
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL ?? 'https://jurutani.com',
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseKey: process.env.SUPABASE_KEY,
     },
@@ -23,10 +23,12 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/',
     head: {
+      titleTemplate: `%s ${titleSeparator} ${title}`,
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
       meta: [
+        { name: 'description', content: description },
         { name: 'google-site-verification', content: 'pn_TzR8VuA68qFc7RG6_d5Hr6Rj3pzXveqmQcHfx5lo' },
       ],
     },
