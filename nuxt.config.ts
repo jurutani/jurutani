@@ -37,19 +37,20 @@ export default defineNuxtConfig({
         '/',
         '/about-us',
         '/contact-us',
-        '/services',
         '/news',
         '/tools',
         '/videos',
         '/courses',
         '/help-faqs',
         '/privacy-policy',
-        '/terms-of-service',
         '/food-prices',
         '/markets',
         '/educations',
         '/terms',
       ],
+      ignore: [
+        '/room-chat',
+      ]
     },
   },
 
