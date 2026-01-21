@@ -24,17 +24,8 @@ const { sidebarOpen, isMobile, toggleSidebar } = useChatLayout()
     </div>
 
     <!-- Empty State Content -->
-    <div class="flex-1 flex flex-col items-center justify-center p-8">
+    <div class="flex-1 flex flex-col items-center justify-center p-4">
       <div class="text-center max-w-md space-y-6">
-        <!-- Icon -->
-        <div class="flex justify-center">
-          <div class="w-24 h-24 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
-            <UIcon 
-              name="i-heroicons-chat-bubble-left-right" 
-              class="w-12 h-12 text-green-600 dark:text-green-400" 
-            />
-          </div>
-        </div>
         
         <!-- Title -->
         <div>

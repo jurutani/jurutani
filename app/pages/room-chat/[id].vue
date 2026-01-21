@@ -306,7 +306,7 @@
     <!-- Messages Container - Scrollable -->
     <div 
       ref="messagesContainer" 
-      class="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900 space-y-4"
+      class="flex-1 overflow-y-auto p-3 bg-gray-50 dark:bg-gray-900 space-y-3"
     >
       <!-- Loading Skeleton -->
       <ChatMessageSkeleton v-if="loading && messages.length === 0" :count="5" />
