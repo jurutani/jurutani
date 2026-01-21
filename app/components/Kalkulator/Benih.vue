@@ -60,7 +60,7 @@ const totalKebutuhanBenih = computed<number>(() => {
 
         <div>
           <label class="flex items-center gap-2 font-semibold mb-2 text-gray-700 dark:text-gray-200">
-            <UIcon name="i-lucide-ruler-square" class="w-4 h-4 text-emerald-600" />
+            <UIcon name="i-lucide-ruler" class="w-4 h-4 text-emerald-600" />
             Jarak Tanam (cm)
           </label>
           <div class="flex items-center gap-3">

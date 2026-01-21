@@ -184,7 +184,6 @@ onMounted(() => {
       @update:page="handlePageChange"
     />
     
-    <CreateButton />
   </div>
 </template>
 

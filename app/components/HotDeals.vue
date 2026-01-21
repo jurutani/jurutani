@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
 import { useSupabase } from '~/composables/useSupabase'
-import { CreateButton } from '#components'
 import { useAsyncData } from '#app'
 
 // Types
