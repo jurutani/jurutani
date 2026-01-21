@@ -24,6 +24,7 @@ interface Props {
   truncateMessage: (message: string, length: number) => string
   getAvatarFallback: (name: string) => string
   isDeleting?: boolean
+  isSelected?: boolean
 }
 
 const props = defineProps<Props>()
@@ -32,10 +33,8 @@ const emit = defineEmits(['openChat', 'deleteConversation'])
 const { getBadgeColor, getBadgeName } = useUserBadge()
 
 const showDeleteConfirm = ref(false)
-const isHovered = ref(false)
 
-const handleDeleteClick = (e: Event) => {
-  e.stopPropagation()
+const handleDeleteClick = () => {
   showDeleteConfirm.value = true
 }
 
@@ -47,20 +46,28 @@ const confirmDelete = () => {
 const cancelDelete = () => {
   showDeleteConfirm.value = false
 }
+
+// Menu items for dropdown
+const menuItems = computed(() => [
+  {
+    label: 'Delete',
+    icon: 'i-lucide-trash-2',
+    onClick: handleDeleteClick,
+    disabled: props.isDeleting
+  }
+])
 </script>
 
 <template>
   <div
-    class="flex items-center gap-4 p-4 
-           hover:bg-green-50 dark:hover:bg-green-900/10 
-           cursor-pointer transition-all duration-200 group 
-           border-l-4 border-transparent 
-           hover:border-green-500 dark:hover:border-green-500
-           dark:bg-gray-800/50 bg-white relative
-           hover:shadow-sm"
+    :class="[
+      'flex items-center gap-4 p-4 cursor-pointer transition-all duration-200 group relative',
+      'border-l-4',
+      isSelected
+        ? 'bg-green-50 dark:bg-green-900/20 border-green-500 dark:border-green-500 shadow-sm'
+        : 'border-transparent bg-white dark:bg-gray-800/50 hover:bg-green-50 dark:hover:bg-green-900/10 hover:border-green-500 dark:hover:border-green-500 hover:shadow-sm'
+    ]"
     @click="emit('openChat', conversation.id)"
-    @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
   >
     <!-- Avatar with JuruTani styling -->
     <div class="relative">
@@ -135,28 +142,17 @@ const cancelDelete = () => {
         </div>
       </div>
       
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between gap-2">
         <p
           class="text-sm text-gray-600 dark:text-gray-300 
-                 truncate pr-2 leading-relaxed">
+                 truncate flex-1 leading-relaxed">
           {{ truncateMessage(conversation.last_message || 'Belum ada pesan...', 65) }}
         </p>
       </div>
     </div>
     
-    <!-- Actions Container -->
-    <div class="flex items-center gap-2">
-      <!-- Delete Button - only shown on hover -->
-      <UButton
-        v-if="isHovered && !isDeleting"
-        icon="i-heroicons-trash"
-        color="error"
-        variant="ghost"
-        size="sm"
-        class="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-        @click="handleDeleteClick"
-      />
-      
+    <!-- Three Dots Menu Button - Always Visible -->
+    <div class="flex items-center gap-2 shrink-0" @click.stop>
       <!-- Loading spinner when deleting -->
       <UIcon
         v-if="isDeleting"
@@ -164,30 +160,19 @@ const cancelDelete = () => {
         class="w-5 h-5 text-gray-400 animate-spin"
       />
       
-      <!-- Chevron with agricultural icon -->
-      <div class="flex flex-col items-center gap-1">
-        <UIcon 
-          name="i-heroicons-chevron-right" 
-          class="w-5 h-5 text-green-400 dark:text-green-500 
-                 group-hover:text-green-600 dark:group-hover:text-green-400 
-                 transition-colors shrink-0"
+      <!-- Three Dots Menu -->
+      <UDropdownMenu
+        v-else
+        :items="[menuItems]"
+        :popper="{ placement: 'bottom-end' }"
+      >
+        <UButton
+          icon="i-lucide-more-vertical"
+          color="neutral"
+          variant="ghost"
+          size="sm"
         />
-        <UIcon 
-          v-if="partner?.role === 'pakar'"
-          name="i-heroicons-academic-cap" 
-          class="w-3 h-3 text-green-500 dark:text-green-400"
-        />
-        <UIcon 
-          v-else-if="partner?.role === 'penyuluh'"
-          name="i-heroicons-megaphone" 
-          class="w-3 h-3 text-blue-500 dark:text-blue-400"
-        />
-        <UIcon 
-          v-else
-          name="i-heroicons-user" 
-          class="w-3 h-3 text-gray-400 dark:text-gray-500"
-        />
-      </div>
+      </UDropdownMenu>
     </div>
 
     <!-- Delete Confirmation Modal -->
@@ -239,7 +224,7 @@ const cancelDelete = () => {
           </UButton>
           <UButton
             color="error"
-            icon="i-heroicons-trash"
+            icon="i-lucide-trash-2"
             :loading="isDeleting"
             @click="confirmDelete"
           >

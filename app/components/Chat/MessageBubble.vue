@@ -4,6 +4,7 @@ interface Message {
   content: string
   image_url?: string
   created_at: string
+  updated_at?: string
   sender_id: string
 }
 
@@ -17,36 +18,83 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   delete: [messageId: string]
+  edit: [messageId: string, content: string]
   imageClick: [imageUrl: string]
 }>()
-
-const showActions = ref(false)
 
 const handleImageClick = () => {
   if (props.message.image_url) {
     emit('imageClick', props.message.image_url)
   }
 }
+
+const handleCopy = async () => {
+  if (props.message.content) {
+    try {
+      await navigator.clipboard.writeText(props.message.content)
+      // Could add toast notification here
+      toastStore.success('Pesan berhasil disalin')
+    } catch (err) {
+      console.error('Failed to copy:', err)
+      toastStore.error('Gagal menyalin pesan')
+    }
+  }
+}
+
+const handleEdit = () => {
+  emit('edit', props.message.id, props.message.content)
+}
+
+const handleDelete = () => {
+  emit('delete', props.message.id)
+}
+
+// Check if message was edited
+const isEdited = computed(() => {
+  if (!props.message.updated_at || !props.message.created_at) return false
+  const created = new Date(props.message.created_at).getTime()
+  const updated = new Date(props.message.updated_at).getTime()
+  return updated > created + 1000 // Allow 1 second difference for server processing
+})
+
+// Menu items
+const menuItems = computed(() => {
+  const items = [
+    {
+      label: 'Copy',
+      icon: 'i-lucide-copy',
+      onClick: handleCopy,
+      disabled: !props.message.content
+    }
+  ]
+
+  if (props.isOwnMessage) {
+    items.push(
+      {
+        label: 'Edit',
+        icon: 'i-lucide-pencil',
+        onClick: handleEdit,
+      },
+      {
+        label: 'Delete',
+        icon: 'i-lucide-trash-2',
+        onClick: handleDelete,
+      }
+    )
+  }
+
+  return items
+})
 </script>
 
 <template>
   <div 
     :class="[
-      'flex group relative transition-all duration-200',
+      'flex group relative transition-all duration-200 gap-2',
       isOwnMessage ? 'justify-end' : 'justify-start'
     ]"
-    @mouseenter="showActions = true"
-    @mouseleave="showActions = false"
   >
-    <!-- Delete button for own messages -->
-    <button
-      v-if="isOwnMessage && showActions"
-      class="absolute -left-8 top-2 opacity-0 group-hover:opacity-100 transition-all duration-200 p-1.5 rounded-full hover:bg-red-100 dark:hover:bg-red-900/20 text-red-500 hover:scale-110"
-      @click="$emit('delete', message.id)"
-    >
-      <UIcon name="i-heroicons-trash" class="w-4 h-4" />
-    </button>
-
+    <!-- Message Bubble -->
     <div 
       :class="[
         'max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl transition-all duration-200',
@@ -79,6 +127,19 @@ const handleImageClick = () => {
       
       <!-- Timestamp & Status -->
       <div class="flex items-center justify-end gap-1.5 mt-1.5">
+        <!-- Edited Indicator -->
+        <span 
+          v-if="isEdited"
+          :class="[
+            'text-[10px] italic',
+            isOwnMessage 
+              ? 'text-green-100 dark:text-green-200' 
+              : 'text-gray-400 dark:text-gray-500'
+          ]"
+        >
+          edited
+        </span>
+        
         <p 
           :class="[
             'text-[11px] font-medium',
@@ -93,7 +154,7 @@ const handleImageClick = () => {
         <!-- Read Receipt for own messages -->
         <UIcon 
           v-if="isOwnMessage"
-          name="i-heroicons-check-20-solid"
+          name="i-lucide-check"
           :class="[
             'w-3.5 h-3.5',
             'text-green-100 dark:text-green-200'
@@ -101,6 +162,19 @@ const handleImageClick = () => {
         />
       </div>
     </div>
+
+    <!-- Three Dots Menu Button -->
+    <UDropdownMenu
+      :items="[menuItems]"
+      :popper="{ placement: isOwnMessage ? 'bottom-end' : 'bottom-start' }"
+    >
+      <UButton
+        icon="i-lucide-more-vertical"
+        color="neutral"
+        variant="ghost"
+        size="xs"
+        class="shrink-0 self-center"
+      />
+    </UDropdownMenu>
   </div>
 </template>
-

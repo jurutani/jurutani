@@ -149,93 +149,93 @@ useHead({
 </script>
 
 <template>
-  <div class="flex flex-col h-screen max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-xl dark:shadow-2xl">
-    <!-- Header -->
-    <ChatRoomHeader
-      title="Chat Admin"
-      subtitle="Hubungi admin JuruTani"
-      back-to="/discussions"
-      back-label="Kembali ke Diskusi"
-      :show-action-button="!hasAdminConversation"
-      action-button-label="Chat dengan Admin"
-      action-button-icon="i-heroicons-chat-bubble-left-right"
-      action-button-color="success"
-      :action-button-loading="loading"
-      @action="startChatWithAdmin"
-    />
+  <div class="lg:pt-24 pt-20">
+    <div class="bg-gray-50 dark:bg-gray-950 flex flex-col h-screen">
+      <!-- Content -->
+      <div class="flex-1 max-w-[1600px] mx-auto w-full overflow-hidden">
+        <div class="flex h-full bg-white dark:bg-gray-900 shadow-xl">
+          <!-- Main Content Area -->
+          <div class="flex-1 flex flex-col min-w-0 bg-gray-50 dark:bg-gray-950">
+            <!-- Loading State -->
+            <ChatLoadingState v-if="loading" />
 
-    <!-- Loading State -->
-    <ChatLoadingState v-if="loading" />
+            <!-- Admin Info Card (if no conversation exists) -->
+            <div v-else-if="!hasAdminConversation && adminUser" class="flex items-center justify-center h-full p-6">
+              <div class="max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-green-100 dark:border-gray-700 p-6">
+                <div class="flex items-center gap-4 mb-4">
+                  <UAvatar
+                    :src="adminUser.avatar_url"
+                    :alt="adminUser.full_name"
+                    size="lg"
+                    class="ring-2 ring-green-200 dark:ring-green-800"
+                  >
+                    <template #fallback>
+                      {{ getAvatarFallback(adminUser.full_name) }}
+                    </template>
+                  </UAvatar>
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                      {{ adminUser.full_name }}
+                    </h3>
+                    <UBadge color="success" variant="soft">
+                      Admin
+                    </UBadge>
+                  </div>
+                </div>
+                
+                <p class="text-gray-600 dark:text-gray-400 mb-4">
+                  Hubungi admin untuk bantuan teknis, pertanyaan tentang platform, atau masalah lainnya yang memerlukan bantuan langsung.
+                </p>
+                
+                <UButton
+                  icon="i-heroicons-chat-bubble-left-right"
+                  color="success"
+                  block
+                  :loading="loading"
+                  @click="startChatWithAdmin"
+                >
+                  Mulai Chat dengan Admin
+                </UButton>
+              </div>
+            </div>
 
-    <!-- Content -->
-    <div v-else class="flex-1 overflow-y-auto bg-gradient-to-br from-white to-green-50 dark:from-gray-900 dark:to-gray-900">
-      <!-- Admin Info Card (if no conversation exists) -->
-      <div v-if="!hasAdminConversation && adminUser" class="p-6">
-        <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-green-100 dark:border-gray-700 p-6">
-          <div class="flex items-center gap-4 mb-4">
-            <UAvatar
-              :src="adminUser.avatar_url"
-              :alt="adminUser.full_name"
-              size="lg"
-              class="ring-2 ring-green-200 dark:ring-green-800"
+            <!-- Conversation List (if conversation exists) -->
+            <div v-else-if="hasAdminConversation" class="h-full overflow-y-auto">
+              <div class="divide-y divide-gray-100 dark:divide-gray-800">
+                <ChatConversationItem
+                  v-for="conversation in adminConversations"
+                  :key="conversation.id"
+                  :conversation="conversation"
+                  :partner="getPartner(conversation)"
+                  :format-last-message-time="formatLastMessageTime"
+                  :truncate-message="truncateMessage"
+                  :get-avatar-fallback="getAvatarFallback"
+                  :is-deleting="deletingConversationId === conversation.id"
+                  @open-chat="openChat"
+                  @delete-conversation="handleDeleteConversation"
+                />
+              </div>
+            </div>
+
+            <!-- Empty State (if no admin user found) -->
+            <div
+              v-else-if="!loading && !adminUser"
+              class="flex flex-col items-center justify-center h-full p-8"
             >
-              <template #fallback>
-                {{ getAvatarFallback(adminUser.full_name) }}
-              </template>
-            </UAvatar>
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {{ adminUser.full_name }}
-              </h3>
-              <UBadge color="success" variant="soft">
-                Admin
-              </UBadge>
+              <div class="text-center text-gray-500 dark:text-gray-400 space-y-4">
+                <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto">
+                  <UIcon name="i-heroicons-user-circle" class="w-10 h-10" />
+                </div>
+                <div>
+                  <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">Ada pertanyaan lebih lanjut?</p>
+                  <p class="text-sm mt-2">
+                    Silakan hubungi tim support kami untuk bantuan
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
-            Hubungi admin untuk bantuan teknis, pertanyaan tentang platform, atau masalah lainnya yang memerlukan bantuan langsung.
-          </p>
-          
-          <UButton
-            icon="i-heroicons-chat-bubble-left-right"
-            color="success"
-            block
-            :loading="loading"
-            @click="startChatWithAdmin"
-          >
-            Mulai Chat dengan Admin
-          </UButton>
         </div>
-      </div>
-
-      <!-- Conversation List (if conversation exists) -->
-      <div v-if="hasAdminConversation" class="divide-y divide-green-100 dark:divide-gray-700">
-        <ChatConversationItem
-          v-for="conversation in adminConversations"
-          :key="conversation.id"
-          :conversation="conversation"
-          :partner="getPartner(conversation)"
-          :format-last-message-time="formatLastMessageTime"
-          :truncate-message="truncateMessage"
-          :get-avatar-fallback="getAvatarFallback"
-          :is-deleting="deletingConversationId === conversation.id"
-          class="hover:bg-green-50 dark:hover:bg-gray-800 transition-colors duration-200"
-          @open-chat="openChat"
-          @delete-conversation="handleDeleteConversation"
-        />
-      </div>
-
-      <!-- Empty State (if no admin user found) -->
-      <div
-        v-if="!loading && !adminUser"
-        class="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400"
-      >
-        <UIcon name="i-heroicons-user-circle" class="w-10 h-10 mb-4 text-blue-500" />
-        <p class="text-lg font-semibold">Ada pertanyaan lebih lanjut?</p>
-        <p class="text-sm text-center mt-2">
-          Silakan hubungi tim support kami untuk bantuan
-        </p>
       </div>
     </div>
   </div>

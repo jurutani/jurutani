@@ -473,6 +473,43 @@ export const useChat = () => {
     }
   }
 
+  // Update message (for edit functionality)
+  const updateMessage = async (messageId: string, newContent: string) => {
+    try {
+      const currentUser = await getCurrentUser()
+
+      if (!currentUser) throw new Error('User not authenticated')
+
+      const { data, error: updateError } = await supabase
+        .from('messages')
+        .update({
+          content: newContent.trim(),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', messageId)
+        .eq('sender_id', currentUser.id) // Only allow editing own messages
+        .select(`
+          *,
+          sender:profiles!messages_sender_id_fkey(id, full_name, avatar_url, role)
+        `)
+        .single()
+
+      if (updateError) throw updateError
+
+      // Update local state
+      const messageIndex = messages.value.findIndex(m => m.id === messageId)
+      if (messageIndex !== -1) {
+        messages.value[messageIndex] = data
+      }
+
+      console.log(`Message with ID ${messageId} successfully updated.`)
+
+      return data
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update message'
+      throw err
+    }
+  }
 
   // Clear all messages in a conversation (keep conversation)
   const clearConversationMessages = async (conversationId: string) => {
@@ -664,6 +701,7 @@ export const useChat = () => {
     compressImage,
     deleteConversation,
     deleteMessage,
+    updateMessage,
     clearConversationMessages,
     markAsRead,
     subscribeToMessages,

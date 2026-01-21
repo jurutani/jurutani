@@ -18,6 +18,7 @@
     getMessages,
     sendMessage: sendChatMessage,
     sendImageMessage,
+    updateMessage,
     subscribeToMessages,
     unsubscribeFromMessages,
     markAsRead,
@@ -77,6 +78,42 @@
       console.error('Gagal mengirim pesan:', error)
       toastStore.error('Gagal mengirim pesan, Silakan coba lagi nanti')
     }
+  }
+
+  // Handle edit message - using modal
+  const showEditModal = ref(false)
+  const editingMessageId = ref<string | null>(null)
+  const editingMessageContent = ref('')
+  const editMessageText = ref('')
+
+  const handleEditMessage = (messageId: string, content: string) => {
+    editingMessageId.value = messageId
+    editingMessageContent.value = content
+    editMessageText.value = content
+    showEditModal.value = true
+  }
+
+  const saveEditMessage = async () => {
+    if (!editingMessageId.value || !editMessageText.value.trim()) return
+
+    try {
+      await updateMessage(editingMessageId.value, editMessageText.value.trim())
+      toastStore.success('Pesan berhasil diubah')
+      showEditModal.value = false
+      editingMessageId.value = null
+      editingMessageContent.value = ''
+      editMessageText.value = ''
+    } catch (error) {
+      console.error('Gagal mengubah pesan:', error)
+      toastStore.error('Gagal mengubah pesan')
+    }
+  }
+
+  const cancelEditMessage = () => {
+    showEditModal.value = false
+    editingMessageId.value = null
+    editingMessageContent.value = ''
+    editMessageText.value = ''
   }
 
   // Image handling methods
@@ -305,6 +342,7 @@
             :is-own-message="isOwnMessage(message, currentUser?.id)"
             :format-time="formatMessageTime"
             @delete="confirmDeleteMessage"
+            @edit="handleEditMessage"
             @image-click="handleImageClick"
           />
         </div>
@@ -386,6 +424,56 @@
         @confirm="handleClearConversation"
         @cancel="cancelClearConversation"
       />
+
+      <!-- Edit Message Modal -->
+      <UModal v-model:open="showEditModal">
+        <template #header>
+          <div class="flex items-center gap-3">
+            <UIcon name="i-lucide-pencil" class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Edit Pesan
+            </h3>
+          </div>
+        </template>
+
+        <template #body>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Pesan
+              </label>
+              <UTextarea
+                v-model="editMessageText"
+                placeholder="Edit pesan Anda..."
+                :rows="4"
+                autofocus
+                class="w-full"
+              />
+            </div>
+          </div>
+        </template>
+
+        <template #footer>
+          <div class="flex justify-end gap-3">
+            <UButton
+              color="neutral"
+              variant="ghost"
+              @click="cancelEditMessage"
+            >
+              Batal
+            </UButton>
+            <UButton
+              icon="i-lucide-check"
+              color="primary"
+              :disabled="!editMessageText.trim()"
+              @click="saveEditMessage"
+            >
+              Simpan
+            </UButton>
+          </div>
+        </template>
+      </UModal>
+
 
     <!-- Message Input - Fixed at bottom -->
     <div class="shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">

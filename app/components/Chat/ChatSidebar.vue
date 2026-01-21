@@ -37,9 +37,9 @@ const getPartner = (conversation: Conversation) => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
-    <!-- Sidebar Header -->
-    <div class="shrink-0 p-4 border-b border-gray-200 dark:border-gray-800">
+  <div class="flex flex-col h-full bg-white dark:bg-gray-900">
+    <!-- Sidebar Header - Sticky -->
+    <div class="shrink-0 p-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-10">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">
           Percakapan
@@ -64,7 +64,7 @@ const getPartner = (conversation: Conversation) => {
       />
     </div>
 
-    <!-- Conversation List -->
+    <!-- Conversation List - Scrollable -->
     <div class="flex-1 overflow-y-auto">
       <ChatLoadingState v-if="loading" />
       
@@ -74,15 +74,10 @@ const getPartner = (conversation: Conversation) => {
           :key="conversation.id"
           :conversation="conversation"
           :partner="getPartner(conversation)"
+          :is-selected="selectedConversationId === conversation.id"
           :format-last-message-time="formatLastMessageTime"
           :truncate-message="truncateMessage"
           :get-avatar-fallback="getAvatarFallback"
-          :class="[
-            'transition-colors duration-200',
-            selectedConversationId === conversation.id 
-              ? 'bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500' 
-              : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
-          ]"
           @open-chat="emit('openChat', $event)"
           @delete-conversation="emit('deleteConversation', $event)"
         />

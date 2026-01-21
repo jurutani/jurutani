@@ -1,10 +1,11 @@
 // composables/useChatLayout.ts
 import { ref, onMounted, onUnmounted } from 'vue'
 
+// Shared state using Nuxt's useState
+const sidebarOpen = useState('chat-sidebar-open', () => false)
+const isMobile = useState('chat-is-mobile', () => false)
+
 export const useChatLayout = () => {
-  const sidebarOpen = ref(true)
-  const isMobile = ref(false)
-  
   // Check if mobile on mount
   onMounted(() => {
     const checkMobile = () => {
