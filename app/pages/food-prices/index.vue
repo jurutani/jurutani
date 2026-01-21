@@ -214,9 +214,9 @@ const handlePageChange = (page: number) => {
 </script>
 
 <template>
-  <div class="food-prices-page container mx-auto px-4 py-12">
+  <main class="food-prices-page container mx-auto px-4 py-12">
     <!-- Hero Section -->
-    <div class="mx-auto mb-12 max-w-4xl text-center">
+    <header class="mx-auto mb-12 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
         <UIcon name="i-lucide-bar-chart-2" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Informasi Harga Terkini</span>
@@ -234,16 +234,18 @@ const handlePageChange = (page: number) => {
       </p>
 
       <!-- Category Filter -->
+      <nav aria-label="Filter kategori pangan">
       <AppCategoryFilter 
         :categories="foodPriceCategories" 
         :current-category="selectedCategory"
         :show-all-option="false"
         @update:category="handleCategoryChange"
-      />
-    </div>
+        />
+      </nav>
+    </header>
     
     <!-- Filter & Sort Bar -->
-    <div class="flex flex-col gap-4 mb-8">
+    <aside class="flex flex-col gap-4 mb-8" aria-label="Filter dan pencarian harga pangan">
       
       <!-- Search Bar - Full width on all screens -->
       <AppSearchBar 
@@ -266,7 +268,7 @@ const handlePageChange = (page: number) => {
           Menampilkan <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ paginatedData.length }}</span> dari <span class="font-semibold">{{ filteredData.length }}</span> produk
         </div>
       </div>
-    </div>
+    </aside>
     
     <!-- Info Badge -->
     <div class="flex items-center justify-center gap-2 mb-6 text-sm text-gray-600 dark:text-gray-400">
@@ -275,7 +277,10 @@ const handlePageChange = (page: number) => {
     </div>
 
     <!-- Data Table -->
-    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
+    <section aria-labelledby="price-table-heading">
+      <h2 id="price-table-heading" class="sr-only">Tabel Harga Komoditas Pangan</h2>
+      
+      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
       <div v-if="paginatedData.length > 0" class="overflow-x-auto">
         <UTable
           :data="paginatedData"
@@ -301,9 +306,10 @@ const handlePageChange = (page: number) => {
         </UButton>
       </div>
     </div>
+    </section>
 
     <!-- Pagination -->
-    <div v-if="totalPages > 1" class="mt-8">
+    <nav aria-label="Navigasi halaman harga pangan" v-if="totalPages > 1" class="mt-8">
       <AppPagination 
         :current-page="currentPage" 
         :total-pages="totalPages"
@@ -313,10 +319,10 @@ const handlePageChange = (page: number) => {
         :show-first-last="true"
         @update:page="handlePageChange"
       />
-    </div>
+    </nav>
 
     <!-- Info Footer -->
-    <div class="mt-8 p-6 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-xl">
+    <aside class="mt-8 p-6 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-xl" aria-label="Catatan penting">
       <div class="flex items-start gap-3">
         <UIcon name="i-lucide-info" class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
         <div class="text-sm text-amber-800 dark:text-amber-200">
@@ -328,8 +334,8 @@ const handlePageChange = (page: number) => {
           </ul>
         </div>
       </div>
-    </div>
-  </div>
+    </aside>
+  </main>
 </template>
 
 <style scoped>

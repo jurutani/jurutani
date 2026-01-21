@@ -240,10 +240,10 @@
 </script>
 
 <template>
-  <div class="min-h-screen transition-colors duration-300">
+  <main class="min-h-screen transition-colors duration-300">
     
     <!-- Hero Section with Logo -->
-    <section class="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24">
+    <header class="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24">
       <div class="container mx-auto px-4 relative z-10">
         <div class="text-center max-w-4xl mx-auto">
           <!-- Logo -->
@@ -261,14 +261,14 @@
           
         </div>
       </div>
-    </section>
+    </header>
 
     <div class="container mx-auto px-4 pb-16">
       
       <!-- Tentang Si JuruTani -->
-      <section class="mb-16" id="tentang">
+      <section class="mb-16" id="tentang" aria-labelledby="about-heading">
         <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl border border-green-100 dark:border-green-800">
-          <h2 class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-2 text-center">
+          <h2 id="about-heading" class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-2 text-center">
             Apa itu Si JuruTani?
           </h2>
           <p class="text-center text-sm text-green-600 dark:text-green-400 mb-8 font-medium">Platform Inovasi Penyuluhan Digital Pertanian</p>
@@ -332,9 +332,9 @@
       </section>
 
       <!-- Gallery Section -->
-      <section class="mb-16 pt-6" id="galeri">
+      <section class="mb-16 pt-6" id="galeri" aria-labelledby="gallery-heading">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-4">
+          <h2 id="gallery-heading" class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-4">
             Galeri Inovasi Penyuluhan Digital
           </h2>
           <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
@@ -366,7 +366,8 @@
       </section>
 
       <!-- Visi Misi -->
-      <section class="mb-16">
+      <section class="mb-16" aria-labelledby="vision-mission-heading">
+        <h2 id="vision-mission-heading" class="sr-only">Visi dan Misi JuruTani</h2>
         <div class="grid md:grid-cols-2 gap-8">
           <!-- Visi -->
           <div class="bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-8 border border-green-200 dark:border-green-700">
@@ -412,9 +413,9 @@
       </section>
 
       <!-- Keunggulan Platform -->
-      <section class="mb-16">
+      <section class="mb-16" aria-labelledby="advantages-heading">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-4">
+          <h2 id="advantages-heading" class="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-300 mb-4">
             Keunggulan Kompetitif JuruTani
           </h2>
           <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
@@ -439,10 +440,10 @@
         </div>
       </section>
       <!-- Sponsor Section -->
-      <section class="mb-16" id="sponsor">
+      <section class="mb-16" id="sponsor" aria-labelledby="sponsor-heading">
         <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl border border-green-100 dark:border-green-800">
           <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold text-green-800 dark:text-green-300 mb-2">
+            <h2 id="sponsor-heading" class="text-3xl font-bold text-green-800 dark:text-green-300 mb-2">
               Institusi Pengembang & Mitra Strategis
             </h2>
             <p class="text-gray-600 dark:text-gray-400">Dukungan penuh dari institusi pendidikan dan organisasi strategis</p>
@@ -473,9 +474,9 @@
       </section>
 
       <!-- Tim Pengembang -->
-      <section class="mb-16" id="tim-developer">
+      <section class="mb-16" id="tim-developer" aria-labelledby="team-heading">
         <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
-          <h2 class="text-3xl md:text-4xl font-bold mb-3">
+          <h2 id="team-heading" class="text-3xl md:text-4xl font-bold mb-3">
             Tim Pengembang Inovasi
           </h2>
           <p class="text-lg text-green-100 mb-8 font-medium">
@@ -515,5 +516,5 @@
 
 
     </div>
-  </div>
+  </main>
 </template>

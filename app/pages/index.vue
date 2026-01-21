@@ -16,17 +16,55 @@ useJsonLdSchemas(schemas)
 </script>
 
 <template>
-  <div>
+  <main>
+    <!-- Hero Section with h1 -->
     <HeroSection />
-    <WeatherSection class="mt-16" />
-    <LaunchSale class="mt-16" />
-    <HotDeals class="mt-16" />
-    <FoodPriceSection class="mt-16" />
-    <FeatureSection class="mt-16" />
-    <HomeSponsorship class="mt-16" />
-    <HomeTestimoni />
+    
+    <!-- Weather Section -->
+    <section aria-labelledby="weather-section" class="mt-16">
+      <h2 id="weather-section" class="sr-only">Informasi Cuaca Pertanian</h2>
+      <WeatherSection />
+    </section>
+    
+    <!-- Promo Section -->
+    <section aria-labelledby="promo-section" class="mt-16">
+      <h2 id="promo-section" class="sr-only">Promo dan Penawaran Spesial</h2>
+      <LaunchSale />
+    </section>
+    
+    <!-- Hot Deals Section -->
+    <section aria-labelledby="deals-section" class="mt-16">
+      <h2 id="deals-section" class="sr-only">Penawaran Terbaik Hari Ini</h2>
+      <HotDeals />
+    </section>
+    
+    <!-- Food Price Section -->
+    <section aria-labelledby="food-price-section" class="mt-16">
+      <h2 id="food-price-section" class="sr-only">Informasi Harga Pangan</h2>
+      <FoodPriceSection />
+    </section>
+    
+    <!-- Features Section -->
+    <section aria-labelledby="features-section" class="mt-16">
+      <h2 id="features-section" class="sr-only">Fitur Unggulan JuruTani</h2>
+      <FeatureSection />
+    </section>
+    
+    <!-- Sponsors Section -->
+    <section aria-labelledby="sponsors-section" class="mt-16">
+      <h2 id="sponsors-section" class="sr-only">Sponsor dan Mitra</h2>
+      <HomeSponsorship />
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section aria-labelledby="testimonials-section">
+      <h2 id="testimonials-section" class="sr-only">Testimoni Pengguna</h2>
+      <HomeTestimoni />
+    </section>
+    
+    <!-- Chatbot -->
     <ChatbotJurutani />
-  </div>
+  </main>
 </template>
 
 

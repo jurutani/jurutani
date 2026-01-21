@@ -141,12 +141,12 @@ const organizationDisplay = computed(() => {
 </script>
 
 <template>
-  <div class="group announcement-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1 flex flex-col">
+  <article class="group announcement-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1 flex flex-col">
     <!-- Image Section with Overlay -->
-    <div class="relative h-48 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 overflow-hidden">
+    <figure class="relative h-48 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 overflow-hidden">
       <img
         :src="imageUrl"
-        :alt="announcement.title || 'Gambar Meeting'"
+        :alt="`Gambar ${announcement.category}: ${announcement.title || 'Meeting'}`"
         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         loading="lazy"
         @error="handleImageError"
@@ -172,26 +172,28 @@ const organizationDisplay = computed(() => {
           {{ attachmentCount }}
         </div>
       </div>
-    </div>
+    </figure>
 
     <!-- Content Section -->
     <div class="p-6 flex-grow flex flex-col">
       <!-- Date and Organization -->
-      <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-3">
+      <footer class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-3">
         <span class="flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md">
           <UIcon name="i-heroicons-calendar-days" class="w-3.5 h-3.5 mr-1.5" />
-          {{ formattedDate }}
+          <time :datetime="announcement.created_at">{{ formattedDate }}</time>
         </span>
         <span class="flex items-center bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-md text-emerald-700 dark:text-emerald-400">
           <UIcon name="i-heroicons-building-office" class="w-3.5 h-3.5 mr-1.5" />
           {{ organizationDisplay }}
         </span>
-      </div>
+      </footer>
 
       <!-- Title -->
-      <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-white line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
-        {{ announcement.title || 'Meeting Tanpa Judul' }}
-      </h3>
+      <header>
+        <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-white line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">
+          {{ announcement.title || 'Meeting Tanpa Judul' }}
+        </h3>
+      </header>
       
       <!-- Excerpt -->
       <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow leading-relaxed">
@@ -199,7 +201,7 @@ const organizationDisplay = computed(() => {
       </p>
 
       <!-- Attachments Preview -->
-      <div v-if="hasAttachments" class="mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+      <aside v-if="hasAttachments" class="mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
         <div class="flex items-center text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
           <UIcon name="i-heroicons-paper-clip" class="w-4 h-4 mr-1.5" />
           {{ attachmentCount }} file lampiran
@@ -228,7 +230,7 @@ const organizationDisplay = computed(() => {
             +{{ attachmentCount - 2 }} file lainnya
           </div>
         </div>
-      </div>
+      </aside>
 
       <!-- Action Button -->
       <div class="mt-auto flex gap-2">
@@ -257,7 +259,7 @@ const organizationDisplay = computed(() => {
         </a>
       </div>
     </div>
-  </div>
+  </article>
 </template>
 
 <style scoped>

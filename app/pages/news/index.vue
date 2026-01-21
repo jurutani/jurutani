@@ -90,17 +90,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="news-page container mx-auto px-4 py-12">
+  <main class="news-page container mx-auto px-4 py-12">
     <!-- News Section Header -->
-    <div class="mx-auto mb-8 max-w-4xl text-center">
+    <header class="mx-auto mb-8 max-w-4xl text-center">
       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
         <UIcon name="i-heroicons-newspaper" class="w-5 h-5 text-green-600 dark:text-green-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Berita Terupdate Jurutani</span>
       </div>
       
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+      <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
         Berita Tani JuruTani
-      </h2>
+      </h1>
       
       <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto mb-8">
         Dapatkan informasi terkini seputar dunia pertanian, teknologi, dan inovasi dengan
@@ -110,18 +110,20 @@ onMounted(() => {
       </p>
       
       <!-- Category Filter -->
-      <AppCategoryFilter 
+      <nav aria-label="Filter kategori berita">
+        <AppCategoryFilter 
         :categories="categories" 
         :current-category="filters.category"
         :show-all-option="true"
         all-option-text="Semua"
         all-option-value="all"
         @update:category="handleCategoryChange"
-      />
-    </div>
+        />
+      </nav>
+    </header>
     
     <!-- Filter & Sort Bar -->
-    <div class="flex flex-col gap-4 mb-8">
+    <aside class="flex flex-col gap-4 mb-8" aria-label="Filter dan pencarian berita">
       
       <!-- Search Bar - Full width on all screens -->
       <AppSearchBar 
@@ -144,10 +146,12 @@ onMounted(() => {
           Menampilkan <span class="font-semibold text-green-600 dark:text-green-400">{{ newsList.length }}</span> dari <span class="font-semibold">{{ totalItems }}</span> berita
         </div>
       </div>
-    </div>
+    </aside>
     
     <!-- News Content with Bento Grid -->
-    <div class="mt-8">
+    <section aria-labelledby="news-list-heading" class="mt-8">
+      <h2 id="news-list-heading" class="sr-only">Daftar Berita Pertanian</h2>
+      
       <LoadingData v-if="isLoading" />      
       <ErrorData v-else-if="hasError" :error="error" />
       <NotFoundData v-else-if="!hasData" />
@@ -162,10 +166,11 @@ onMounted(() => {
           :index="index"
         />
       </div>
-    </div>
+    </section>
     
     <!-- Pagination -->
-    <AppPagination 
+    <nav aria-label="Navigasi halaman berita">
+      <AppPagination 
       v-if="showPagination"
       :current-page="currentPage" 
       :total-pages="totalPages"
@@ -174,8 +179,9 @@ onMounted(() => {
       :show-page-info="true"
       :show-first-last="true"
       @update:page="handlePageChange"
-    />
+      />
+    </nav>
     
     <CreateButton />
-  </div>
+  </main>
 </template>

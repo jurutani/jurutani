@@ -23,7 +23,7 @@ const {
 
 // Fetch data on client side only
 onMounted(async () => {
-  if (!process.client) return
+  if (!import.meta.client) return
   
   try {
     console.log('Fetching hero data...')
@@ -37,6 +37,9 @@ onMounted(async () => {
 
 <template>
   <section class="relative overflow-hidden select-none">
+    <!-- SEO h1 - Hidden but accessible -->
+    <h1 class="sr-only">JuruTani - Platform Penyuluhan Digital Pertanian Indonesia</h1>
+    
     <!-- Loading State -->
     <CarouselLoadingState v-if="loading" />
 
@@ -92,7 +95,7 @@ onMounted(async () => {
       />
 
       <!-- Navigation Hint -->
-      <CarouselNavigationHint v-if="carouselItems.length > 1" />
+      <!-- <CarouselNavigationHint v-if="carouselItems.length > 1" /> -->
     </div>
   </section>
 </template>

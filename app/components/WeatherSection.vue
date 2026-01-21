@@ -212,14 +212,14 @@ onMounted(() => {
   <div class="rounded-lg">
     <div class="container mx-auto px-4 py-6">
       <!-- Header -->
-      <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+      <header class="text-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">
           Info Cuaca Pertanian
-        </h1>
+        </h2>
         <p class="text-gray-600 dark:text-gray-300">
           Informasi cuaca real-time untuk kebutuhan pertanian Anda
         </p>
-      </div>
+      </header>
       <!-- Navigation Tabs -->
       <div class="flex justify-center mb-6">
         <div class="glass-tab-container">
