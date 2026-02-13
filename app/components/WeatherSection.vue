@@ -211,13 +211,22 @@ onMounted(() => {
 <template>
   <div class="rounded-lg">
     <div class="container mx-auto px-4 py-6">
-      <!-- Section Header -->
+            <!-- Section Header -->
       <div class="mx-auto mb-12 max-w-4xl text-center">
-        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Info Cuaca Pertanian
+        <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-linear-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
+          <UIcon name="i-lucide-cloudy" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Prediksi Cuaca</span>
+        </div>
+
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-linear-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent py-1">
+          Informasi Cuaca Pertanian
         </h2>
-        <p class="text-gray-600 dark:text-gray-400">
-          Informasi cuaca real-time untuk kebutuhan pertanian Anda
+
+        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          Dapatkan informasi cuaca terkini dan prediksi 5 hari ke depan untuk mendukung keputusan pertanian Anda. 
+          <span class="font-semibold text-emerald-600 dark:text-emerald-400">JuruTani</span> membantu meningkatkan 
+          <span class="font-semibold text-teal-600 dark:text-teal-400">produktivitas</span> dan 
+          <span class="font-semibold text-cyan-600 dark:text-cyan-400">efisiensi</span> lahan pertanian Anda.
         </p>
       </div>
       
