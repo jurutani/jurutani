@@ -35,7 +35,7 @@ const getDropdownItems = (children: any[]): DropdownMenuItem[][] => {
 <template>
   <div class="w-full">
     <!-- Mobile Layout: Grid with Logo -->
-    <div class="xl:hidden flex flex-col items-center bg-gradient-to-r from-green-50 via-green-25 to-green-50 dark:from-green-950 dark:via-green-900 dark:to-green-950 rounded-xl p-4">
+    <div class="xl:hidden flex flex-col items-center border-muted rounded-xl p-4">
       <NavLogo class="mb-4" />
 
       <!-- Mobile Grid Menu (3 Columns) -->

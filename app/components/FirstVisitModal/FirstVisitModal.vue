@@ -2,8 +2,10 @@
 const isOpen = ref(false)
 
 // Cookie untuk menandai sudah pernah membuka
+// ✅ SEO SAFE: Cookie hanya untuk UX, tidak mempengaruhi crawler
+// Crawler tidak peduli cookie, mereka tetap dapat full HTML
 const firstVisit = useCookie('firstVisit', {
-  maxAge: 21600, // 6 jam
+  maxAge: 60 * 60 * 24 * 30, // 30 hari (bukan 6 jam)
   sameSite: 'lax'
 })
 
@@ -20,7 +22,7 @@ const closeModal = () => {
 
 // Pastikan hanya dijalankan di sisi client
 onMounted(() => {
-  if (process.client) {
+  if (import.meta.client) {
     if (!firstVisit.value) {
       openModal()
     } else {
@@ -38,7 +40,13 @@ defineExpose({
 </script>
 
 <template>
-  <UModal v-model:open="isOpen" :close="false">
+  <UModal 
+    v-model:open="isOpen" 
+    :close="false"
+    role="dialog"
+    aria-labelledby="first-visit-title"
+    aria-describedby="first-visit-description"
+  >
     <template #header>
       <div class="flex justify-center w-full">
         <TheLogo class="h-20" />
@@ -48,10 +56,16 @@ defineExpose({
     <template #body>
       <div class="flex flex-col items-center justify-center space-y-6 p-4">
         <div class="space-y-4 text-center">
-          <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-800 dark:text-emerald-400 leading-tight">
+          <h1 
+            id="first-visit-title"
+            class="text-3xl md:text-4xl font-extrabold text-emerald-800 dark:text-emerald-400 leading-tight"
+          >
             Selamat Datang di JuruTani!
           </h1>
-          <p class="text-base md:text-lg text-gray-700 dark:text-gray-300">
+          <p 
+            id="first-visit-description"
+            class="text-base md:text-lg text-gray-700 dark:text-gray-300"
+          >
             Terima kasih telah mengunjungi website kami.
           </p>
         </div>
@@ -65,7 +79,7 @@ defineExpose({
               src="/logo/sponsor1.png"
               alt="Sponsor Logo"
               class="h-12 md:h-16 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200 mx-auto"
-            />
+            >
           </div>
         </div>
 
@@ -87,11 +101,11 @@ defineExpose({
     <template #footer>
       <div class="flex justify-center w-full px-4 pb-4">
         <UButton
-          @click="closeModal"
           color="success"
           size="xl"
           block
           class="shadow-lg"
+          @click="closeModal"
         >
           Masuk ke Beranda
         </UButton>

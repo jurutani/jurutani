@@ -27,7 +27,7 @@ useJsonLdSchemas(schemas)
     </section>
     
     <!-- Promo Section -->
-    <section aria-labelledby="promo-section" class="mt-16">
+    <section aria-labelledby="promo-section" class="mt-16 sm:px-4">
       <h2 id="promo-section" class="sr-only">Promo dan Penawaran Spesial</h2>
       <LaunchSale />
     </section>
@@ -50,6 +50,7 @@ useJsonLdSchemas(schemas)
       <FeatureSection />
     </section>
     
+    
     <!-- Sponsors Section -->
     <section aria-labelledby="sponsors-section" class="mt-16">
       <h2 id="sponsors-section" class="sr-only">Sponsor dan Mitra</h2>
@@ -62,6 +63,11 @@ useJsonLdSchemas(schemas)
       <HomeTestimoni />
     </section>
     
+    <!-- Android App Promotion Section -->
+    <section aria-labelledby="android-app-section" class="my-16 container mx-auto px-4">
+      <h2 id="android-app-section" class="sr-only">Download Aplikasi JuruTani di Android</h2>
+      <AndroidAppPromotion />
+    </section>
     <!-- Chatbot -->
     <ChatbotJurutani />
   </main>

@@ -10,7 +10,7 @@ defineProps<{
     @click="onClick"
   >
     <NuxtImg 
-      src="/chatbot.png" 
+      src="/jurutani.png" 
       alt="Chatbot" 
       class="w-full h-full object-cover"
     />

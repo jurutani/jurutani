@@ -211,15 +211,16 @@ onMounted(() => {
 <template>
   <div class="rounded-lg">
     <div class="container mx-auto px-4 py-6">
-      <!-- Header -->
-      <header class="text-center mb-6">
-        <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+      <!-- Section Header -->
+      <div class="mx-auto mb-12 max-w-4xl text-center">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Info Cuaca Pertanian
         </h2>
-        <p class="text-gray-600 dark:text-gray-300">
+        <p class="text-gray-600 dark:text-gray-400">
           Informasi cuaca real-time untuk kebutuhan pertanian Anda
         </p>
-      </header>
+      </div>
+      
       <!-- Navigation Tabs -->
       <div class="flex justify-center mb-6">
         <div class="glass-tab-container">
@@ -261,29 +262,29 @@ onMounted(() => {
         <!-- Main Weather Card (selalu tampil) -->
         <WeatherMainCard
           v-if="weatherData"
-          :weatherData="weatherData"
-          :currentLocalTime="currentLocalTime"
-          :sunriseTime="sunriseTime"
-          :sunsetTime="sunsetTime"
+          :weather-data="weatherData"
+          :current-local-time="currentLocalTime"
+          :sunrise-time="sunriseTime"
+          :sunset-time="sunsetTime"
         />
         <!-- Tab Details (hanya detail yang berubah) -->
         <WeatherTabDetails
-          :activeTab="activeTab"
-          :isLoading="isLoading"
-          :isForecastLoading="isForecastLoading"
-          :isHourlyLoading="isHourlyLoading"
+          :active-tab="activeTab"
+          :is-loading="isLoading"
+          :is-forecast-loading="isForecastLoading"
+          :is-hourly-loading="isHourlyLoading"
           :error="error"
-          :forecastError="forecastError"
-          :hourlyError="hourlyError"
-          :weatherData="weatherData"
-          :forecastData="forecastData"
-          :hourlyData="hourlyData"
-          :farmingConditions="farmingConditions"
-          :windDirection="windDirection"
-          :sunriseTime="sunriseTime"
-          :sunsetTime="sunsetTime"
-          :formatHour="formatHour"
-          :formatDateShort="formatDateShort"
+          :forecast-error="forecastError"
+          :hourly-error="hourlyError"
+          :weather-data="weatherData"
+          :forecast-data="forecastData"
+          :hourly-data="hourlyData"
+          :farming-conditions="farmingConditions"
+          :wind-direction="windDirection"
+          :sunrise-time="sunriseTime"
+          :sunset-time="sunsetTime"
+          :format-hour="formatHour"
+          :format-date-short="formatDateShort"
         />
       </div>
     </div>

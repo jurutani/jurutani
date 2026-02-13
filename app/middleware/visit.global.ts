@@ -8,7 +8,8 @@ function getTodayWIB(): string {
     return `${year}-${month}-${day}`
 }
 
-export default defineNuxtRouteMiddleware(async () => {
+export default defineNuxtRouteMiddleware(() => {
+    // Skip on server-side rendering
     if (import.meta.server) return
 
     const today = getTodayWIB()
@@ -23,20 +24,32 @@ export default defineNuxtRouteMiddleware(async () => {
         if (timeDiff < oneHour) return
     }
 
-    const { supabase } = useSupabase()
+    // ✅ SEO OPTIMIZATION: Defer Supabase call to idle time
+    // This prevents blocking first paint and improves Core Web Vitals
+    // Googlebot gets instant HTML, analytics run after page is interactive
+    const deferredTrack = async () => {
+        const { supabase } = useSupabase()
 
-    try {
-        const { error } = await supabase
-            .rpc('increment_visit', { visit_date: today })
-        visitedTime.value = Date.now().toString()
+        try {
+            const { error } = await supabase.rpc('increment_visit', { visit_date: today })
+            visitedTime.value = Date.now().toString()
 
-        if (error) {
+            if (error) {
+                console.error('Failed to increment visit:', error)
+                return
+            }
+
+            visited.value = today
+        } catch (error) {
             console.error('Failed to increment visit:', error)
-            return
         }
+    }
 
-        visited.value = today
-    } catch (error) {
-        console.error('Failed to increment visit:', error)
+    // Use requestIdleCallback for better performance
+    // Falls back to setTimeout if not supported
+    if (typeof requestIdleCallback !== 'undefined') {
+        requestIdleCallback(deferredTrack, { timeout: 2000 })
+    } else {
+        setTimeout(deferredTrack, 1000)
     }
 })

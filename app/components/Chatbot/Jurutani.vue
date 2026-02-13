@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, onMounted } from 'vue'
 
+// Get runtime config
+const config = useRuntimeConfig()
+
 // Reactive state
 const isOpen = ref(false)
 const showSplash = ref(true)
@@ -20,9 +23,10 @@ const messages = ref([
 ])
 
 // API Configuration
-const GEMINI_API_KEY = 'AIzaSyDkLlBPmVfFQUOq5Cb4RWF7TM2zUDIH6Kk'
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`
-// const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}`
+const GEMINI_API_KEY = config.public.geminiApiKey
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
+// Alternatif model (uncomment jika ingin menggunakan model yang berbeda):
+// const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`
 // Methods
 const openChat = () => {
   if (!hasSeenSplash.value) {
@@ -125,14 +129,43 @@ const sendMessageToGemini = async (message) => {
     })
 
     if (!response.ok) {
-      throw new Error('Gagal menghubungi API Gemini')
+      // Handle different error status codes
+      if (response.status === 429) {
+        throw new Error('RATE_LIMIT')
+      } else if (response.status === 503) {
+        throw new Error('SERVICE_UNAVAILABLE')
+      } else if (response.status === 401 || response.status === 403) {
+        throw new Error('AUTH_ERROR')
+      } else {
+        throw new Error('API_ERROR')
+      }
     }
 
     const data = await response.json()
+    
+    // Validate response structure
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      throw new Error('INVALID_RESPONSE')
+    }
+    
     return data.candidates[0].content.parts[0].text
   } catch (error) {
     console.error('Error:', error)
-    return 'Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi atau hubungi admin sistem.'
+    
+    // Return user-friendly error messages based on error type
+    const errorMessage = error.message
+    
+    if (errorMessage === 'RATE_LIMIT') {
+      return '⚠️ Maaf, sistem sedang sibuk karena terlalu banyak permintaan. Mohon tunggu beberapa saat (1-2 menit) sebelum mencoba lagi. Terima kasih atas kesabarannya! 🙏'
+    } else if (errorMessage === 'SERVICE_UNAVAILABLE') {
+      return '⚠️ Layanan AI sedang dalam pemeliharaan. Silakan coba lagi dalam beberapa menit. Terima kasih! 🔧'
+    } else if (errorMessage === 'AUTH_ERROR') {
+      return '⚠️ Terjadi masalah autentikasi. Mohon hubungi administrator sistem untuk bantuan lebih lanjut. 📞'
+    } else if (errorMessage === 'INVALID_RESPONSE') {
+      return '⚠️ Respons dari AI tidak valid. Silakan coba kirim pertanyaan Anda lagi. 🔄'
+    } else {
+      return '⚠️ Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi atau hubungi tim support jika masalah berlanjut. 💬'
+    }
   }
 }
 
@@ -154,28 +187,23 @@ const handleSendMessage = async (userMessage: string) => {
     messageListRef.value?.scrollToBottom()
   })
 
-  try {
-    const botResponse = await sendMessageToGemini(userMessage)
-    
-    const botMessage = {
-      id: messages.value.length + 1,
-      type: 'bot',
-      text: botResponse,
-      timestamp: new Date()
-    }
-
-    messages.value.push(botMessage)
-  } catch (error) {
-    const errorMessage = {
-      id: messages.value.length + 1,
-      type: 'bot',
-      text: 'Maaf, terjadi kesalahan sistem. Silakan coba lagi dalam beberapa saat.',
-      timestamp: new Date()
-    }
-    messages.value.push(errorMessage)
-  } finally {
-    isLoading.value = false
+  // sendMessageToGemini always returns a string (either success or error message)
+  const botResponse = await sendMessageToGemini(userMessage)
+  
+  const botMessage = {
+    id: messages.value.length + 1,
+    type: 'bot',
+    text: botResponse,
+    timestamp: new Date()
   }
+
+  messages.value.push(botMessage)
+  isLoading.value = false
+  
+  // Auto scroll after bot response
+  nextTick(() => {
+    messageListRef.value?.scrollToBottom()
+  })
 }
 
 // Handle Enter key for sending messages

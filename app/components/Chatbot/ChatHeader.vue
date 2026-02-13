@@ -11,7 +11,7 @@ defineProps<{
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center shadow-inner">
         <NuxtImg 
-          src="/chatbot.png" 
+          src="/jurutani.png" 
           alt="Chatbot" 
           class="w-5 h-5"
         />

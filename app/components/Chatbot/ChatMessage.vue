@@ -53,7 +53,7 @@ const shouldShowExpandButton = (message: Message) => {
         <div v-if="message.type === 'bot'" class="flex-shrink-0 mt-0.5">
           <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center border border-green-200 dark:bg-green-900 dark:border-green-800">
             <NuxtImg 
-              src="/chatbot.png" 
+              src="/jurutani.png" 
               alt="Chatbot" 
               class="w-3 h-3 text-green-600 dark:text-green-300"
             />

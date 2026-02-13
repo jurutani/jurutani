@@ -16,7 +16,7 @@ defineProps<{
       <!-- Logo -->
       <div class="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center shadow-lg dark:bg-green-900">
         <NuxtImg
-          src="/chatbot.png" 
+          src="/jurutani.png" 
           alt="Chatbot" 
           class="w-10 h-10 text-green-600 dark:text-green-300"
       />

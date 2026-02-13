@@ -34,16 +34,23 @@ const changeTab = (tabId: string) => {
   <UContainer class="py-12">
     <!-- Hero Section -->
     <div class="mx-auto mb-12 max-w-4xl text-center">
-      <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
-        <UIcon name="i-lucide-calculator" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-        <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Penghitungan Pertanian</span>
-      </div>
+      <UBadge 
+        color="success" 
+        variant="subtle" 
+        size="lg"
+        class="mb-6"
+      >
+        <template #leading>
+          <UIcon name="i-lucide-calculator" class="w-4 h-4" />
+        </template>
+        Penghitungan Pertanian
+      </UBadge>
       
       <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
         Tools Tani JuruTani
       </h1>
       
-      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
         Gunakan kalkulator pertanian kami untuk menghitung kebutuhan
         <span class="font-semibold text-emerald-600 dark:text-emerald-400">benih yang optimal</span>, 
         <span class="font-semibold text-teal-600 dark:text-teal-400">pupuk yang tepat</span>, dan 
@@ -57,19 +64,19 @@ const changeTab = (tabId: string) => {
       <button
         v-for="tool in tools"
         :key="tool.id"
-        @click="changeTab(tool.id)"
         class="group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
         :class="[
           activeTab === tool.id 
             ? 'border-emerald-500 dark:border-emerald-400 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 shadow-lg' 
             : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-emerald-300 dark:hover:border-emerald-700'
         ]"
+        @click="changeTab(tool.id)"
       >
         <!-- Gradient Background Effect -->
         <div 
           class="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300"
           :class="tool.gradient"
-        ></div>
+        />
         
         <!-- Content -->
         <div class="relative p-6 text-left">
@@ -130,7 +137,7 @@ const changeTab = (tabId: string) => {
             tool.gradient,
             activeTab === tool.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'
           ]"
-        ></div>
+        />
       </button>
     </div>
 

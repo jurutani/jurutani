@@ -63,11 +63,11 @@ const features = [
     <UContainer>
       <!-- Section Header -->
       <div class="mx-auto mb-6 max-w-4xl text-center">
-        <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
+        <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-linear-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
           <UIcon name="i-lucide-pencil" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
           <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Fitur Terbaru</span>
         </div>
-        <h2 class="text-3xl pb-1 md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+        <h2 class="text-3xl pb-1 md:text-4xl lg:text-5xl font-bold mb-6 bg-linear-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
           Layanan Si JuruTani
         </h2>
         <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
@@ -85,7 +85,7 @@ const features = [
           :key="feature.id"
           class="bento-card group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl cursor-pointer"
         >
-          <!-- Background Image with Gradient Overlay -->
+          <!-- Background Image with linear Overlay -->
           <div class="absolute inset-0">
             <NuxtImg
               :src="feature.image"
@@ -93,25 +93,25 @@ const features = [
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               loading="lazy"
             />
-            <!-- Gradient Overlay - Enhanced with multiple layers -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-500" />
-            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-transparent to-green-900/20 group-hover:from-emerald-900/30 group-hover:to-green-900/30 transition-all duration-500" />
+            <!-- linear Overlay - Enhanced with multiple layers -->
+            <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-500" />
+            <div class="absolute inset-0 bg-linear-to-br from-emerald-900/20 via-transparent to-green-900/20 group-hover:from-emerald-900/30 group-hover:to-green-900/30 transition-all duration-500" />
           </div>
 
           <!-- Content Overlay -->
           <div class="relative h-full flex flex-col justify-end p-6 md:p-8">
-            <!-- Icon Badge -->
+            <!-- Icon Badge - Hidden on Mobile -->
             <div class="absolute top-4 left-4 md:top-6 md:left-6">
               <span
-                :class="[`inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl`, `bg-${feature.color}-600` ]"
+              :class="[`hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl`, `bg-${feature.color}-600` ]"
               >
-                <UIcon :name="feature.icon" class="w-4 h-4" />
-                {{ feature.title }}
+              <UIcon :name="feature.icon" class="w-4 h-4" />
+              {{ feature.title }}
               </span>
             </div>
 
             <!-- Main Content -->
-            <div class="space-y-3 md:space-y-4 transform transition-transform duration-500 group-hover:translate-y-[-8px]">
+            <div class="space-y-3 md:space-y-4 transform transition-transform duration-500 ggroup-hover:-translate-y-2">
               <h3 class="font-bold text-white leading-tight line-clamp-2 transition-all duration-300 text-xl md:text-2xl">
                 {{ feature.title }}
               </h3>

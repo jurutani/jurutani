@@ -100,7 +100,7 @@ export const generateSeoMeta = (options: SEOMetaOptions) => {
 export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussions' | 'educations' | 'markets' | 'tools' | 'food-prices' | 'about' | 'contact' | 'help' | 'terms' | 'privacy' | 'security' | 'profile' | 'history' | 'setting' | 'videos' | 'chat') => {
     const pageMetaConfig: Record<string, SEOMetaOptions> = {
         home: {
-            title: 'JuruTani | Solusi Pertanian Digital',
+            title: 'Solusi Pertanian Digital',
             description: 'Platform pertanian digital dari Polbangtan Yogyakarta-Magelang untuk mendukung petani lokal menuju era pertanian modern.',
             keywords: ['JuruTani', 'pertanian digital', 'inovasi pertanian', 'polbangtan yogyakarta', 'petani indonesia', 'teknologi pertanian', 'penyuluhan digital'],
             ogType: 'website',
@@ -148,66 +148,66 @@ export const getPageSeoMeta = (pageType: 'home' | 'news' | 'courses' | 'discussi
             ogType: 'website',
         },
         about: {
-            title: 'Tentang Si JuruTani',
-            description: 'Si JuruTani: inovasi digital Polbangtan untuk mengembangkan pertanian Indonesia menuju era digital.',
+            title: 'Tentang JuruTani',
+            description: 'JuruTani: inovasi digital Polbangtan untuk mengembangkan pertanian Indonesia menuju era digital.',
             keywords: ['tentang JuruTani', 'visi misi JuruTani', 'polbangtan yogyakarta', 'polbangtan magelang', 'tentang pertanian digital'],
             ogType: 'website',
         },
         contact: {
             title: 'Hubungi Kami',
-            description: 'Hubungi tim Si JuruTani untuk informasi atau pertanyaan tentang platform pertanian digital kami.',
+            description: 'Hubungi tim JuruTani untuk informasi atau pertanyaan tentang platform pertanian digital kami.',
             keywords: ['hubungi JuruTani', 'kontak JuruTani', 'layanan pelanggan', 'customer service', 'dukungan JuruTani'],
             ogType: 'website',
         },
         help: {
             title: 'Bantuan & FAQ',
-            description: 'FAQ dan panduan lengkap untuk menggunakan platform Si JuruTani secara optimal dengan bantuan teknis.',
+            description: 'FAQ dan panduan lengkap untuk menggunakan platform JuruTani secara optimal dengan bantuan teknis.',
             keywords: ['faq JuruTani', 'bantuan JuruTani', 'pertanyaan umum', 'cara menggunakan', 'panduan pengguna', 'tips JuruTani'],
             ogType: 'website',
         },
         terms: {
             title: 'Syarat & Ketentuan',
-            description: 'Baca syarat dan ketentuan penggunaan platform Si JuruTani. Perjanjian pengguna dan kebijakan layanan untuk semua pengguna.',
+            description: 'Baca syarat dan ketentuan penggunaan platform JuruTani. Perjanjian pengguna dan kebijakan layanan untuk semua pengguna.',
             keywords: ['syarat ketentuan', 'terms of service', 'kebijakan JuruTani', 'perjanjian pengguna'],
             ogType: 'website',
         },
         privacy: {
             title: 'Kebijakan Privasi',
-            description: 'Kebijakan privasi Si JuruTani: komitmen kami melindungi data pribadi dan keamanan pengguna platform.',
+            description: 'Kebijakan privasi JuruTani: komitmen kami melindungi data pribadi dan keamanan pengguna platform.',
             keywords: ['kebijakan privasi', 'privacy policy', 'keamanan data', 'perlindungan data pribadi'],
             ogType: 'website',
         },
         security: {
             title: 'Keamanan Akun',
-            description: 'Kelola keamanan akun Si JuruTani dengan fitur keamanan lengkap untuk melindungi data pribadi.',
+            description: 'Kelola keamanan akun JuruTani dengan fitur keamanan lengkap untuk melindungi data pribadi.',
             keywords: ['keamanan akun', 'keamanan data', 'proteksi akun', 'keamanan login', 'verifikasi identitas'],
             ogType: 'website',
         },
         profile: {
             title: 'Profil Saya',
-            description: 'Kelola profil pribadi Anda di Si JuruTani. Edit informasi, preferensi, dan pengaturan akun dengan mudah.',
+            description: 'Kelola profil pribadi Anda di JuruTani. Edit informasi, preferensi, dan pengaturan akun dengan mudah.',
             keywords: ['profil pengguna', 'akun saya', 'pengaturan profil', 'data pribadi'],
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
         history: {
             title: 'Riwayat Aktivitas',
-            description: 'Lihat riwayat lengkap aktivitas, transaksi, diskusi, dan interaksi Anda di platform Si JuruTani.',
+            description: 'Lihat riwayat lengkap aktivitas, transaksi, diskusi, dan interaksi Anda di platform JuruTani.',
             keywords: ['riwayat aktivitas', 'riwayat transaksi', 'history', 'log aktivitas'],
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
         setting: {
             title: 'Pengaturan Akun',
-            description: 'Atur preferensi dan pengaturan akun Anda di Si JuruTani. Kustomisasi pengalaman pengguna sesuai kebutuhan.',
+            description: 'Atur preferensi dan pengaturan akun Anda di JuruTani. Kustomisasi pengalaman pengguna sesuai kebutuhan.',
             keywords: ['pengaturan akun', 'preferences', 'settings', 'konfigurasi'],
             ogType: 'website',
             robots: 'noindex, follow', // Private page
         },
         videos: {
-            title: 'Video Si JuruTani',
-            description: 'Video Si JuruTani: belajar pertanian dengan video tutorial interaktif dan materi pembelajaran lengkap.',
-            keywords: ['video si JuruTani', 'pertanian digital', 'video tutorial', 'materi pembelajaran', 'belajar pertanian'],
+            title: 'Video JuruTani',
+            description: 'Video JuruTani: belajar pertanian dengan video tutorial interaktif dan materi pembelajaran lengkap.',
+            keywords: ['video JuruTani', 'pertanian digital', 'video tutorial', 'materi pembelajaran', 'belajar pertanian'],
             ogType: 'website',
         },
         chat: {

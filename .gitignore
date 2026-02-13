@@ -9,6 +9,7 @@ dist
 .DS_Store
 .unlighthouse
 .netlify
+.agent
 
 # Pinegrow
 _pgbackup

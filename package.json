@@ -21,6 +21,7 @@
     "format": "prettier --write \"**/*.{html,vue,svelte,astro,js,jsx,cjs,mjs,ts,tsx,cts,mts,css,md,mdx,json}\" !public --ignore-path .gitignore"
   },
   "dependencies": {
+    "@nuxtjs/supabase": "^2.0.3",
     "@supabase/supabase-js": "^2.51.0",
     "@vee-validate/nuxt": "^4.15.0",
     "@vee-validate/zod": "^4.15.0",

@@ -81,76 +81,147 @@ const getPriceColor = (categoryValue: string) => {
 <template>
   <div class="food-price-section container max-w-6xl mx-auto px-4 py-12">
     <!-- Section Header -->
-    <div class="mx-auto mb-10 max-w-4xl text-center">
-      <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-green-100 to-orange-100 dark:from-green-900/20 dark:to-green-900/20 rounded-full">
-        <UIcon name="i-lucide-trending-down" class="w-5 h-5 text-green-600 dark:text-green-400" />
-        <span class="text-sm font-medium text-green-700 dark:text-green-300">Harga Pangan Terupdate</span>
-      </div>
+    <div class="mx-auto mb-12 max-w-4xl text-center">
+      <UBadge 
+        color="success" 
+        variant="subtle" 
+        size="lg"
+        class="mb-6"
+      >
+        <template #leading>
+          <UIcon name="i-lucide-trending-down" class="w-4 h-4" />
+        </template>
+        Harga Pangan Terupdate
+      </UBadge>
       
-      <h2 class="text-3xl md:text-4xl lg:text-5xl py-1 font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent py-2">
         Pantau Harga Pangan DIY
       </h2>
       
-      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
         Informasi harga komoditas pertanian terkini dari berbagai produsen lokal Daerah Istimewa Yogyakarta. 
         <span class="font-semibold text-green-600 dark:text-green-400">Update harian</span> untuk kebutuhan Anda.
       </p>
     </div>
 
     <!-- Bento Grid Layout -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      <div 
-        v-for="categoryGroup in categorizedData" 
-        :key="categoryGroup.category.value"
-        :class="[
-          'rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden',
-          'hover:shadow-xl transition-all duration-300',
-          'bg-gradient-to-br',
-          getCategoryColor(categoryGroup.category.value)
-        ]"
-      >
-        <!-- Category Header -->
-        <div class="p-6 pb-4 border-b border-gray-200 dark:border-gray-700/50">
-          <div class="flex items-center gap-3 mb-2">
-            <div class="p-2 rounded-lg bg-white/60 dark:bg-gray-900/60">
-              <UIcon 
-                :name="categoryGroup.category.icon || 'i-lucide-package'" 
-                :class="['w-6 h-6', getCategoryIconColor(categoryGroup.category.value)]"
-              />
+    <div class="mb-8">
+      <!-- Mobile: Horizontal Scroll -->
+      <div class="md:hidden overflow-x-auto scrollbar-hide -mx-4 px-4">
+        <div class="flex gap-4 pb-4">
+          <div 
+            v-for="categoryGroup in categorizedData" 
+            :key="categoryGroup.category.value"
+            :class="[
+              'rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden',
+              'hover:shadow-xl transition-all duration-300',
+              'bg-gradient-to-br min-w-[280px] flex-shrink-0',
+              getCategoryColor(categoryGroup.category.value)
+            ]"
+          >
+            <!-- Category Header -->
+            <div class="p-4 pb-3 border-b border-gray-200 dark:border-gray-700/50">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="p-2 rounded-lg bg-white/60 dark:bg-gray-900/60">
+                  <UIcon 
+                    :name="categoryGroup.category.icon || 'i-lucide-package'" 
+                    :class="['w-5 h-5', getCategoryIconColor(categoryGroup.category.value)]"
+                  />
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                  {{ categoryGroup.category.name }}
+                </h3>
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                Harga per {{ formatDate(categoryGroup.items[0]?.updated_at) }}
+              </p>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-              {{ categoryGroup.category.name }}
-            </h3>
+
+            <!-- Items List -->
+            <div class="p-4">
+              <ul v-if="categoryGroup.items.length > 0" class="space-y-2">
+                <li 
+                  v-for="item in categoryGroup.items" 
+                  :key="item.id"
+                  class="py-2 border-b border-gray-200 dark:border-gray-700 last:border-0"
+                >
+                  <div class="text-gray-900 dark:text-white font-medium text-sm mb-1">{{ item.name }}</div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-600 dark:text-gray-400 text-xs">{{ item.producer }}</span>
+                    <span class="text-green-600 dark:text-green-400 font-bold text-sm whitespace-nowrap">
+                      {{ formatCurrency(item.price) }}/{{ item.unit }}
+                    </span>
+                  </div>
+                </li>
+              </ul>
+
+              <!-- Empty State -->
+              <div v-else class="text-center py-6">
+                <UIcon name="i-lucide-package-x" class="w-10 h-10 mx-auto text-gray-400 dark:text-gray-600 mb-2" />
+                <p class="text-xs text-gray-600 dark:text-gray-400">
+                  Belum ada data tersedia
+                </p>
+              </div>
+            </div>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-400">
-            Harga per {{ formatDate(categoryGroup.items[0]?.updated_at) }}
-          </p>
         </div>
+      </div>
 
-        <!-- Items List -->
-        <div class="p-6">
-          <ul v-if="categoryGroup.items.length > 0" class="space-y-3">
-            <li 
-              v-for="item in categoryGroup.items" 
-              :key="item.id"
-              class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0"
-            >
-              <div class="flex-1 min-w-0">
-                <span class="text-gray-900 dark:text-white font-medium">{{ item.name }}</span>
-                <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">- {{ item.producer }}</span>
+      <!-- Desktop: 2 Column Grid -->
+      <div class="hidden md:grid md:grid-cols-2 gap-6">
+        <div 
+          v-for="categoryGroup in categorizedData" 
+          :key="categoryGroup.category.value"
+          :class="[
+            'rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden',
+            'hover:shadow-xl transition-all duration-300',
+            'bg-gradient-to-br',
+            getCategoryColor(categoryGroup.category.value)
+          ]"
+        >
+          <!-- Category Header -->
+          <div class="p-6 pb-4 border-b border-gray-200 dark:border-gray-700/50">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="p-2 rounded-lg bg-white/60 dark:bg-gray-900/60">
+                <UIcon 
+                  :name="categoryGroup.category.icon || 'i-lucide-package'" 
+                  :class="['w-6 h-6', getCategoryIconColor(categoryGroup.category.value)]"
+                />
               </div>
-              <div class="text-green-600 dark:text-green-400 font-bold whitespace-nowrap ml-4">
-                {{ formatCurrency(item.price) }}/{{ item.unit }}
-              </div>
-            </li>
-          </ul>
-
-          <!-- Empty State -->
-          <div v-else class="text-center py-8">
-            <UIcon name="i-lucide-package-x" class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-600 mb-2" />
-            <p class="text-sm text-gray-500 dark:text-gray-500">
-              Belum ada data tersedia
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ categoryGroup.category.name }}
+              </h3>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Harga per {{ formatDate(categoryGroup.items[0]?.updated_at) }}
             </p>
+          </div>
+
+          <!-- Items List -->
+          <div class="p-6">
+            <ul v-if="categoryGroup.items.length > 0" class="space-y-3">
+              <li 
+                v-for="item in categoryGroup.items" 
+                :key="item.id"
+                class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0"
+              >
+                <div class="flex-1 min-w-0">
+                  <span class="text-gray-900 dark:text-white font-medium">{{ item.name }}</span>
+                  <span class="text-gray-600 dark:text-gray-400 text-sm ml-2">- {{ item.producer }}</span>
+                </div>
+                <div :class="['font-bold whitespace-nowrap ml-4', getPriceColor(categoryGroup.category.value)]">
+                  {{ formatCurrency(item.price) }}/{{ item.unit }}
+                </div>
+              </li>
+            </ul>
+
+            <!-- Empty State -->
+            <div v-else class="text-center py-8">
+              <UIcon name="i-lucide-package-x" class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-600 mb-2" />
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Belum ada data tersedia
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -158,13 +229,19 @@ const getPriceColor = (categoryValue: string) => {
 
     <!-- Call to Action Button -->
     <div class="text-center">
-      <NuxtLink 
+      <UButton 
         to="/food-prices"
-        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-orange-600 hover:from-green-600 hover:to-orange-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        color="success"
+        size="xl"
+        class="shadow-lg hover:shadow-xl"
       >
-        <span class="text-lg">Lihat Semua Harga Pangan</span>
-        <UIcon name="i-lucide-arrow-right" class="w-5 h-5" />
-      </NuxtLink>
+        <template #leading>
+          <span class="text-lg">Lihat Semua Harga Pangan</span>
+        </template>
+        <template #trailing>
+          <UIcon name="i-lucide-arrow-right" class="w-5 h-5" />
+        </template>
+      </UButton>
       <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
         Temukan ribuan komoditas pertanian dengan harga terbaik
       </p>
@@ -192,5 +269,15 @@ const getPriceColor = (categoryValue: string) => {
 /* Hover effects */
 .group:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 </style>
