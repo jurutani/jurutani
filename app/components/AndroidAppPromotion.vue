@@ -41,8 +41,8 @@ const currentBadge = computed(() => badges[currentBadgeIndex.value])
 <template>
   <section class="relative max-w-6xl mx-auto overflow-hidden rounded-2xl">
     
-    <!-- Background Gradient -->
-    <div class="absolute inset-0 bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-green-800/20" />
+    <!-- Background linear -->
+    <div class="absolute inset-0 bg-linear-to-br from-green-50 via-emerald-50 to-green-100 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-green-800/20" />
     
     <!-- Decorative Blur -->
     <div class="absolute -top-32 -right-32 w-96 h-96 bg-green-400/10 rounded-full blur-3xl" />
@@ -57,7 +57,7 @@ const currentBadge = computed(() => badges[currentBadgeIndex.value])
           <!-- Logo + Title -->
           <div class="flex items-center gap-4">
             <div class="relative">
-              <div class="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl blur-md opacity-40" />
+              <div class="absolute inset-0 bg-linear-to-br from-green-400 to-emerald-500 rounded-xl blur-md opacity-40" />
               <div class="relative w-20 h-20 p-3 bg-white dark:bg-green-900/40 border border-green-200 dark:border-green-700 rounded-xl shadow-md flex items-center justify-center">
                 <NuxtImg
                   src="/jurutani.png"
@@ -108,11 +108,11 @@ const currentBadge = computed(() => badges[currentBadgeIndex.value])
                 <UIcon
                   v-for="i in 4"
                   :key="i"
-                  name="i-heroicons-star-solid"
+                  name="i-lucide-star"
                   class="w-4 h-4 text-yellow-400"
                 />
                 <UIcon
-                  name="i-heroicons-star-half"
+                  name="i-lucide-star"
                   class="w-4 h-4 text-yellow-400"
                 />
               </div>

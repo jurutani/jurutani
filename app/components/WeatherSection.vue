@@ -10,8 +10,8 @@ const forecastError = ref('')
 const hourlyError = ref('')
 const activeTab = ref('current')
 
-const API_KEY = process.env.OPENWEATHER_API_KEY || '416f0ed0bb28d3110beedecf5fa9cf85'
 const BASE_URL = process.env.OPENWEATHER_BASE_URL || 'https://api.openweathermap.org/data/2.5'
+const API_KEY = process.env.OPENWEATHER_API_KEY || '416f0ed0bb28d3110beedecf5fa9cf85'
 
 const getLocation = () => {
   if (navigator.geolocation) {

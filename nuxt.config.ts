@@ -67,7 +67,6 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     'nuxt-og-image',
     'nuxt-schema-org',
-    // '@nuxtjs/critters',
     '@nuxt/eslint',
     '@nuxt/ui',
   ],
@@ -77,12 +76,6 @@ export default defineNuxtConfig({
     fallback: 'light',
     classSuffix: '',
   },
-
-  // critters: {
-  //   config: {
-  //     preload: 'swap',
-  //   },
-  // },
 
   css: [
     '@/assets/css/tailwind.css',
@@ -95,7 +88,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    format: ['webp, png, jpg'],
+    format: ['webp', 'png', 'jpg'],
     provider: 'none',
     presets: {
       avatar: {
