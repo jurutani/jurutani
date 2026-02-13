@@ -1,74 +1,96 @@
 <script setup lang="ts">
 import { h, resolveComponent } from 'vue'
-import SortDropdown from '~/components/App/SortDropdown.vue'
-import { 
-  foodPricesData, 
-  foodPriceCategories, 
-  filterFoodPrices, 
-  sortFoodPrices,
-  formatCurrency,
-  type FoodPrice 
-} from '~/data/food-prices'
+import type { FoodWithPrice } from '~/types'
+import { FOOD_CATEGORIES } from '~/types'
+
+definePageMeta({
+  layout: 'default',
+})
 
 const UIcon = resolveComponent('UIcon')
 const UBadge = resolveComponent('UBadge')
 const UButton = resolveComponent('UButton')
+
 const router = useRouter()
+const { 
+  getFoodsWithLatestPrices, 
+  formatCurrency, 
+  formatDate,
+  getCategoryIcon,
+  getCategoryLabel 
+} = useFoodPrices()
 
 // State
+const foods = ref<FoodWithPrice[]>([])
+const loading = ref(true)
+const error = ref<any>(null)
 const selectedCategory = ref('all')
 const searchQuery = ref('')
 const currentSort = ref<'name' | 'price-asc' | 'price-desc' | 'updated'>('updated')
 const currentPage = ref(1)
 const itemsPerPage = 15
 
-// Computed data with filters
-const filteredData = computed(() => {
-  let data = filterFoodPrices(foodPricesData, selectedCategory.value, searchQuery.value)
-  data = sortFoodPrices(data, currentSort.value)
-  return data
+// Fetch data from Supabase
+const fetchFoods = async () => {
+  loading.value = true
+  error.value = null
+  
+  const { data, error: fetchError } = await getFoodsWithLatestPrices(
+    selectedCategory.value,
+    searchQuery.value
+  )
+  
+  if (fetchError) {
+    error.value = fetchError
+    console.error('Error fetching foods:', fetchError)
+  } else {
+    foods.value = data || []
+  }
+  
+  loading.value = false
+}
+
+// Watch for filter changes
+watch([selectedCategory, searchQuery], () => {
+  currentPage.value = 1
+  fetchFoods()
+})
+
+// Sort foods
+const sortedData = computed(() => {
+  const data = [...foods.value]
+  
+  switch (currentSort.value) {
+    case 'name':
+      return data.sort((a, b) => a.name.localeCompare(b.name, 'id'))
+    case 'price-asc':
+      return data.sort((a, b) => (a.latest_price || 0) - (b.latest_price || 0))
+    case 'price-desc':
+      return data.sort((a, b) => (b.latest_price || 0) - (a.latest_price || 0))
+    case 'updated':
+      return data.sort((a, b) => {
+        const dateA = new Date(a.latest_price_date || a.updated_at).getTime()
+        const dateB = new Date(b.latest_price_date || b.updated_at).getTime()
+        return dateB - dateA
+      })
+    default:
+      return data
+  }
 })
 
 // Pagination
-const totalPages = computed(() => Math.ceil(filteredData.value.length / itemsPerPage))
+const totalPages = computed(() => Math.ceil(sortedData.value.length / itemsPerPage))
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
   const end = start + itemsPerPage
-  return filteredData.value.slice(start, end)
+  return sortedData.value.slice(start, end)
 })
-
-// Get category icon
-const getCategoryIcon = (category: string) => {
-  const cat = foodPriceCategories.find(c => c.value === category)
-  return cat?.icon || 'i-lucide-package'
-}
-
-// Get stock badge color
-const getStockBadge = (stock?: string) => {
-  if (!stock) return { color: 'neutral', label: 'N/A' }
-  
-  const stockLower = stock.toLowerCase()
-  if (stockLower.includes('tersedia')) {
-    return { color: 'success', label: stock }
-  } else if (stockLower.includes('terbatas')) {
-    return { color: 'warning', label: stock }
-  } else {
-    return { color: 'error', label: stock }
-  }
-}
-
-// WhatsApp handler
-const openWhatsApp = (phone: string, productName: string) => {
-  const message = encodeURIComponent(`Halo, saya tertarik dengan produk ${productName}. Apakah masih tersedia?`)
-  const whatsappUrl = `https://wa.me/${phone.replace(/^0/, '62').replace(/\D/g, '')}?text=${message}`
-  window.open(whatsappUrl, '_blank')
-}
 
 // Table columns with cell renderers
 const columns = [
   {
     accessorKey: 'name',
-    header: 'Nama Produk',
+    header: 'Nama Komoditas',
     cell: ({ row }: any) => {
       return h('div', { class: 'flex items-center gap-3 min-w-[200px]' }, [
         h('div', {
@@ -89,18 +111,6 @@ const columns = [
     }
   },
   {
-    accessorKey: 'producer',
-    header: 'Produsen',
-    cell: ({ row }: any) => {
-      return h('div', { class: 'min-w-[150px]' }, [
-        h('div', { class: 'flex items-center gap-2' }, [
-          h(UIcon, { name: 'i-lucide-users', class: 'w-4 h-4 text-gray-400' }),
-          h('span', { class: 'text-gray-700 dark:text-gray-300' }, row.original.producer)
-        ])
-      ])
-    }
-  },
-  {
     accessorKey: 'category',
     header: 'Kategori',
     cell: ({ row }: any) => {
@@ -109,81 +119,77 @@ const columns = [
           color: 'primary',
           variant: 'subtle',
           size: 'sm'
-        }, () => row.original.category)
+        }, () => getCategoryLabel(row.original.category))
       ])
     }
   },
   {
-    accessorKey: 'district',
-    header: 'Wilayah',
-    cell: ({ row }: any) => {
-      return h('div', { class: 'min-w-[100px]' }, [
-        h('div', { class: 'flex items-center gap-2' }, [
-          h(UIcon, { name: 'i-lucide-map-pin', class: 'w-4 h-4 text-gray-400' }),
-          h('span', { class: 'text-gray-600 dark:text-gray-400' }, row.original.district || '-')
-        ])
-      ])
-    }
-  },
-  {
-    accessorKey: 'price',
-    header: 'Harga',
+    accessorKey: 'latest_price',
+    header: 'Harga Terkini',
     cell: ({ row }: any) => {
       return h('div', { class: 'min-w-[120px]' }, [
         h('div', {
           class: 'font-bold text-emerald-600 dark:text-emerald-400 text-base'
-        }, formatCurrency(row.original.price))
+        }, formatCurrency(row.original.latest_price || 0)),
+        h('div', {
+          class: 'text-xs text-gray-500 dark:text-gray-400'
+        }, `per ${row.original.satuan}`)
       ])
     }
   },
   {
-    accessorKey: 'unit',
-    header: 'Satuan',
+    accessorKey: 'price_change',
+    header: 'Perubahan',
     cell: ({ row }: any) => {
-      return h('div', { class: 'min-w-[80px]' }, [
-        h('span', { class: 'text-gray-600 dark:text-gray-400' }, `/ ${row.original.unit}`)
+      const change = row.original.price_change || 0
+      const changePercent = row.original.price_change_percent || 0
+      
+      if (change === 0) {
+        return h('div', { class: 'min-w-[100px] text-gray-500' }, '-')
+      }
+      
+      const isPositive = change > 0
+      const color = isPositive ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
+      const icon = isPositive ? 'i-lucide-trending-up' : 'i-lucide-trending-down'
+      
+      return h('div', { class: `min-w-[100px] ${color}` }, [
+        h('div', { class: 'flex items-center gap-1' }, [
+          h(UIcon, { name: icon, class: 'w-4 h-4' }),
+          h('span', { class: 'font-medium' }, `${Math.abs(changePercent).toFixed(1)}%`)
+        ]),
+        h('div', { class: 'text-xs opacity-75' }, 
+          `${isPositive ? '+' : ''}${formatCurrency(change)}`
+        )
       ])
     }
   },
   {
-    accessorKey: 'stock',
-    header: 'Stok',
+    accessorKey: 'latest_price_date',
+    header: 'Tanggal Update',
     cell: ({ row }: any) => {
-      const badge = getStockBadge(row.original.stock)
-      return h('div', { class: 'min-w-[100px]' }, [
-        h(UBadge, {
-          color: badge.color,
-          variant: 'subtle',
-          size: 'sm'
-        }, () => badge.label)
-      ])
+      return h('div', { class: 'min-w-[120px] text-sm text-gray-600 dark:text-gray-400' }, 
+        formatDate(row.original.latest_price_date)
+      )
     }
   },
   {
     accessorKey: 'actions',
     header: 'Aksi',
     cell: ({ row }: any) => {
-      return h('div', { class: 'flex items-center gap-2 min-w-[180px]' }, [
+      return h('div', { class: 'flex items-center gap-2 min-w-[100px]' }, [
         h(UButton, {
           color: 'primary',
           variant: 'soft',
           size: 'xs',
           icon: 'i-lucide-eye',
           onClick: () => router.push(`/food-prices/${row.original.slug}`)
-        }, () => 'Detail'),
-        h(UButton, {
-          color: 'success',
-          variant: 'soft',
-          size: 'xs',
-          icon: 'i-lucide-message-circle',
-          onClick: () => openWhatsApp(row.original.phone, row.original.name)
-        }, () => 'WhatsApp')
+        }, () => 'Detail')
       ])
     }
   }
 ]
 
-// Sort options - format untuk AppSortDropdown
+// Sort options
 const sortOptions = [
   { label: 'Terbaru', value: 'updated', column: 'updated_at', ascending: false },
   { label: 'Nama (A-Z)', value: 'name', column: 'name', ascending: true },
@@ -194,11 +200,6 @@ const sortOptions = [
 // Handlers
 const handleCategoryChange = (category: string) => {
   selectedCategory.value = category
-  currentPage.value = 1
-}
-
-const handleSearchChange = () => {
-  currentPage.value = 1
 }
 
 const handleSortChange = (sort: string) => {
@@ -208,9 +209,22 @@ const handleSortChange = (sort: string) => {
 
 const handlePageChange = (page: number) => {
   currentPage.value = page
-  // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+
+// Initial fetch
+onMounted(() => {
+  fetchFoods()
+})
+
+// SEO
+useSeoOptimized('food-prices')
+useHead({
+  title: 'Daftar Harga Pangan DIY - JuruTani',
+  meta: [
+    { name: 'description', content: 'Informasi harga komoditas pertanian terkini dari produsen lokal di Daerah Istimewa Yogyakarta. Data transparan untuk keputusan bisnis yang lebih baik.' }
+  ]
+})
 </script>
 
 <template>
@@ -227,31 +241,30 @@ const handlePageChange = (page: number) => {
       </h1>
       
       <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto mb-8">
-        Pantau harga komoditas pertanian terkini dari
-        <span class="font-semibold text-emerald-600 dark:text-emerald-400">produsen lokal terpercaya</span> di wilayah Daerah Istimewa Yogyakarta.
+        Pantau harga komoditas pertanian terkini dari wilayah 
+        <span class="font-semibold text-emerald-600 dark:text-emerald-400">Daerah Istimewa Yogyakarta</span>.
         Informasi harga transparan untuk 
         <span class="font-semibold text-teal-600 dark:text-teal-400">keputusan bisnis yang lebih baik</span>.
       </p>
 
       <!-- Category Filter -->
       <nav aria-label="Filter kategori pangan">
-      <AppCategoryFilter 
-        :categories="foodPriceCategories" 
-        :current-category="selectedCategory"
-        :show-all-option="false"
-        @update:category="handleCategoryChange"
+        <AppCategoryFilter 
+          :categories="FOOD_CATEGORIES" 
+          :current-category="selectedCategory"
+          :show-all-option="false"
+          @update:category="handleCategoryChange"
         />
       </nav>
     </header>
     
     <!-- Filter & Sort Bar -->
     <aside class="flex flex-col gap-4 mb-8" aria-label="Filter dan pencarian harga pangan">
-      
-      <!-- Search Bar - Full width on all screens -->
+      <!-- Search Bar -->
       <AppSearchBar 
         v-model="searchQuery"
-        placeholder="Cari produk, produsen, atau komoditas..."
-        @search="handleSearchChange"
+        placeholder="Cari komoditas..."
+        @search="() => currentPage = 1"
       />
       
       <!-- Sort and Results Row -->
@@ -264,56 +277,79 @@ const handlePageChange = (page: number) => {
         />
         
         <!-- Results Count -->
-        <div v-if="filteredData.length > 0" class="text-sm text-gray-600 dark:text-gray-400">
-          Menampilkan <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ paginatedData.length }}</span> dari <span class="font-semibold">{{ filteredData.length }}</span> produk
+        <div v-if="!loading && sortedData.length > 0" class="text-sm text-gray-600 dark:text-gray-400">
+          Menampilkan <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ paginatedData.length }}</span> dari <span class="font-semibold">{{ sortedData.length }}</span> produk
         </div>
       </div>
     </aside>
     
     <!-- Info Badge -->
-    <div class="flex items-center justify-center gap-2 mb-6 text-sm text-gray-600 dark:text-gray-400">
+    <div v-if="!loading" class="flex items-center justify-center gap-2 mb-6 text-sm text-gray-600 dark:text-gray-400">
       <UIcon name="i-lucide-clock" class="w-4 h-4" />
-      Data diperbarui hari ini
+      Data diperbarui secara berkala
+    </div>
+
+    <!-- Loading State -->
+    <div v-if="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-emerald-200 border-t-emerald-600 dark:border-emerald-800 dark:border-t-emerald-400"></div>
+      <p class="mt-4 text-gray-600 dark:text-gray-400">Memuat data harga pangan...</p>
+    </div>
+
+    <!-- Error State -->
+    <div v-else-if="error" class="text-center py-12">
+      <UIcon name="i-lucide-alert-circle" class="w-16 h-16 mx-auto text-red-400 mb-4" />
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        Gagal memuat data
+      </h3>
+      <p class="text-gray-600 dark:text-gray-400 mb-4">
+        Terjadi kesalahan saat mengambil data. Silakan coba lagi.
+      </p>
+      <UButton 
+        color="primary" 
+        @click="fetchFoods"
+      >
+        Coba Lagi
+      </UButton>
     </div>
 
     <!-- Data Table -->
-    <section aria-labelledby="price-table-heading">
+    <section v-else aria-labelledby="price-table-heading">
       <h2 id="price-table-heading" class="sr-only">Tabel Harga Komoditas Pangan</h2>
       
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
-      <div v-if="paginatedData.length > 0" class="overflow-x-auto">
-        <UTable
-          :data="paginatedData"
-          :columns="columns"
-        />
-      </div>
+        <div v-if="paginatedData.length > 0" class="overflow-x-auto">
+          <UTable
+            :data="paginatedData"
+            :columns="columns"
+          />
+        </div>
 
-      <!-- Empty State -->
-      <div v-if="filteredData.length === 0" class="text-center py-12">
-        <UIcon name="i-lucide-search-x" class="w-16 h-16 mx-auto text-gray-400 mb-4" />
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-          Tidak ada data ditemukan
-        </h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-4">
-          Coba ubah filter atau kata kunci pencarian
-        </p>
-        <UButton 
-          color="primary" 
-          variant="soft"
-          @click="() => { selectedCategory = 'all'; searchQuery = '' }"
-        >
-          Reset Filter
-        </UButton>
+        <!-- Empty State -->
+        <div v-else class="text-center py-12">
+          <UIcon name="i-lucide-search-x" class="w-16 h-16 mx-auto text-gray-400 mb-4" />
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Tidak ada data ditemukan
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            Coba ubah filter atau kata kunci pencarian
+          </p>
+          <UButton 
+            color="primary" 
+            variant="soft"
+            @click="() => { selectedCategory = 'all'; searchQuery = '' }"
+          >
+            Reset Filter
+          </UButton>
+        </div>
       </div>
-    </div>
     </section>
 
     <!-- Pagination -->
-    <nav aria-label="Navigasi halaman harga pangan" v-if="totalPages > 1" class="mt-8">
+    <nav aria-label="Navigasi halaman harga pangan" v-if="!loading && totalPages > 1" class="mt-8">
       <AppPagination 
         :current-page="currentPage" 
         :total-pages="totalPages"
-        :total-items="filteredData.length"
+        :total-items="sortedData.length"
         :page-size="itemsPerPage"
         :show-page-info="true"
         :show-first-last="true"
@@ -328,9 +364,9 @@ const handlePageChange = (page: number) => {
         <div class="text-sm text-amber-800 dark:text-amber-200">
           <p class="font-semibold mb-1">Catatan Penting:</p>
           <ul class="list-disc list-inside space-y-1 text-amber-700 dark:text-amber-300">
-            <li>Harga yang tertera merupakan harga perkiraan dan dapat berubah sewaktu-waktu</li>
-            <li>Untuk kepastian harga dan ketersediaan stok, silakan hubungi produsen terkait</li>
-            <li>Data harga diperbarui secara berkala untuk memberikan informasi yang akurat</li>
+            <li>Harga yang tertera merupakan harga rata-rata pasar dan dapat berubah sewaktu-waktu</li>
+            <li>Data harga bersumber dari <a href="https://dpkp.jogjaprov.go.id/harga-pangan/list" target="_blank" rel="noopener noreferrer" class="font-medium underline hover:text-amber-900 dark:hover:text-amber-100">Dinas Pertanian dan Ketahanan Pangan DIY</a> dan pasar lokal</li>
+            <li>Untuk informasi lebih detail, silakan hubungi dinas terkait</li>
           </ul>
         </div>
       </div>

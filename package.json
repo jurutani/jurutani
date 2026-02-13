@@ -18,7 +18,9 @@
     "analyze": "nuxt analyze",
     "lint": "npm run lint:fix && npm run format",
     "lint:fix": "eslint --fix ./",
-    "format": "prettier --write \"**/*.{html,vue,svelte,astro,js,jsx,cjs,mjs,ts,tsx,cts,mts,css,md,mdx,json}\" !public --ignore-path .gitignore"
+    "format": "prettier --write \"**/*.{html,vue,svelte,astro,js,jsx,cjs,mjs,ts,tsx,cts,mts,css,md,mdx,json}\" !public --ignore-path .gitignore",
+    "supabase:generate": "supabase gen types typescript --project-id gzklfxfrislzfuqlcgtr > app/types/database.types.ts",
+    "supabase:generate:ps": "supabase gen types typescript --project-id $env:SUPABASE_PROJECT_REF > app/types/database.types.ts"
   },
   "dependencies": {
     "@nuxtjs/supabase": "^2.0.3",
@@ -59,6 +61,7 @@
     "nuxt-schema-org": "^5.0.10",
     "postcss": "^8.5.1",
     "prettier": "^3.4.2",
+    "supabase": "^2.76.8",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.3"
   },

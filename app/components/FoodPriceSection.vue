@@ -1,36 +1,57 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { foodPricesData, foodPriceCategories, formatCurrency, type FoodPrice } from '~/data/food-prices'
+import type { FoodWithPrice, FoodCategory } from '~/types'
+import { FOOD_CATEGORIES } from '~/types'
+
+const { getFoodsWithLatestPrices, formatCurrency, formatDate, getCategoryIcon, getCategoryLabel } = useFoodPrices()
+
+// State
+const loading = ref(true)
+const allFoods = ref<FoodWithPrice[]>([])
 
 // Filter kategori utama (4 kategori, exclude 'all')
 const mainCategories = computed(() => {
-  return foodPriceCategories
+  return FOOD_CATEGORIES
     .filter(cat => cat.value !== 'all')
     .slice(0, 4)
 })
 
-// Ambil 5 data terbaru per kategori
-const getCategoryData = (categoryValue: string): FoodPrice[] => {
-  return foodPricesData
-    .filter(item => item.category === categoryValue)
-    .sort((a, b) => {
-      const dateA = new Date(a.updated_at || '2026-01-01')
-      const dateB = new Date(b.updated_at || '2026-01-01')
-      return dateB.getTime() - dateA.getTime()
-    })
-    .slice(0, 5)
-}
-
 // Grouped data per kategori
 const categorizedData = computed(() => {
-  return mainCategories.value.map(category => ({
-    category,
-    items: getCategoryData(category.value)
-  }))
+  return mainCategories.value.map(category => {
+    // Filter foods by category and sort by latest price date
+    const items = allFoods.value
+      .filter(food => food.category === category.value)
+      .sort((a, b) => {
+        const dateA = new Date(a.latest_price_date || a.updated_at).getTime()
+        const dateB = new Date(b.latest_price_date || b.updated_at).getTime()
+        return dateB - dateA
+      })
+      .slice(0, 5) // Get 5 latest items per category
+
+    return {
+      category,
+      items
+    }
+  })
 })
 
-// Format date
-const formatDate = (dateStr?: string) => {
+// Fetch data from Supabase
+const fetchFoods = async () => {
+  loading.value = true
+  
+  const { data, error } = await getFoodsWithLatestPrices()
+  
+  if (error) {
+    console.error('Error fetching foods:', error)
+  } else {
+    allFoods.value = data || []
+  }
+  
+  loading.value = false
+}
+
+// Format date in short format
+const formatShortDate = (dateStr?: string) => {
   if (!dateStr) return ''
   try {
     const date = new Date(dateStr)
@@ -47,10 +68,10 @@ const formatDate = (dateStr?: string) => {
 // Get category color
 const getCategoryColor = (categoryValue: string) => {
   const colors: Record<string, string> = {
-    'Hortikultura': 'from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30',
-    'Perkebunan': 'from-green-50 to-lime-50 dark:from-green-950/30 dark:to-lime-950/30',
-    'Peternakan': 'from-orange-50 to-green-50 dark:from-orange-950/30 dark:to-green-950/30',
-    'Perikanan': 'from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30',
+    'hortikultura': 'from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30',
+    'perkebunan': 'from-green-50 to-lime-50 dark:from-green-950/30 dark:to-lime-950/30',
+    'peternakan': 'from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30',
+    'perikanan': 'from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30',
   }
   return colors[categoryValue] || 'from-gray-50 to-slate-50 dark:from-gray-950/30 dark:to-slate-950/30'
 }
@@ -58,10 +79,10 @@ const getCategoryColor = (categoryValue: string) => {
 // Get category icon color
 const getCategoryIconColor = (categoryValue: string) => {
   const colors: Record<string, string> = {
-    'Hortikultura': 'text-emerald-600 dark:text-emerald-400',
-    'Perkebunan': 'text-green-600 dark:text-green-400',
-    'Peternakan': 'text-orange-600 dark:text-orange-400',
-    'Perikanan': 'text-blue-600 dark:text-blue-400',
+    'hortikultura': 'text-emerald-600 dark:text-emerald-400',
+    'perkebunan': 'text-green-600 dark:text-green-400',
+    'peternakan': 'text-orange-600 dark:text-orange-400',
+    'perikanan': 'text-blue-600 dark:text-blue-400',
   }
   return colors[categoryValue] || 'text-gray-600 dark:text-gray-400'
 }
@@ -69,13 +90,18 @@ const getCategoryIconColor = (categoryValue: string) => {
 // Get price color
 const getPriceColor = (categoryValue: string) => {
   const colors: Record<string, string> = {
-    'Hortikultura': 'text-emerald-600 dark:text-emerald-400',
-    'Perkebunan': 'text-green-600 dark:text-green-400',
-    'Peternakan': 'text-orange-600 dark:text-orange-400',
-    'Perikanan': 'text-blue-600 dark:text-blue-400',
+    'hortikultura': 'text-emerald-600 dark:text-emerald-400',
+    'perkebunan': 'text-green-600 dark:text-green-400',
+    'peternakan': 'text-orange-600 dark:text-orange-400',
+    'perikanan': 'text-blue-600 dark:text-blue-400',
   }
   return colors[categoryValue] || 'text-gray-600 dark:text-gray-400'
 }
+
+// Initial fetch
+onMounted(() => {
+  fetchFoods()
+})
 </script>
 
 <template>
@@ -104,8 +130,14 @@ const getPriceColor = (categoryValue: string) => {
       </p>
     </div>
 
+    <!-- Loading State -->
+    <div v-if="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-emerald-200 border-t-emerald-600 dark:border-emerald-800 dark:border-t-emerald-400"></div>
+      <p class="mt-4 text-gray-600 dark:text-gray-400">Memuat data harga pangan...</p>
+    </div>
+
     <!-- Bento Grid Layout -->
-    <div class="mb-8">
+    <div v-else class="mb-8">
       <!-- Mobile: Horizontal Scroll -->
       <div class="md:hidden overflow-x-auto scrollbar-hide -mx-4 px-4">
         <div class="flex gap-4 pb-4">
@@ -124,7 +156,7 @@ const getPriceColor = (categoryValue: string) => {
               <div class="flex items-center gap-2 mb-2">
                 <div class="p-2 rounded-lg bg-white/60 dark:bg-gray-900/60">
                   <UIcon 
-                    :name="categoryGroup.category.icon || 'i-lucide-package'" 
+                    :name="getCategoryIcon(categoryGroup.category.value)" 
                     :class="['w-5 h-5', getCategoryIconColor(categoryGroup.category.value)]"
                   />
                 </div>
@@ -133,7 +165,10 @@ const getPriceColor = (categoryValue: string) => {
                 </h3>
               </div>
               <p class="text-xs text-gray-500 dark:text-gray-400">
-                Harga per {{ formatDate(categoryGroup.items[0]?.updated_at) }}
+                <span v-if="categoryGroup.items.length > 0">
+                  Harga per {{ formatShortDate(categoryGroup.items[0]?.latest_price_date) }}
+                </span>
+                <span v-else>Belum ada data</span>
               </p>
             </div>
 
@@ -145,11 +180,11 @@ const getPriceColor = (categoryValue: string) => {
                   :key="item.id"
                   class="py-2 border-b border-gray-200 dark:border-gray-700 last:border-0"
                 >
-                  <div class="text-gray-900 dark:text-white font-medium text-sm mb-1">{{ item.name }}</div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-600 dark:text-gray-400 text-xs">{{ item.producer }}</span>
-                    <span class="text-green-600 dark:text-green-400 font-bold text-sm whitespace-nowrap">
-                      {{ formatCurrency(item.price) }}/{{ item.unit }}
+                  <div class="text-gray-900 dark:text-white font-medium text-sm mb-1 truncate">{{ item.name }}</div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-gray-600 dark:text-gray-400 text-xs truncate">{{ item.satuan }}</span>
+                    <span :class="['font-bold text-sm whitespace-nowrap', getPriceColor(categoryGroup.category.value)]">
+                      {{ formatCurrency(item.latest_price || 0) }}
                     </span>
                   </div>
                 </li>
@@ -184,7 +219,7 @@ const getPriceColor = (categoryValue: string) => {
             <div class="flex items-center gap-3 mb-2">
               <div class="p-2 rounded-lg bg-white/60 dark:bg-gray-900/60">
                 <UIcon 
-                  :name="categoryGroup.category.icon || 'i-lucide-package'" 
+                  :name="getCategoryIcon(categoryGroup.category.value)" 
                   :class="['w-6 h-6', getCategoryIconColor(categoryGroup.category.value)]"
                 />
               </div>
@@ -193,7 +228,10 @@ const getPriceColor = (categoryValue: string) => {
               </h3>
             </div>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Harga per {{ formatDate(categoryGroup.items[0]?.updated_at) }}
+              <span v-if="categoryGroup.items.length > 0">
+                Harga per {{ formatShortDate(categoryGroup.items[0]?.latest_price_date) }}
+              </span>
+              <span v-else>Belum ada data</span>
             </p>
           </div>
 
@@ -206,11 +244,11 @@ const getPriceColor = (categoryValue: string) => {
                 class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0"
               >
                 <div class="flex-1 min-w-0">
-                  <span class="text-gray-900 dark:text-white font-medium">{{ item.name }}</span>
-                  <span class="text-gray-600 dark:text-gray-400 text-sm ml-2">- {{ item.producer }}</span>
+                  <span class="text-gray-900 dark:text-white font-medium block truncate">{{ item.name }}</span>
+                  <span class="text-gray-600 dark:text-gray-400 text-sm">per {{ item.satuan }}</span>
                 </div>
                 <div :class="['font-bold whitespace-nowrap ml-4', getPriceColor(categoryGroup.category.value)]">
-                  {{ formatCurrency(item.price) }}/{{ item.unit }}
+                  {{ formatCurrency(item.latest_price || 0) }}
                 </div>
               </li>
             </ul>
@@ -228,7 +266,7 @@ const getPriceColor = (categoryValue: string) => {
     </div>
 
     <!-- Call to Action Button -->
-    <div class="text-center">
+    <div v-if="!loading" class="text-center">
       <UButton 
         to="/food-prices"
         color="success"

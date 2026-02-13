@@ -47,3 +47,5 @@ export * from './chatbot'
 
 // Professional types
 export * from './professional'
+// Food types
+export * from './food'
