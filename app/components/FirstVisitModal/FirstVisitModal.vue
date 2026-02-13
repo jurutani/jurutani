@@ -1,9 +1,5 @@
 <script setup lang="ts">
 const isOpen = ref(false)
-
-// Cookie untuk menandai sudah pernah membuka
-// ✅ SEO SAFE: Cookie hanya untuk UX, tidak mempengaruhi crawler
-// Crawler tidak peduli cookie, mereka tetap dapat full HTML
 const firstVisit = useCookie('firstVisit', {
   maxAge: 60 * 60 * 24 * 30, // 30 hari (bukan 6 jam)
   sameSite: 'lax'
