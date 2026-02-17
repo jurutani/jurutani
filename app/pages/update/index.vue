@@ -11,6 +11,7 @@ useSeoMeta({
 })
 
 const { supabase } = useSupabase()
+const { getImageUrl, getExcerpt, formatDate, getStatusBadge } = useNewsUpdatedUtils()
 
 // Filters
 const selectedCategory = ref<string>('')
@@ -88,61 +89,6 @@ const totalItems = computed(() => newsData.value?.total || 0)
 const totalPages = computed(() => Math.ceil(totalItems.value / pageSize))
 const hasData = computed(() => newsList.value.length > 0)
 
-// Get image URL helper
-function getImageUrl(news: NewsUpdated): string {
-  const { supabase } = useSupabase()
-  
-  // Priority: cover_image, then first image from gallery, then placeholder
-  const imagePath = news.cover_image || (news.images && news.images.length > 0 ? news.images[0] : null)
-  
-  if (!imagePath) return '/placeholder.png'
-  
-  if (imagePath.startsWith('http')) {
-    return imagePath
-  }
-  
-  const { data } = supabase.storage
-    .from('news-images')
-    .getPublicUrl(imagePath)
-  
-  return data.publicUrl || '/placeholder.png'
-}
-
-// Get excerpt from TipTap JSON content
-function getExcerpt(content: any, maxLength: number = 150): string {
-  if (!content || !content.content) return ''
-  
-  // Extract text from TipTap JSON
-  let text = ''
-  
-  function extractText(node: any) {
-    if (node.text) {
-      text += node.text
-    }
-    if (node.content && Array.isArray(node.content)) {
-      node.content.forEach((child: any) => extractText(child))
-    }
-  }
-  
-  extractText(content)
-  
-  text = text.trim()
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + '...'
-  }
-  return text
-}
-
-// Format date
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('id-ID', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }).format(date)
-}
-
 // Handle category change
 function onCategoryChange(value: string) {
   selectedCategory.value = value
@@ -184,7 +130,18 @@ function onSearch() {
           icon="i-heroicons-magnifying-glass"
           size="lg"
           @keyup.enter="onSearch"
-        />
+        >
+          <template #trailing>
+            <UButton
+              v-if="searchQuery"
+              color="neutral"
+              variant="ghost"
+              icon="i-lucide-x"
+              size="xs"
+              @click="searchQuery = ''; onSearch()"
+            />
+          </template>
+        </UInput>
       </div>
 
       <!-- Category Filter & Create Button -->
@@ -193,11 +150,12 @@ function onSearch() {
           v-model="selectedCategory"
           :options="categoryItems"
           placeholder="Pilih Kategori"
+          size="lg"
           class="w-full md:w-64"
           @change="onCategoryChange"
         />
         
-        <!-- Create Button (always visible) -->
+        <!-- Create Button -->
         <UButton
           to="/update/create"
           color="primary"
@@ -209,12 +167,46 @@ function onSearch() {
       </div>
     </div>
 
+    <!-- Active Filters -->
+    <div v-if="searchQuery || selectedCategory" class="mb-6 flex items-center gap-2 flex-wrap">
+      <span class="text-sm text-gray-600 dark:text-gray-400">Filter aktif:</span>
+      
+      <UBadge v-if="searchQuery" color="primary" variant="soft">
+        <UIcon name="i-lucide-search" class="w-3 h-3" />
+        "{{ searchQuery }}"
+        <button @click="searchQuery = ''; onSearch()" class="ml-1">
+          <UIcon name="i-lucide-x" class="w-3 h-3" />
+        </button>
+      </UBadge>
+      
+      <UBadge v-if="selectedCategory" color="primary" variant="soft">
+        <UIcon name="i-lucide-folder" class="w-3 h-3" />
+        {{ categoryItems.find(c => c.value === selectedCategory)?.label }}
+        <button @click="selectedCategory = ''; onCategoryChange('')" class="ml-1">
+          <UIcon name="i-lucide-x" class="w-3 h-3" />
+        </button>
+      </UBadge>
+      
+      <UButton
+        color="neutral"
+        variant="ghost"
+        size="xs"
+        @click="searchQuery = ''; selectedCategory = ''; currentPage = 1"
+      >
+        Reset Semua
+      </UButton>
+    </div>
+
     <!-- Loading State -->
     <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="i in 6" :key="i" class="animate-pulse">
-        <div class="bg-gray-200 dark:bg-gray-700 h-64 rounded-lg mb-4"></div>
-        <div class="bg-gray-200 dark:bg-gray-700 h-4 rounded mb-2"></div>
-        <div class="bg-gray-200 dark:bg-gray-700 h-3 rounded w-2/3"></div>
+        <div class="bg-gray-200 dark:bg-gray-700 h-48 rounded-t-lg"></div>
+        <div class="p-5 space-y-3">
+          <div class="bg-gray-200 dark:bg-gray-700 h-4 rounded w-1/4"></div>
+          <div class="bg-gray-200 dark:bg-gray-700 h-6 rounded w-3/4"></div>
+          <div class="bg-gray-200 dark:bg-gray-700 h-4 rounded w-full"></div>
+          <div class="bg-gray-200 dark:bg-gray-700 h-4 rounded w-5/6"></div>
+        </div>
       </div>
     </div>
 
@@ -226,46 +218,59 @@ function onSearch() {
         :to="`/update/${news.slug}`"
         class="group block"
       >
-        <article class="h-full border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <article class="h-full border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-xl hover:border-primary/50 transition-all duration-300 bg-white dark:bg-gray-800">
           <!-- Image -->
           <div class="relative aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">
             <img
               :src="getImageUrl(news)"
               :alt="news.title"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             >
+            
             <!-- Gallery badge -->
-            <div v-if="news.images && news.images.length > 0" class="absolute top-2 right-2 px-2 py-1 bg-black/70 text-white text-xs rounded-full flex items-center gap-1">
+            <div v-if="news.images && news.images.length > 0" class="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm text-white text-xs rounded-full flex items-center gap-1">
               <UIcon name="i-lucide-images" class="w-3 h-3" />
               {{ news.images.length }}
             </div>
+            
             <!-- Category badge -->
-            <div class="absolute bottom-2 left-2 px-3 py-1 bg-primary text-white text-xs font-medium rounded-full">
+            <div class="absolute bottom-2 left-2 px-3 py-1 bg-primary text-white text-xs font-medium rounded-full shadow-lg">
               {{ news.category }}
             </div>
           </div>
 
           <!-- Content -->
-          <div class="p-5">
+          <div class="p-5 space-y-3">
             <!-- Date -->
-            <time class="text-xs text-gray-500 dark:text-gray-400 mb-2 block">
-              {{ formatDate(news.created_at) }}
-            </time>
+            <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+              <UIcon name="i-lucide-calendar" class="w-3 h-3" />
+              <time>{{ formatDate(news.created_at) }}</time>
+            </div>
 
             <!-- Title -->
-            <h3 class="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+            <h3 class="text-lg font-bold line-clamp-2 group-hover:text-primary transition-colors min-h-14">
               {{ news.title }}
             </h3>
 
             <!-- Sub Title or Excerpt -->
-            <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+            <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 min-h-18">
               {{ news.sub_title || getExcerpt(news.content) }}
             </p>
 
-            <!-- Attachments indicator -->
-            <div v-if="news.attachments && news.attachments.length > 0" class="mt-3 flex items-center gap-1 text-xs text-gray-500">
-              <UIcon name="i-lucide-paperclip" class="w-3 h-3" />
-              {{ news.attachments.length }} lampiran
+            <!-- Footer -->
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+              <!-- Attachments indicator -->
+              <div v-if="news.attachments && news.attachments.length > 0" class="flex items-center gap-1 text-xs text-gray-500">
+                <UIcon name="i-lucide-paperclip" class="w-3 h-3" />
+                {{ news.attachments.length }} lampiran
+              </div>
+              <div v-else></div>
+              
+              <!-- Read more -->
+              <span class="text-sm font-medium text-primary group-hover:gap-2 flex items-center gap-1 transition-all">
+                Baca
+                <UIcon name="i-lucide-arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </span>
             </div>
           </div>
         </article>
@@ -274,18 +279,38 @@ function onSearch() {
 
     <!-- Empty State -->
     <div v-else class="text-center py-20">
-      <UIcon name="i-heroicons-newspaper" class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+        <UIcon name="i-heroicons-newspaper" class="w-8 h-8 text-gray-400 dark:text-gray-600" />
+      </div>
+      
       <h3 class="text-xl font-semibold mb-2">Belum ada berita</h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">
-        {{ searchQuery || selectedCategory ? 'Tidak ada berita yang sesuai dengan filter Anda' : 'Belum ada berita yang dipublikasikan' }}
+      
+      <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+        {{ searchQuery || selectedCategory 
+          ? 'Tidak ada berita yang sesuai dengan filter Anda. Coba ubah filter atau reset pencarian.' 
+          : 'Belum ada berita yang dipublikasikan. Jadilah yang pertama membuat berita!' 
+        }}
       </p>
-      <UButton
-        v-if="searchQuery || selectedCategory"
-        color="neutral"
-        @click="searchQuery = ''; selectedCategory = ''; currentPage = 1"
-      >
-        Reset Filter
-      </UButton>
+      
+      <div class="flex gap-3 justify-center">
+        <UButton
+          v-if="searchQuery || selectedCategory"
+          color="neutral"
+          variant="soft"
+          @click="searchQuery = ''; selectedCategory = ''; currentPage = 1"
+        >
+          <UIcon name="i-lucide-refresh-cw" class="w-4 h-4" />
+          Reset Filter
+        </UButton>
+        
+        <UButton
+          to="/update/create"
+          color="primary"
+        >
+          <UIcon name="i-lucide-plus" class="w-4 h-4" />
+          Buat Berita Pertama
+        </UButton>
+      </div>
     </div>
 
     <!-- Pagination -->

@@ -32,9 +32,15 @@ const sizeClasses = computed(() => {
   return sizes[props.size]
 })
 
-// Ring classes
+// Track mounted state to prevent hydration mismatch
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
+
+// Ring classes - use isMounted to prevent hydration mismatch
 const ringClasses = computed(() => 
-  props.isAuthenticated 
+  isMounted.value && props.isAuthenticated 
     ? 'ring-green-500/30 hover:ring-green-500/50' 
     : 'ring-gray-300/30 hover:ring-gray-300/50'
 )

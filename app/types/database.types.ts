@@ -327,34 +327,87 @@ export type Database = {
       }
       food_prices: {
         Row: {
-          category: string
-          commodity: string
-          created_at: string
+          created_at: string | null
           date: string
           deleted_at: string | null
+          food_id: string
           id: string
           price: number
-          updated_at: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          date?: string
+          deleted_at?: string | null
+          food_id: string
+          id?: string
+          price: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          deleted_at?: string | null
+          food_id?: string
+          id?: string
+          price?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_prices_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "foods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      foods: {
+        Row: {
+          category: string
+          created_at: string | null
+          deleted_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          satuan: string
+          search_vector: unknown
+          slug: string
+          specifications: string | null
+          tags: string[] | null
+          updated_at: string | null
         }
         Insert: {
           category: string
-          commodity: string
-          created_at?: string
-          date?: string
+          created_at?: string | null
           deleted_at?: string | null
+          description?: string | null
           id?: string
-          price: number
-          updated_at?: string
+          image_url?: string | null
+          name: string
+          satuan: string
+          search_vector?: unknown
+          slug: string
+          specifications?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
         }
         Update: {
           category?: string
-          commodity?: string
-          created_at?: string
-          date?: string
+          created_at?: string | null
           deleted_at?: string | null
+          description?: string | null
           id?: string
-          price?: number
-          updated_at?: string
+          image_url?: string | null
+          name?: string
+          satuan?: string
+          search_vector?: unknown
+          slug?: string
+          specifications?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -678,6 +731,71 @@ export type Database = {
           },
         ]
       }
+      news_updated: {
+        Row: {
+          attachments: Json | null
+          category: string
+          content: Json
+          cover_image: string | null
+          created_at: string
+          deleted_at: string | null
+          id: string
+          images: Json | null
+          link: string | null
+          published_at: string | null
+          slug: string | null
+          status_news: string
+          sub_title: string | null
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          attachments?: Json | null
+          category: string
+          content?: Json
+          cover_image?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          images?: Json | null
+          link?: string | null
+          published_at?: string | null
+          slug?: string | null
+          status_news?: string
+          sub_title?: string | null
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          attachments?: Json | null
+          category?: string
+          content?: Json
+          cover_image?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          images?: Json | null
+          link?: string | null
+          published_at?: string | null
+          slug?: string | null
+          status_news?: string
+          sub_title?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "news_updated_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: string
@@ -857,13 +975,156 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      generate_slug: {
-        Args: { input_text: string; table_name: string }
+      create_or_get_conversation: {
+        Args: { other_user_id: string }
         Returns: string
       }
+      generate_slug:
+        | { Args: { input_text: string; table_name: string }; Returns: string }
+        | { Args: { text_input: string }; Returns: string }
+      get_all_latest_prices: {
+        Args: never
+        Returns: {
+          category: string
+          date: string
+          description: string
+          food_id: string
+          image_url: string
+          name: string
+          price: number
+          price_change: number
+          satuan: string
+          slug: string
+        }[]
+      }
+      get_food_by_slug: {
+        Args: { p_slug: string }
+        Returns: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string
+          name: string
+          satuan: string
+          slug: string
+          specifications: string
+          tags: string[]
+          updated_at: string
+        }[]
+      }
+      get_food_image_url: { Args: { p_file_path: string }; Returns: string }
+      get_latest_price_by_slug: {
+        Args: { p_slug: string }
+        Returns: {
+          category: string
+          date: string
+          food_id: string
+          food_name: string
+          image_url: string
+          price: number
+          satuan: string
+        }[]
+      }
+      get_latest_prices_by_category: {
+        Args: { p_category: string }
+        Returns: {
+          category: string
+          date: string
+          food_id: string
+          image_url: string
+          name: string
+          price: number
+          satuan: string
+          slug: string
+        }[]
+      }
+      get_price_stats_by_slug: {
+        Args: { p_days?: number; p_slug: string }
+        Returns: Json
+      }
+      get_price_trend_by_slug: {
+        Args: { p_days?: number; p_slug: string }
+        Returns: {
+          date: string
+          price: number
+          price_change: number
+          price_change_percent: number
+        }[]
+      }
+      get_unread_messages_count: { Args: never; Returns: number }
+      get_unread_notifications_count: { Args: never; Returns: number }
+      get_user_role: { Args: never; Returns: string }
+      get_user_stats: { Args: { p_user_id: string }; Returns: Json }
       increment_visit:
-      | { Args: never; Returns: undefined }
-      | { Args: { visit_date: string }; Returns: undefined }
+        | { Args: never; Returns: undefined }
+        | { Args: { visit_date: string }; Returns: undefined }
+      is_admin: { Args: never; Returns: boolean }
+      is_conversation_participant: {
+        Args: { conversation_id: string }
+        Returns: boolean
+      }
+      is_expert: { Args: never; Returns: boolean }
+      is_instructor: { Args: never; Returns: boolean }
+      is_market_owner: { Args: { market_id: string }; Returns: boolean }
+      is_meeting_author: { Args: { meeting_id: string }; Returns: boolean }
+      is_news_author: { Args: { news_id: string }; Returns: boolean }
+      is_profile_owner: { Args: { profile_id: string }; Returns: boolean }
+      list_foods: {
+        Args: { p_category?: string }
+        Returns: {
+          category: string
+          description: string
+          id: string
+          image_url: string
+          name: string
+          satuan: string
+          slug: string
+          tags: string[]
+        }[]
+      }
+      mark_all_notifications_read: { Args: never; Returns: undefined }
+      mark_conversation_messages_read: {
+        Args: { conversation_id: string }
+        Returns: undefined
+      }
+      search_foods: {
+        Args: { p_category?: string; p_limit?: number; p_search_term: string }
+        Returns: {
+          category: string
+          description: string
+          id: string
+          image_url: string
+          name: string
+          rank: number
+          satuan: string
+          slug: string
+        }[]
+      }
+      search_users: {
+        Args: { search_term: string; user_limit?: number }
+        Returns: {
+          avatar_url: string
+          bio: string
+          full_name: string
+          id: string
+          role: string
+          username: string
+        }[]
+      }
+      send_notification: {
+        Args: {
+          p_body: string
+          p_data?: Json
+          p_title: string
+          p_user_id: string
+        }
+        Returns: string
+      }
+      update_food_image: {
+        Args: { p_file_path: string; p_food_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
@@ -880,116 +1141,116 @@ type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-  | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-  : never = never,
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
-  ? R
-  : never
+    ? R
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-    DefaultSchema["Views"])
-  ? (DefaultSchema["Tables"] &
-    DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-      Row: infer R
-    }
-  ? R
-  : never
-  : never
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-  | keyof DefaultSchema["Tables"]
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-  : never = never,
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-    Insert: infer I
-  }
-  ? I
-  : never
+      Insert: infer I
+    }
+    ? I
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-    Insert: infer I
-  }
-  ? I
-  : never
-  : never
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-  | keyof DefaultSchema["Tables"]
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-  : never = never,
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-    Update: infer U
-  }
-  ? U
-  : never
+      Update: infer U
+    }
+    ? U
+    : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-    Update: infer U
-  }
-  ? U
-  : never
-  : never
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-  | keyof DefaultSchema["Enums"]
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-  : never = never,
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-  : never
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-  | keyof DefaultSchema["CompositeTypes"]
-  | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-  ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-  : never = never,
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-  : never
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
 
 export const Constants = {
   public: {

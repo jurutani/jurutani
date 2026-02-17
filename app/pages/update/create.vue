@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
-import type { NewsAttachment } from '~/types/news'
-import { toastStore } from '~/composables/useJuruTaniToast';
+import type { EditorSuggestionMenuItem } from '@nuxt/ui'
+import type { JSONContent } from '@tiptap/vue-3'
+import { toastStore } from '~/composables/useJuruTaniToast'
+import { Enum } from '#shared/utils/enum'
+import { NEWS_UPDATED_CONSTANTS } from '~/composables/useNewsUpdatedForm'
+import { formatFileSize } from '~/composables/useNewsUpdatedUtils'
+
+definePageMeta({
+  layout: 'default'
+})
 
 useSeoMeta({
   title: 'Buat Berita Baru',
@@ -10,15 +18,20 @@ useSeoMeta({
 })
 
 const { supabase } = useSupabase()
-const { uploadFile } = useAppFileUpload()
 const router = useRouter()
+const { 
+  uploadCoverImage, 
+  uploadGalleryImages, 
+  uploadAttachments,
+  createImagePreview,
+  createImagePreviews,
+  validateImageFile,
+  validateAttachmentFile,
+  generateUniqueSlug
+} = useNewsUpdatedForm()
 
-const STORAGE_BUCKETS = {
-  images: 'news-images',
-  attachments: 'news-attachments'
-} as const
-
-const { data: categories } = await useAsyncData('category_news', async () => {
+// Fetch categories
+const { data: categories } = await useAsyncData('category_news_create', async () => {
   const { data, error } = await supabase
     .from('category_news')
     .select('name, value')
@@ -33,49 +46,50 @@ const { data: categories } = await useAsyncData('category_news', async () => {
 
 const categoryItems = computed(() => {
   if (!categories.value) return []
-  return categories.value.map(cat => ({
+  return categories.value.map((cat: any) => ({
     label: cat.name,
     value: cat.value
   }))
 })
 
-// Form schema
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
-const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024 // 10MB
-const MAX_GALLERY_IMAGES = 10
-const MAX_ATTACHMENTS = 5
-
+// Form schema with separate title and sub_title
 const schema = z.object({
-  content: z.string().min(1, 'Konten wajib diisi'),
+  title: z.string().min(1, 'Judul wajib diisi').max(200, 'Judul maksimal 200 karakter'),
+  sub_title: z.string().max(300, 'Sub judul maksimal 300 karakter').optional(),
+  content: z.any().refine((val) => {
+    // Validate JSONContent has content
+    if (!val || typeof val !== 'object') return false
+    if (!val.content || !Array.isArray(val.content)) return false
+    // Check if there's actual text content (not just empty paragraphs)
+    const hasText = JSON.stringify(val).length > 50 // Basic check
+    return hasText
+  }, 'Konten berita wajib diisi'),
   category: z.string().min(1, 'Kategori wajib dipilih'),
+  link: z.string().url('URL tidak valid').optional().or(z.literal('')),
   coverImageFile: z.instanceof(File).optional()
-    .refine((file) => !file || file.size <= MAX_IMAGE_SIZE, 'Ukuran gambar cover maksimal 5MB')
+    .refine((file) => !file || file.size <= NEWS_UPDATED_CONSTANTS.MAX_IMAGE_SIZE, 'Ukuran gambar cover maksimal 5MB')
     .refine((file) => !file || file.type.startsWith('image/'), 'File harus berupa gambar'),
-  galleryFiles: z.array(z.instanceof(File)).max(MAX_GALLERY_IMAGES, `Maksimal ${MAX_GALLERY_IMAGES} gambar galeri`),
-  attachmentFiles: z.array(z.instanceof(File)).max(MAX_ATTACHMENTS, `Maksimal ${MAX_ATTACHMENTS} lampiran`)
+  galleryFiles: z.array(z.instanceof(File)).max(NEWS_UPDATED_CONSTANTS.MAX_GALLERY_IMAGES, `Maksimal ${NEWS_UPDATED_CONSTANTS.MAX_GALLERY_IMAGES} gambar galeri`),
+  attachmentFiles: z.array(z.instanceof(File)).max(NEWS_UPDATED_CONSTANTS.MAX_ATTACHMENTS, `Maksimal ${NEWS_UPDATED_CONSTANTS.MAX_ATTACHMENTS} lampiran`)
 })
 
 type Schema = z.output<typeof schema>
 
 // Form state
 const state = reactive<Partial<Schema>>({
-  content: `# Judul Berita Anda
-
-_Sub judul atau ringkasan singkat_
-
----
-
-## Isi Berita
-
-Tulis konten berita Anda di sini dengan Markdown...
-
-**Tips Menulis:**
-- Gunakan **bold** untuk teks penting
-- Gunakan *italic* untuk penekanan
-- Gunakan heading (##, ###) untuk sub-bagian
-- Tambahkan list dengan tanda -
-- Link: [teks](url)`,
+  title: '',
+  sub_title: '',
+  content: {
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        content: []
+      }
+    ]
+  } as JSONContent,
   category: '',
+  link: '',
   coverImageFile: undefined,
   galleryFiles: [],
   attachmentFiles: []
@@ -87,201 +101,255 @@ const loading = ref(false)
 const coverImagePreview = ref<string | null>(null)
 const galleryPreviews = ref<string[]>([])
 
-function onCoverImageChange(files: FileList | null) {
-  if (!files || files.length === 0) {
+// Reactive files for UFileUpload v-model
+const coverImageFile = ref<File | null>(null)
+const galleryImageFiles = ref<File[]>([])
+const attachmentFilesList = ref<File[]>([])
+
+// Watch for cover image changes
+watch(coverImageFile, async (newFile) => {
+  if (!newFile) {
     state.coverImageFile = undefined
     coverImagePreview.value = null
     return
   }
 
-  const file = files[0]
-  if (file.size > MAX_IMAGE_SIZE) {
-    toastStore.error('Ukuran gambar cover maksimal 5MB')
+  if (!validateImageFile(newFile)) {
+    coverImageFile.value = null
     return
   }
 
-  state.coverImageFile = file
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    coverImagePreview.value = e.target?.result as string
+  state.coverImageFile = newFile
+  try {
+    coverImagePreview.value = await createImagePreview(newFile)
+  } catch (error) {
+    console.error('Error creating preview:', error)
+    toastStore.error('Gagal membuat preview gambar')
   }
-  reader.readAsDataURL(file)
-}
+})
 
-function onGalleryImagesChange(files: FileList | null) {
-  if (!files || files.length === 0) return
+// Watch for gallery images changes
+watch(galleryImageFiles, async (newFiles) => {
+  if (!newFiles || newFiles.length === 0) return
 
   const validFiles: File[] = []
-  const previews: string[] = []
 
-  Array.from(files).forEach((file) => {
-    if (file.size > MAX_IMAGE_SIZE) {
-      toastStore.error(`File ${file.name} terlalu besar (maks 5MB)`)
-      return
-    }
-    if (!file.type.startsWith('image/')) {
-      toastStore.error(`File ${file.name} bukan gambar`)
-      return
-    }
-    if (state.galleryFiles!.length + validFiles.length >= MAX_GALLERY_IMAGES) {
-      toastStore.error(`Maksimal ${MAX_GALLERY_IMAGES} gambar galeri`)
-      return
+  for (const file of newFiles) {
+    if (!validateImageFile(file)) continue
+    
+    if (state.galleryFiles!.length + validFiles.length >= NEWS_UPDATED_CONSTANTS.MAX_GALLERY_IMAGES) {
+      toastStore.error(`Maksimal ${NEWS_UPDATED_CONSTANTS.MAX_GALLERY_IMAGES} gambar galeri`)
+      break
     }
 
     validFiles.push(file)
+  }
 
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      previews.push(e.target?.result as string)
-    }
-    reader.readAsDataURL(file)
-  })
+  if (validFiles.length === 0) return
 
   state.galleryFiles = [...(state.galleryFiles || []), ...validFiles]
-  setTimeout(() => {
+  
+  try {
+    const previews = await createImagePreviews(validFiles)
     galleryPreviews.value = [...galleryPreviews.value, ...previews]
-  }, 100)
-}
+  } catch (error) {
+    console.error('Error creating previews:', error)
+  }
+
+  // Reset the file input for next upload
+  galleryImageFiles.value = []
+})
+
+// Watch for attachments changes
+watch(attachmentFilesList, (newFiles) => {
+  if (!newFiles || newFiles.length === 0) return
+
+  const validFiles: File[] = []
+
+  for (const file of newFiles) {
+    if (!validateAttachmentFile(file)) continue
+
+    if (state.attachmentFiles!.length + validFiles.length >= NEWS_UPDATED_CONSTANTS.MAX_ATTACHMENTS) {
+      toastStore.error(`Maksimal ${NEWS_UPDATED_CONSTANTS.MAX_ATTACHMENTS} lampiran`)
+      break
+    }
+
+    validFiles.push(file)
+  }
+
+  state.attachmentFiles = [...(state.attachmentFiles || []), ...validFiles]
+  
+  // Reset the file input for next upload
+  attachmentFilesList.value = []
+})
 
 function removeGalleryImage(index: number) {
   state.galleryFiles = state.galleryFiles!.filter((_, i) => i !== index)
   galleryPreviews.value = galleryPreviews.value.filter((_, i) => i !== index)
 }
 
-function onAttachmentsChange(files: FileList | null) {
-  if (!files || files.length === 0) return
-
-  const validFiles: File[] = []
-
-  Array.from(files).forEach((file) => {
-    if (file.size > MAX_ATTACHMENT_SIZE) {
-      toastStore.error(`File ${file.name} terlalu besar (maks 10MB)`)
-      return
-    }
-    if (state.attachmentFiles!.length + validFiles.length >= MAX_ATTACHMENTS) {
-      toastStore.error(`Maksimal ${MAX_ATTACHMENTS} lampiran`)
-      return
-    }
-
-    validFiles.push(file)
-  })
-
-  state.attachmentFiles = [...(state.attachmentFiles || []), ...validFiles]
-}
-
 function removeAttachment(index: number) {
   state.attachmentFiles = state.attachmentFiles!.filter((_, i) => i !== index)
 }
 
-function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes'
-  const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+function removeCoverImage() {
+  state.coverImageFile = undefined
+  coverImagePreview.value = null
+  coverImageFile.value = null
 }
 
-// Extract title from markdown content
-function extractTitle(content: string): string {
-  const lines = content.split('\n')
-  const titleLine = lines.find(line => line.trim().startsWith('#'))
-  if (titleLine) {
-    return titleLine.replace(/^#+\s*/, '').trim()
-  }
-  return 'untitled'
-}
-
-// Slug generation
-function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
+// Slash command suggestions
+const suggestionItems: EditorSuggestionMenuItem[][] = [
+  [
+    {
+      type: 'label',
+      label: 'Text'
+    },
+    {
+      kind: 'paragraph',
+      label: 'Paragraph',
+      description: 'Teks paragraf biasa',
+      icon: 'i-lucide-text'
+    },
+    {
+      kind: 'heading',
+      level: 1,
+      label: 'Heading 1',
+      description: 'Judul besar',
+      icon: 'i-lucide-heading-1'
+    },
+    {
+      kind: 'heading',
+      level: 2,
+      label: 'Heading 2',
+      description: 'Judul sedang',
+      icon: 'i-lucide-heading-2'
+    },
+    {
+      kind: 'heading',
+      level: 3,
+      label: 'Heading 3',
+      description: 'Judul kecil',
+      icon: 'i-lucide-heading-3'
+    }
+  ],
+  [
+    {
+      type: 'label',
+      label: 'Lists'
+    },
+    {
+      kind: 'bulletList',
+      label: 'Bullet List',
+      description: 'Daftar dengan bullet',
+      icon: 'i-lucide-list'
+    },
+    {
+      kind: 'orderedList',
+      label: 'Numbered List',
+      description: 'Daftar dengan nomor',
+      icon: 'i-lucide-list-ordered'
+    }
+  ],
+  [
+    {
+      type: 'label',
+      label: 'Insert'
+    },
+    {
+      kind: 'blockquote',
+      label: 'Blockquote',
+      description: 'Kutipan teks',
+      icon: 'i-lucide-text-quote'
+    },
+    {
+      kind: 'codeBlock',
+      label: 'Code Block',
+      description: 'Blok kode',
+      icon: 'i-lucide-square-code'
+    },
+    {
+      kind: 'horizontalRule',
+      label: 'Divider',
+      description: 'Garis pemisah',
+      icon: 'i-lucide-separator-horizontal'
+    },
+    {
+      kind: 'image',
+      label: 'Image',
+      description: 'Insert gambar',
+      icon: 'i-lucide-image'
+    }
+  ]
+]
 
 // Form submit
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   loading.value = true
 
   try {
-    // Extract title and generate slug
-    const title = extractTitle(event.data.content)
-    const slug = generateSlug(title) + '-' + Date.now()
+    // Validate required fields
+    if (!event.data.title || !event.data.category) {
+      toastStore.error('Judul dan kategori wajib diisi')
+      loading.value = false
+      return
+    }
+
+    // Generate unique slug
+    const slug = generateUniqueSlug(event.data.title)
 
     // Upload cover image
     let coverImagePath: string | null = null
     if (event.data.coverImageFile) {
-      const result = await uploadFile(event.data.coverImageFile, {
-        bucket: STORAGE_BUCKETS.images,
-        folder: `covers/${slug}`,
-        maxSizeMB: 5,
-        allowedTypes: ['image/*']
-      })
-      coverImagePath = result.path
+      coverImagePath = await uploadCoverImage(event.data.coverImageFile, slug)
     }
 
     // Upload gallery images
-    const imagePaths: string[] = []
+    let imagePaths: string[] = []
     if (event.data.galleryFiles && event.data.galleryFiles.length > 0) {
-      for (let i = 0; i < event.data.galleryFiles.length; i++) {
-        const file = event.data.galleryFiles[i]
-        const result = await uploadFile(file, {
-          bucket: STORAGE_BUCKETS.images,
-          folder: `gallery/${slug}`,
-          maxSizeMB: 5,
-          allowedTypes: ['image/*']
-        })
-        imagePaths.push(result.path)
-      }
+      imagePaths = await uploadGalleryImages(event.data.galleryFiles, slug)
     }
 
     // Upload attachments
-    const attachments: NewsAttachment[] = []
+    let attachments: any[] = []
     if (event.data.attachmentFiles && event.data.attachmentFiles.length > 0) {
-      for (const file of event.data.attachmentFiles) {
-        const result = await uploadFile(file, {
-          bucket: STORAGE_BUCKETS.attachments,
-          folder: `attachments/${slug}`,
-          maxSizeMB: 10,
-          allowedTypes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
-        })
-        attachments.push({
-          name: file.name,
-          url: result.path,
-          size: file.size,
-          type: file.type
-        })
-      }
+      attachments = await uploadAttachments(event.data.attachmentFiles, slug)
     }
 
-    // Insert to database
-    const payload = {
-      title: title,
-      sub_title: null,
-      content: event.data.content.trim(),
+    // Get current user
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // Prepare payload - status default is 'pending' for all users
+    const payload: any = {
+      title: event.data.title.trim(),
+      sub_title: event.data.sub_title?.trim() || null,
+      content: event.data.content, // JSONContent object
       category: event.data.category,
-      link: null,
-      status_news: 'pending',
+      link: event.data.link?.trim() || null,
+      status_news: 'pending', // Always pending for new submissions
       cover_image: coverImagePath,
       images: imagePaths,
       attachments: attachments,
       slug: slug,
+      user_id: user?.id || null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
 
-    const { data, error } = await supabase
+    // Insert to database
+    const { error: insertError } = await supabase
       .from('news_updated')
-      .insert([payload])
+      .insert(payload)
       .select()
       .single()
 
-    if (error) throw error
+    if (insertError) {
+      console.error('Database error:', insertError)
+      throw insertError
+    }
 
     toastStore.success('Berita berhasil dibuat! Menunggu persetujuan admin.')
-    router.push(`/update/${data.slug}`)
+    router.push(`/update/${slug}`)
   } catch (error) {
     console.error('Error creating news:', error)
     toastStore.error('Gagal membuat berita. Silakan coba lagi.')
@@ -292,107 +360,263 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8 max-w-5xl">
+  <main class="container mx-auto px-4 py-8 max-w-6xl">
+    <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold mb-2">Buat Berita Baru</h1>
-      <p class="text-muted">Tulis artikel berita dengan Markdown. Judul otomatis diambil dari heading pertama.</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h1 class="text-3xl font-bold mb-2">Buat Berita Baru</h1>
+          <p class="text-gray-600 dark:text-gray-400">Buat artikel berita dengan rich text editor modern</p>
+        </div>
+        <UButton
+          to="/update"
+          color="neutral"
+          variant="ghost"
+          icon="i-lucide-arrow-left"
+        >
+          Kembali
+        </UButton>
+      </div>
+      
+      <UAlert
+        icon="i-lucide-info"
+        color="primary"
+        variant="soft"
+        title="Informasi Pembuatan Berita"
+        description="Berita yang Anda buat akan berstatus 'pending' dan menunggu persetujuan dari admin sebelum dipublikasikan."
+      />
     </div>
 
+    <!-- Form -->
     <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
-      <UFormField label="Judul Berita" name="title" required>
-        <UInput v-model="state.title" placeholder="# Judul Berita di sini..." class="w-full" size="lg"/>
-      </UFormField>
+      <!-- Metadata Section -->
+      <UCard>
+        <template #header>
+          <div class="flex items-center gap-2">
+            <UIcon name="i-lucide-file-text" class="w-5 h-5" />
+            <h2 class="text-xl font-semibold">Informasi Berita</h2>
+          </div>
+        </template>
 
-      <UFormField label="Sub Judul Berita" name="sub_title" required>
-        <UInput v-model="state.sub_title" placeholder="# Sub Judul Berita di sini..." class="w-full" size="lg"/>
-      </UFormField>
+        <div class="space-y-6">
+          <!-- Title -->
+          <UFormField label="Judul Berita" name="title" required>
+            <UInput 
+              v-model="state.title" 
+              placeholder="Masukkan judul berita yang menarik..." 
+              size="lg"
+              icon="i-lucide-heading"
+              class="w-full"
+            />
+          </UFormField>
 
-      <UFormField label="Gambar Cover" name="coverImageFile" hint="Maksimal 5MB">
-        <UFileUpload
-          accept="image/*"
-          :max-size="MAX_IMAGE_SIZE"
-          :show-preview="true"
-          :preview-url="coverImagePreview"
-          @change="onCoverImageChange"
-          class="w-96 min-h-48"
-        />
-      </UFormField>
+          <!-- Sub Title -->
+          <UFormField label="Sub Judul" name="sub_title" hint="Opsional - Ringkasan singkat berita">
+            <UInput 
+              v-model="state.sub_title" 
+              placeholder="Ringkasan singkat atau tagline berita..."
+              icon="i-lucide-text"
+              class="w-full"
+            />
+          </UFormField>
 
-      <UFormField label="Konten Berita" name="content" required hint="Silakan masukan konten berita ...">
-        <CommonRichTextEditor 
-          v-model="state.content"
-          placeholder="# Judul Berita di sini..."
-        />
-      </UFormField>
+          <!-- Category & Link -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <UFormField label="Kategori" name="category" required>
+              <USelect 
+                v-model="state.category"
+                :items="categoryItems" 
+                placeholder="Pilih kategori berita"
+                icon="i-lucide-folder"
+                class="w-full"
+              />
+            </UFormField>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <UFormField label="Kategori" name="category" required>
-          <USelect :items="categoryItems" placeholder="Pilih kategori" class="w-full" />
-        </UFormField>
-        <UFormField label="Link Referensi" name="link">
-          <UInput v-model="state.link" placeholder="https://contoh.com/berita-referensi" class="w-full" />
-        </UFormField>
-      </div>
-
-      <UFormField label="Galeri Foto" name="galleryFiles" :hint="`Maksimal ${MAX_GALLERY_IMAGES} gambar, 5MB per gambar`">
-        <UFileUpload
-          accept="image/*"
-          multiple
-          :max-size="MAX_IMAGE_SIZE"
-          :show-preview="true"
-          :preview-urls="galleryPreviews"
-          @change="onGalleryImagesChange"
-          class="w-full min-h-48"
-        />
-        <div v-if="state.galleryFiles && state.galleryFiles.length > 0" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div v-for="(file, index) in state.galleryFiles" :key="index" class="relative">
-            <img :src="galleryPreviews[index]" alt="Gallery Image" class="w-full h-32 object-cover rounded">
-            <button
-              type="button"
-              class="absolute top-1 right-1 p-1 text-red-500 hover:bg-red-50 rounded dark:hover:bg-red-900/20"
-              @click="removeGalleryImage(index)"
-            >
-              <UIcon name="i-lucide-x" class="w-4 h-4" />
-            </button>
+            <UFormField label="Link Referensi" name="link" hint="Opsional">
+              <UInput 
+                v-model="state.link" 
+                placeholder="https://contoh.com/referensi"
+                icon="i-lucide-link"
+                class="w-full"
+              />
+            </UFormField>
           </div>
         </div>
-      </UFormField>
+      </UCard>
 
-      <UFormField label="Lampiran" name="attachmentFiles" :hint="`Maksimal ${MAX_ATTACHMENTS} file, 10MB per file (PDF, DOC, DOCX, XLS, XLSX)`">
-        <UFileUpload
-          accept=".pdf,.doc,.docx,.xls,.xlsx"
-          multiple
-          :max-size="MAX_ATTACHMENT_SIZE"
-          @change="onAttachmentsChange"
-          class="w-full min-h-48"
-        />
-        <ul v-if="state.attachmentFiles && state.attachmentFiles.length > 0" class="mt-4 space-y-2">
-          <li v-for="(file, index) in state.attachmentFiles" :key="index" class="flex items-center justify-between p-2 border rounded">
-            <div>
-              <UIcon name="i-lucide-paperclip" class="w-4 h-4 inline-block mr-2" />
-              {{ file.name }} ({{ formatFileSize(file.size) }})
+      <!-- Cover Image Section -->
+      <UCard>
+        <template #header>
+          <div class="flex items-center gap-2">
+            <UIcon name="i-lucide-image" class="w-5 h-5" />
+            <h2 class="text-xl font-semibold">Gambar Cover</h2>
+          </div>
+        </template>
+
+        <UFormField name="coverImageFile" hint="Maksimal 5MB - Format: JPG, PNG, WebP">
+          <div class="space-y-4">
+            <UFileUpload
+              v-model="coverImageFile"
+              accept="image/*"
+              class="min-h-32 w-full"
+            />
+            
+            <div v-if="coverImagePreview" class="relative w-full max-w-md">
+              <img :src="coverImagePreview" alt="Cover Preview" class="w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700">
+              <UButton
+                icon="i-lucide-x"
+                color="error"
+                size="sm"
+                class="absolute top-2 right-2"
+                @click="removeCoverImage"
+              >
+                Hapus
+              </UButton>
             </div>
-            <button
-              type="button"
-              class="p-1 text-red-500 hover:bg-red-50 rounded dark:hover:bg-red-900/20"
-              @click="removeAttachment(index)"
-            >
-              <UIcon name="i-lucide-x" class="w-4 h-4" />
-            </button>
-          </li>
-        </ul>
-      </UFormField>
+          </div>
+        </UFormField>
+      </UCard>
 
-      <div class="flex gap-3 pt-4">
-        <UButton type="submit" size="lg" :loading="loading" :disabled="loading">
-          <UIcon name="i-lucide-send" class="w-4 h-4" />
-          Kirim Berita
-        </UButton>
-        <UButton color="neutral" variant="soft" size="lg" :to="'/update'">
+      <!-- Content Editor Section -->
+      <UCard>
+        <template #header>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <UIcon name="i-lucide-file-edit" class="w-5 h-5" />
+              <h2 class="text-xl font-semibold">Konten Berita</h2>
+            </div>
+            <UBadge color="primary" variant="soft">
+              <UIcon name="i-lucide-zap" class="w-3 h-3" />
+              Ketik / untuk perintah cepat
+            </UBadge>
+          </div>
+        </template>
+
+        <UFormField name="content" required>
+          <UEditor
+            v-slot="{ editor }"
+            v-model="state.content"
+            content-type="json"
+            placeholder="Mulai menulis berita Anda di sini... Ketik / untuk perintah cepat"
+            class="min-h-125 border border-gray-200 dark:border-gray-700 rounded-lg"
+          >
+            <!-- Suggestion Menu for Slash Commands -->
+            <UEditorSuggestionMenu 
+              :editor="editor" 
+              :items="suggestionItems"
+            />
+          </UEditor>
+        </UFormField>
+      </UCard>
+
+      <!-- Gallery Section -->
+      <UCard>
+        <template #header>
+          <div class="flex items-center gap-2">
+            <UIcon name="i-lucide-images" class="w-5 h-5" />
+            <h2 class="text-xl font-semibold">Galeri Foto</h2>
+          </div>
+        </template>
+
+        <UFormField name="galleryFiles" :hint="`Maksimal ${NEWS_UPDATED_CONSTANTS.MAX_GALLERY_IMAGES} gambar, 5MB per gambar`">
+          <div class="space-y-4">
+            <UFileUpload
+              v-model="galleryImageFiles"
+              accept="image/*"
+              multiple
+              class="min-h-32 w-full"
+            />
+            
+            <div v-if="state.galleryFiles && state.galleryFiles.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div v-for="(file, index) in state.galleryFiles" :key="index" class="relative group">
+                <img 
+                  :src="galleryPreviews[index]" 
+                  :alt="`Gallery ${index + 1}`" 
+                  class="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+                >
+                <UButton
+                  icon="i-lucide-x"
+                  color="error"
+                  size="xs"
+                  class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  @click="removeGalleryImage(index)"
+                />
+                <div class="absolute bottom-1 left-1 px-2 py-0.5 bg-black/70 text-white text-xs rounded">
+                  {{ formatFileSize(file.size) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </UFormField>
+      </UCard>
+
+      <!-- Attachments Section -->
+      <UCard>
+        <template #header>
+          <div class="flex items-center gap-2">
+            <UIcon name="i-lucide-paperclip" class="w-5 h-5" />
+            <h2 class="text-xl font-semibold">Lampiran</h2>
+          </div>
+        </template>
+
+        <UFormField name="attachmentFiles" :hint="`Maksimal ${NEWS_UPDATED_CONSTANTS.MAX_ATTACHMENTS} file, 10MB per file (PDF, DOC, DOCX, XLS, XLSX)`">
+          <div class="space-y-4">
+            <UFileUpload
+              v-model="attachmentFilesList"
+              accept=".pdf,.doc,.docx,.xls,.xlsx"
+              multiple
+              class="min-h-32 w-full"
+            />
+            
+            <ul v-if="state.attachmentFiles && state.attachmentFiles.length > 0" class="space-y-2">
+              <li 
+                v-for="(file, index) in state.attachmentFiles" 
+                :key="index" 
+                class="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                  <UIcon name="i-lucide-file-text" class="w-5 h-5 text-primary shrink-0" />
+                  <div class="min-w-0 flex-1">
+                    <p class="font-medium truncate">{{ file.name }}</p>
+                    <p class="text-sm text-gray-500">{{ formatFileSize(file.size) }}</p>
+                  </div>
+                </div>
+                <UButton
+                  icon="i-lucide-x"
+                  color="error"
+                  variant="ghost"
+                  size="sm"
+                  @click="removeAttachment(index)"
+                />
+              </li>
+            </ul>
+          </div>
+        </UFormField>
+      </UCard>
+
+      <!-- Submit Actions -->
+      <div class="flex gap-3 justify-end pt-4 sticky bottom-4 bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg">
+        <UButton 
+          color="neutral" 
+          variant="soft" 
+          size="lg" 
+          to="/update"
+          :disabled="loading"
+        >
           <UIcon name="i-lucide-x" class="w-4 h-4" />
           Batal
         </UButton>
+        
+        <UButton 
+          type="submit" 
+          size="lg" 
+          :loading="loading" 
+          :disabled="loading"
+        >
+          <UIcon name="i-lucide-send" class="w-4 h-4" />
+          Kirim Berita
+        </UButton>
       </div>
     </UForm>
-  </div>
+  </main>
 </template>
