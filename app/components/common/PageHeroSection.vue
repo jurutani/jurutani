@@ -40,7 +40,7 @@ const handleCtaClick = () => {
     :class="{ 'min-h-screen': minHeight === 'screen' }"
   >
     <!-- Background Decorative Elements -->
-    <div v-if="decorative === 'gradient'" class="absolute inset-0 bg-gradient-to-br from-green-600/10 via-emerald-500/5 to-green-700/10 dark:from-green-700/20 dark:via-emerald-600/10 dark:to-green-800/20" />
+    <div v-if="decorative === 'gradient'" class="absolute inset-0 bg-linear-to-br from-green-600/10 via-emerald-500/5 to-green-700/10 dark:from-green-700/20 dark:via-emerald-600/10 dark:to-green-800/20" />
     
     <div v-else-if="decorative === 'pattern'" class="absolute inset-0 opacity-10 dark:opacity-5">
       <svg class="h-full w-full" viewBox="0 0 800 800">
@@ -76,14 +76,14 @@ const handleCtaClick = () => {
 
         <!-- Title with Gradient Text -->
         <h1 
-          class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight bg-gradient-to-r from-green-700 via-emerald-600 to-green-800 dark:from-green-400 dark:via-emerald-400 dark:to-green-500 bg-clip-text text-transparent animate-slide-up"
+          class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight bg-linear-to-r from-green-700 via-emerald-600 to-green-800 dark:from-green-400 dark:via-emerald-400 dark:to-green-500 bg-clip-text text-transparent animate-slide-up"
         >
           {{ title }}
         </h1>
 
         <!-- Decorative Divider -->
         <div 
-          class="w-24 h-1 mb-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+          class="w-24 h-1 mb-6 bg-linear-to-r from-green-500 to-emerald-500 rounded-full"
           :class="{ 'mx-auto': align === 'center' }"
         />
 
@@ -102,7 +102,7 @@ const handleCtaClick = () => {
             v-if="cta.link"
             :to="cta.link"
             size="lg"
-            class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            class="bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             {{ cta.text }}
           </UButton>
@@ -110,7 +110,7 @@ const handleCtaClick = () => {
             v-else
             size="lg"
             @click="handleCtaClick"
-            class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            class="bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             {{ cta.text }}
           </UButton>

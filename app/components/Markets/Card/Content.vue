@@ -142,7 +142,7 @@ const contentClasses = computed(() => {
       <!-- Loading State -->
       <div 
         v-if="imageLoading && mainImage && !imageError" 
-        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-100 dark:from-gray-800 dark:to-gray-900"
+        class="absolute inset-0 flex items-center justify-center bg-linear-to-br from-emerald-50 to-green-100 dark:from-gray-800 dark:to-gray-900"
       >
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600" />
       </div>
@@ -161,7 +161,7 @@ const contentClasses = computed(() => {
       <!-- Fallback Background -->
       <div 
         v-else 
-        class="w-full h-full bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center"
+        class="w-full h-full bg-linear-to-br from-green-100 via-emerald-100 to-teal-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center"
       >
         <div class="text-center text-green-400 dark:text-gray-600">
           <UIcon name="i-heroicons-shopping-bag" class="w-20 h-20 mb-3 opacity-50" />
@@ -170,10 +170,10 @@ const contentClasses = computed(() => {
       </div>
       
       <!-- Gradient Overlay - Enhanced with multiple layers -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-500" />
+      <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-500" />
       
       <!-- Additional gradient for better text readability -->
-      <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-transparent to-green-900/20 group-hover:from-emerald-900/30 group-hover:to-green-900/30 transition-all duration-500" />
+      <div class="absolute inset-0 bg-linear-to-br from-emerald-900/20 via-transparent to-green-900/20 group-hover:from-emerald-900/30 group-hover:to-green-900/30 transition-all duration-500" />
     </div>
     
     <!-- Content Overlay -->

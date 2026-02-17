@@ -13,10 +13,15 @@ const {
 
 export default defineNuxtConfig({
   runtimeConfig: {
+    // Private keys yang hanya tersedia di server-side (AMAN)
+    geminiApiKey: process.env.GEMINI_API_KEY || '',
+
+    // Public keys yang tersedia di client-side
     public: {
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL ?? 'https://jurutani.com',
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseKey: process.env.SUPABASE_KEY,
+      geminiApiKey: process.env.GEMINI_API_KEY || '',
     },
   },
 
@@ -42,6 +47,7 @@ export default defineNuxtConfig({
         '/about-us',
         '/contact-us',
         '/news',
+        '/update',
         '/tools',
         '/videos',
         '/courses',
@@ -126,6 +132,15 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    optimizeDeps: {
+      include: [
+        '@nuxt/ui > prosemirror-state',
+        '@nuxt/ui > prosemirror-transform',
+        '@nuxt/ui > prosemirror-model',
+        '@nuxt/ui > prosemirror-view',
+        '@nuxt/ui > prosemirror-gapcursor'
+      ]
+    },
     build: {
       rollupOptions: {
         output: {

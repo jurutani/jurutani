@@ -181,7 +181,7 @@ watch(() => instructor.value, (newVal) => {
       <UCard class="dark:bg-gray-900 dark:border-gray-800">
         <!-- Header Section with Gradient -->
         <template #header>
-          <div class="bg-gradient-to-r from-green-500 to-emerald-600 dark:from-green-700 dark:to-emerald-700 px-6 py-10 md:p-8 -m-6 mb-6 rounded-t-lg">
+          <div class="bg-linear-to-r from-green-500 to-emerald-600 dark:from-green-700 dark:to-emerald-700 px-6 py-10 md:p-8 -m-6 mb-6 rounded-t-lg">
             <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
               <!-- Profile Picture -->
               <div class="flex-shrink-0">

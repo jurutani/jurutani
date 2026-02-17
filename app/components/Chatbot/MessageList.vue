@@ -65,7 +65,7 @@ watch(
 <template>
   <div 
     ref="messagesContainer"
-    class="absolute top-20 bottom-20 left-0 right-0 overflow-y-scroll p-4 space-y-3 bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 scroll-smooth"
+    class="absolute top-20 bottom-20 left-0 right-0 overflow-y-scroll p-4 space-y-3 bg-linear-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 scroll-smooth"
     style="scroll-behavior: smooth;"
   >
     <ChatbotChatMessage

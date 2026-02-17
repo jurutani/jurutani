@@ -182,7 +182,7 @@ watch(() => expert.value, (newVal) => {
       <UCard class="mb-8 overflow-hidden dark:bg-gray-900 dark:border-gray-800">
         <!-- Cover Background with Agriculture Pattern -->
         <template #header>
-          <div class="h-48 relative agriculture-pattern bg-gradient-to-r from-green-400 via-green-500 to-emerald-600 dark:from-green-700 dark:via-green-800 dark:to-emerald-700">
+          <div class="h-48 relative agriculture-pattern bg-linear-to-r from-green-400 via-green-500 to-emerald-600 dark:from-green-700 dark:via-green-800 dark:to-emerald-700">
             <!-- Expert Badge -->
             <div class="absolute top-6 right-6">
               <UBadge
@@ -277,7 +277,7 @@ watch(() => expert.value, (newVal) => {
           <!-- Expertise Notes -->
           <UCard
             v-if="expert.note"
-            class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 dark:border-green-900"
+            class="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 dark:border-green-900"
           >
             <template #header>
               <div class="flex items-center gap-3">
@@ -342,7 +342,7 @@ watch(() => expert.value, (newVal) => {
 
           <!-- Location Card -->
           <UCard
-            class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 dark:border-emerald-900"
+            class="bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 dark:border-emerald-900"
           >
             <template #header>
               <div class="flex items-center gap-3">
@@ -363,7 +363,7 @@ watch(() => expert.value, (newVal) => {
 
           <!-- Trust Badge -->
           <UCard
-            class="bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950 dark:to-amber-950 dark:border-yellow-900"
+            class="bg-linear-to-br from-yellow-50 to-amber-50 dark:from-yellow-950 dark:to-amber-950 dark:border-yellow-900"
           >
             <div class="text-center">
               <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">

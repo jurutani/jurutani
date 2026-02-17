@@ -121,7 +121,7 @@ onMounted(() => {
         <!-- Profile Header Card -->
         <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/50 border border-gray-100 dark:border-gray-800 overflow-hidden transition-all duration-200 mb-6">
           <!-- Header Profile dengan Background -->
-          <div class="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 px-6 py-8 transition-all duration-200">
+          <div class="bg-linear-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 px-6 py-8 transition-all duration-200">
             <div class="flex flex-col md:flex-row items-center">
               <!-- Profile Image -->
               <div class="relative mb-4 md:mb-0 md:mr-6">

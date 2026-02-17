@@ -46,7 +46,7 @@ const changeTab = (tabId: string) => {
         Penghitungan Pertanian
       </UBadge>
       
-      <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+      <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-linear-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
         Tools Tani JuruTani
       </h1>
       
@@ -67,14 +67,14 @@ const changeTab = (tabId: string) => {
         class="group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
         :class="[
           activeTab === tool.id 
-            ? 'border-emerald-500 dark:border-emerald-400 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 shadow-lg' 
+            ? 'border-emerald-500 dark:border-emerald-400 bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 shadow-lg' 
             : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-emerald-300 dark:hover:border-emerald-700'
         ]"
         @click="changeTab(tool.id)"
       >
         <!-- Gradient Background Effect -->
         <div 
-          class="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+          class="absolute inset-0 bg-linear-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300"
           :class="tool.gradient"
         />
         
@@ -86,7 +86,7 @@ const changeTab = (tabId: string) => {
               class="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
               :class="[
                 activeTab === tool.id
-                  ? 'bg-gradient-to-br shadow-lg ' + tool.gradient
+                  ? 'bg-linear-to-br shadow-lg ' + tool.gradient
                   : 'bg-gray-100 dark:bg-gray-800'
               ]"
             >
@@ -132,7 +132,7 @@ const changeTab = (tabId: string) => {
 
         <!-- Bottom Border Accent -->
         <div 
-          class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r transition-opacity duration-300"
+          class="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r transition-opacity duration-300"
           :class="[
             tool.gradient,
             activeTab === tool.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'
@@ -167,7 +167,7 @@ const changeTab = (tabId: string) => {
 
     <!-- Info Cards -->
     <div class="mt-12 grid md:grid-cols-3 gap-6">
-      <div class="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800">
+      <div class="p-6 rounded-xl bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800">
         <div class="w-12 h-12 rounded-lg bg-blue-500 dark:bg-blue-600 flex items-center justify-center mb-4">
           <UIcon name="i-lucide-lightbulb" class="w-6 h-6 text-white" />
         </div>
@@ -177,7 +177,7 @@ const changeTab = (tabId: string) => {
         </p>
       </div>
 
-      <div class="p-6 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800">
+      <div class="p-6 rounded-xl bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800">
         <div class="w-12 h-12 rounded-lg bg-purple-500 dark:bg-purple-600 flex items-center justify-center mb-4">
           <UIcon name="i-lucide-trending-up" class="w-6 h-6 text-white" />
         </div>
@@ -187,7 +187,7 @@ const changeTab = (tabId: string) => {
         </p>
       </div>
 
-      <div class="p-6 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800">
+      <div class="p-6 rounded-xl bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800">
         <div class="w-12 h-12 rounded-lg bg-amber-500 dark:bg-amber-600 flex items-center justify-center mb-4">
           <UIcon name="i-lucide-shield-check" class="w-6 h-6 text-white" />
         </div>

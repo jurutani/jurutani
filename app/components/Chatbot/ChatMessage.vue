@@ -45,7 +45,7 @@ const shouldShowExpandButton = (message: Message) => {
         maxWidth,
         'px-3 py-2 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md',
         message.type === 'user'
-          ? 'bg-gradient-to-r from-green-600 to-green-500 text-white ml-4'
+          ? 'bg-linear-to-r from-green-600 to-green-500 text-white ml-4'
           : 'bg-white text-gray-800 mr-4 border border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700'
       ]"
     >

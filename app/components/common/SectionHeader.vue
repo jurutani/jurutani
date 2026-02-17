@@ -60,15 +60,15 @@ const alignClass = computed(() => {
       <!-- Animated Underline -->
       <span 
         v-if="align === 'center'"
-        class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+        class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-linear-to-r from-green-500 to-emerald-500 rounded-full"
       />
       <span 
         v-else-if="align === 'left'"
-        class="absolute -bottom-2 left-0 w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+        class="absolute -bottom-2 left-0 w-16 h-1 bg-linear-to-r from-green-500 to-emerald-500 rounded-full"
       />
       <span 
         v-else-if="align === 'right'"
-        class="absolute -bottom-2 right-0 w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+        class="absolute -bottom-2 right-0 w-16 h-1 bg-linear-to-r from-green-500 to-emerald-500 rounded-full"
       />
     </h2>
 

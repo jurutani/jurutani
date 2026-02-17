@@ -71,7 +71,7 @@ const handleSocialLogin = async (provider: 'google' | 'facebook' | 'github') => 
   <div class="min-h-screen flex">
     <!-- Side image - ilustrasi pertanian modern -->
     <div class="hidden lg:flex lg:w-1/2 bg-green-600 relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-br from-green-600 to-emerald-800 opacity-90"/>
+      <div class="absolute inset-0 bg-linear-to-br from-green-600 to-emerald-800 opacity-90"/>
       
       <!-- Pola abstrak -->
       <div class="absolute inset-0 opacity-20">

@@ -143,7 +143,7 @@ const organizationDisplay = computed(() => {
 <template>
   <article class="group announcement-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1 flex flex-col">
     <!-- Image Section with Overlay -->
-    <figure class="relative h-48 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 overflow-hidden">
+    <figure class="relative h-48 bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 overflow-hidden">
       <img
         :src="imageUrl"
         :alt="`Gambar ${announcement.category}: ${announcement.title || 'Meeting'}`"
@@ -153,7 +153,7 @@ const organizationDisplay = computed(() => {
       >
       
       <!-- Gradient Overlay -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"/>
+      <div class="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent"/>
       
       <!-- Category Badge -->
       <div class="absolute top-3 left-3">
@@ -237,9 +237,9 @@ const organizationDisplay = computed(() => {
         <!-- Detail Button -->
         <NuxtLink
           :to="`/courses/${announcement.id}`"
-          class="flex-1 group/button relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-sm font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25"
+          class="flex-1 group/button relative overflow-hidden bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-sm font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25"
         >
-          <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"/>
+          <div class="absolute inset-0 bg-linear-to-r from-white/20 to-white/10 opacity-0 group-hover/button:opacity-100 transition-opacity duration-300"/>
           <div class="relative flex items-center justify-center px-4 py-3">
             <span class="mr-2">Lihat Detail</span>
             <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 transition-transform duration-300 group-hover/button:translate-x-1" />

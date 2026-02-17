@@ -84,16 +84,16 @@ const testimonials = [...testimonialsBase, ...testimonialsBase, ...testimonialsB
             :style="`animation-delay: ${(index % testimonialsBase.length) * 100}ms`"
           >
             <!-- Card Background with Gradient -->
-            <div class="absolute inset-0 bg-gradient-to-br from-white via-green-50/30 to-emerald-50/30 dark:from-green-900/80 dark:via-green-800/60 dark:to-emerald-900/80 rounded-2xl backdrop-blur-sm" />
+            <div class="absolute inset-0 bg-linear-to-br from-white via-green-50/30 to-emerald-50/30 dark:from-green-900/80 dark:via-green-800/60 dark:to-emerald-900/80 rounded-2xl backdrop-blur-sm" />
             
             <!-- Border Glow Effect -->
-            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-green-200/50 via-emerald-200/30 to-green-200/50 dark:from-green-700/50 dark:via-emerald-700/30 dark:to-green-700/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
+            <div class="absolute inset-0 rounded-2xl bg-linear-to-br from-green-200/50 via-emerald-200/30 to-green-200/50 dark:from-green-700/50 dark:via-emerald-700/30 dark:to-green-700/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
             
             <div class="relative z-10">
               <!-- Header dengan Avatar -->
               <div class="flex items-start gap-4 mb-4">
                 <div class="relative flex-shrink-0">
-                  <div class="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-400/20 rounded-full blur-md group-hover:blur-lg transition-all duration-300" />
+                  <div class="absolute inset-0 bg-linear-to-br from-green-400/20 to-emerald-400/20 rounded-full blur-md group-hover:blur-lg transition-all duration-300" />
                   <img
                     :src="testimonial.avatar"
                     :alt="testimonial.name"

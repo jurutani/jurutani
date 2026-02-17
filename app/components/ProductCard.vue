@@ -24,7 +24,7 @@ import type { Product } from '~~/types/store'
           alt="Product Image" 
           loading="lazy"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100"/>
+        <div class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100"/>
   
         <!-- Tombol Action -->
         <div class="absolute bottom-0 left-0 right-0 flex justify-center gap-3 p-4 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">

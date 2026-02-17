@@ -31,7 +31,7 @@ const handleAction = () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between p-4 border-b border-green-200 dark:border-green-800 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800 sticky top-0 z-10">
+  <div class="flex items-center justify-between p-4 border-b border-green-200 dark:border-green-800 bg-linear-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800 sticky top-0 z-10">
     <div class="flex items-center gap-3">
       <NuxtLink 
         :to="backTo" 

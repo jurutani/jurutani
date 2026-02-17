@@ -4,7 +4,7 @@
 
 <template>
   <div
-    class="relative w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-green-900 via-green-800 to-emerald-900 dark:from-green-950 dark:via-green-900 dark:to-emerald-950"
+    class="relative w-full h-screen max-h-screen flex items-center justify-center bg-linear-to-br from-green-900 via-green-800 to-emerald-900 dark:from-green-950 dark:via-green-900 dark:to-emerald-950"
   >
     <div class="text-center">
       <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-green-400 dark:border-green-500 mx-auto mb-4" />

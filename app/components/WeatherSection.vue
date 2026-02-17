@@ -314,7 +314,7 @@ onMounted(() => {
 .glass-tab-container::before {
   content: '';
   @apply absolute inset-0 rounded-2xl;
-  @apply bg-gradient-to-br from-green-500/5 to-transparent;
+  @apply bg-linear-to-br from-green-500/5 to-transparent;
   @apply dark:from-green-500/10;
   pointer-events: none;
 }
@@ -332,7 +332,7 @@ onMounted(() => {
 }
 
 .tab-button-active {
-  @apply bg-gradient-to-br from-green-500 to-emerald-600;
+  @apply bg-linear-to-br from-green-500 to-emerald-600;
   @apply text-white shadow-lg shadow-green-500/30;
   @apply hover:text-white;
   @apply hover:from-green-600 hover:to-emerald-700;
@@ -341,7 +341,7 @@ onMounted(() => {
 .tab-button-active::before {
   content: '';
   @apply absolute inset-0 rounded-xl;
-  @apply bg-gradient-to-br from-white/20 to-transparent;
+  @apply bg-linear-to-br from-white/20 to-transparent;
   pointer-events: none;
 }
 
@@ -357,14 +357,14 @@ onMounted(() => {
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-gradient-to-r from-green-400 to-emerald-500;
+  @apply bg-linear-to-r from-green-400 to-emerald-500;
   @apply dark:from-green-500 dark:to-emerald-600;
   border-radius: 10px;
   @apply transition-all duration-300;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gradient-to-r from-green-500 to-emerald-600;
+  @apply bg-linear-to-r from-green-500 to-emerald-600;
   @apply dark:from-green-600 dark:to-emerald-700;
 }
 </style>

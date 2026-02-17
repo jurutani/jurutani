@@ -9,7 +9,7 @@ defineProps<Props>()
 
 <template>
   <UCard
-    class="absolute inset-0 w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-orange-900 dark:from-red-950 dark:via-red-900 dark:to-orange-950 border-0 shadow-none bg-opacity-0"
+    class="absolute inset-0 w-full h-screen max-h-screen flex items-center justify-center bg-linear-to-br from-red-900 via-red-800 to-orange-900 dark:from-red-950 dark:via-red-900 dark:to-orange-950 border-0 shadow-none bg-opacity-0"
   >
     <template #header>
       <div class="text-center max-w-md mx-auto px-4">

@@ -86,19 +86,19 @@ onMounted(() => {
   <section class="relative max-w-6xl mx-auto w-full">
     <!-- Loading State -->
     <div v-if="loading" class="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl">
-      <div class="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 flex items-center justify-center">
+      <div class="absolute inset-0 bg-linear-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 flex items-center justify-center">
         <div class="text-center">
           <div class="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"/>
           <p class="text-emerald-600 dark:text-emerald-400 text-sm font-medium">Memuat banner...</p>
         </div>
       </div>
       <!-- Shimmer effect -->
-      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"/>
+      <div class="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-pulse"/>
     </div>
 
     <!-- Error State -->
     <div v-else-if="error" class="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl">
-      <div class="absolute inset-0 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 flex items-center justify-center">
+      <div class="absolute inset-0 bg-linear-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 flex items-center justify-center">
         <div class="text-center">
           <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4">
             <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +118,7 @@ onMounted(() => {
 
     <!-- Empty State -->
     <div v-else-if="!banner" class="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl">
-      <div class="absolute inset-0 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-800 dark:to-slate-800 flex items-center justify-center">
+      <div class="absolute inset-0 bg-linear-to-r from-gray-50 to-slate-50 dark:from-gray-800 dark:to-slate-800 flex items-center justify-center">
         <div class="text-center">
           <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
             <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,7 +141,7 @@ onMounted(() => {
       >
       
       <!-- Subtle gradient overlay for text readability -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"/>
+      <div class="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent"/>
       
       <!-- Optional floating decoration -->
       <div class="absolute top-4 right-4 w-3 h-3 bg-white/30 rounded-full animate-pulse"/>

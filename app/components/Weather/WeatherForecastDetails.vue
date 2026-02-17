@@ -51,7 +51,7 @@ const getWeatherIconClass = (weatherMain: string) => {
       <div class="glass-card-container">
         <!-- Header -->
         <div class="flex items-center gap-3 mb-6">
-          <div class="icon-wrapper-header bg-gradient-to-br from-green-500/20 to-green-500/20">
+          <div class="icon-wrapper-header bg-linear-to-br from-green-500/20 to-green-500/20">
             <UIcon name="i-ic-baseline-date-range" class="w-7 h-7 text-green-600 dark:text-green-400" />
           </div>
           <h3 class="text-xl font-bold text-gray-900 dark:text-white">Ramalan 5 Hari Kedepan</h3>
@@ -194,7 +194,7 @@ const getWeatherIconClass = (weatherMain: string) => {
 .glass-card-container::before {
   content: '';
   @apply absolute inset-0 rounded-3xl;
-  @apply bg-gradient-to-br from-green-500/5 via-green-500/5 to-transparent;
+  @apply bg-linear-to-br from-green-500/5 via-green-500/5 to-transparent;
   @apply dark:from-green-500/10 dark:via-green-500/10;
   pointer-events: none;
 }
@@ -210,7 +210,7 @@ const getWeatherIconClass = (weatherMain: string) => {
 /* Forecast Card */
 .forecast-card {
   @apply relative flex items-center gap-4 p-6 rounded-2xl overflow-hidden;
-  @apply bg-gradient-to-br from-white/30 via-green-100/20 to-green-200/10 dark:from-gray-700/40 dark:via-gray-800/30 dark:to-gray-900/20;
+  @apply bg-linear-to-br from-white/30 via-green-100/20 to-green-200/10 dark:from-gray-700/40 dark:via-gray-800/30 dark:to-gray-900/20;
   @apply shadow-xl shadow-black/10;
   @apply transition-all duration-500;
   @apply hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/20;
@@ -232,7 +232,7 @@ const getWeatherIconClass = (weatherMain: string) => {
 .weather-icon-wrapper {
   @apply relative flex-shrink-0;
   @apply p-2 rounded-2xl;
-  @apply bg-gradient-to-br from-white/50 to-white/20;
+  @apply bg-linear-to-br from-white/50 to-white/20;
   @apply dark:from-gray-600/50 dark:to-gray-700/30;
   @apply backdrop-blur-md;
   @apply border border-white/30;
@@ -243,7 +243,7 @@ const getWeatherIconClass = (weatherMain: string) => {
 .weather-icon-wrapper::before {
   content: '';
   @apply absolute inset-0 rounded-2xl;
-  @apply bg-gradient-to-br from-white/20 to-transparent;
+  @apply bg-linear-to-br from-white/20 to-transparent;
   pointer-events: none;
 }
 

@@ -17,7 +17,7 @@ const totalKCL = computed(() => (luasLahan.value || 0) * kclPerHa)
   <div class="rounded-2xl p-8 shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
     <!-- Header -->
     <div class="flex items-center gap-3 mb-8">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
+      <div class="w-12 h-12 rounded-xl bg-linear-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
         <UIcon name="i-lucide-beaker" class="w-6 h-6 text-white" />
       </div>
       <div>
@@ -65,7 +65,7 @@ const totalKCL = computed(() => (luasLahan.value || 0) * kclPerHa)
         <p class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">Total Kebutuhan Pupuk:</p>
         
         <!-- Urea -->
-        <div class="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-2 border-amber-200 dark:border-amber-800">
+        <div class="p-4 rounded-xl bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-2 border-amber-200 dark:border-amber-800">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 rounded-lg bg-amber-500 dark:bg-amber-600 flex items-center justify-center">
@@ -81,7 +81,7 @@ const totalKCL = computed(() => (luasLahan.value || 0) * kclPerHa)
         </div>
 
         <!-- NPK -->
-        <div class="p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800">
+        <div class="p-4 rounded-xl bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 rounded-lg bg-green-500 dark:bg-green-600 flex items-center justify-center">
@@ -97,7 +97,7 @@ const totalKCL = computed(() => (luasLahan.value || 0) * kclPerHa)
         </div>
 
         <!-- KCL -->
-        <div class="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800">
+        <div class="p-4 rounded-xl bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 rounded-lg bg-purple-500 dark:bg-purple-600 flex items-center justify-center">

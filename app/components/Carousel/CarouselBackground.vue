@@ -36,7 +36,7 @@ defineProps<Props>()
       <!-- Background Hijau jika tidak ada gambar -->
       <div
         v-else
-        class="absolute inset-0 bg-gradient-to-br from-green-800 via-green-700 to-emerald-800 transition-all duration-1000 ease-out"
+        class="absolute inset-0 bg-linear-to-br from-green-800 via-green-700 to-emerald-800 transition-all duration-1000 ease-out"
         :class="[currentSlide === index ? 'scale-100' : 'scale-105']"
       />
     </div>
@@ -45,10 +45,10 @@ defineProps<Props>()
     <div class="absolute inset-0 bg-black/30 dark:bg-black/50" />
 
     <!-- Shadow dari bawah -->
-    <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+    <div class="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
 
     <!-- Side shadows -->
-    <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black/30 to-transparent" />
-    <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black/30 to-transparent" />
+    <div class="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-black/30 to-transparent" />
+    <div class="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-black/30 to-transparent" />
   </div>
 </template>

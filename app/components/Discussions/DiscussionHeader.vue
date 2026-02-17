@@ -23,7 +23,7 @@ defineProps<Props>();
         class="rounded-full"
       />
       <div>
-        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+        <h1 class="text-3xl md:text-4xl font-bold bg-linear-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
           {{ title }}
         </h1>
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">

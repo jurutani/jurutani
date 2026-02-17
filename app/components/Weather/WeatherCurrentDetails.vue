@@ -89,7 +89,7 @@ const props = defineProps<{
       <!-- Rekomendasi Pertanian -->
       <div v-if="farmingConditions" class="glass-card-large group">
         <div class="flex items-center gap-3 mb-6">
-          <div class="icon-wrapper-large bg-gradient-to-br from-green-500 to-emerald-500">
+          <div class="icon-wrapper-large bg-linear-to-br from-green-500 to-emerald-500">
             <UIcon name="i-ic-baseline-agriculture" class="w-7 h-7 text-slate-900 dark:text-slate-200" />
           </div>
           <h3 class="text-xl font-bold text-slate-900 dark:text-white">Rekomendasi Pertanian</h3>

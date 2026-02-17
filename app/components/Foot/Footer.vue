@@ -11,7 +11,7 @@ const currentYear = new Date().getFullYear()
 
 <template>
   <footer 
-    class="relative py-16 overflow-hidden bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/90 dark:to-green-800/80 text-green-800 dark:text-green-200"
+    class="relative py-16 overflow-hidden bg-linear-to-br from-green-50 to-green-100 dark:from-green-900/90 dark:to-green-800/80 text-green-800 dark:text-green-200"
   >
     <!-- Backdrop blur container -->
     <div class="absolute inset-0 backdrop-blur-sm bg-white/5 dark:bg-black/5"/>

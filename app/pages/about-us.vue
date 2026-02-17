@@ -251,10 +251,10 @@
             <NuxtImg :src="logoJuruTani" alt="Si JuruTani Logo" class="w-32 md:w-40 mx-auto drop-shadow-2xl animate-pulse" />
           </div>
           
-          <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-green-800 bg-clip-text text-transparent mb-6 leading-tight">
+          <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold bg-linear-to-r from-green-700 via-emerald-600 to-green-800 bg-clip-text text-transparent mb-6 leading-tight">
             Si JuruTani
           </h1>
-          <div class="w-24 h-1 bg-gradient-to-r from-green-500 to-emerald-500 mx-auto mb-6"/>
+          <div class="w-24 h-1 bg-linear-to-r from-green-500 to-emerald-500 mx-auto mb-6"/>
           <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
             Inovasi digital dari <strong class="text-green-700 dark:text-green-400">Politeknik Pembangunan Pertanian Yogyakarta Magelang</strong> untuk memajukan pertanian Indonesia menuju era digital yang berkelanjutan
           </p>  
@@ -313,7 +313,7 @@
             </div>
 
             <!-- Key Innovation Points -->
-            <div class="mt-12 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 p-8 rounded-xl border border-green-200 dark:border-green-800">
+            <div class="mt-12 bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 p-8 rounded-xl border border-green-200 dark:border-green-800">
               <h3 class="text-2xl font-bold text-green-800 dark:text-green-300 mb-6 text-center">Inovasi Penyuluhan Digital Kami</h3>
               <div class="grid md:grid-cols-2 gap-6">
                 <div v-for="point in innovationPoints" :key="point.title" class="flex items-center group hover:bg-green-100 dark:hover:bg-green-800/30 p-4 rounded-lg transition-colors">
@@ -355,7 +355,7 @@
                 class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
               />
             </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div class="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <h3 class="text-xl font-semibold mb-2">{{ item.title }}</h3>
                 <p class="text-sm opacity-90">{{ item.desc }}</p>
@@ -370,7 +370,7 @@
         <h2 id="vision-mission-heading" class="sr-only">Visi dan Misi JuruTani</h2>
         <div class="grid md:grid-cols-2 gap-8">
           <!-- Visi -->
-          <div class="bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-8 border border-green-200 dark:border-green-700">
+          <div class="bg-linear-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-8 border border-green-200 dark:border-green-700">
             <div class="text-center mb-6">
               <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <UIcon name="i-lucide-eye" class="w-8 h-8 text-white" />
@@ -385,7 +385,7 @@
           </div>
 
           <!-- Misi -->
-          <div class="bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-8 border border-green-200 dark:border-green-700">
+          <div class="bg-linear-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl p-8 border border-green-200 dark:border-green-700">
             <div class="text-center mb-6">
               <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <UIcon name="i-lucide-check-circle-2" class="w-8 h-8 text-white" />
@@ -427,9 +427,9 @@
           <div 
             v-for="(feature, index) in platformAdvantages" 
             :key="index"
-            class="group text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 backdrop-blur-sm rounded-xl shadow-lg border border-green-200 dark:border-green-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+            class="group text-center p-8 bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 backdrop-blur-sm rounded-xl shadow-lg border border-green-200 dark:border-green-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
           >
-            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+            <div class="w-16 h-16 bg-linear-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
               <UIcon :name="feature.icon" class="w-8 h-8 text-white" />
             </div>
             <h3 class="text-xl font-semibold text-green-800 dark:text-green-300 mb-3">{{ feature.title }}</h3>
@@ -475,7 +475,7 @@
 
       <!-- Tim Pengembang -->
       <section class="mb-16" id="tim-developer" aria-labelledby="team-heading">
-        <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
+        <div class="bg-linear-to-r from-green-600 to-emerald-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
           <h2 id="team-heading" class="text-3xl md:text-4xl font-bold mb-3">
             Tim Pengembang Inovasi
           </h2>

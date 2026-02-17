@@ -37,7 +37,7 @@ const cardClass = computed(() => {
   }
   
   if (props.variant === 'gradient') {
-    return `${base} bg-gradient-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/60 dark:to-green-900/20 shadow-md border border-gray-100 dark:border-gray-700/50 ${props.hoverable ? 'hover:shadow-2xl hover:-translate-y-2 hover:border-green-200 dark:hover:border-green-800' : ''}`
+    return `${base} bg-linear-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/60 dark:to-green-900/20 shadow-md border border-gray-100 dark:border-gray-700/50 ${props.hoverable ? 'hover:shadow-2xl hover:-translate-y-2 hover:border-green-200 dark:hover:border-green-800' : ''}`
   }
   
   // Default variant
@@ -55,13 +55,13 @@ const cardClass = computed(() => {
       <!-- Hover Glow Effect -->
       <div 
         v-if="hoverable"
-        class="absolute inset-0 bg-gradient-to-br from-green-500/0 via-emerald-500/0 to-green-500/0 group-hover:from-green-500/10 group-hover:via-emerald-500/5 group-hover:to-green-500/10 transition-all duration-500 pointer-events-none rounded-2xl"
+        class="absolute inset-0 bg-linear-to-br from-green-500/0 via-emerald-500/0 to-green-500/0 group-hover:from-green-500/10 group-hover:via-emerald-500/5 group-hover:to-green-500/10 transition-all duration-500 pointer-events-none rounded-2xl"
       />
 
       <!-- Shine Effect -->
       <div 
         v-if="hoverable"
-        class="absolute -inset-full top-0 block h-full w-1/2 transform -skew-x-12 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:animate-shine"
+        class="absolute -inset-full top-0 block h-full w-1/2 transform -skew-x-12 bg-linear-to-r from-transparent to-white/10 opacity-0 group-hover:animate-shine"
       />
 
       <!-- Content Container -->

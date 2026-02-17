@@ -137,12 +137,12 @@ onBeforeUnmount(() => {
 <template>
   <UContainer class="py-12">
     <div class="mx-auto mb-16 max-w-4xl text-center">
-      <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
+      <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-linear-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
         <UIcon name="i-heroicons-sparkles" class="w-5 h-5 text-green-600 dark:text-green-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Platform Diskusi Pertanian #1 Indonesia</span>
       </div>
       
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-linear-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
         Forum Diskusi JuruTani
       </h2>
       
@@ -167,7 +167,7 @@ onBeforeUnmount(() => {
 
     <!-- Statistics Section -->
     <div class="mx-auto max-w-6xl">
-      <div class="rounded-3xl bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 border border-green-200 dark:border-green-700 p-8">
+      <div class="rounded-3xl bg-linear-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 border border-green-200 dark:border-green-700 p-8">
         <div class="text-center mb-8">
           <div class="inline-flex items-center gap-2 mb-4 px-3 py-1 bg-green-100 dark:bg-green-800 rounded-full">
             <UIcon name="i-lucide-check-circle" class="w-4 h-4 text-green-600 dark:text-green-400" />
@@ -185,7 +185,7 @@ onBeforeUnmount(() => {
         
         <div class="grid md:grid-cols-3 gap-8">
           <div class="text-center group">
-            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-linear-to-br from-green-400 to-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <UIcon name="i-lucide-user-check" class="w-8 h-8 text-white" />
             </div>
             <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Terverifikasi & Terpercaya</h4>
@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
           </div>
           
           <div class="text-center group">
-            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-linear-to-br from-blue-400 to-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <UIcon name="i-lucide-clock" class="w-8 h-8 text-white" />
             </div>
             <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Respon Super Cepat</h4>
@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
           </div>
           
           <div class="text-center group">
-            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-linear-to-br from-amber-400 to-yellow-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <UIcon name="i-lucide-star" class="w-8 h-8 text-white" />
             </div>
             <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-2">100% Gratis</h4>

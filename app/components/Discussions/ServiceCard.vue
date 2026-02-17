@@ -49,10 +49,10 @@ const contentClasses = computed(() => {
         loading="lazy"
       >
       <!-- Gradient Overlay -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+      <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
       
       <!-- Additional color tint -->
-      <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 via-transparent to-emerald-900/20 group-hover:from-green-900/30 group-hover:to-emerald-900/30 transition-all duration-500" />
+      <div class="absolute inset-0 bg-linear-to-br from-green-900/20 via-transparent to-emerald-900/20 group-hover:from-green-900/30 group-hover:to-emerald-900/30 transition-all duration-500" />
     </div>
     
     <!-- Content Overlay -->

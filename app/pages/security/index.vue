@@ -130,7 +130,7 @@
             <button
               type="submit"
               :disabled="loading || !isFormValid"
-              class="w-full bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700
+              class="w-full bg-linear-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700
                      hover:from-green-700 hover:to-emerald-700 dark:hover:from-green-600 dark:hover:to-emerald-600
                      disabled:from-gray-400 disabled:to-gray-500 dark:disabled:from-gray-600 dark:disabled:to-gray-700
                      text-white font-semibold py-3 px-4 rounded-lg 

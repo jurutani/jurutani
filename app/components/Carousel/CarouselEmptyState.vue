@@ -4,7 +4,7 @@
 
 <template>
   <UCard
-    class="absolute inset-0 w-full h-screen max-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-slate-900 dark:from-gray-950 dark:via-gray-900 dark:to-slate-950 border-0 shadow-none bg-opacity-0"
+    class="absolute inset-0 w-full h-screen max-h-screen flex items-center justify-center bg-linear-to-br from-gray-900 via-gray-800 to-slate-900 dark:from-gray-950 dark:via-gray-900 dark:to-slate-950 border-0 shadow-none bg-opacity-0"
   >
     <template #header>
       <div class="text-center max-w-md mx-auto px-4">

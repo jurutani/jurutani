@@ -99,9 +99,9 @@ const scrollToForm = () => {
               :target="method.link.startsWith('http') ? '_blank' : undefined"
               class="block h-full group"
             >
-              <div class="relative h-full overflow-hidden rounded-2xl p-8 transition-all duration-300 bg-gradient-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/60 dark:to-green-900/20 shadow-md border border-gray-100 dark:border-gray-700/50 hover:shadow-2xl hover:-translate-y-2 hover:border-green-200 dark:hover:border-green-800">
+              <div class="relative h-full overflow-hidden rounded-2xl p-8 transition-all duration-300 bg-linear-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/60 dark:to-green-900/20 shadow-md border border-gray-100 dark:border-gray-700/50 hover:shadow-2xl hover:-translate-y-2 hover:border-green-200 dark:hover:border-green-800">
                 <!-- Hover Glow -->
-                <div class="absolute inset-0 bg-gradient-to-br from-green-500/0 via-emerald-500/0 to-green-500/0 group-hover:from-green-500/10 group-hover:via-emerald-500/5 group-hover:to-green-500/10 transition-all duration-500 pointer-events-none rounded-2xl" />
+                <div class="absolute inset-0 bg-linear-to-br from-green-500/0 via-emerald-500/0 to-green-500/0 group-hover:from-green-500/10 group-hover:via-emerald-500/5 group-hover:to-green-500/10 transition-all duration-500 pointer-events-none rounded-2xl" />
                 
                 <!-- Icon -->
                 <div 
@@ -155,7 +155,7 @@ const scrollToForm = () => {
           <!-- Map & Location Info -->
           <div class="space-y-6">
             <!-- Location Info Card -->
-            <div class="bg-gradient-to-br from-green-50 via-emerald-50 to-green-50 dark:from-green-900/20 dark:via-emerald-900/10 dark:to-green-900/20 rounded-2xl p-8 border border-green-200 dark:border-green-800/50">
+            <div class="bg-linear-to-br from-green-50 via-emerald-50 to-green-50 dark:from-green-900/20 dark:via-emerald-900/10 dark:to-green-900/20 rounded-2xl p-8 border border-green-200 dark:border-green-800/50">
               <div class="flex items-start gap-4 mb-6">
                 <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
                   <UIcon name="i-heroicons-map-pin" class="text-2xl text-green-600 dark:text-green-400" />
@@ -205,7 +205,7 @@ const scrollToForm = () => {
           <!-- Google Maps Canvas -->
           <div class="relative">
             <!-- Glow Effect -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-2xl blur opacity-20" />
+            <div class="absolute -inset-1 bg-linear-to-r from-blue-600 to-emerald-600 rounded-2xl blur opacity-20" />
             
             <div class="relative bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl border border-gray-200 dark:border-gray-700/50">
               <!-- Map Header -->
@@ -235,7 +235,7 @@ const scrollToForm = () => {
               <!-- Map Container -->
               <div class="relative aspect-[16/10] bg-gray-100 dark:bg-gray-900">
                 <!-- Loading Skeleton -->
-                <div class="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 animate-pulse" />
+                <div class="absolute inset-0 bg-linear-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 animate-pulse" />
                 
                 <!-- Google Maps Iframe -->
                 <iframe
@@ -293,7 +293,7 @@ const scrollToForm = () => {
           <CommonFaqAccordion :items="faqs" default-open />
           
           <!-- CTA Card -->
-          <div class="mt-12 relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-50 via-emerald-50 to-green-50 dark:from-green-900/20 dark:via-emerald-900/10 dark:to-green-900/20 border border-green-200 dark:border-green-800/50 p-8 text-center">
+          <div class="mt-12 relative overflow-hidden rounded-2xl bg-linear-to-br from-green-50 via-emerald-50 to-green-50 dark:from-green-900/20 dark:via-emerald-900/10 dark:to-green-900/20 border border-green-200 dark:border-green-800/50 p-8 text-center">
             <div class="absolute top-0 right-0 w-64 h-64 bg-green-300/10 dark:bg-green-700/10 rounded-full blur-3xl" />
             <div class="absolute bottom-0 left-0 w-48 h-48 bg-emerald-300/10 dark:bg-emerald-700/10 rounded-full blur-3xl" />
             
@@ -312,7 +312,7 @@ const scrollToForm = () => {
               <UButton 
                 @click="scrollToForm"
                 size="lg"
-                class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                class="bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <UIcon name="i-heroicons-chat-bubble-left-right" class="mr-2" />
                 Hubungi Tim Kami

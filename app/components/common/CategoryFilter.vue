@@ -23,7 +23,7 @@ const emit = defineEmits<{
 <template>
   <div class="relative">
     <!-- Decorative Background -->
-    <div class="absolute inset-0 bg-gradient-to-r from-green-50/50 via-emerald-50/30 to-green-50/50 dark:from-green-900/10 dark:via-emerald-900/5 dark:to-green-900/10 rounded-2xl blur-xl opacity-50" />
+    <div class="absolute inset-0 bg-linear-to-r from-green-50/50 via-emerald-50/30 to-green-50/50 dark:from-green-900/10 dark:via-emerald-900/5 dark:to-green-900/10 rounded-2xl blur-xl opacity-50" />
     
     <!-- Filter Container -->
     <div class="relative flex flex-wrap justify-center gap-3 p-4 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50">
@@ -33,7 +33,7 @@ const emit = defineEmits<{
         class="group relative inline-flex items-center px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 overflow-hidden"
         :class="[
           activeCategory === category.id
-            ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30 scale-105'
+            ? 'bg-linear-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30 scale-105'
             : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-600 hover:shadow-md hover:scale-105'
         ]"
         @click="emit('update:category', category.id)"
@@ -41,7 +41,7 @@ const emit = defineEmits<{
         <!-- Animated Background Gradient -->
         <div 
           v-if="activeCategory !== category.id"
-          class="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          class="absolute inset-0 bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         />
         
         <!-- Ripple Effect on Active -->

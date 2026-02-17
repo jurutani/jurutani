@@ -274,7 +274,7 @@ useHead({
             </div>
 
             <!-- Price Card -->
-            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 mb-4 border border-emerald-200 dark:border-emerald-800">
+            <div class="bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 mb-4 border border-emerald-200 dark:border-emerald-800">
               <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Harga Terkini</div>
               <div class="text-4xl font-bold text-emerald-600 dark:text-emerald-400 mb-1">
                 {{ formatCurrency(food.latest_price || 0) }}
@@ -316,7 +316,7 @@ useHead({
           <!-- Product Header -->
           <div class="mb-6">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-xl bg-linear-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center">
                 <UIcon :name="getCategoryIcon(food.category)" class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <UBadge color="primary" variant="subtle" size="lg">

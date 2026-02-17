@@ -44,7 +44,7 @@ const handleResetPassword = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-green-900/20 dark:to-emerald-900/20 flex items-center justify-center p-4">
+  <div class="min-h-screen bg-linear-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-green-900/20 dark:to-emerald-900/20 flex items-center justify-center p-4">
     <!-- Background decorative elements -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
       <div class="absolute top-20 left-10 w-4 h-4 bg-green-300/30 dark:bg-green-600/30 rounded-full animate-float"/>
@@ -55,7 +55,7 @@ const handleResetPassword = async () => {
 
     <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-green-200/50 dark:border-green-700/50 p-8 w-full max-w-md relative overflow-hidden">
       <!-- Decorative top border -->
-      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"/>
+      <div class="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-green-500 via-emerald-500 to-teal-500"/>
       
       <div v-if="!isSubmitted" class="space-y-6">
         <!-- Header with plant icon -->
@@ -63,7 +63,7 @@ const handleResetPassword = async () => {
           <!-- Plant Icon -->
             <TheLogo class="mx-auto" />
           
-          <h1 class="text-3xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
+          <h1 class="text-3xl font-bold bg-linear-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
             Lupa Password?
           </h1>
           <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -98,7 +98,7 @@ const handleResetPassword = async () => {
           
           <button
             type="submit"
-            class="group w-full py-3 px-6 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 dark:from-green-500 dark:to-emerald-500 dark:hover:from-green-600 dark:hover:to-emerald-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
+            class="group w-full py-3 px-6 bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 dark:from-green-500 dark:to-emerald-500 dark:hover:from-green-600 dark:hover:to-emerald-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
             :disabled="isLoading"
           >
             <span v-if="isLoading" class="flex items-center gap-2">
@@ -135,19 +135,19 @@ const handleResetPassword = async () => {
         <!-- Success Plant Animation -->
         <div class="w-20 h-20 mx-auto mb-6 relative">
           <!-- Pot -->
-          <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-12 bg-gradient-to-b from-amber-600 to-amber-700 dark:from-amber-700 dark:to-amber-800 rounded-b-2xl rounded-t-lg"/>
+          <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-12 bg-linear-to-b from-amber-600 to-amber-700 dark:from-amber-700 dark:to-amber-800 rounded-b-2xl rounded-t-lg"/>
           <!-- Soil -->
           <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-12 h-2 bg-amber-900 dark:bg-amber-950 rounded-full"/>
           <!-- Main stem -->
-          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-2 h-12 bg-gradient-to-t from-green-600 to-green-500 dark:from-green-700 dark:to-green-600 rounded-full"/>
+          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-2 h-12 bg-linear-to-t from-green-600 to-green-500 dark:from-green-700 dark:to-green-600 rounded-full"/>
           <!-- Success leaves (bigger and more vibrant) -->
           <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
             <!-- Left leaf -->
-            <div class="absolute -left-4 top-3 w-6 h-9 bg-gradient-to-br from-green-400 to-green-600 dark:from-green-500 dark:to-green-700 rounded-full transform -rotate-45 origin-bottom animate-pulse"/>
+            <div class="absolute -left-4 top-3 w-6 h-9 bg-linear-to-br from-green-400 to-green-600 dark:from-green-500 dark:to-green-700 rounded-full transform -rotate-45 origin-bottom animate-pulse"/>
             <!-- Right leaf -->
-            <div class="absolute -right-4 top-3 w-6 h-9 bg-gradient-to-bl from-green-400 to-green-600 dark:from-green-500 dark:to-green-700 rounded-full transform rotate-45 origin-bottom animate-pulse delay-300"/>
+            <div class="absolute -right-4 top-3 w-6 h-9 bg-linear-to-bl from-green-400 to-green-600 dark:from-green-500 dark:to-green-700 rounded-full transform rotate-45 origin-bottom animate-pulse delay-300"/>
             <!-- Center leaf -->
-            <div class="absolute -left-2 top-0 w-6 h-10 bg-gradient-to-t from-green-500 to-green-400 dark:from-green-600 dark:to-green-500 rounded-full animate-pulse delay-150"/>
+            <div class="absolute -left-2 top-0 w-6 h-10 bg-linear-to-t from-green-500 to-green-400 dark:from-green-600 dark:to-green-500 rounded-full animate-pulse delay-150"/>
           </div>
           <!-- Sparkles -->
           <div class="absolute top-2 left-2 text-yellow-400 animate-bounce">✨</div>
@@ -155,7 +155,7 @@ const handleResetPassword = async () => {
         </div>
 
         <div class="space-y-4">
-          <h2 class="text-2xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
+          <h2 class="text-2xl font-bold bg-linear-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
             Benih Telah Ditanam! 🌱
           </h2>
           <div class="space-y-3">
@@ -173,7 +173,7 @@ const handleResetPassword = async () => {
         <div class="flex flex-col gap-3 pt-6">
           <NuxtLink
             to="/auth/login"
-            class="inline-flex items-center justify-center gap-2 py-3 px-6 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 dark:from-green-500 dark:to-emerald-500 dark:hover:from-green-600 dark:hover:to-emerald-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+            class="inline-flex items-center justify-center gap-2 py-3 px-6 bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 dark:from-green-500 dark:to-emerald-500 dark:hover:from-green-600 dark:hover:to-emerald-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>

@@ -13,7 +13,7 @@ const props = defineProps<{
     <div v-else-if="hourlyData && hourlyData.length > 0">
       <div class="glass-card-container">
         <div class="flex items-center gap-3 mb-6">
-          <div class="icon-wrapper-header bg-gradient-to-br from-green-500/20 to-green-500/20">
+          <div class="icon-wrapper-header bg-linear-to-br from-green-500/20 to-green-500/20">
             <UIcon name="i-ic-baseline-access-time" class="w-7 h-7 text-green-600 dark:text-green-400" />
           </div>
           <h3 class="text-xl font-bold text-gray-900 dark:text-white">Ramalan 24 Jam Kedepan</h3>
@@ -73,7 +73,7 @@ const props = defineProps<{
 .glass-card-container::before {
   content: '';
   @apply absolute inset-0 rounded-3xl;
-  @apply bg-gradient-to-br from-green-500/5 via-green-500/5 to-transparent;
+  @apply bg-linear-to-br from-green-500/5 via-green-500/5 to-transparent;
   @apply dark:from-green-500/10 dark:via-green-500/10;
   pointer-events: none;
 }
@@ -108,7 +108,7 @@ const props = defineProps<{
 .hourly-card::before {
   content: '';
   @apply absolute inset-0 rounded-2xl;
-  @apply bg-gradient-to-br from-white/40 to-transparent dark:from-white/5;
+  @apply bg-linear-to-br from-white/40 to-transparent dark:from-white/5;
   @apply opacity-0 group-hover:opacity-100;
   @apply transition-opacity duration-300;
   pointer-events: none;
@@ -118,7 +118,7 @@ const props = defineProps<{
 .weather-icon-wrapper {
   @apply relative;
   @apply p-2 rounded-xl;
-  @apply bg-gradient-to-br from-white/40 to-white/10;
+  @apply bg-linear-to-br from-white/40 to-white/10;
   @apply dark:from-gray-600/40 dark:to-gray-700/20;
   @apply backdrop-blur-sm;
   @apply transition-all duration-300;
@@ -164,14 +164,14 @@ const props = defineProps<{
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  @apply bg-gradient-to-r from-green-400 to-emerald-500;
+  @apply bg-linear-to-r from-green-400 to-emerald-500;
   @apply dark:from-green-500 dark:to-emerald-600;
   border-radius: 10px;
   @apply transition-all duration-300;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-  @apply bg-gradient-to-r from-green-500 to-emerald-600;
+  @apply bg-linear-to-r from-green-500 to-emerald-600;
   @apply dark:from-green-600 dark:to-emerald-700;
 }
 

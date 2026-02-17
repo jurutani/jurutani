@@ -94,7 +94,7 @@ const columns = [
     cell: ({ row }: any) => {
       return h('div', { class: 'flex items-center gap-3 min-w-[200px]' }, [
         h('div', {
-          class: 'flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center'
+          class: 'flex-shrink-0 w-10 h-10 rounded-lg bg-linear-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center'
         }, [
           h(UIcon, {
             name: getCategoryIcon(row.original.category),
@@ -231,12 +231,12 @@ useHead({
   <main class="food-prices-page container mx-auto px-4 py-12">
     <!-- Hero Section -->
     <header class="mx-auto mb-12 max-w-4xl text-center">
-      <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
+      <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-linear-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full">
         <UIcon name="i-lucide-bar-chart-2" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
         <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Informasi Harga Terkini</span>
       </div>
       
-      <h1 class="text-3xl md:text-4xl lg:text-5xl py-1 font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+      <h1 class="text-3xl md:text-4xl lg:text-5xl py-1 font-bold mb-6 bg-linear-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
         Daftar Harga Pangan DIY
       </h1>
       

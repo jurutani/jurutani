@@ -22,7 +22,7 @@ defineProps<Props>()
       ]"
     >
       <!-- Glassmorphism Background -->
-      <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 dark:from-white/5 dark:to-white/[0.02] backdrop-blur-2xl" />
+      <div class="absolute inset-0 bg-linear-to-br from-white/10 to-white/5 dark:from-white/5 dark:to-white/[0.02] backdrop-blur-2xl" />
 
       <!-- Animated Shadow Effect -->
       <div class="absolute inset-0 rounded-2xl bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

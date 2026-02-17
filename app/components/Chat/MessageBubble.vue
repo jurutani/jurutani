@@ -100,7 +100,7 @@ const menuItems = computed(() => {
         'max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl transition-all duration-200',
         'hover:shadow-md',
         isOwnMessage 
-          ? 'bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 text-white rounded-br-md shadow-sm' 
+          ? 'bg-linear-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 text-white rounded-br-md shadow-sm' 
           : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-bl-md shadow-sm'
       ]"
     >

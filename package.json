@@ -23,6 +23,7 @@
     "supabase:generate:ps": "supabase gen types typescript --project-id $env:SUPABASE_PROJECT_REF > app/types/database.types.ts"
   },
   "dependencies": {
+    "@google/genai": "^1.41.0",
     "@nuxtjs/supabase": "^2.0.3",
     "@supabase/supabase-js": "^2.51.0",
     "@vee-validate/nuxt": "^4.15.0",

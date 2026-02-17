@@ -112,7 +112,7 @@ const cardClasses = computed(() => {
       <!-- Loading State -->
       <div 
         v-if="imageLoading && !imageError" 
-        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900"
+        class="absolute inset-0 flex items-center justify-center bg-linear-to-br from-gray-800 to-gray-900"
       >
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600" />
       </div>
@@ -131,13 +131,13 @@ const cardClasses = computed(() => {
       <!-- Fallback -->
       <div 
         v-else 
-        class="w-full h-full bg-gradient-to-br from-green-900 to-emerald-900 flex items-center justify-center"
+        class="w-full h-full bg-linear-to-br from-green-900 to-emerald-900 flex items-center justify-center"
       >
         <UIcon name="i-heroicons-play-circle" class="w-20 h-20 text-white/50" />
       </div>
       
       <!-- Gradient Overlay -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+      <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
       
       <!-- Play Button Overlay -->
       <div class="absolute inset-0 flex items-center justify-center">

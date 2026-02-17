@@ -120,7 +120,7 @@ onMounted(() => {
         Harga Pangan Terupdate
       </UBadge>
       
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent py-2">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-linear-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent py-2">
         Pantau Harga Pangan DIY
       </h2>
       
@@ -147,7 +147,7 @@ onMounted(() => {
             :class="[
               'rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden',
               'hover:shadow-xl transition-all duration-300',
-              'bg-gradient-to-br min-w-[280px] flex-shrink-0',
+              'bg-linear-to-br min-w-[280px] flex-shrink-0',
               getCategoryColor(categoryGroup.category.value)
             ]"
           >
@@ -210,7 +210,7 @@ onMounted(() => {
           :class="[
             'rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden',
             'hover:shadow-xl transition-all duration-300',
-            'bg-gradient-to-br',
+            'bg-linear-to-br',
             getCategoryColor(categoryGroup.category.value)
           ]"
         >

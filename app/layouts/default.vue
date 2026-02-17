@@ -7,7 +7,7 @@
     
     <!-- Background gradient -->
     <div
-    class="absolute inset-0 z-0 bg-gradient-to-b from-green-50 via-green-100 to-blue-50 dark:from-green-950 dark:via-green-800 dark:to-green-950"
+    class="absolute inset-0 z-0 bg-linear-to-b from-green-50 via-green-100 to-blue-50 dark:from-green-950 dark:via-green-800 dark:to-green-950"
     />
     
     <!-- Decorative blur circles -->

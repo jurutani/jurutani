@@ -287,7 +287,7 @@ watch(() => product.value, (newVal) => {
               />
               
               <!-- Gradient Overlay for better readability -->
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+              <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
               
               <!-- Image Navigation Buttons -->
               <div v-if="images.length > 1" class="absolute inset-0 flex justify-between items-center pointer-events-none">
@@ -322,7 +322,7 @@ watch(() => product.value, (newVal) => {
             </div>
             
             <!-- Thumbnail Images - Positioned at bottom -->
-            <div v-if="images.length > 1" class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+            <div v-if="images.length > 1" class="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-black/80 to-transparent">
               <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
                 <button 
                   v-for="(img, index) in images" 
@@ -537,7 +537,7 @@ watch(() => product.value, (newVal) => {
           <div class="flex justify-center">
             <NuxtLink
               to="/markets"
-              class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg transition-all duration-200 hover:shadow-lg font-semibold"
+              class="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg transition-all duration-200 hover:shadow-lg font-semibold"
             >
               <span>Lihat Semua Produk</span>
               <UIcon name="i-lucide-arrow-right" class="w-4 h-4" />

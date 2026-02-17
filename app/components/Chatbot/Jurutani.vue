@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, onMounted } from 'vue'
 
-// Get runtime config
-const config = useRuntimeConfig()
-
 // Reactive state
 const isOpen = ref(false)
 const showSplash = ref(true)
@@ -22,11 +19,6 @@ const messages = ref([
   }
 ])
 
-// API Configuration
-const GEMINI_API_KEY = config.public.geminiApiKey
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
-// Alternatif model (uncomment jika ingin menggunakan model yang berbeda):
-// const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`
 // Methods
 const openChat = () => {
   if (!hasSeenSplash.value) {
@@ -62,111 +54,10 @@ const closeChat = () => {
   isOpen.value = false
 }
 
-const sendMessageToGemini = async (message) => {
-  try {
-    const systemPrompt = `Anda adalah JuruTani AI, asisten penyuluh JuruTani yang ahli dan berpengalaman. Tugas Anda adalah memberikan penjelasan yang jelas, akurat, praktis, dan mudah dipahami dalam bahasa Indonesia.
+const { sendMessage } = useChatbot()
 
-    Bidang keahlian Anda meliputi:
-    
-    PERTANIAN:
-    - Teknik budidaya tanaman pangan (padi, jagung, kedelai, dll)
-    - Budidaya tanaman hortikultura (sayuran, buah-buahan)
-    - Teknologi pertanian modern dan presisi
-    - Manajemen hama dan penyakit tanaman
-    - Pupuk dan nutrisi tanaman
-    - Irigasi dan pengelolaan air
-    - Pertanian organik dan berkelanjutan
-    
-    PETERNAKAN:
-    - Budidaya ternak besar (sapi, kerbau, kambing)
-    - Budidaya unggas (ayam, bebek, burung)
-    - Perikanan dan akuakultur
-    - Pakan ternak dan nutrisi
-    - Kesehatan hewan dan pencegahan penyakit
-    - Manajemen kandang dan lingkungan
-    
-    PEMBANGUNAN:
-    - Infrastruktur pertanian (jalan tani, irigasi, gudang)
-    - Teknologi pasca panen dan pengolahan
-    - Koperasi dan kelembagaan petani
-    - Pemasaran dan rantai nilai produk pertanian
-    - Program pemerintah untuk petani
-    - Ekonomi pertanian dan agribisnis
-    - Pembangunan pedesaan
-    
-    LINGKUNGAN & KEBERLANJUTAN:
-    - Konservasi tanah dan air
-    - Adaptasi perubahan iklim
-    - Energi terbarukan di pertanian
-    - Pengelolaan limbah pertanian
-
-    Instruksi penting:
-    - Berikan jawaban yang praktis dan aplikatif untuk petani, peternak, dan masyarakat pedesaan
-    - Gunakan bahasa Indonesia yang sederhana dan mudah dipahami
-    - Sertakan tips praktis, langkah-langkah konkret, atau solusi yang bisa diterapkan
-    - Batasi jawaban maksimal 5-6 kalimat agar mudah dibaca
-    - Jika relevan, sebutkan program pemerintah atau bantuan yang tersedia
-    - Jika pertanyaan di luar bidang keahlian, arahkan dengan sopan ke topik yang relevan
-    - Prioritaskan keamanan dan keberlanjutan dalam setiap saran
-
-    Pertanyaan: ${message}`
-
-    const response = await fetch(GEMINI_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [
-              { text: systemPrompt }
-            ]
-          }
-        ]
-      })
-    })
-
-    if (!response.ok) {
-      // Handle different error status codes
-      if (response.status === 429) {
-        throw new Error('RATE_LIMIT')
-      } else if (response.status === 503) {
-        throw new Error('SERVICE_UNAVAILABLE')
-      } else if (response.status === 401 || response.status === 403) {
-        throw new Error('AUTH_ERROR')
-      } else {
-        throw new Error('API_ERROR')
-      }
-    }
-
-    const data = await response.json()
-    
-    // Validate response structure
-    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-      throw new Error('INVALID_RESPONSE')
-    }
-    
-    return data.candidates[0].content.parts[0].text
-  } catch (error) {
-    console.error('Error:', error)
-    
-    // Return user-friendly error messages based on error type
-    const errorMessage = error.message
-    
-    if (errorMessage === 'RATE_LIMIT') {
-      return '⚠️ Maaf, sistem sedang sibuk karena terlalu banyak permintaan. Mohon tunggu beberapa saat (1-2 menit) sebelum mencoba lagi. Terima kasih atas kesabarannya! 🙏'
-    } else if (errorMessage === 'SERVICE_UNAVAILABLE') {
-      return '⚠️ Layanan AI sedang dalam pemeliharaan. Silakan coba lagi dalam beberapa menit. Terima kasih! 🔧'
-    } else if (errorMessage === 'AUTH_ERROR') {
-      return '⚠️ Terjadi masalah autentikasi. Mohon hubungi administrator sistem untuk bantuan lebih lanjut. 📞'
-    } else if (errorMessage === 'INVALID_RESPONSE') {
-      return '⚠️ Respons dari AI tidak valid. Silakan coba kirim pertanyaan Anda lagi. 🔄'
-    } else {
-      return '⚠️ Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi atau hubungi tim support jika masalah berlanjut. 💬'
-    }
-  }
+const sendMessageToGemini = async (message: string) => {
+  return await sendMessage(message)
 }
 
 const handleSendMessage = async (userMessage: string) => {
@@ -242,7 +133,7 @@ watch(isOpen, (newVal) => {
       v-if="isOpen && !showSplash"
       :class="[
         'relative overflow-hidden border-2 border-green-400 shadow-2xl transition-all duration-300',
-        isExpanded ? 'w-96 h-[600px]' : 'w-80 h-96'
+        isExpanded ? 'w-96 h-150' : 'w-80 h-96'
       ]"
       :ui="{ body: { padding: 'p-0' } }"
     >

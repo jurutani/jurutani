@@ -32,7 +32,7 @@ const totalKebutuhanBenih = computed<number>(() => {
   <div class="rounded-2xl p-8 shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
     <!-- Header -->
     <div class="flex items-center gap-3 mb-8">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+      <div class="w-12 h-12 rounded-xl bg-linear-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
         <UIcon name="i-lucide-sprout" class="w-6 h-6 text-white" />
       </div>
       <div>
@@ -114,7 +114,7 @@ const totalKebutuhanBenih = computed<number>(() => {
         </div>
 
         <!-- Result Card -->
-        <div class="mt-6 p-6 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-2 border-emerald-200 dark:border-emerald-800">
+        <div class="mt-6 p-6 rounded-xl bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-2 border-emerald-200 dark:border-emerald-800">
           <div class="flex items-center gap-2 mb-2">
             <UIcon name="i-lucide-calculator" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Total Kebutuhan Benih</p>

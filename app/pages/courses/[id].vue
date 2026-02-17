@@ -275,7 +275,7 @@ watch(() => meeting.value, (newVal) => {
 </script>
 
 <template>
-  <div class="min-h-screen pt-14 bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+  <div class="min-h-screen pt-14 bg-linear-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
     <!-- Header -->
     <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-14 z-10">
       <div class="container mx-auto px-4 py-4">
@@ -308,7 +308,7 @@ watch(() => meeting.value, (newVal) => {
 
       <!-- Error State -->
       <div v-else-if="error" class="text-center py-20">
-        <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200 dark:border-red-800 rounded-2xl p-8 max-w-md mx-auto shadow-lg">
+        <div class="bg-linear-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200 dark:border-red-800 rounded-2xl p-8 max-w-md mx-auto shadow-lg">
           <div class="w-16 h-16 bg-red-100 dark:bg-red-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
             <UIcon name="i-heroicons-exclamation-triangle" class="w-8 h-8 text-red-500" />
           </div>
@@ -322,7 +322,7 @@ watch(() => meeting.value, (newVal) => {
 
       <!-- Not Found -->
       <div v-else-if="notFound" class="text-center py-20">
-        <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 max-w-md mx-auto shadow-lg">
+        <div class="bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 max-w-md mx-auto shadow-lg">
           <div class="text-8xl mb-6 opacity-50">📚</div>
           <h3 class="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">Course Tidak Ditemukan</h3>
           <p class="text-gray-600 dark:text-gray-400 mb-6">Course yang Anda cari mungkin telah dihapus atau tidak tersedia.</p>
@@ -335,7 +335,7 @@ watch(() => meeting.value, (newVal) => {
       <!-- Course Content -->
       <article v-else-if="meeting" class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
         <!-- Hero Image -->
-        <div class="relative h-72 md:h-96 bg-gradient-to-br from-green-100 via-green-200 to-emerald-200 dark:from-green-900 dark:via-green-800 dark:to-emerald-800">
+        <div class="relative h-72 md:h-96 bg-linear-to-br from-green-100 via-green-200 to-emerald-200 dark:from-green-900 dark:via-green-800 dark:to-emerald-800">
           <img
             v-if="imageUrl"
             :src="imageUrl"
@@ -351,7 +351,7 @@ watch(() => meeting.value, (newVal) => {
           </div>
 
           <!-- Overlay gradient -->
-          <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent"></div>
 
           <!-- Category Badge -->
           <div class="absolute top-6 right-6">
@@ -388,7 +388,7 @@ watch(() => meeting.value, (newVal) => {
           </div>
 
           <!-- Instructor Card -->
-          <div v-if="author" class="mb-10 p-8 bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 dark:from-green-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-green-200 dark:border-green-700 shadow-sm">
+          <div v-if="author" class="mb-10 p-8 bg-linear-to-br from-green-50 via-blue-50 to-indigo-50 dark:from-green-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-green-200 dark:border-green-700 shadow-sm">
             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
               <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                 <UIcon name="i-heroicons-user-circle" class="w-5 h-5 text-white" />
@@ -419,7 +419,7 @@ watch(() => meeting.value, (newVal) => {
               </div>
               Deskripsi Course
             </h2>
-            <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-600/50 rounded-2xl p-8 border border-gray-200 dark:border-gray-600 shadow-sm">
+            <div class="bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-600/50 rounded-2xl p-8 border border-gray-200 dark:border-gray-600 shadow-sm">
               <div 
                 class="prose prose-lg max-w-none prose-green prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-green-600 hover:prose-a:text-green-700 dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300 dark:prose-a:text-green-400"
                 v-html="meeting.description || meeting.content"
@@ -428,7 +428,7 @@ watch(() => meeting.value, (newVal) => {
           </div>
 
           <!-- Course Link -->
-          <div v-if="meeting.link" class="mb-10 p-8 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-2xl border border-green-200 dark:border-green-800 shadow-sm">
+          <div v-if="meeting.link" class="mb-10 p-8 bg-linear-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-2xl border border-green-200 dark:border-green-800 shadow-sm">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
               <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                 <UIcon name="i-heroicons-link" class="w-5 h-5 text-white" />
@@ -470,11 +470,11 @@ watch(() => meeting.value, (newVal) => {
               <div 
                 v-for="attachment in attachmentUrls" 
                 :key="attachment.id"
-                class="group relative flex items-center justify-between p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-200 dark:border-blue-800 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                class="group relative flex items-center justify-between p-6 bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-200 dark:border-blue-800 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 @click="downloadAttachment(attachment)"
               >
                 <div class="flex items-start space-x-4 flex-1">
-                  <div class="w-14 h-14 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/40 dark:to-indigo-900/40 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm flex-shrink-0">
+                  <div class="w-14 h-14 bg-linear-to-br from-blue-100 to-indigo-100 dark:from-blue-900/40 dark:to-indigo-900/40 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm flex-shrink-0">
                     <UIcon :name="getFileIcon(attachment.type)" class="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div class="flex-1 min-w-0">
@@ -499,11 +499,11 @@ watch(() => meeting.value, (newVal) => {
                 </div>
 
                 <!-- Hover overlay -->
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                <div class="absolute inset-0 bg-linear-to-r from-blue-500/5 to-indigo-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
               </div>
             </div>
             
-            <div v-else class="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-600/50 rounded-2xl border border-gray-200 dark:border-gray-600">
+            <div v-else class="text-center py-16 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-600/50 rounded-2xl border border-gray-200 dark:border-gray-600">
               <div class="w-20 h-20 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <UIcon name="i-heroicons-paper-clip" class="w-10 h-10 text-gray-400" />
               </div>

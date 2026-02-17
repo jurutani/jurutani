@@ -162,7 +162,7 @@ watch(() => news.value, (newVal) => {
     
     <div class="container mx-auto px-4 py-8">
       <!-- Header -->
-      <div class="shadow-sm">
+      <div>
         <div class="container mx-auto px-4 py-4">
           <div class="flex items-center justify-between">
             <UButton
@@ -203,7 +203,7 @@ watch(() => news.value, (newVal) => {
       <!-- News Content -->
       <article v-else-if="hasData" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <!-- Hero Image -->
-        <div class="relative h-64 md:h-80 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
+        <div class="relative h-64 md:h-80 bg-linear-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
           <img
             v-if="imageUrl"
             :src="imageUrl"
@@ -355,7 +355,7 @@ watch(() => news.value, (newVal) => {
           <div class="mt-8 flex justify-center">
             <NuxtLink
               to="/news"
-              class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
+              class="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold bg-linear-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
             >
               <span>Lihat Semua Berita</span>
               <UIcon name="i-lucide-arrow-right" class="w-4 h-4 transition-transform" />

@@ -177,7 +177,7 @@ onBeforeUnmount(() => {
       <div 
         v-for="(stat, index) in stats" 
         :key="index"
-        class="stat-card flex items-center space-x-3 p-4 rounded-xl bg-gradient-to-br from-white/50 to-green-50/30 dark:from-green-800/20 dark:to-green-900/10 border border-green-200/40 dark:border-green-700/30 hover:shadow-md transition-shadow"
+        class="stat-card flex items-center space-x-3 p-4 rounded-xl bg-linear-to-br from-white/50 to-green-50/30 dark:from-green-800/20 dark:to-green-900/10 border border-green-200/40 dark:border-green-700/30 hover:shadow-md transition-shadow"
       >
         <div class="stat-icon flex-shrink-0 w-10 h-10 rounded-lg bg-green-100 dark:bg-green-800/40 flex items-center justify-center">
           <UIcon :name="stat.icon" class="text-xl text-green-600 dark:text-green-400" />

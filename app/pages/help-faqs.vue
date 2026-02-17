@@ -94,7 +94,7 @@ const scrollToFaqs = () => {
         <div class="mb-12 max-w-2xl mx-auto">
           <div class="relative group">
             <!-- Glow Effect -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300" />
+            <div class="absolute -inset-1 bg-linear-to-r from-green-600 to-emerald-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300" />
             
             <div class="relative">
               <AppSearchBar
@@ -138,7 +138,7 @@ const scrollToFaqs = () => {
                   <!-- Animated Icon -->
                   <div class="relative inline-block mb-6">
                     <div class="absolute inset-0 bg-green-100 dark:bg-green-900/30 rounded-full animate-ping" />
-                    <div class="relative w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 rounded-full flex items-center justify-center">
+                    <div class="relative w-20 h-20 bg-linear-to-br from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 rounded-full flex items-center justify-center">
                       <UIcon name="i-heroicons-magnifying-glass" class="w-10 h-10 text-green-600 dark:text-green-400" />
                     </div>
                   </div>
@@ -181,7 +181,7 @@ const scrollToFaqs = () => {
           <!-- Still Need Help Card -->
           <div 
             v-if="activeFaqs.length > 0" 
-            class="mt-12 relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-50 via-emerald-50 to-green-50 dark:from-green-900/20 dark:via-emerald-900/10 dark:to-green-900/20 border border-green-200 dark:border-green-800/50 p-8"
+            class="mt-12 relative overflow-hidden rounded-2xl bg-linear-to-br from-green-50 via-emerald-50 to-green-50 dark:from-green-900/20 dark:via-emerald-900/10 dark:to-green-900/20 border border-green-200 dark:border-green-800/50 p-8"
           >
             <!-- Decorative Elements -->
             <div class="absolute top-0 right-0 w-64 h-64 bg-green-300/10 dark:bg-green-700/10 rounded-full blur-3xl" />
@@ -203,7 +203,7 @@ const scrollToFaqs = () => {
                 <UButton 
                   to="/contact-us" 
                   size="lg"
-                  class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  class="bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <UIcon name="i-heroicons-chat-bubble-left-right" class="mr-2" />
                   Hubungi Support

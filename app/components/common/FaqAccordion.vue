@@ -37,7 +37,7 @@ const isOpen = (index: number) => openItems.value.includes(index)
       class="group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700/50 transition-all duration-300 hover:shadow-lg hover:border-green-300 dark:hover:border-green-700"
     >
       <!-- Gradient Overlay on Hover -->
-      <div class="absolute inset-0 bg-gradient-to-r from-green-50/0 via-emerald-50/0 to-green-50/0 dark:from-green-900/0 dark:via-emerald-900/0 dark:to-green-900/0 group-hover:from-green-50/30 group-hover:via-emerald-50/20 group-hover:to-green-50/30 dark:group-hover:from-green-900/10 dark:group-hover:via-emerald-900/5 dark:group-hover:to-green-900/10 transition-all duration-300 pointer-events-none" />
+      <div class="absolute inset-0 bg-linear-to-r from-green-50/0 via-emerald-50/0 to-green-50/0 dark:from-green-900/0 dark:via-emerald-900/0 dark:to-green-900/0 group-hover:from-green-50/30 group-hover:via-emerald-50/20 group-hover:to-green-50/30 dark:group-hover:from-green-900/10 dark:group-hover:via-emerald-900/5 dark:group-hover:to-green-900/10 transition-all duration-300 pointer-events-none" />
       
       <!-- Question Button -->
       <button
@@ -93,7 +93,7 @@ const isOpen = (index: number) => openItems.value.includes(index)
         >
           <div class="px-6 pb-6 pl-[4.5rem] relative z-10">
             <!-- Decorative Line -->
-            <div class="absolute left-9 top-0 bottom-6 w-0.5 bg-gradient-to-b from-green-300 to-transparent dark:from-green-700 dark:to-transparent" />
+            <div class="absolute left-9 top-0 bottom-6 w-0.5 bg-linear-to-b from-green-300 to-transparent dark:from-green-700 dark:to-transparent" />
             
             <!-- Answer Text -->
             <div class="prose prose-sm md:prose-base dark:prose-invert max-w-none">

@@ -31,7 +31,7 @@ export function useSocialShare() {
         window.open(url, '_blank', 'noopener,noreferrer,width=600,height=400')
     }
 
-    // Share to Instagram (Note: Instagram doesn't have direct share URL, so we copy link)
+    // Share to Instagram (Note: Instagram doesn't have direct share URL, so we Link URL)
     const shareToInstagram = async (options: ShareOptions) => {
         const success = await copyToClipboard(options.url)
         if (success) {
@@ -41,7 +41,7 @@ export function useSocialShare() {
         }
     }
 
-    // Share to TikTok (Note: TikTok doesn't have direct share URL, so we copy link)
+    // Share to TikTok (Note: TikTok doesn't have direct share URL, so we Link URL)
     const shareToTikTok = async (options: ShareOptions) => {
         const success = await copyToClipboard(options.url)
         if (success) {
@@ -51,7 +51,7 @@ export function useSocialShare() {
         }
     }
 
-    // Copy link
+    // Link URL
     const copyLink = async (options: ShareOptions) => {
         const success = await copyToClipboard(options.url)
         if (success) {
@@ -78,7 +78,7 @@ export function useSocialShare() {
         {
             name: 'Instagram',
             icon: 'i-mdi-instagram',
-            color: 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600',
+            color: 'bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600',
             action: shareToInstagram
         },
         {
@@ -88,7 +88,7 @@ export function useSocialShare() {
             action: shareToTikTok
         },
         {
-            name: 'Copy Link',
+            name: 'Link URL',
             icon: 'i-heroicons-link',
             color: 'bg-gray-500 hover:bg-gray-600',
             action: copyLink

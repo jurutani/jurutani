@@ -58,8 +58,8 @@ const weatherIconClass = computed(() => {
         loading="lazy"
       />
       <!-- Animated Gradient Overlays -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-green-800/60 to-emerald-900/70 animate-gradient" />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+      <div class="absolute inset-0 bg-linear-to-br from-blue-900/70 via-green-800/60 to-emerald-900/70 animate-gradient" />
+      <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
       
       <!-- Animated particles effect -->
       <div class="absolute inset-0 opacity-30">
